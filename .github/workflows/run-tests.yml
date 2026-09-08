@@ -45,6 +45,8 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
           coverage: none
+          # Pest generates its default XML inside assert() when no config exists.
+          ini-values: zend.assertions=1
 
       - name: Setup problem matchers
         run: |
