@@ -26,12 +26,10 @@ Requires PHP 8.4 or later in the PHP 8 series. The current test harness uses
 Laravel 12; CI runs PHP 8.4 and 8.5 on Ubuntu and Windows with lowest and stable
 dependencies. Storyfeed itself remains on `dev-main` in both dependency lanes.
 
-The package is public on GitHub but is not currently available from Packagist.
-Register its public repository in your application's Composer configuration,
-then explicitly allow both development branches:
+The package is available from Packagist. Explicitly allow both development
+branches:
 
 ```bash
-composer config repositories.storyfeed-ui vcs https://github.com/storyfeed/ui
 composer require storyfeed/ui:dev-main storyfeed/storyfeed:dev-main
 ```
 
@@ -92,7 +90,7 @@ defined it, so the library cannot be in the name. The name is a lookup key and
 nothing else; it resolves to no class. It is PascalCase because Activity Streams 2.0
 types are (`Document`, `Note`), and because a lowercase `vendor/name` reads as a
 Composer package, which it is not. Renderers match the name exactly, so the casing
-is part of it.
+is part of it. An app-owned form follows the same rule: `Acme/Invoice`.
 
 ## The other forms
 
