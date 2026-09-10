@@ -1,0 +1,289 @@
+<?php
+
+namespace Storyfeed\Ui\Data;
+
+use LogicException;
+use Storyfeed\Concerns\HasPayload;
+use Storyfeed\Contracts\FeedDetail;
+use Storyfeed\MediaSlot;
+
+/**
+ * The shape of a post: a title line, some prose, one picture, the files.
+ * Every field is optional, and the picture is a reference rather than an image.
+ *
+ *     public function toFeed(): FeedEntity
+ *     {
+ *         return FeedEntity::make($this->name, data: MediaObject::make(
+ *             subject: $this->name,
+ *             content: $this->summary,
+ *             image:   $this->feedMediaIcon(),
+ *         ));
+ *     }
+ *
+ * Stored:
+ *
+ *     {"$detail": "Storyfeed/MediaObject", "$v": 1,
+ *      "subject": "N201 Saffron Butter Rice",
+ *      "content": "Basmati replaces Jasmine.",
+ *      "image": "icon", "attachments": false}
+ *
+ * ## It stores no media, it names a slot
+ *
+ * `FeedImage` is what `feedMedia()` RETURNS and not what `toFeed()` stores:
+ * a src ages, so the resolver mints the location at read time. A detail is
+ * stored, so a `MediaObject` holding a `FeedImage` would store exactly the
+ * URL that rule forbids. It holds a slot name instead — `image: "icon"` —
+ * and no src, no mediaType, no width, no height, no alt. The `FeedImage`
+ * that `feedMedia()` mints carries all of those; a copy here would be a
+ * second copy that ages exactly as the URL would. At read time the renderer
+ * takes `entity.media.icon`, already minted, already beside this block in
+ * the payload, and draws it with a live aspect box and live alt.
+ *
+ * The consequence worth having: changing a thumbnail conversion does not
+ * rewrite history. Raise a THUMB_SIZE and every historical row draws the
+ * new one, because none of them stored a size.
+ *
+ * `attachments` is the same reference one slot over: `true` means "draw
+ * whatever `entity.media.attachments` holds", each href minted at read time.
+ * How many there are, and what a resource looks like, is core's business;
+ * this block never learns it.
+ *
+ * ## The three slots, by example — the slot IS the meaning
+ *
+ * The values are Activity Streams 2.0's own property names, already the
+ * keys of `entity.media`, and a consumer who has set entity media has
+ * already chosen between them once. The slot answers what the media IS to
+ * the entity, and the rule that falls out of the examples below: media
+ * should be OF the entity, unless the slot is `icon`, which may represent
+ * by association.
+ *
+ * A consumer's production feed showed why the distinction earns a slot.
+ * Three rows in one viewport, about the same menu item, all drawing the
+ * identical plated-dish photograph at the same size: "Nangi replied on
+ * N201", "Nayani added a photo of N201", "Nayani wrote a note on N201".
+ * Only the middle row is ABOUT the photograph. The other two are a reply
+ * and a note whose object is a discussion, and the app had put the dish's
+ * lead image in the discussion's `preview` — but a photograph of food is
+ * not a preview of a discussion.
+ *
+ * **`icon` — which thing this is.** The reply and the note. A discussion
+ * has no picture of its own, but "what small image represents this
+ * discussion?" has an answer: the dish it concerns. `icon` is small and
+ * REPRESENTATIONAL, and a representation may be borrowed from what the
+ * thing is about. So the comment-shaped rows name `icon`, and the same
+ * photograph reads as a 32px identifier beside the text — the way it
+ * labels the dish in the menu list — rather than as a photograph under a
+ * reply.
+ *
+ *     MediaObject::make(subject: $note->title, content: $note->body, image: $note->feedMediaIcon())
+ *
+ * **`image` — what the thing looks like.** The photo row. "Nayani added a
+ * photo of N201" is about the picture, and the dish is a non-image object
+ * of which the photograph is a larger visual representation. The block
+ * reads as the post it is — the name, the caption, and the picture worth
+ * stopping on, at the size the feed gives a picture. Same rows, same
+ * photograph, and only this one stays a photograph.
+ *
+ *     MediaObject::make(subject: $dish->name, content: $photo->caption, image: $dish->feedMediaImage())
+ *
+ * **`preview` — a stand-in that previews the thing without depicting it.**
+ * A link card. An app stores a URL, scrapes its og:title, og:description
+ * and og:image on its own schedule, and its `toFeed()` is this form with
+ * no field left over and none missing: `subject` is the title, `content`
+ * the description, and the og:image is the `preview` — it does not depict
+ * the page's content, it stands in for it, which is AS2's "an entity that
+ * provides a preview of this object" to the letter. Not `icon` (there is
+ * no identity mark) and not `image` (it is not a visual representation of
+ * the thing itself). Every reader has seen this card in a chat app, so the
+ * case is recognised rather than taught.
+ *
+ *     MediaObject::make(subject: $link->og_title, content: $link->og_description, image: $link->feedMediaPreview())
+ *
+ * THE PACKAGE FETCHES NOTHING. The app scraped and cached those values
+ * before it recorded the row; the resolver mints the cached og:image's URL
+ * into `preview` at read time; the renderer draws what it is handed. Same
+ * line {@see File} draws — it is not the remote-resource hazard `Link` and
+ * `Media` are, because nothing here issues a request — and this example
+ * is not an invitation to make a feed render fetch a page.
+ *
+ * And the misuse, named: `preview` is the slot people reach for when the
+ * other two do not obviously fit. That is how the three-photographs row
+ * above happened — nothing about a reply has a preview, and a plated dish
+ * is not a stand-in for a discussion. A preview previews THIS entity; if
+ * the picture depicts something else, the slot is `icon` or the picture
+ * does not belong on the row.
+ *
+ * A row's picture is `icon` when it labels, `image` when it represents,
+ * `preview` when it stands in. `url` cannot be named: it is where the tap
+ * goes, not a picture of the thing.
+ *
+ * ## At most one slot, and a second one throws
+ *
+ * A block naming two slots is a block asking to be drawn twice. `make()`
+ * takes one `image`; the fluent `withIcon()` / `withPreview()` /
+ * `withImage()` set the same field and throw a `LogicException` if it is
+ * already set, rather than replacing it. Last-wins would turn an authoring
+ * mistake into a silent layout, at the one moment — record time — where
+ * the author is present to hear about it. Unknown methods are errors here,
+ * not features; a second slot is the same kind of thing.
+ *
+ * Fluent and named forms produce byte-identical rows — the fluent form is
+ * sugar, never a second form:
+ *
+ *     MediaObject::make(subject: $name)->withIcon()->withAttachments()
+ *     MediaObject::make(subject: $name, image: MediaSlot::Icon, attachments: true)
+ *
+ * ## A block naming an empty slot draws nothing
+ *
+ * Naming a slot does not check that the entity's resolver fills it. If
+ * `feedMedia()` never sets `icon`, a block saying `image: "icon"` draws its
+ * subject and content and no picture — correct, and silent, the same rule
+ * as an unknown detail. That mismatch is statically knowable without any
+ * traffic, and it is a doctor check's job, not a renderer's.
+ *
+ * ## Only on an entity, for now
+ *
+ * The reference is unambiguous on an ENTITY: "my icon". In an activity's
+ * own `data` it would have to say whose — the object's or the target's —
+ * and this version does not. A renderer that meets one there has no
+ * entity to read a slot from, and draws the text and nothing else. `$v`
+ * exists for the day the block learns to say whose.
+ *
+ * ## Not `Excerpt`, not `Change`, not `Markdown`, not a thread
+ *
+ * Most app data fits this shape, which is its use and its hazard. It can
+ * express the other forms badly, and nothing stops a consumer doing so.
+ *
+ * `content` is PROSE, plain text, escaped on the way out: a description, a
+ * caption, a one-line reason. A quotation with a source is {@see Excerpt}
+ * — the tell is that the words are someone else's. Authored rich text is
+ * {@see Markdown}, which says so and is sanitised at read time; Markdown
+ * pasted into `content` renders as its own asterisks. A field that was one
+ * thing and is now another is {@see Change}, and a conversation is core's
+ * `FeedThread`, painted by the presenter — the tell is a reply count. Files
+ * are named from `entity.media.attachments`, not listed here: a name and a
+ * size stored in this row would be the second copy this class exists to
+ * avoid, and {@see File} is the form for one artefact's own facts.
+ *
+ * A `subject` that repeats the headline is the smell the other forms name
+ * too: a preview complements the sentence above it.
+ *
+ * The version travels in both storage and payload: core does not own the
+ * app's key, so the renderer must upgrade the detail at read time, never
+ * write it back.
+ */
+class MediaObject implements FeedDetail
+{
+    use HasPayload;
+
+    final protected function __construct(
+        private readonly ?string $subject,
+        private readonly ?string $content,
+        private readonly ?MediaSlot $image,
+        private readonly bool $attachments,
+    ) {}
+
+    /**
+     * @param  string|null  $subject  a title line — only when the headline does not already say it
+     * @param  string|null  $content  prose, as plain text
+     * @param  MediaSlot|null  $image  which of the entity's media slots is this block's picture
+     * @param  bool  $attachments  whether to draw the entity's attachments
+     */
+    public static function make(
+        ?string $subject = null,
+        ?string $content = null,
+        ?MediaSlot $image = null,
+        bool $attachments = false,
+    ): static {
+        return new static($subject, $content, $image, $attachments);
+    }
+
+    /** The picture is the entity's `icon` — which thing this is. */
+    public function withIcon(): static
+    {
+        return $this->naming(MediaSlot::Icon);
+    }
+
+    /** The picture is the entity's `preview` — a stand-in that previews the thing without depicting it. */
+    public function withPreview(): static
+    {
+        return $this->naming(MediaSlot::Preview);
+    }
+
+    /** The picture is the entity's `image` — what the thing looks like. */
+    public function withImage(): static
+    {
+        return $this->naming(MediaSlot::Image);
+    }
+
+    /** Draw the entity's attachments, whatever the resolver puts there. */
+    public function withAttachments(): static
+    {
+        return new static($this->subject, $this->content, $this->image, true);
+    }
+
+    /**
+     * `Storyfeed/MediaObject` — the VOCABULARY'S name, not this package's.
+     *
+     * A detail outlives whichever library defined it ({@see FeedDetail}), so
+     * the name must not contain the library. The name is a pure lookup key —
+     * no reflection, no autoloading — so it need not resolve to anything.
+     * PascalCase matches AS2's own type casing, and a lowercase `vendor/name`
+     * reads as a Composer package, which it is not. Renderers match it
+     * EXACTLY, so the casing is part of the name.
+     */
+    public static function name(): string
+    {
+        return 'Storyfeed/MediaObject';
+    }
+
+    public static function version(): int
+    {
+        return 1;
+    }
+
+    public static function upgrade(array $payload, int $from): array
+    {
+        // Total by contract: a row from a version this class does not know
+        // still has to render. A slot name it does not know — a case a later
+        // version added, or `url`, which is never a slot — is null, so the
+        // text draws and the picture does not, rather than a renderer being
+        // asked for a slot this vocabulary never issued.
+        $image = $payload['image'] ?? null;
+
+        return [
+            'subject' => is_string($payload['subject'] ?? null) ? $payload['subject'] : null,
+            'content' => is_string($payload['content'] ?? null) ? $payload['content'] : null,
+            'image' => is_string($image) ? MediaSlot::tryFrom($image)?->value : null,
+            'attachments' => ($payload['attachments'] ?? false) === true,
+        ];
+    }
+
+    /**
+     * @return array{'$detail': string, '$v': int, subject: string|null, content: string|null, image: string|null, attachments: bool}
+     */
+    public function toPayload(): array
+    {
+        return [
+            self::KEY => self::name(),
+            self::VERSION => self::version(),
+            'subject' => $this->subject,
+            'content' => $this->content,
+            'image' => $this->image?->value,
+            'attachments' => $this->attachments,
+        ];
+    }
+
+    private function naming(MediaSlot $slot): static
+    {
+        if ($this->image !== null) {
+            throw new LogicException(sprintf(
+                'A MediaObject names at most one image slot; this one already names `%s` and cannot also name `%s`.',
+                $this->image->value,
+                $slot->value,
+            ));
+        }
+
+        return new static($this->subject, $this->content, $slot, $this->attachments);
+    }
+}

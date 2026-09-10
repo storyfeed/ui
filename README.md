@@ -3,11 +3,13 @@
 [![GitHub Tests Action Status](https://github.com/storyfeed/ui/actions/workflows/run-tests.yml/badge.svg)](https://github.com/storyfeed/ui/actions/workflows/run-tests.yml)
 
 Storyfeed UI is a free, MIT-licensed library of conventional data forms for
-[Storyfeed](https://github.com/storyfeed/storyfeed) activity feeds. It ships five
+[Storyfeed](https://github.com/storyfeed/storyfeed) activity feeds. It ships six
 details under `Storyfeed\Ui\Data`: `Markdown` (authored Markdown source), `Change`
 (named fields with a before and an after), `Fields` (labelled rows), `Excerpt` (a
-passage and where it came from) and `File` (an artefact's size and media type, never
-its URL). Every form is named `Storyfeed/<Form>` in storage — `Storyfeed/Change`,
+passage and where it came from), `File` (an artefact's size and media type, never
+its URL) and `MediaObject` (the shape of a post: a subject, prose, and the name of
+the entity's media slot to draw, never the image). Every form is named
+`Storyfeed/<Form>` in storage — `Storyfeed/Change`,
 `Storyfeed/File` — and versioned from its first commit. The classes are open to extension: a renderer with a genuinely
 renderer-specific variant subclasses one rather than duplicating it.
 
@@ -94,11 +96,14 @@ is part of it.
 
 ## The other forms
 
-`Change`, `Fields`, `Excerpt` and `File` follow the same pattern: `make(...)`
+`Change`, `Fields`, `Excerpt`, `File` and `MediaObject` follow the same pattern: `make(...)`
 returns the detail, `toArray()` gives you the array to store under a key of your
 choosing, and a renderer calls `upgrade()` on the stored props at read time. Each
 class documents its own field names and the reasoning behind them. `File` stores no
 URL on purpose: the entity already carries one, regenerated live at read time.
+`MediaObject` stores no image for the same reason: `image: $this->feedMediaIcon()`
+stores the slot name `icon`, and a renderer draws `entity.media.icon`, which the
+entity's `feedMedia()` mints at read time.
 
 ## Documentation
 
