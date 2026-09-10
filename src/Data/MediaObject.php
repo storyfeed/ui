@@ -5,6 +5,7 @@ namespace Storyfeed\Ui\Data;
 use LogicException;
 use Storyfeed\Concerns\HasPayload;
 use Storyfeed\Contracts\FeedDetail;
+use Storyfeed\FeedLink;
 use Storyfeed\MediaSlot;
 
 /**
@@ -24,6 +25,13 @@ use Storyfeed\MediaSlot;
  *
  *     {"$detail": "Storyfeed/MediaObject", "$v": 1,
  *      "subject": "N201 Saffron Butter Rice",
+ *      "content": "Basmati replaces Jasmine.",
+ *      "image": "icon", "attachments": false}
+ *
+ * …and with a subject that leads to its entity:
+ *
+ *     {"$detail": "Storyfeed/MediaObject", "$v": 1,
+ *      "subject": {"label": "N201 Saffron Butter Rice", "href": null},
  *      "content": "Basmati replaces Jasmine.",
  *      "image": "icon", "attachments": false}
  *
@@ -117,6 +125,32 @@ use Storyfeed\MediaSlot;
  * `preview` when it stands in. `url` cannot be named: it is where the tap
  * goes, not a picture of the thing.
  *
+ * ## The subject may be the way in
+ *
+ * `subject` takes a string or a {@see FeedLink}, and the two mean different
+ * things: text that leads nowhere, and text that leads somewhere.
+ *
+ *     subject: $dish->name                                  // a title
+ *     subject: FeedLink::make($dish->name)                  // → this entity
+ *     subject: FeedLink::make($n->title, $n->external_url)  // → there
+ *
+ * A LINK WITH NO HREF IS THE ONE TO REACH FOR. It stores no location; the
+ * renderer resolves it against the entity's own url, minted at read time,
+ * the same way `image: "icon"` resolves against `entity.media.icon`. An
+ * explicit href is stored and ages, and is for a target the entity's
+ * resolver cannot know.
+ *
+ * IT EXISTS SO NOBODY HAS TO OPEN A VIEW FILE. A consumer who needs a way
+ * into the thing a row is about, and has only a renderer's markup to put it
+ * in, ships a bordered card containing the words *Open the conversation* —
+ * and three of those in one viewport outweigh the words they are a way into.
+ * The affordance is not a second thing on the row; it is a property of the
+ * title that was already there.
+ *
+ * A plain-string subject never becomes a link. Widening this field must not
+ * make every title written before it clickable — an available target is not
+ * an instruction, the same rule the picture slots answer to.
+ *
  * ## At most one slot, and a second one throws
  *
  * A block naming two slots is a block asking to be drawn twice. `make()`
@@ -177,20 +211,20 @@ class MediaObject implements FeedDetail
     use HasPayload;
 
     final protected function __construct(
-        private readonly ?string $subject,
+        private readonly string|FeedLink|null $subject,
         private readonly ?string $content,
         private readonly ?MediaSlot $image,
         private readonly bool $attachments,
     ) {}
 
     /**
-     * @param  string|null  $subject  a title line — only when the headline does not already say it
+     * @param  string|FeedLink|null  $subject  a title line — only when the headline does not already say it; a {@see FeedLink} makes it the row's way in
      * @param  string|null  $content  prose, as plain text
      * @param  MediaSlot|null  $image  which of the entity's media slots is this block's picture
      * @param  bool  $attachments  whether to draw the entity's attachments
      */
     public static function make(
-        ?string $subject = null,
+        string|FeedLink|null $subject = null,
         ?string $content = null,
         ?MediaSlot $image = null,
         bool $attachments = false,
@@ -251,8 +285,13 @@ class MediaObject implements FeedDetail
         // asked for a slot this vocabulary never issued.
         $image = $payload['image'] ?? null;
 
+        // A SUBJECT IS TEXT OR A LINK, and the two are not interchangeable.
+        // A string stays a string: widening the field must not turn every
+        // title written before this class existed into a clickable one.
+        $subject = $payload['subject'] ?? null;
+
         return [
-            'subject' => is_string($payload['subject'] ?? null) ? $payload['subject'] : null,
+            'subject' => is_string($subject) ? $subject : FeedLink::from($subject)?->toPayload(),
             'content' => is_string($payload['content'] ?? null) ? $payload['content'] : null,
             'image' => is_string($image) ? MediaSlot::tryFrom($image)?->value : null,
             'attachments' => ($payload['attachments'] ?? false) === true,
@@ -260,14 +299,14 @@ class MediaObject implements FeedDetail
     }
 
     /**
-     * @return array{'$detail': string, '$v': int, subject: string|null, content: string|null, image: string|null, attachments: bool}
+     * @return array{'$detail': string, '$v': int, subject: string|array{label: string, href: string|null}|null, content: string|null, image: string|null, attachments: bool}
      */
     public function toPayload(): array
     {
         return [
             self::KEY => self::name(),
             self::VERSION => self::version(),
-            'subject' => $this->subject,
+            'subject' => $this->subject instanceof FeedLink ? $this->subject->toPayload() : $this->subject,
             'content' => $this->content,
             'image' => $this->image?->value,
             'attachments' => $this->attachments,

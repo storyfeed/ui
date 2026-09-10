@@ -1,6 +1,7 @@
 <?php
 
 use Storyfeed\Contracts\FeedDetail;
+use Storyfeed\FeedLink;
 use Storyfeed\MediaSlot;
 use Storyfeed\Ui\Data\MediaObject;
 
@@ -79,5 +80,44 @@ it('normalizes malformed and unknown-version payloads without throwing', functio
     // a case a later version adds — draws the text and no picture.
     foreach (['url', 'hero', ''] as $unknown) {
         expect(MediaObject::upgrade(['image' => $unknown], 1)['image'])->toBeNull();
+    }
+});
+
+it('takes a subject that is text or a subject that leads somewhere', function () {
+    /*
+     * THE TWO ARE NOT INTERCHANGEABLE. A string is a title; a FeedLink is a
+     * title that is also the row's way in. The whole reason this field widened
+     * is so a consumer never has to open a renderer's view file to make a title
+     * clickable — the route that produced a bordered card saying "Open the
+     * conversation" three times in one viewport.
+     */
+    expect(MediaObject::make(subject: 'N201 Saffron Butter Rice')->toPayload()['subject'])
+        ->toBe('N201 Saffron Butter Rice');
+
+    // A null href stores no location: the renderer resolves it against the
+    // entity at read time, the same way `image: "icon"` resolves.
+    expect(MediaObject::make(subject: FeedLink::make('N201 Saffron Butter Rice'))->toPayload()['subject'])
+        ->toBe(['label' => 'N201 Saffron Butter Rice', 'href' => null]);
+
+    expect(MediaObject::make(subject: FeedLink::make('The notice', 'https://example.test/n/9'))->toPayload()['subject'])
+        ->toBe(['label' => 'The notice', 'href' => 'https://example.test/n/9']);
+});
+
+it('does not make an old string subject clickable when the field widens', function () {
+    /*
+     * Every row written before FeedLink existed has a string here. Upgrading
+     * one must leave it a string: an available target read as an instruction is
+     * the defect this vocabulary keeps producing, and a whole feed of titles
+     * silently becoming links is its largest available form.
+     */
+    expect(MediaObject::upgrade(['subject' => 'N201 Saffron Butter Rice'], 1)['subject'])
+        ->toBe('N201 Saffron Butter Rice');
+
+    expect(MediaObject::upgrade(['subject' => ['label' => 'A dish', 'href' => null]], 1)['subject'])
+        ->toBe(['label' => 'A dish', 'href' => null]);
+
+    // Malformed degrades to no subject at all, never to a broken row.
+    foreach ([['label' => ''], ['href' => 'https://example.test'], 7, []] as $malformed) {
+        expect(MediaObject::upgrade(['subject' => $malformed], 1)['subject'])->toBeNull();
     }
 });
