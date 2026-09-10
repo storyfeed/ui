@@ -7,7 +7,7 @@ it('round-trips authored source with its form and version intact', function () {
     $content = "## Release notes\n\n**Hello** <script>alert('source')</script>";
     $detail = Markdown::make($content);
     $expected = [
-        '$detail' => 'storyfeed-ui/markdown',
+        '$detail' => 'Storyfeed/Markdown',
         '$v' => 1,
         'content' => $content,
         'mediaType' => 'text/markdown',

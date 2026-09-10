@@ -3,8 +3,13 @@
 [![GitHub Tests Action Status](https://github.com/storyfeed/ui/actions/workflows/run-tests.yml/badge.svg)](https://github.com/storyfeed/ui/actions/workflows/run-tests.yml)
 
 Storyfeed UI is a free, MIT-licensed library of conventional data forms for
-[Storyfeed](https://github.com/storyfeed/storyfeed) activity feeds. It currently
-ships one detail: `Storyfeed\Ui\Data\Markdown`, for authored Markdown source.
+[Storyfeed](https://github.com/storyfeed/storyfeed) activity feeds. It ships five
+details under `Storyfeed\Ui\Data`: `Markdown` (authored Markdown source), `Change`
+(named fields with a before and an after), `Fields` (labelled rows), `Excerpt` (a
+passage and where it came from) and `File` (an artefact's size and media type, never
+its URL). Every form is named `Storyfeed/<Form>` in storage — `Storyfeed/Change`,
+`Storyfeed/File` — and versioned from its first commit. The classes are open to extension: a renderer with a genuinely
+renderer-specific variant subclasses one rather than duplicating it.
 
 A Vue/Inertia kit is planned. There are no Vue components or Blade views in this
 package yet; drawing a detail belongs to the renderer consuming it.
@@ -64,7 +69,7 @@ The `notes` value is:
 
 ```php
 [
-    '$detail' => 'storyfeed-ui/markdown',
+    '$detail' => 'Storyfeed/Markdown',
     '$v' => 1,
     'content' => 'Delivery moved to **Friday**.',
     'mediaType' => 'text/markdown',
@@ -76,6 +81,24 @@ recording the activity. The key `notes` is your choice, not a reserved payload k
 
 Markdown stores source, including any authored HTML; it does not compile or
 sanitize it. The renderer is responsible for converting it safely for display.
+
+## Names
+
+A form's name is the vocabulary's, not this package's: `Storyfeed/Markdown`, never
+`storyfeed-ui/markdown`. Core's contract says a detail outlives whichever library
+defined it, so the library cannot be in the name. The name is a lookup key and
+nothing else; it resolves to no class. It is PascalCase because Activity Streams 2.0
+types are (`Document`, `Note`), and because a lowercase `vendor/name` reads as a
+Composer package, which it is not. Renderers match the name exactly, so the casing
+is part of it.
+
+## The other forms
+
+`Change`, `Fields`, `Excerpt` and `File` follow the same pattern: `make(...)`
+returns the detail, `toArray()` gives you the array to store under a key of your
+choosing, and a renderer calls `upgrade()` on the stored props at read time. Each
+class documents its own field names and the reasoning behind them. `File` stores no
+URL on purpose: the entity already carries one, regenerated live at read time.
 
 ## Documentation
 
