@@ -7,7 +7,7 @@ use Storyfeed\Ui\Data\Excerpt;
 it('keeps a quotation out of the headline, with its form and version intact', function () {
     $detail = Excerpt::make('The fee for each subsequent term is agreed at renewal.');
     $expected = [
-        '$detail' => 'storyfeed-ui/excerpt',
+        '$detail' => 'Storyfeed/Excerpt',
         '$v' => 1,
         'text' => 'The fee for each subsequent term is agreed at renewal.',
         'from' => null,

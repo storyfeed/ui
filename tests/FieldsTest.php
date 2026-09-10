@@ -7,7 +7,7 @@ use Storyfeed\Ui\Data\Fields;
 it('serializes with the reserved keys, so a stored row describes itself', function () {
     $detail = Fields::make(['Address' => '99.225.169.111']);
     $expected = [
-        '$detail' => 'storyfeed-ui/fields',
+        '$detail' => 'Storyfeed/Fields',
         '$v' => 1,
         'rows' => [['label' => 'Address', 'value' => '99.225.169.111', 'mono' => false, 'missing' => null]],
     ];

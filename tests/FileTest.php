@@ -6,7 +6,7 @@ use Storyfeed\Ui\Data\File;
 it('never stores a file url, because the entity regenerates its own', function () {
     $detail = File::make(size: 4404019, mediaType: 'application/zip');
     $expected = [
-        '$detail' => 'storyfeed-ui/file',
+        '$detail' => 'Storyfeed/File',
         '$v' => 1,
         'name' => null,
         'size' => 4404019,

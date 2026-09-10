@@ -9,7 +9,7 @@ uses(ChangeRecordingTestCase::class);
 it('records and reads a detail exactly like its plain array without writing read upgrades back', function () {
     $changes = ['Status' => ['Draft', 'Ready'], 'Added' => [1 => null], 'Removed' => [0 => 'old']];
     $detail = Change::make($changes);
-    $plain = ['$detail' => 'storyfeed-ui/change', '$v' => 1, 'changes' => $changes];
+    $plain = ['$detail' => 'Storyfeed/Change', '$v' => 1, 'changes' => $changes];
     $data = ['reason' => 'Reviewed', 'diff' => $plain, '$app' => ['keep' => true]];
     $authored = Storyfeed::activity('revise')->data(array_replace($data, ['diff' => $detail->toArray()]))->publish();
     $manual = Storyfeed::activity('revise')->data($data)->publish();

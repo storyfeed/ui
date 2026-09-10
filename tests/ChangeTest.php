@@ -6,7 +6,7 @@ use Storyfeed\Ui\Data\Change;
 it('round-trips authored changes with their form and version intact', function () {
     $changes = ['Status' => ['Draft', 'Ready']];
     $detail = Change::make($changes);
-    $expected = ['$detail' => 'storyfeed-ui/change', '$v' => 1, 'changes' => $changes];
+    $expected = ['$detail' => 'Storyfeed/Change', '$v' => 1, 'changes' => $changes];
 
     expect($detail)->toBeInstanceOf(FeedDetail::class)
         ->and($detail->toArray())->toBe($expected)
