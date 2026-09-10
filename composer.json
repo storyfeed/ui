@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": "^8.4",
-        "storyfeed/storyfeed": "dev-w128-media-object"
+        "storyfeed/storyfeed": "dev-main"
     },
     "require-dev": {
         "laravel/pint": "^1.18",
