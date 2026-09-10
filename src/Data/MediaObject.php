@@ -6,11 +6,13 @@ use LogicException;
 use Storyfeed\Concerns\HasPayload;
 use Storyfeed\Contracts\FeedDetail;
 use Storyfeed\FeedLink;
+use Storyfeed\FeedResource;
 use Storyfeed\MediaSlot;
 
 /**
- * The shape of a post: a title line, some prose, one picture, the files.
- * Every field is optional, and the picture is a reference rather than an image.
+ * The shape of a post: a title line, some prose, one picture, the files it
+ * names, and a line of small print. Every field is optional, and the picture
+ * is a reference rather than an image.
  *
  *     public function toFeed(): FeedEntity
  *     {
@@ -26,14 +28,17 @@ use Storyfeed\MediaSlot;
  *     {"$detail": "Storyfeed/MediaObject", "$v": 1,
  *      "subject": "N201 Saffron Butter Rice",
  *      "content": "Basmati replaces Jasmine.",
- *      "image": "icon", "attachments": false}
+ *      "image": "icon", "attachments": [], "footnote": "Approved by Jasper"}
  *
- * …and with a subject that leads to its entity:
+ * …and with a subject that leads to its entity, and a file it names itself:
  *
  *     {"$detail": "Storyfeed/MediaObject", "$v": 1,
  *      "subject": {"label": "N201 Saffron Butter Rice", "href": null},
  *      "content": "Basmati replaces Jasmine.",
- *      "image": "icon", "attachments": false}
+ *      "image": "icon",
+ *      "attachments": [{"type": "Document", "href": "https://…/n201-v4.pdf",
+ *                       "mediaType": "application/pdf", "name": "n201-v4.pdf"}],
+ *      "footnote": null}
  *
  * ## It stores no media, it names a slot
  *
@@ -51,10 +56,56 @@ use Storyfeed\MediaSlot;
  * rewrite history. Raise a THUMB_SIZE and every historical row draws the
  * new one, because none of them stored a size.
  *
- * `attachments` is the same reference one slot over: `true` means "draw
- * whatever `entity.media.attachments` holds", each href minted at read time.
- * How many there are, and what a resource looks like, is core's business;
- * this block never learns it.
+ * ## `attachments` names its own files, and that costs something
+ *
+ * `attachments` is a list of {@see FeedResource} values: the files THIS
+ * block names. It was a bool until 2026-09-10, where `true` meant "draw
+ * whatever `entity.media.attachments` holds" — the paragraph above applied
+ * one slot over, storing nothing and therefore ageing not at all.
+ *
+ * What it could not do was say WHICH. A block that defers to the entity
+ * draws whatever the entity happens to hold at read time, so two blocks on
+ * the same entity can never differ, and neither one can say what it was
+ * about. The consumer says what a block CONTAINS; the renderer decides how
+ * it looks. So the files are named here.
+ *
+ * THE COST IS REAL AND IS NOT HIDDEN. A `FeedResource` carries an href and
+ * a name, and both are copies that age exactly as the paragraph above says
+ * a src does: renamed files, moved disks, expired signatures. The trade,
+ * taken with eyes open, is per-block choice of which files against rows
+ * that go stale. It narrows *store a reference, not a copy* for this field
+ * alone — `image` still names a slot and still stores nothing at all.
+ *
+ * A `FeedResource` is a VALUE, so a list of them is fine in every position:
+ * the rule details answer to is that a form may hold a list of values, and
+ * may not hold a list of forms.
+ *
+ * ## `footnote` — small print, and the name is the constraint
+ *
+ * A line under the content, drawn small and muted by a renderer; this
+ * package only stores it. The case it exists for is an approval that has to
+ * be RECORDED without claiming equal weight with the sentence — subtle,
+ * which is the word that was used for it and is the whole specification.
+ *
+ * It takes a string or a {@see FeedLink}, on `subject`'s rule exactly, so
+ * that the credit can lead to the person or to the approval:
+ *
+ *     footnote: 'Approved by Jasper'
+ *     footnote: FeedLink::make('Approved by Jasper', $approval->url)
+ *
+ * A plain-string footnote never becomes a link, for the same reason a
+ * plain-string subject does not.
+ *
+ * THE NAME IS THE TRIPWIRE, the one {@see FeedLink} carries too. A footnote
+ * that grows a picture, a second line or a heading has stopped being a
+ * footnote: it is a block asking to be born, and the correct response to
+ * that proposal is not a second thing in this field.
+ *
+ * There is no industry term to borrow, which is why the name is ours. AS2's
+ * nearest is `attributedTo`, an entity reference and not text. schema.org's
+ * `creditText` is scoped to media credit. HTML's `<small>` has the right
+ * semantics — "side comments and small print, including… attribution" — but
+ * it is an element, not a field name. The name was chosen for what it forbids.
  *
  * ## The three slots, by example — the slot IS the meaning
  *
@@ -164,8 +215,8 @@ use Storyfeed\MediaSlot;
  * Fluent and named forms produce byte-identical rows — the fluent form is
  * sugar, never a second form:
  *
- *     MediaObject::make(subject: $name)->withIcon()->withAttachments()
- *     MediaObject::make(subject: $name, image: MediaSlot::Icon, attachments: true)
+ *     MediaObject::make(subject: $name)->withIcon()->withAttachments($pdf)
+ *     MediaObject::make(subject: $name, image: MediaSlot::Icon, attachments: [$pdf])
  *
  * ## A block naming an empty slot draws nothing
  *
@@ -194,10 +245,11 @@ use Storyfeed\MediaSlot;
  * {@see Markdown}, which says so and is sanitised at read time; Markdown
  * pasted into `content` renders as its own asterisks. A field that was one
  * thing and is now another is {@see Change}, and a conversation is core's
- * `FeedThread`, painted by the presenter — the tell is a reply count. Files
- * are named from `entity.media.attachments`, not listed here: a name and a
- * size stored in this row would be the second copy this class exists to
- * avoid, and {@see File} is the form for one artefact's own facts.
+ * `FeedThread`, painted by the presenter — the tell is a reply count. A
+ * list of files BESIDE a sentence is `attachments`; ONE artefact whose own
+ * facts are the row — how big it is, what type it is — is {@see File}, and
+ * a `MediaObject` carrying a single attachment and nothing else is usually
+ * a `File` written the long way.
  *
  * A `subject` that repeats the headline is the smell the other forms name
  * too: a preview complements the sentence above it.
@@ -210,26 +262,38 @@ class MediaObject implements FeedDetail
 {
     use HasPayload;
 
+    /**
+     * @param  list<FeedResource>  $attachments
+     */
     final protected function __construct(
         private readonly string|FeedLink|null $subject,
         private readonly ?string $content,
         private readonly ?MediaSlot $image,
-        private readonly bool $attachments,
+        private readonly array $attachments,
+        private readonly string|FeedLink|null $footnote,
     ) {}
 
     /**
      * @param  string|FeedLink|null  $subject  a title line — only when the headline does not already say it; a {@see FeedLink} makes it the row's way in
      * @param  string|null  $content  prose, as plain text
      * @param  MediaSlot|null  $image  which of the entity's media slots is this block's picture
-     * @param  bool  $attachments  whether to draw the entity's attachments
+     * @param  array<array-key, mixed>  $attachments  the files this block names, as {@see FeedResource} values
+     * @param  string|FeedLink|null  $footnote  small print under the content — a credit, an approval; never a second paragraph
      */
     public static function make(
         string|FeedLink|null $subject = null,
         ?string $content = null,
         ?MediaSlot $image = null,
-        bool $attachments = false,
+        array $attachments = [],
+        string|FeedLink|null $footnote = null,
     ): static {
-        return new static($subject, $content, $image, $attachments);
+        return new static(
+            $subject,
+            $content,
+            $image,
+            array_values(array_filter($attachments, fn (mixed $file): bool => $file instanceof FeedResource)),
+            $footnote,
+        );
     }
 
     /** The picture is the entity's `icon` — which thing this is. */
@@ -250,10 +314,18 @@ class MediaObject implements FeedDetail
         return $this->naming(MediaSlot::Image);
     }
 
-    /** Draw the entity's attachments, whatever the resolver puts there. */
-    public function withAttachments(): static
+    /**
+     * Name the files this block draws, replacing any already named.
+     *
+     * At least one is REQUIRED, so that the day the bool was retired lands
+     * as an error in the fluent form too. `withAttachments()` meaning "draw
+     * the entity's files" is the shape that went away; accepting the same
+     * call and quietly producing an empty list would make an upgrade look
+     * like it worked.
+     */
+    public function withAttachments(FeedResource $file, FeedResource ...$more): static
     {
-        return new static($this->subject, $this->content, $this->image, true);
+        return new static($this->subject, $this->content, $this->image, [$file, ...$more], $this->footnote);
     }
 
     /**
@@ -287,19 +359,35 @@ class MediaObject implements FeedDetail
 
         // A SUBJECT IS TEXT OR A LINK, and the two are not interchangeable.
         // A string stays a string: widening the field must not turn every
-        // title written before this class existed into a clickable one.
+        // title written before this class existed into a clickable one. The
+        // footnote answers to the same rule and for the same reason.
         $subject = $payload['subject'] ?? null;
+        $footnote = $payload['footnote'] ?? null;
+
+        /*
+         * `attachments` WAS A BOOL, and an old `true` upgrades to an empty
+         * list: the row that used to defer to the entity now names no files
+         * and draws none. It does not throw and it is not migrated — nothing
+         * already written becomes invalid, it becomes empty, which is a state
+         * this vocabulary already has and already renders as nothing. The
+         * consumer re-authors the block the next time they touch it.
+         */
+        $attachments = $payload['attachments'] ?? null;
 
         return [
             'subject' => is_string($subject) ? $subject : FeedLink::from($subject)?->toPayload(),
             'content' => is_string($payload['content'] ?? null) ? $payload['content'] : null,
             'image' => is_string($image) ? MediaSlot::tryFrom($image)?->value : null,
-            'attachments' => ($payload['attachments'] ?? false) === true,
+            'attachments' => array_values(array_filter(
+                array_map(self::resource(...), is_array($attachments) ? $attachments : []),
+                is_array(...),
+            )),
+            'footnote' => is_string($footnote) ? $footnote : FeedLink::from($footnote)?->toPayload(),
         ];
     }
 
     /**
-     * @return array{'$detail': string, '$v': int, subject: string|array{label: string, href: string|null}|null, content: string|null, image: string|null, attachments: bool}
+     * @return array{'$detail': string, '$v': int, subject: string|array{label: string, href: string|null}|null, content: string|null, image: string|null, attachments: list<array{href: string, mediaType: string|null, name: string|null, type: string}>, footnote: string|array{label: string, href: string|null}|null}
      */
     public function toPayload(): array
     {
@@ -309,8 +397,52 @@ class MediaObject implements FeedDetail
             'subject' => $this->subject instanceof FeedLink ? $this->subject->toPayload() : $this->subject,
             'content' => $this->content,
             'image' => $this->image?->value,
-            'attachments' => $this->attachments,
+            'attachments' => array_map(fn (FeedResource $file): array => $file->toPayload(), $this->attachments),
+            'footnote' => $this->footnote instanceof FeedLink ? $this->footnote->toPayload() : $this->footnote,
         ];
+    }
+
+    /**
+     * Rehydrate one stored file, or null if it is not one.
+     *
+     * An href is the one thing a resource cannot do without, so a value
+     * missing it is dropped rather than rendered as a link to nowhere — the
+     * same rule as a malformed subject. What survives is minted back through
+     * {@see FeedResource} so an upgraded row carries exactly the shape and
+     * key order {@see toPayload()} writes, rather than whatever the stored
+     * value happened to have.
+     *
+     * @return array{href: string, mediaType: string|null, name: string|null, type: string}|null
+     */
+    private static function resource(mixed $value): ?array
+    {
+        if ($value instanceof FeedResource) {
+            return $value->toPayload();
+        }
+
+        if (! is_array($value)) {
+            return null;
+        }
+
+        $href = $value['href'] ?? null;
+
+        if (! is_string($href) || $href === '') {
+            return null;
+        }
+
+        $type = $value['type'] ?? null;
+
+        return FeedResource::make(
+            href: $href,
+            mediaType: self::text($value['mediaType'] ?? null),
+            name: self::text($value['name'] ?? null),
+            type: is_string($type) && $type !== '' ? $type : 'Document',
+        )->toPayload();
+    }
+
+    private static function text(mixed $value): ?string
+    {
+        return is_string($value) && $value !== '' ? $value : null;
     }
 
     private function naming(MediaSlot $slot): static
@@ -323,6 +455,6 @@ class MediaObject implements FeedDetail
             ));
         }
 
-        return new static($this->subject, $this->content, $slot, $this->attachments);
+        return new static($this->subject, $this->content, $slot, $this->attachments, $this->footnote);
     }
 }

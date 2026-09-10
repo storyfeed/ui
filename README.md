@@ -7,8 +7,9 @@ Storyfeed UI is a free, MIT-licensed library of conventional data forms for
 details under `Storyfeed\Ui\Data`: `Markdown` (authored Markdown source), `Change`
 (named fields with a before and an after), `Fields` (labelled rows), `Excerpt` (a
 passage and where it came from), `File` (an artefact's size and media type, never
-its URL) and `MediaObject` (the shape of a post: a subject, prose, and the name of
-the entity's media slot to draw, never the image). Every form is named
+its URL) and `MediaObject` (the shape of a post: a subject, prose, the name of a
+media slot rather than the image, the files the block names, and a line of small
+print). Every form is named
 `Storyfeed/<Form>` in storage — `Storyfeed/Change`,
 `Storyfeed/File` — and versioned from its first commit. The classes are open to extension: a renderer with a genuinely
 renderer-specific variant subclasses one rather than duplicating it.
@@ -101,7 +102,9 @@ class documents its own field names and the reasoning behind them. `File` stores
 URL on purpose: the entity already carries one, regenerated live at read time.
 `MediaObject` stores no image for the same reason: `image: $this->feedMediaIcon()`
 stores the slot name `icon`, and a renderer draws `entity.media.icon`, which the
-entity's `feedMedia()` mints at read time.
+entity's `feedMedia()` mints at read time. Its `attachments` list is the one place
+that rule is narrowed on purpose — a block names its own files rather than
+deferring to whatever the entity holds — and the class states what that costs.
 
 ## Documentation
 
