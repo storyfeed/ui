@@ -17,17 +17,17 @@ use Storyfeed\Contracts\FeedDetail;
  * The version travels in both storage and payload: core does not own the app's
  * key, so the renderer must upgrade the detail at read time, never write it back.
  */
-final class Change implements FeedDetail
+class Change implements FeedDetail
 {
     use HasPayload;
 
     /** @param array<string, array<int, scalar|null>> $changes */
-    private function __construct(
+    final protected function __construct(
         private readonly array $changes,
     ) {}
 
     /** @param array<array-key, mixed> $changes */
-    public static function make(array $changes): self
+    public static function make(array $changes): static
     {
         foreach ($changes as $field => $pair) {
             if (! is_string($field) || ! self::validPair($pair)) {
@@ -35,7 +35,7 @@ final class Change implements FeedDetail
             }
         }
 
-        return new self($changes);
+        return new static($changes);
     }
 
     public static function name(): string

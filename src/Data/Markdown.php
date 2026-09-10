@@ -12,17 +12,17 @@ use Stringable;
  * The version travels in both storage and payload: core does not own the app's
  * key, so the renderer must upgrade the detail at read time.
  */
-final class Markdown implements FeedDetail
+class Markdown implements FeedDetail
 {
     use HasPayload;
 
-    private function __construct(
+    final protected function __construct(
         private readonly string $content,
     ) {}
 
-    public static function make(mixed $content): self
+    public static function make(mixed $content): static
     {
-        return new self(match (true) {
+        return new static(match (true) {
             is_string($content) => $content,
             is_scalar($content) => (string) $content,
             $content instanceof Stringable, is_object($content) && method_exists($content, '__toString') => (string) $content,
