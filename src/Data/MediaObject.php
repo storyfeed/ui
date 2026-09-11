@@ -254,6 +254,14 @@ use Storyfeed\MediaSlot;
  * A `subject` that repeats the headline is the smell the other forms name
  * too: a preview complements the sentence above it.
  *
+ * IT IS ADVICE, AND A RENDERER MUST NOT ENFORCE IT. One drew the subject only
+ * when it differed from the entity's label, which silently deleted a title an
+ * app had supplied — and, once the subject could link, an affordance with it.
+ * The owner's ruling: *"if a consumer describes a media object with a subject,
+ * they expect to see that subject rendered in the media object."* A renderer
+ * deciding whether an app's content is legitimate is the same posture that was
+ * removed from the object icon the same day.
+ *
  * The version travels in both storage and payload: core does not own the
  * app's key, so the renderer must upgrade the detail at read time, never
  * write it back.
