@@ -1,7 +1,14 @@
 {
     "name": "storyfeed/ui",
-    "description": "Prefabricated detail forms and a Vue kit for Storyfeed activity feeds.",
-    "keywords": ["laravel", "storyfeed", "activity-feed", "vue", "inertia"],
+    "description": "Renderers for Storyfeed activity feeds: Vue/Inertia, Blade, Livewire and React.",
+    "keywords": [
+        "laravel",
+        "storyfeed",
+        "activity-feed",
+        "vue",
+        "inertia",
+        "blade"
+    ],
     "homepage": "https://github.com/storyfeed/ui",
     "license": "MIT",
     "authors": [

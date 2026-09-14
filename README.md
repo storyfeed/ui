@@ -1,21 +1,19 @@
-# Storyfeed UI — Details for activity feeds
+# Storyfeed UI — renderers for activity feeds
 
 [![GitHub Tests Action Status](https://github.com/storyfeed/ui/actions/workflows/run-tests.yml/badge.svg)](https://github.com/storyfeed/ui/actions/workflows/run-tests.yml)
 
-Storyfeed UI is a free, MIT-licensed library of conventional data forms for
-[Storyfeed](https://github.com/storyfeed/storyfeed) activity feeds. It ships six
-details under `Storyfeed\Ui\Data`: `Markdown` (authored Markdown source), `Change`
-(named fields with a before and an after), `Fields` (labelled rows), `Excerpt` (a
-passage and where it came from), `File` (an artefact's size and media type, never
-its URL) and `MediaObject` (the shape of a post: a subject, prose, the name of a
-media slot rather than the image, the files the block names, and a line of small
-print). Every form is named
-`Storyfeed/<Form>` in storage — `Storyfeed/Change`,
-`Storyfeed/File` — and versioned from its first commit. The classes are open to extension: a renderer with a genuinely
-renderer-specific variant subclasses one rather than duplicating it.
+Storyfeed UI is a free, MIT-licensed set of renderers for
+[Storyfeed](https://github.com/storyfeed/storyfeed) activity feeds: components
+that take a payload node and draw it. Vue/Inertia first, then Blade, with
+Livewire and React following.
 
-A Vue/Inertia kit is planned. There are no Vue components or Blade views in this
-package yet; drawing a detail belongs to the renderer consuming it.
+> **The detail forms moved to core on 2026-09-14.** `Markdown`, `Change`,
+> `Fields`, `Excerpt`, `File` and `MediaObject` are
+> `Storyfeed\Detail\*` in `storyfeed/storyfeed`, and their storage names gained
+> a segment: `Storyfeed/Detail/Change`. Their names always said `Storyfeed/`
+> rather than `storyfeed-ui/`, because a detail's name must not contain the
+> library that defined it — so the vocabulary was core's while the classes were
+> not. This package is the renderers.
 
 > **Early development.** This package currently depends on Storyfeed's `dev-main`
 > branch. Its API can change without a deprecation cycle. Commit your application's
@@ -25,99 +23,12 @@ package yet; drawing a detail belongs to the renderer consuming it.
 
 Requires PHP 8.4 or later in the PHP 8 series. The current test harness uses
 Laravel 12; CI runs PHP 8.4 and 8.5 on Ubuntu and Windows with lowest and stable
-dependencies. Storyfeed itself remains on `dev-main` in both dependency lanes.
-
-The package is available from Packagist. Explicitly allow both development
-branches:
+dependencies.
 
 ```bash
-composer require storyfeed/ui:dev-main storyfeed/storyfeed:dev-main
+composer require storyfeed/ui
 ```
 
-## What is a detail?
+## Licence
 
-An activity's `data` map belongs to your app. A detail puts one value in that map
-into a conventional form, so a renderer can draw it without knowing your app.
-Your app writes the content at record time, where it knows what happened; the
-renderer recognises the form later.
-
-Core defines the `Storyfeed\Contracts\FeedDetail` interface. This package supplies
-an implementation. You choose the key under `data` and store the detail's array;
-core passes that array through unchanged. Its form name (`$detail`) and version
-(`$v`) travel with it, so the renderer can upgrade it at read time without
-rewriting stored history. A missing version means version 1. Renderers skip
-unknown forms without hiding the activity, and details do not nest.
-
-## Markdown
-
-After installing, this example runs as a PHP script from your application root:
-
-```php
-<?php
-
-require 'vendor/autoload.php';
-
-use Storyfeed\Ui\Data\Markdown;
-
-$data = [
-    'notes' => Markdown::make('Delivery moved to **Friday**.')->toArray(),
-];
-
-print_r($data['notes']);
-```
-
-The `notes` value is:
-
-```php
-[
-    '$detail' => 'Storyfeed/Markdown',
-    '$v' => 1,
-    'content' => 'Delivery moved to **Friday**.',
-    'mediaType' => 'text/markdown',
-]
-```
-
-Pass `$data` to your Storyfeed activity builder's `data($data)` method when
-recording the activity. The key `notes` is your choice, not a reserved payload key.
-
-Markdown stores source, including any authored HTML; it does not compile or
-sanitize it. The renderer is responsible for converting it safely for display.
-
-## Names
-
-A form's name is the vocabulary's, not this package's: `Storyfeed/Markdown`, never
-`storyfeed-ui/markdown`. Core's contract says a detail outlives whichever library
-defined it, so the library cannot be in the name. The name is a lookup key and
-nothing else; it resolves to no class. It is PascalCase because Activity Streams 2.0
-types are (`Document`, `Note`), and because a lowercase `vendor/name` reads as a
-Composer package, which it is not. Renderers match the name exactly, so the casing
-is part of it. An app-owned form follows the same rule: `Acme/Invoice`.
-
-## The other forms
-
-`Change`, `Fields`, `Excerpt`, `File` and `MediaObject` follow the same pattern: `make(...)`
-returns the detail, `toArray()` gives you the array to store under a key of your
-choosing, and a renderer calls `upgrade()` on the stored props at read time. Each
-class documents its own field names and the reasoning behind them. `File` stores no
-URL on purpose: the entity already carries one, regenerated live at read time.
-`MediaObject` stores no image for the same reason: `image: $this->feedMediaIcon()`
-stores the slot name `icon`, and a renderer draws `entity.media.icon`, which the
-entity's `feedMedia()` mints at read time. Its `attachments` list is the one place
-that rule is narrowed on purpose — a block names its own files rather than
-deferring to whatever the entity holds — and the class states what that costs.
-
-## Documentation
-
-Recording activities, reading feeds and the payload contract are documented at
-[docs.storyfeed.dev](https://docs.storyfeed.dev), which tracks core's `main` branch.
-The [FeedDetail interface](https://github.com/storyfeed/storyfeed/blob/main/src/Contracts/FeedDetail.php)
-describes the conventions for detail authors and renderers.
-
-## Credits
-
-- [Jasper Tey](https://github.com/jaspertey) / [Tey Labs](https://teylabs.com)
-- [All Contributors](../../contributors)
-
-## License
-
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+MIT. See [LICENSE.md](LICENSE.md).
