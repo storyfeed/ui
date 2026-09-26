@@ -1,5 +1,5 @@
 {{--
-    Storyfeed/Body/File: an attachment name with its size and media type.
+    Storyfeed/Body/FileAttachment: an attachment name with its size and media type.
     The entity supplies the resolved URL; the body stores no URL.
 --}}
 @props(['body', 'entity' => null])

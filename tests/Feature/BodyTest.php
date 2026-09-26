@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Blade;
 use Storyfeed\Body\Component;
 use Storyfeed\Body\Excerpt;
-use Storyfeed\Body\File;
+use Storyfeed\Body\FileAttachment;
 use Storyfeed\Body\ItemList;
 use Storyfeed\Body\KeyValue;
 use Storyfeed\Body\MediaObject;
@@ -41,7 +41,7 @@ it('draws a key-value body as labelled rows', function () {
         'Pickup' => '12:10 pm',
         'Paid' => true,
         'Reference' => KeyValue::verbatim('ORD-1042'),
-        'Table' => KeyValue::missingAs(null, 'not seated'),
+        'Table' => KeyValue::placeholder(null, 'not seated'),
         'Notes' => null,
     ], title: 'Order #1042'));
 
@@ -114,7 +114,7 @@ it('escapes excerpt text and source and only marks truncated passages', function
 });
 
 it('draws a file attachment with its resolved name link and a separate metadata line', function () {
-    expect(render_bodies([File::make(2_516_582, 'application/pdf', 'invoice.pdf'), File::make(512, name: 'Order #1042')]))
+    expect(render_bodies([FileAttachment::make(2_516_582, 'application/pdf', 'invoice.pdf'), FileAttachment::make(512, name: 'Order #1042')]))
         ->toContain('<span aria-hidden="true"><svg')
         ->toContain('<p> <a href="/orders/1" target="_blank">invoice.pdf</a> </p>')
         ->toContain('<p>2.4 MB · application/pdf</p>')
@@ -123,7 +123,7 @@ it('draws a file attachment with its resolved name link and a separate metadata 
 });
 
 it('renders file names without a URL as escaped text and omits absent metadata', function () {
-    $html = render_blade('<x-storyfeed::body.file :body="$body" :entity="$entity" />', [
+    $html = render_blade('<x-storyfeed::body.file-attachment :body="$body" :entity="$entity" />', [
         'body' => ['name' => '<invoice>.pdf', 'href' => '/not-from-the-body'],
         'entity' => Entity::of(['label' => 'Invoice']),
     ]);
@@ -133,11 +133,11 @@ it('renders file names without a URL as escaped text and omits absent metadata',
 });
 
 it('uses the entity label when a file name is absent and omits a completely empty file', function () {
-    expect(render_blade('<x-storyfeed::body.file :body="$body" :entity="$entity" />', [
+    expect(render_blade('<x-storyfeed::body.file-attachment :body="$body" :entity="$entity" />', [
         'body' => ['size' => 0],
         'entity' => Entity::of(['label' => 'Invoice']),
     ]))->toContain('<p> Invoice </p>', '<p>0 B</p>')
-        ->and(render_blade('<x-storyfeed::body.file :body="[]" />'))->toBe('');
+        ->and(render_blade('<x-storyfeed::body.file-attachment :body="[]" />'))->toBe('');
 });
 
 it('draws an item list, numbered when ordered, with what was not sent', function () {
@@ -157,7 +157,7 @@ it('draws a media object with the entity\'s current picture, once', function () 
         subject: 'Dinner for two',
         content: 'Two pizzas and a dessert.',
         footnote: FeedLink::make('Receipt', '/receipts/1042'),
-    )->withPreview()->withAttachments(FeedResource::make('/files/menu.pdf', mediaType: 'application/pdf', name: 'menu.pdf')));
+    )->withPreview()->withFiles(FeedResource::make('/files/menu.pdf', mediaType: 'application/pdf', name: 'menu.pdf')));
 
     expect($html)
         ->toContain('<div> <div><div style="aspect-ratio: 800 / 600"><img src="/img/1042.jpg" alt="The order" loading="lazy"></div> </div> '
@@ -216,4 +216,23 @@ it('renders an unordered item list with plain list semantics', function () {
     expect(render_bodies(ItemList::make(['Margherita', 'Tiramisu'])))
         ->toContain('<ul> <li> Margherita </li> <li> Tiramisu </li> </ul>')
         ->not->toContain('<ol>');
+});
+
+it('renders stored File, KeyValue v1 and MediaObject v1 bodies without rewriting them', function () {
+    $bodies = [
+        ['$body' => 'Storyfeed/Body/File', '$v' => 1, 'name' => 'legacy.zip', 'size' => 512],
+        ['$body' => 'Storyfeed/Body/KeyValue', '$v' => 1, 'missing' => 'Unknown', 'items' => [
+            ['key' => 'Seat', 'value' => null, 'missing' => 'Not seated'],
+            ['key' => 'Silent', 'value' => null, 'missing' => null],
+            ['key' => 'Default', 'value' => null],
+        ]],
+        ['$body' => 'Storyfeed/Body/MediaObject', '$v' => 1, 'attachments' => [['href' => '/legacy.pdf', 'name' => 'Legacy file']]],
+    ];
+    $item = FeedItem::of(['kind' => 'activity', 'object' => ['type' => 'order', 'body' => $bodies]]);
+    $html = render_blade('<x-storyfeed::activity :activity="$item" />', ['item' => $item]);
+
+    expect($html)->toContain('legacy.zip', '512 B', 'Not seated', 'Unknown', 'href="/legacy.pdf"', 'Legacy file')
+        ->not->toContain('Silent')
+        ->and($bodies[0]['$body'])->toBe('Storyfeed/Body/File')
+        ->and($bodies[2])->toHaveKey('attachments');
 });

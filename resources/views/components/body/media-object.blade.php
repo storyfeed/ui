@@ -9,6 +9,7 @@
 @props(['body', 'entity' => null])
 
 @php
+    $body = \Storyfeed\Body\MediaObject::upgrade($body, is_int($body['$v'] ?? null) ? $body['$v'] : 1);
     $link = fn ($value): ?array => match (true) {
         is_string($value) && $value !== '' => ['label' => $value, 'href' => null],
         is_array($value) && filled($value['label'] ?? $value['href'] ?? null) => ['label' => $value['label'] ?? $value['href'], 'href' => $value['href'] ?? null],
@@ -19,7 +20,7 @@
     $footnote = $link($body['footnote'] ?? null);
     $imageSlot = is_string($body['image'] ?? null) ? $body['image'] : null;
     $picture = $imageSlot !== null ? $entity?->media()?->get($imageSlot) : null;
-    $attachments = collect($body['attachments'] ?? [])->filter(fn ($file) => is_array($file) && filled($file['href'] ?? null));
+    $files = collect($body['files'] ?? [])->filter(fn ($file) => is_array($file) && filled($file['href'] ?? null));
 @endphp
 
 <div {{ $attributes->class('mt-1.5 flex min-w-0 max-w-lg items-start gap-3 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white/60 p-3 backdrop-blur-sm dark:bg-white/5') }}>
@@ -37,9 +38,9 @@
             <p class="m-0 text-sm leading-relaxed whitespace-pre-wrap line-clamp-3 text-zinc-600 dark:text-zinc-400">{{ $body['content'] }}</p>
         @endif
 
-        @if ($attachments->isNotEmpty())
+        @if ($files->isNotEmpty())
         <ul class="mt-0.5 flex list-none flex-col gap-0.5 p-0">
-        @foreach ($attachments as $file)
+        @foreach ($files as $file)
             <li class="m-0 text-sm text-zinc-600 dark:text-zinc-400"><a class="font-medium text-indigo-700 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 dark:text-indigo-300" href="{{ $file['href'] }}">{{ $file['name'] ?? $file['href'] }}</a>@if (filled($file['mediaType'] ?? null)) · {{ $file['mediaType'] }}@endif</li>
         @endforeach
         </ul>
