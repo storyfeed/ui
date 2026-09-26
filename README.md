@@ -105,6 +105,11 @@ Each of core's body types has a component in `components/body`: `key-value`,
 `excerpt`, `prose`, `change`, `file`, `item-list` and `media-object`. A body
 type with no component draws nothing.
 
+Prose displays plain text and unknown media types as escaped text. It parses
+Markdown with raw HTML and unsafe links disabled, and sanitizes rich HTML at
+render time using Symfony's HTML Sanitizer. Verbatim content is always escaped
+and preserves its source whitespace.
+
 ### Styling
 
 The components use Tailwind's zinc palette for text, borders, and surfaces,
@@ -112,8 +117,8 @@ and indigo for links. To change these styles, publish the views and edit their
 utility classes. You may also customize Tailwind's existing theme variables,
 such as `--color-indigo-700` and `--color-indigo-300`, in your application's
 `@theme` block. These changes apply to every component using those colours.
-The kit defines no additional theme variables. Item lists use the Typography
-plugin's `prose` defaults.
+The kit defines no additional theme variables. ItemList, Prose, and Excerpt use the
+Typography plugin's `prose` styles.
 
 The components include `dark:` variants and follow your application's
 [Tailwind dark mode configuration](https://tailwindcss.com/docs/dark-mode).

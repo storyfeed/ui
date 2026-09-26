@@ -1,10 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Blade;
+use Storyfeed\Body\Excerpt;
 use Storyfeed\Body\File;
 use Storyfeed\Body\ItemList;
 use Storyfeed\Body\KeyValue;
 use Storyfeed\Body\MediaObject;
+use Storyfeed\Body\Prose;
 use Storyfeed\Facades\Storyfeed;
 use Storyfeed\FeedImage;
 use Storyfeed\FeedLink;
@@ -36,6 +38,11 @@ final class WorkbenchTest extends TestCase
             'MediaObject' => MediaObject::make(subject: FeedLink::make('Dinner for two', '/orders/1042'), content: 'Two pizzas and a dessert, ready for pickup at the kitchen.', footnote: FeedLink::make('Receipt', '/receipts/1042'))->withPreview()->withAttachments(FeedResource::make('/files/menu.pdf', mediaType: 'application/pdf', name: 'menu.pdf')),
             'ItemList' => ItemList::ordered(['Margherita', FeedLink::make('Tiramisu', '/menu/tiramisu')], title: 'Items', totalItems: 5, more: FeedLink::make('See all', '/orders/1042')),
             'File' => File::make(2516582, 'application/pdf', 'invoice.pdf'),
+            'Prose plain' => Prose::make("Please ring the bell on arrival.\nLeave the order with reception if no one answers.", title: 'Delivery instructions'),
+            'Prose Markdown' => Prose::markdown("**Ready for pickup**\n\nPlease bring your [order confirmation](/orders/1042).\n\n- Two pizzas\n- One dessert", title: 'Pickup note'),
+            'Prose HTML' => Prose::html('<p><strong>Order confirmed.</strong> Your pickup is at <em>12:10 pm</em>.</p><p><a href="/orders/1042">View order</a></p>', title: 'Confirmation'),
+            'Prose verbatim' => Prose::verbatim("Order #1042\n  status: ready\n  pickup: 12:10 pm\n  result: <confirmed>", title: 'Kitchen output'),
+            'Excerpt' => Excerpt::make('The pizza was still warm when we got home. We will be back', from: 'Customer review'),
         ];
 
         foreach ($bodies as $label => $body) {

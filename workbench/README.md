@@ -10,7 +10,7 @@ npx playwright install chromium
 npm run screenshots
 ```
 
-The page is written to `build/workbench/index.html`. The screenshot command starts a local HTTP server, verifies the compiled styles, body examples, keyboard disclosure and mobile overflow, and saves light/dark desktop/mobile captures in `workbench/screenshots`.
+The page is written to `build/workbench/index.html`. The screenshot command starts a local HTTP server, verifies the compiled styles, body examples (including plain, Markdown, HTML and verbatim Prose and Excerpt), keyboard disclosure and mobile overflow, and saves light/dark desktop/mobile captures in `workbench/screenshots`.
 
 The page uses Tailwind's default media-query dark mode. Applications may configure their own `dark` variant. No compiled CSS ships with the package. Workbench files and Node tooling are excluded from Composer distribution archives.
 

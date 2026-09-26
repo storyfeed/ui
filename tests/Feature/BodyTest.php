@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Blade;
 use Storyfeed\Body\Change;
 use Storyfeed\Body\Component;
 use Storyfeed\Body\Excerpt;
@@ -62,16 +63,55 @@ it('draws an excerpt with where it came from', function () {
     );
 });
 
-it('draws prose as its source, escaped, and verbatim text in a fixed width', function () {
-    $html = render_bodies([
-        Prose::markdown('**Rush** <script>alert(1)</script>', title: 'Note'),
-        Prose::verbatim('SELECT 1;', title: 'query.sql'),
-    ]);
+it('renders Markdown formatting and strips raw HTML and unsafe links', function () {
+    $html = render_bodies(Prose::markdown("**Rush** [Order](/orders/1042)\n\n<script>alert(1)</script>\n\n[Bad](javascript:alert%281%29)", title: 'Note'));
 
-    expect($html)
-        ->toContain('<figcaption>Note</figcaption> <p>**Rush** &lt;script&gt;alert(1)&lt;/script&gt;</p>')
-        ->toContain('<pre><code>SELECT 1;</code></pre>')
-        ->not->toContain('<script>');
+    expect($html)->toContain('<figcaption>Note</figcaption>', '<strong>Rush</strong>', '<a href="/orders/1042">Order</a>')
+        ->not->toContain('<script', 'alert(1)', 'javascript:');
+});
+
+it('sanitizes HTML while retaining safe formatting and relative links', function () {
+    $html = render_bodies(Prose::html('<p onclick="alert(1)"><strong>Ready</strong> <a href="/orders/1042">Order</a></p><script>alert(1)</script><img src="x" onerror="alert(1)"><a href="javascript:alert(1)">Bad</a><iframe src="https://example.com"></iframe><svg onload="alert(1)"></svg>'));
+
+    expect($html)->toContain('<strong>Ready</strong>', '<a href="/orders/1042">Order</a>')
+        ->not->toContain('<script', 'onclick', 'onerror', 'javascript:', '<iframe', '<svg onload');
+});
+
+it('keeps plain text and unknown encodings escaped', function () {
+    foreach (['text/plain', 'application/x-unknown'] as $mediaType) {
+        $html = render_blade('<x-storyfeed::body.prose :body="$body" />', [
+            'body' => ['content' => "**Rush** <script>alert(1)</script>\nSecond line", 'mediaType' => $mediaType, 'title' => '<Note>'],
+        ]);
+
+        expect($html)->toContain('<figcaption>&lt;Note&gt;</figcaption>', '<p>**Rush** &lt;script&gt;alert(1)&lt;/script&gt; Second line</p>')
+            ->not->toContain('<script>', '<strong>');
+    }
+});
+
+it('preserves exact source whitespace and escapes verbatim regardless of encoding', function () {
+    $source = "<b>**literal**</b>\n    indented\n\nlast line";
+
+    foreach (['text/plain', 'text/markdown', 'text/html'] as $mediaType) {
+        $html = Blade::render('<x-storyfeed::body.prose :body="$body" />', [
+            'body' => ['content' => $source, 'mediaType' => $mediaType, 'verbatim' => true],
+        ]);
+
+        expect($html)->toContain('<pre><code>'.e($source).'</code></pre>')
+            ->not->toContain('<b>', '<strong>');
+    }
+});
+
+it('keeps long rich text instead of silently truncating it', function () {
+    $source = '<p>'.str_repeat('Keep this text. ', 1500).'The end.</p>';
+
+    expect(render_bodies(Prose::html($source)))->toContain('The end.</p>');
+});
+
+it('escapes excerpt text and source and only marks truncated passages', function () {
+    expect(render_blade('<x-storyfeed::body.excerpt :body="$body" />', [
+        'body' => ['text' => '<b>Quoted</b>', 'from' => '<Source>', 'truncated' => false],
+    ]))->toContain('<blockquote>&lt;b&gt;Quoted&lt;/b&gt;</blockquote>', '<figcaption>&lt;Source&gt;</figcaption>')
+        ->not->toContain('…');
 });
 
 it('draws a change as before and after', function () {
