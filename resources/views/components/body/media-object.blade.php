@@ -4,7 +4,7 @@
 
     The body stores no image. `image` names one of the entity's media slots,
     minted when the feed is read, so the picture is always the current one.
-    The subject is left out when the headline already says it.
+    The supplied subject titles the card independently of the headline.
 --}}
 @props(['body', 'entity' => null])
 
@@ -16,7 +16,6 @@
     };
 
     $subject = $link($body['subject'] ?? null);
-    $subject = $subject !== null && $subject['label'] !== $entity?->label() ? $subject : null;
     $footnote = $link($body['footnote'] ?? null);
     $imageSlot = is_string($body['image'] ?? null) ? $body['image'] : null;
     $picture = $imageSlot !== null ? $entity?->media()?->get($imageSlot) : null;
@@ -24,27 +23,32 @@
 @endphp
 
 <div {{ $attributes->class('sf-media-object') }}>
-    @if ($subject)
-        <p class="sf-media-object__subject">
-            @if ($subject['href'])<a href="{{ $subject['href'] }}">{{ $subject['label'] }}</a>@else{{ $subject['label'] }}@endif
-        </p>
-    @endif
-
-    @if (filled($body['content'] ?? null))
-        <p class="sf-prose">{{ $body['content'] }}</p>
-    @endif
-
     @if (is_array($picture))
-        <x-storyfeed::media :image="$picture" />
+        <div class="sf-media-object__image"><x-storyfeed::media :image="$picture" /></div>
     @endif
+    <div class="sf-media-object__body">
+        @if ($subject)
+            <p class="sf-media-object__subject">
+                @if ($subject['href'])<a href="{{ $subject['href'] }}">{{ $subject['label'] }}</a>@else{{ $subject['label'] }}@endif
+            </p>
+        @endif
 
-    @foreach ($attachments as $file)
-        <p class="sf-file"><a href="{{ $file['href'] }}">{{ $file['name'] ?? $file['href'] }}</a>@if (filled($file['mediaType'] ?? null)) · {{ $file['mediaType'] }}@endif</p>
-    @endforeach
+        @if (filled($body['content'] ?? null))
+            <p class="sf-prose sf-media-object__content">{{ $body['content'] }}</p>
+        @endif
 
-    @if ($footnote)
-        <p class="sf-media-object__footnote">
-            @if ($footnote['href'])<a href="{{ $footnote['href'] }}">{{ $footnote['label'] }}</a>@else{{ $footnote['label'] }}@endif
-        </p>
-    @endif
+        @if ($attachments->isNotEmpty())
+        <ul class="sf-media-object__attachments">
+        @foreach ($attachments as $file)
+            <li class="sf-file"><a href="{{ $file['href'] }}">{{ $file['name'] ?? $file['href'] }}</a>@if (filled($file['mediaType'] ?? null)) · {{ $file['mediaType'] }}@endif</li>
+        @endforeach
+        </ul>
+        @endif
+
+        @if ($footnote)
+            <p class="sf-media-object__footnote">
+                @if ($footnote['href'])<a href="{{ $footnote['href'] }}">{{ $footnote['label'] }}</a>@else{{ $footnote['label'] }}@endif
+            </p>
+        @endif
+    </div>
 </div>

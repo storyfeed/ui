@@ -109,12 +109,20 @@ it('draws a media object with the entity\'s current picture, once', function () 
     )->withPreview()->withAttachments(FeedResource::make('/files/menu.pdf', mediaType: 'application/pdf', name: 'menu.pdf')));
 
     expect($html)
-        ->toContain('<div class="sf-media-object"> <p class="sf-media-object__subject"> Dinner for two </p> <p class="sf-prose">Two pizzas and a dessert.</p> '
-            .'<div class="sf-media" style="aspect-ratio: 800 / 600"><img src="/img/1042.jpg" alt="The order" loading="lazy"></div> '
-            .'<p class="sf-file"><a href="/files/menu.pdf">menu.pdf</a> · application/pdf</p> '
-            .'<p class="sf-media-object__footnote"> <a href="/receipts/1042">Receipt</a> </p> </div>')
+        ->toContain('<div class="sf-media-object"> <div class="sf-media-object__image"><div class="sf-media" style="aspect-ratio: 800 / 600"><img src="/img/1042.jpg" alt="The order" loading="lazy"></div> </div> '
+            .'<div class="sf-media-object__body"> <p class="sf-media-object__subject"> Dinner for two </p> <p class="sf-prose sf-media-object__content">Two pizzas and a dessert.</p> '
+            .'<ul class="sf-media-object__attachments"> <li class="sf-file"><a href="/files/menu.pdf">menu.pdf</a> · application/pdf</li> </ul> '
+            .'<p class="sf-media-object__footnote"> <a href="/receipts/1042">Receipt</a> </p> </div> </div>')
         // The form draws the preview, so the row does not draw it again.
         ->and(substr_count($html, '/img/1042.jpg'))->toBe(1);
+});
+
+it('draws a linked card title without a picture or optional sections', function () {
+    $html = render_bodies(MediaObject::make(subject: FeedLink::make('Order #1042', '/orders/1042'), content: 'Dinner'));
+
+    expect($html)
+        ->toContain('<div class="sf-media-object"> <div class="sf-media-object__body"> <p class="sf-media-object__subject"> <a href="/orders/1042">Order #1042</a> </p>')
+        ->not->toContain('sf-media-object__image', 'sf-media-object__attachments', 'sf-media-object__footnote');
 });
 
 it('draws the object\'s preview on the row when no body claims it', function () {
