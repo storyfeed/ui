@@ -9,6 +9,7 @@
 @props(['body', 'entity' => null])
 
 @php
+    $body = \Storyfeed\Body\MediaObject::upgrade($body, is_int($body['$v'] ?? null) ? $body['$v'] : 1);
     $link = fn ($value): ?array => match (true) {
         is_string($value) && $value !== '' => ['label' => $value, 'href' => null],
         is_array($value) && filled($value['label'] ?? $value['href'] ?? null) => ['label' => $value['label'] ?? $value['href'], 'href' => $value['href'] ?? null],
@@ -19,7 +20,7 @@
     $footnote = $link($body['footnote'] ?? null);
     $imageSlot = is_string($body['image'] ?? null) ? $body['image'] : null;
     $picture = $imageSlot !== null ? $entity?->media()?->get($imageSlot) : null;
-    $attachments = collect($body['attachments'] ?? [])->filter(fn ($file) => is_array($file) && filled($file['href'] ?? null));
+    $files = collect($body['files'] ?? [])->filter(fn ($file) => is_array($file) && filled($file['href'] ?? null));
 @endphp
 
 <div {{ $attributes->class('sf-media-object') }}>
@@ -37,9 +38,9 @@
             <p class="sf-prose sf-media-object__content">{{ $body['content'] }}</p>
         @endif
 
-        @if ($attachments->isNotEmpty())
+        @if ($files->isNotEmpty())
         <ul class="sf-media-object__attachments">
-        @foreach ($attachments as $file)
+        @foreach ($files as $file)
             <li class="sf-file"><a href="{{ $file['href'] }}">{{ $file['name'] ?? $file['href'] }}</a>@if (filled($file['mediaType'] ?? null)) · {{ $file['mediaType'] }}@endif</li>
         @endforeach
         </ul>

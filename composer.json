@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": "^8.4",
-        "storyfeed/storyfeed": "dev-main",
+        "storyfeed/storyfeed": "dev-wave53-placeholder as dev-main",
         "illuminate/support": "^12.0||^13.0",
         "illuminate/view": "^12.0||^13.0"
     },

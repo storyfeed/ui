@@ -3,7 +3,7 @@
 use Storyfeed\Body\Change;
 use Storyfeed\Body\Component;
 use Storyfeed\Body\Excerpt;
-use Storyfeed\Body\File;
+use Storyfeed\Body\FileAttachment;
 use Storyfeed\Body\ItemList;
 use Storyfeed\Body\KeyValue;
 use Storyfeed\Body\MediaObject;
@@ -40,7 +40,7 @@ it('draws a key-value body as labelled rows', function () {
         'Pickup' => '12:10 pm',
         'Paid' => true,
         'Reference' => KeyValue::verbatim('ORD-1042'),
-        'Table' => KeyValue::missingAs(null, 'not seated'),
+        'Table' => KeyValue::placeholder(null, 'not seated'),
         'Notes' => null,
     ], title: 'Order #1042'));
 
@@ -84,7 +84,7 @@ it('draws a change as before and after', function () {
 });
 
 it('draws a file\'s name, size and type, leaving out a name the headline says', function () {
-    expect(render_bodies([File::make(2_516_582, 'application/pdf', 'invoice.pdf'), File::make(512, name: 'Order #1042')]))
+    expect(render_bodies([FileAttachment::make(2_516_582, 'application/pdf', 'invoice.pdf'), FileAttachment::make(512, name: 'Order #1042')]))
         ->toContain('<p class="sf-file">invoice.pdf · 2.4 MB · application/pdf</p>')
         ->toContain('<p class="sf-file">512 B</p>');
 });
@@ -106,7 +106,7 @@ it('draws a media object with the entity\'s current picture, once', function () 
         subject: 'Dinner for two',
         content: 'Two pizzas and a dessert.',
         footnote: FeedLink::make('Receipt', '/receipts/1042'),
-    )->withPreview()->withAttachments(FeedResource::make('/files/menu.pdf', mediaType: 'application/pdf', name: 'menu.pdf')));
+    )->withPreview()->withFiles(FeedResource::make('/files/menu.pdf', mediaType: 'application/pdf', name: 'menu.pdf')));
 
     expect($html)
         ->toContain('<div class="sf-media-object"> <div class="sf-media-object__image"><div class="sf-media" style="aspect-ratio: 800 / 600"><img src="/img/1042.jpg" alt="The order" loading="lazy"></div> </div> '
@@ -159,4 +159,23 @@ it('draws nothing for a malformed or app-owned body, and an app can add a compon
 
     expect($render())->toContain('<div class="sf-body-form"> <p class="acme">plan.pdf</p> </div>')
         ->and(substr_count($render(), 'sf-body-form'))->toBe(1);
+});
+
+it('renders stored File, KeyValue v1 and MediaObject v1 bodies without rewriting them', function () {
+    $bodies = [
+        ['$body' => 'Storyfeed/Body/File', '$v' => 1, 'name' => 'legacy.zip', 'size' => 512],
+        ['$body' => 'Storyfeed/Body/KeyValue', '$v' => 1, 'missing' => 'Unknown', 'items' => [
+            ['key' => 'Seat', 'value' => null, 'missing' => 'Not seated'],
+            ['key' => 'Silent', 'value' => null, 'missing' => null],
+            ['key' => 'Default', 'value' => null],
+        ]],
+        ['$body' => 'Storyfeed/Body/MediaObject', '$v' => 1, 'attachments' => [['href' => '/legacy.pdf', 'name' => 'Legacy file']]],
+    ];
+    $item = FeedItem::of(['kind' => 'activity', 'object' => ['type' => 'order', 'body' => $bodies]]);
+    $html = render_blade('<x-storyfeed::activity :activity="$item" />', ['item' => $item]);
+
+    expect($html)->toContain('legacy.zip', '512 B', 'Not seated', 'Unknown', 'href="/legacy.pdf"', 'Legacy file')
+        ->not->toContain('Silent')
+        ->and($bodies[0]['$body'])->toBe('Storyfeed/Body/File')
+        ->and($bodies[2])->toHaveKey('attachments');
 });

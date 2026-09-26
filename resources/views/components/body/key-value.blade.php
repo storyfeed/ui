@@ -5,8 +5,9 @@
 @props(['body', 'entity' => null])
 
 @php
+    $body = \Storyfeed\Body\KeyValue::upgrade($body, is_int($body['$v'] ?? null) ? $body['$v'] : 1);
     $rows = collect($body['items'] ?? [])->filter(fn ($row) => is_array($row) && isset($row['key'])
-        && (! (($row['value'] ?? null) === null || ($row['value'] ?? null) === '') || ($row['missing'] ?? null) !== null));
+        && (! (($row['value'] ?? null) === null || ($row['value'] ?? null) === '') || ($row['placeholder'] ?? null) !== null));
 @endphp
 
 @if ($rows->isNotEmpty())
@@ -20,7 +21,7 @@
                 <div class="sf-facts__row">
                     <dt class="sf-facts__label">{{ $row['key'] }}</dt>
                     @if ($value === null || $value === '')
-                        <dd class="sf-facts__value"><span class="sf-facts__value--absent">{{ $row['missing'] }}</span></dd>
+                        <dd class="sf-facts__value"><span class="sf-facts__value--absent">{{ $row['placeholder'] }}</span></dd>
                     @else
                         @php($text = is_bool($value) ? ($value ? __('Yes') : __('No')) : $value)
                         @if ($row['verbatim'] ?? false)

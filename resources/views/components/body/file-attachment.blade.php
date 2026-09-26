@@ -1,5 +1,5 @@
 {{--
-    Storyfeed/Body/File: what a file is and how big. The name is left out when
+    Storyfeed/Body/FileAttachment: what a file is and how big. The name is left out when
     the headline already says it.
 --}}
 @props(['body', 'entity' => null])

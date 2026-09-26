@@ -16,6 +16,9 @@
 @php
     $type = is_array($body) ? ($body['$body'] ?? null) : null;
 
+    // Stored File bodies keep their original token.
+    $type = $type === 'Storyfeed/Body/File' ? 'Storyfeed/Body/FileAttachment' : $type;
+
     $component = is_string($type) && preg_match('#^[A-Za-z0-9_]+(/[A-Za-z0-9_]+)*$#', $type) === 1
         ? 'body.'.collect(explode('/', \Illuminate\Support\Str::after($type, 'Storyfeed/Body/')))
             ->map(fn (string $segment): string => \Illuminate\Support\Str::kebab($segment))

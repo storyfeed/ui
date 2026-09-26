@@ -12,7 +12,7 @@
 use Storyfeed\Contracts\FeedBody;
 
 it('leaves the body vocabulary to core', function () {
-    foreach (['Change', 'Excerpt', 'KeyValue', 'File', 'Prose', 'MediaObject', 'ItemList'] as $form) {
+    foreach (['Change', 'Excerpt', 'KeyValue', 'FileAttachment', 'Prose', 'MediaObject', 'ItemList'] as $form) {
         expect(class_exists("Storyfeed\\Body\\{$form}"))->toBeTrue()
             ->and(class_exists("Storyfeed\\Ui\\Data\\{$form}"))->toBeFalse()
             ->and("Storyfeed\\Body\\{$form}"::bodyType())->toBe("Storyfeed/Body/{$form}");
