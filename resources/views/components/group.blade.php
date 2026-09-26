@@ -14,18 +14,18 @@
     $hidden = max(0, $group->count() - $children->count());
 @endphp
 
-<article {{ $attributes->class('sf-row') }}>
-    <div class="sf-rail">
-        <div class="sf-rail__disc">
+<article {{ $attributes->class('relative flex items-start gap-3') }}>
+    <div class="flex w-8 shrink-0 flex-col items-center self-stretch">
+        <div class="relative flex shrink-0">
             <x-storyfeed::glyph :glyph="$group->glyph()" :intent="$group->intent()" />
         </div>
         @unless ($last && $children->isEmpty())
-            <div class="sf-rail__line" aria-hidden="true"></div>
+            <div class="mt-1 w-px flex-1 bg-zinc-200 dark:bg-zinc-700" aria-hidden="true"></div>
         @endunless
     </div>
 
-    <div @class(['sf-body', 'sf-body--spaced' => ! $last || $children->isNotEmpty()])>
-        <div class="sf-head">
+    <div @class(['min-w-0 flex-1 pt-1.5', 'pb-5' => ! $last || $children->isNotEmpty()])>
+        <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
             <x-storyfeed::headline :headline="$headline" />
             <x-storyfeed::time :at="$group->publishedAt()" />
         </div>
@@ -34,22 +34,22 @@
 
         @if ($children->isNotEmpty())
             @if ($headline->isFallback())
-                <details class="sf-disclosure" open>
+                <details class="group/disclosure" open>
             @else
-                <details class="sf-disclosure">
+                <details class="group/disclosure">
             @endif
-                <summary class="sf-toggle">
-                    <span class="sf-toggle__more">{{ __('Show all :count', ['count' => $group->count()]) }}</span>
-                    <span class="sf-toggle__less">{{ __('Show less') }}</span>
+                <summary class="mt-1 inline-block cursor-pointer list-none rounded-sm text-xs font-medium underline-offset-2 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 dark:hover:text-zinc-100 [&::-webkit-details-marker]:hidden">
+                    <span class="group-open/disclosure:hidden">{{ __('Show all :count', ['count' => $group->count()]) }}</span>
+                    <span class="hidden group-open/disclosure:inline">{{ __('Show less') }}</span>
                 </summary>
 
-                <div class="sf-children">
+                <div class="mt-3">
                     @foreach ($children as $child)
                         <x-storyfeed::activity :activity="$child" dense :last="$loop->last && $hidden === 0" />
                     @endforeach
 
                     @if ($hidden > 0)
-                        <p class="sf-overflow">{{ __('…and :count more not shown', ['count' => $hidden]) }}</p>
+                        <p class="pl-11 text-xs text-zinc-500 dark:text-zinc-400">{{ __('…and :count more not shown', ['count' => $hidden]) }}</p>
                     @endif
                 </div>
             </details>

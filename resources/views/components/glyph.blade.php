@@ -7,8 +7,7 @@
     a token with no view draws `icons/activity`.
 
     `intent` is your app's own word, such as `success`, carried onto
-    `data-sf-intent` and never interpreted. The stylesheet colours three
-    example words; anything else draws the plain disc.
+    `data-sf-intent` and never interpreted. Publish this view to map your intent values to Tailwind utilities.
 --}}
 @props(['glyph' => null, 'intent' => null])
 
@@ -19,7 +18,7 @@
 @endphp
 
 @if ($glyph === null)
-    <span {{ $attributes->class('sf-icon sf-icon--blank') }} aria-hidden="true"></span>
+    <span {{ $attributes->class('flex size-8 shrink-0 items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-white text-zinc-600 dark:text-zinc-400 dark:bg-zinc-900 [&>svg]:size-3.5 border-dashed') }} aria-hidden="true"></span>
 @else
-    <span {{ $attributes->class('sf-icon')->merge(['data-sf-intent' => $intent, 'data-sf-glyph' => $glyph]) }} aria-hidden="true">@include($icon)</span>
+    <span {{ $attributes->class('flex size-8 shrink-0 items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-700 bg-white text-zinc-600 dark:text-zinc-400 dark:bg-zinc-900 [&>svg]:size-3.5')->merge(['data-sf-intent' => $intent, 'data-sf-glyph' => $glyph]) }} aria-hidden="true">@include($icon)</span>
 @endif

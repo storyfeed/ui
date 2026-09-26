@@ -11,10 +11,10 @@ It works the way Laravel's pagination does. Core hands you the data, a
 `FeedPage` whose items read as `Storyfeed\Support\FeedItem`, and this package
 renders it with default Blade views you can publish and restyle.
 
-> **The detail forms moved to core on 2026-09-14.** `Markdown`, `Change`,
+> **The detail forms moved to core on 2026-09-14.** `Markdown`,
 > `Fields`, `Excerpt`, `File` and `MediaObject` are
 > `Storyfeed\Detail\*` in `storyfeed/storyfeed`, and their storage names gained
-> a segment: `Storyfeed/Detail/Change`. Their names always said `Storyfeed/`
+> a segment: `Storyfeed/Detail/Excerpt`. Their names always said `Storyfeed/`
 > rather than `storyfeed-ui/`, because a detail's name must not contain the
 > library that defined it — so the vocabulary was core's while the classes were
 > not. This package is the renderers.
@@ -35,6 +35,24 @@ composer require storyfeed/ui
 
 The service provider registers itself through package discovery.
 
+Storyfeed UI uses Tailwind CSS v4 and its Typography plugin. Install the plugin:
+
+```bash
+npm install -D @tailwindcss/typography
+```
+
+Register the plugin and the package's views in your application's
+`resources/css/app.css` file:
+
+```css
+@source "../../vendor/storyfeed/ui/resources/views";
+@plugin "@tailwindcss/typography";
+```
+
+Compile your application's CSS with `npm run build`. Your layout must load
+the compiled CSS, for example with `@vite('resources/css/app.css')`.
+
+
 ## Usage
 
 Pass a page of the feed to a view:
@@ -48,13 +66,9 @@ Route::get('/', fn (Request $request) => view('feed', [
 ]));
 ```
 
-Draw it with one tag, and put the default stylesheet in your layout's head:
+Render the page with the `feed` component:
 
 ```blade
-<head>
-    @storyfeedStyles
-</head>
-
 <x-storyfeed::feed :page="$page" />
 ```
 
@@ -75,10 +89,10 @@ can be used on its own:
 | Component | Draws |
 |---|---|
 | `<x-storyfeed::feed :page>` | the page, then a link to older activity |
-| `<x-storyfeed::item :item>` | one item: an activity, a group or a digest row |
+| `<x-storyfeed::item :item>` | one item: an activity, a group or a summary row |
 | `<x-storyfeed::activity :activity>` | an activity row |
 | `<x-storyfeed::group :group>` | a group row, its members behind a disclosure |
-| `<x-storyfeed::digest :digest>` | a digest row: a person's day, or a crowd |
+| `<x-storyfeed::digest :digest>` | a summary row: a person's day, or a crowd |
 | `<x-storyfeed::headline :headline>` | a headline, each entity linked |
 | `<x-storyfeed::glyph :glyph :intent>` | the icon disc |
 | `<x-storyfeed::time :at>` | when it happened |
@@ -88,35 +102,30 @@ can be used on its own:
 | `<x-storyfeed::pager :cursor>` | the link to the next page |
 
 Each of core's body types has a component in `components/body`: `key-value`,
-`excerpt`, `prose`, `change`, `file`, `item-list` and `media-object`. A body
+`excerpt`, `prose`, `file`, `item-list` and `media-object`. A body
 type with no component draws nothing.
+
+Prose displays plain text and unknown media types as escaped text. It parses
+Markdown with raw HTML and unsafe links disabled, and sanitizes rich HTML at
+render time using Symfony's HTML Sanitizer. Verbatim content is always escaped
+and preserves its source whitespace.
 
 ### Styling
 
-`@storyfeedStyles` inlines the kit's stylesheet, as `@livewireStyles` does.
-It needs no build step and no Tailwind. The markup carries stable `sf-*`
-classes, and the colours are CSS custom properties you set on an ancestor:
+The components use Tailwind's zinc palette for text, borders, and surfaces,
+and indigo for links. To change these styles, publish the views and edit their
+utility classes. You may also customize Tailwind's existing theme variables,
+such as `--color-indigo-700` and `--color-indigo-300`, in your application's
+`@theme` block. These changes apply to every component using those colours.
+The kit defines no additional theme variables. ItemList, Prose, and Excerpt use the
+Typography plugin's `prose` styles.
 
-```css
-.sf-feed {
-    --sf-text-color: #111827;
-    --sf-muted-color: #4b5563;
-    --sf-faint-color: #9ca3af;
-    --sf-line-color: #e5e7eb;
-    --sf-hover-color: #f9fafb;
-    --sf-ring-color: #ffffff;
-}
-```
+The components include `dark:` variants and follow your application's
+[Tailwind dark mode configuration](https://tailwindcss.com/docs/dark-mode).
 
-A glyph's intent is your app's own word and lands on `data-sf-intent`, so
-colour it in your own CSS: `.sf-icon[data-sf-intent='shipped'] { … }`.
-
-To serve or bundle the stylesheet instead of inlining it, publish it to
-`public/vendor/storyfeed/storyfeed.css`:
-
-```bash
-php artisan vendor:publish --tag=storyfeed-assets
-```
+Icon intents are application-defined strings exposed through `data-sf-intent`.
+To assign colours to your intent values, add the corresponding Tailwind
+utilities to the published `components/glyph.blade.php` view.
 
 ## Customising the Views
 
@@ -146,3 +155,8 @@ The kit's own words, such as "Older activity" and "Show all :count", are plain
 ## Licence
 
 MIT. See [LICENSE.md](LICENSE.md).
+
+The paperclip icon is from [Heroicons](https://github.com/tailwindlabs/heroicons),
+copyright Tailwind Labs, Inc., used under the MIT licence. The full notice is
+included in [licenses/heroicons.txt](licenses/heroicons.txt). The attachment row
+layout is original work.

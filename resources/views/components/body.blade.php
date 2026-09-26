@@ -27,7 +27,7 @@
 @endphp
 
 @if ($component !== null && view()->exists("storyfeed::components.{$component}"))
-    <div {{ $attributes->class('sf-body-form') }}>
+    <div data-storyfeed-body {{ $attributes->class('mt-2 max-w-[44rem]') }}>
         <x-dynamic-component :component="'storyfeed::'.$component" :body="$body" :entity="$entity" />
     </div>
 @endif
