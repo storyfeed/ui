@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Blade;
 use Storyfeed\Body\Component;
 use Storyfeed\Body\Excerpt;
 use Storyfeed\Body\FileAttachment;
+use Storyfeed\Body\Image;
 use Storyfeed\Body\ItemList;
 use Storyfeed\Body\KeyValue;
 use Storyfeed\Body\MediaObject;
@@ -176,10 +177,10 @@ it('draws a linked card title without a picture or optional sections', function 
         ->not->toContain('<img', '<ul', '/receipts/');
 });
 
-it('draws the object\'s preview on the row when no body claims it', function () {
+it('draws no object picture when no body asks for it', function () {
     Order::$preview = FeedImage::make('/img/1042.jpg');
 
-    expect(render_bodies([]))->toContain('<div><img src="/img/1042.jpg" alt="" loading="lazy"></div>');
+    expect(render_bodies([]))->not->toContain('/img/1042.jpg');
 });
 
 it('draws nothing for a body type it has no component for', function () {
@@ -235,4 +236,20 @@ it('renders stored File, KeyValue v1 and MediaObject v1 bodies without rewriting
         ->not->toContain('Silent')
         ->and($bodies[0]['$body'])->toBe('Storyfeed/Body/File')
         ->and($bodies[2])->toHaveKey('attachments');
+});
+
+it('renders Image from the named slot with escaped caption and fallback alt', function () {
+    $entity = Entity::of(['media' => ['preview' => ['src' => '/preview.jpg'], 'image' => ['src' => '/image.jpg'], 'url' => ['src' => '/not-a-picture']]]);
+    $html = Blade::render('<x-storyfeed::body.image :body="$body" :entity="$entity" />', [
+        'body' => Image::make()->caption('<Boat>')->withImage()->toPayload(),
+        'entity' => $entity,
+    ]);
+    expect($html)->toContain('src="/image.jpg"', 'alt="&lt;Boat&gt;"', '&lt;Boat&gt;</figcaption>')
+        ->not->toContain('/preview.jpg', '/not-a-picture');
+
+    $blank = Blade::render('<x-storyfeed::body.image :body="$body" :entity="$entity" />', [
+        'body' => Image::make()->caption('Hidden')->withIcon()->toPayload(),
+        'entity' => $entity,
+    ]);
+    expect($blank)->not->toContain('<img', '<figcaption', 'Hidden');
 });

@@ -1,6 +1,6 @@
 {{--
     An activity row: the glyph on the rail, the headline and its time, then
-    what the activity quotes, the object's picture and the object's bodies.
+    what the activity quotes and the object's bodies.
 
     `dense` is a group member's row: tighter, under its group.
 --}}
@@ -16,12 +16,6 @@
     $object = $activity->object();
     $bodies = $object?->bodies() ?? collect();
 
-    // A MediaObject body that names an image slot draws that picture itself,
-    // so the row does not paint the same one above it.
-    $claimed = $bodies->where('$body', 'Storyfeed/Body/MediaObject')->pluck('image')->all();
-    $picture = in_array('preview', $claimed, true) || in_array('url', $claimed, true)
-        ? null
-        : ($object?->media()?->get('preview') ?? $object?->media()?->get('url'));
 @endphp
 
 <article {{ $attributes->class('relative flex items-start gap-3') }}>
@@ -42,10 +36,6 @@
 
         @if ($thread = $activity->thread())
             <x-storyfeed::thread :thread="$thread" :actor="$activity->actor()" />
-        @endif
-
-        @if (is_array($picture))
-            <x-storyfeed::media :image="$picture" />
         @endif
 
         @foreach ($bodies as $body)

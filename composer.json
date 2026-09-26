@@ -23,7 +23,7 @@
         "illuminate/support": "^12.0||^13.0",
         "illuminate/view": "^12.0||^13.0",
         "league/commonmark": "^2.7",
-        "storyfeed/storyfeed": "dev-main",
+        "storyfeed/storyfeed": "dev-wave62-image-body as dev-main",
         "symfony/html-sanitizer": "^7.3 || ^8.0"
     },
     "require-dev": {
