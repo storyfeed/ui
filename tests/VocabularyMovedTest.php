@@ -15,7 +15,7 @@ it('leaves the body vocabulary to core', function () {
     foreach (['Change', 'Excerpt', 'KeyValue', 'File', 'Prose', 'MediaObject', 'ItemList'] as $form) {
         expect(class_exists("Storyfeed\\Body\\{$form}"))->toBeTrue()
             ->and(class_exists("Storyfeed\\Ui\\Data\\{$form}"))->toBeFalse()
-            ->and("Storyfeed\\Body\\{$form}"::name())->toBe("Storyfeed/Body/{$form}");
+            ->and("Storyfeed\\Body\\{$form}"::bodyType())->toBe("Storyfeed/Body/{$form}");
     }
 });
 
@@ -25,7 +25,7 @@ it('draws forms it did not define', function () {
     // core's six.
     $appOwned = new class implements FeedBody
     {
-        public static function name(): string
+        public static function bodyType(): string
         {
             return 'Acme/Attachment';
         }
@@ -42,7 +42,7 @@ it('draws forms it did not define', function () {
 
         public function toPayload(): array
         {
-            return [self::KEY => self::name(), self::VERSION => self::version()];
+            return [self::KEY => self::bodyType(), self::VERSION => self::version()];
         }
 
         public function toArray(): array
