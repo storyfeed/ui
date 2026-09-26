@@ -14,16 +14,16 @@
 @endphp
 
 @if ($items->isNotEmpty())
-    <figure {{ $attributes->class('sf-list-block') }}>
+    <figure {{ $attributes->class('prose prose-sm prose-zinc max-w-lg dark:prose-invert rounded-lg bg-zinc-50 px-4 py-3 dark:bg-white/5 [&>:first-child]:mt-0 [&>:last-child]:mb-0') }}>
         @if (filled($body['title'] ?? null))
-            <figcaption class="sf-list__title">{{ $body['title'] }}</figcaption>
+            <figcaption class="mt-0 font-medium text-zinc-900 dark:text-zinc-100">{{ $body['title'] }}</figcaption>
         @endif
 
-        <{{ $tag }} class="sf-list">
+        <{{ $tag }}>
             @foreach ($items as $item)
-                <li class="sf-list__item">
+                <li>
                     @if (is_array($item) && filled($item['href'] ?? null))
-                        <a href="{{ $item['href'] }}" class="sf-entity">{{ $item['label'] }}</a>
+                        <a href="{{ $item['href'] }}">{{ $item['label'] }}</a>
                     @else
                         {{ is_string($item) ? $item : $item['label'] }}
                     @endif
@@ -32,12 +32,12 @@
         </{{ $tag }}>
 
         @if ($remaining > 0 || $more !== null)
-            <figcaption class="sf-list__more">
+            <figcaption>
                 @if ($remaining > 0)
                     <span>{{ __(':count more', ['count' => $remaining]) }}</span>
                 @endif
                 @if ($more !== null)
-                    <a href="{{ $more['href'] }}" class="sf-entity">{{ $more['label'] ?? $more['href'] }}</a>
+                    <a href="{{ $more['href'] }}">{{ $more['label'] ?? $more['href'] }}</a>
                 @endif
             </figcaption>
         @endif
