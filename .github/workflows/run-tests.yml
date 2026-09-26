@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '**.php'
+      - 'resources/**'
       - '.github/workflows/run-tests.yml'
       - 'README.md'
       - 'composer.json'
@@ -11,6 +12,7 @@ on:
   pull_request:
     paths:
       - '**.php'
+      - 'resources/**'
       - '.github/workflows/run-tests.yml'
       - 'README.md'
       - 'composer.json'
