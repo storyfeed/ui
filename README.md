@@ -11,10 +11,10 @@ It works the way Laravel's pagination does. Core hands you the data, a
 `FeedPage` whose items read as `Storyfeed\Support\FeedItem`, and this package
 renders it with default Blade views you can publish and restyle.
 
-> **The detail forms moved to core on 2026-09-14.** `Markdown`, `Change`,
+> **The detail forms moved to core on 2026-09-14.** `Markdown`,
 > `Fields`, `Excerpt`, `File` and `MediaObject` are
 > `Storyfeed\Detail\*` in `storyfeed/storyfeed`, and their storage names gained
-> a segment: `Storyfeed/Detail/Change`. Their names always said `Storyfeed/`
+> a segment: `Storyfeed/Detail/Excerpt`. Their names always said `Storyfeed/`
 > rather than `storyfeed-ui/`, because a detail's name must not contain the
 > library that defined it — so the vocabulary was core's while the classes were
 > not. This package is the renderers.
@@ -102,7 +102,7 @@ can be used on its own:
 | `<x-storyfeed::pager :cursor>` | the link to the next page |
 
 Each of core's body types has a component in `components/body`: `key-value`,
-`excerpt`, `prose`, `change`, `file`, `item-list` and `media-object`. A body
+`excerpt`, `prose`, `file`, `item-list` and `media-object`. A body
 type with no component draws nothing.
 
 Prose displays plain text and unknown media types as escaped text. It parses

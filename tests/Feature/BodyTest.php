@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Blade;
-use Storyfeed\Body\Change;
 use Storyfeed\Body\Component;
 use Storyfeed\Body\Excerpt;
 use Storyfeed\Body\File;
@@ -112,16 +111,6 @@ it('escapes excerpt text and source and only marks truncated passages', function
         'body' => ['text' => '<b>Quoted</b>', 'from' => '<Source>', 'truncated' => false],
     ]))->toContain('<blockquote>&lt;b&gt;Quoted&lt;/b&gt;</blockquote>', '<figcaption>&lt;Source&gt;</figcaption>')
         ->not->toContain('…');
-});
-
-it('draws a change as before and after', function () {
-    expect(render_bodies(Change::make(['status' => ['draft', 'paid'], 'coupon' => [1 => 'SUMMER'], 'note' => ['Hi', null]])))->toContain(
-        '<dl> '
-        .'<div> <dt>status</dt> <dd> <span>draft</span> <span aria-hidden="true">→</span> <span>paid</span> </dd> </div> '
-        .'<div> <dt>coupon</dt> <dd> <span>SUMMER</span> </dd> </div> '
-        .'<div> <dt>note</dt> <dd> <span>Hi</span> <span aria-hidden="true">→</span> <span>empty</span> </dd> </div> '
-        .'</dl>'
-    );
 });
 
 it('draws a file attachment with its resolved name link and a separate metadata line', function () {
