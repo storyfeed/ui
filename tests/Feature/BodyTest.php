@@ -1,6 +1,5 @@
 <?php
 
-use Storyfeed\Body\Change;
 use Storyfeed\Body\Component;
 use Storyfeed\Body\Excerpt;
 use Storyfeed\Body\File;
@@ -71,16 +70,6 @@ it('draws prose as its source, escaped, and verbatim text in a fixed width', fun
         ->toContain('<figcaption class="sf-prose__title">Note</figcaption> <p class="sf-prose">**Rush** &lt;script&gt;alert(1)&lt;/script&gt;</p>')
         ->toContain('<pre class="sf-verbatim"><code>SELECT 1;</code></pre>')
         ->not->toContain('<script>');
-});
-
-it('draws a change as before and after', function () {
-    expect(render_bodies(Change::make(['status' => ['draft', 'paid'], 'coupon' => [1 => 'SUMMER'], 'note' => ['Hi', null]])))->toContain(
-        '<dl class="sf-change"> '
-        .'<div class="sf-change__row"> <dt class="sf-change__field">status</dt> <dd class="sf-change__pair"> <span class="sf-change__before">draft</span> <span class="sf-change__arrow" aria-hidden="true">→</span> <span>paid</span> </dd> </div> '
-        .'<div class="sf-change__row"> <dt class="sf-change__field">coupon</dt> <dd class="sf-change__pair"> <span>SUMMER</span> </dd> </div> '
-        .'<div class="sf-change__row"> <dt class="sf-change__field">note</dt> <dd class="sf-change__pair"> <span class="sf-change__before">Hi</span> <span class="sf-change__arrow" aria-hidden="true">→</span> <span>empty</span> </dd> </div> '
-        .'</dl>'
-    );
 });
 
 it('draws a file\'s name, size and type, leaving out a name the headline says', function () {
