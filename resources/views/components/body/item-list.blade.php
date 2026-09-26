@@ -14,16 +14,16 @@
 @endphp
 
 @if ($items->isNotEmpty())
-    <figure {{ $attributes->class('m-0') }}>
+    <figure {{ $attributes->class('prose prose-sm prose-zinc dark:prose-invert') }}>
         @if (filled($body['title'] ?? null))
-            <figcaption class="mb-1 text-sm text-zinc-900 dark:text-zinc-100">{{ $body['title'] }}</figcaption>
+            <figcaption>{{ $body['title'] }}</figcaption>
         @endif
 
-        <{{ $tag }} @class(['m-0 pl-5 text-sm leading-relaxed', 'list-decimal' => $tag === 'ol', 'list-disc' => $tag === 'ul'])>
+        <{{ $tag }}>
             @foreach ($items as $item)
-                <li class="m-0">
+                <li>
                     @if (is_array($item) && filled($item['href'] ?? null))
-                        <a href="{{ $item['href'] }}" class="font-medium text-indigo-700 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 dark:text-indigo-300">{{ $item['label'] }}</a>
+                        <a href="{{ $item['href'] }}">{{ $item['label'] }}</a>
                     @else
                         {{ is_string($item) ? $item : $item['label'] }}
                     @endif
@@ -32,12 +32,12 @@
         </{{ $tag }}>
 
         @if ($remaining > 0 || $more !== null)
-            <figcaption class="mt-1 flex gap-2 text-xs text-zinc-600 dark:text-zinc-400">
+            <figcaption>
                 @if ($remaining > 0)
                     <span>{{ __(':count more', ['count' => $remaining]) }}</span>
                 @endif
                 @if ($more !== null)
-                    <a href="{{ $more['href'] }}" class="font-medium text-indigo-700 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 dark:text-indigo-300">{{ $more['label'] ?? $more['href'] }}</a>
+                    <a href="{{ $more['href'] }}">{{ $more['label'] ?? $more['href'] }}</a>
                 @endif
             </figcaption>
         @endif

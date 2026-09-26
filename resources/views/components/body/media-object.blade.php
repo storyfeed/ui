@@ -22,7 +22,7 @@
     $attachments = collect($body['attachments'] ?? [])->filter(fn ($file) => is_array($file) && filled($file['href'] ?? null));
 @endphp
 
-<div {{ $attributes->class('mt-1.5 flex min-w-0 max-w-lg items-start gap-3 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 p-3 dark:bg-zinc-800') }}>
+<div {{ $attributes->class('mt-1.5 flex min-w-0 max-w-lg items-start gap-3 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white/60 p-3 backdrop-blur-sm dark:bg-white/5') }}>
     @if (is_array($picture))
         <div class="w-16 shrink-0 [&>div]:m-0 [&>div]:size-16 [&>div]:rounded-md"><x-storyfeed::media :image="$picture" /></div>
     @endif

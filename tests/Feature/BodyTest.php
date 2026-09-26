@@ -13,6 +13,7 @@ use Storyfeed\Facades\Storyfeed;
 use Storyfeed\FeedImage;
 use Storyfeed\FeedLink;
 use Storyfeed\FeedResource;
+use Storyfeed\Support\Entity;
 use Storyfeed\Support\FeedItem;
 use Storyfeed\Ui\Tests\Fixtures\Order;
 use Storyfeed\Ui\Tests\Fixtures\User;
@@ -83,10 +84,31 @@ it('draws a change as before and after', function () {
     );
 });
 
-it('draws a file\'s name, size and type, leaving out a name the headline says', function () {
+it('draws a file attachment with its resolved name link and a separate metadata line', function () {
     expect(render_bodies([File::make(2_516_582, 'application/pdf', 'invoice.pdf'), File::make(512, name: 'Order #1042')]))
-        ->toContain('<p>invoice.pdf · 2.4 MB · application/pdf</p>')
+        ->toContain('<span aria-hidden="true"><svg')
+        ->toContain('<p> <a href="/orders/1" target="_blank">invoice.pdf</a> </p>')
+        ->toContain('<p>2.4 MB · application/pdf</p>')
+        ->toContain('<p> <a href="/orders/1" target="_blank">Order #1042</a> </p>')
         ->toContain('<p>512 B</p>');
+});
+
+it('renders file names without a URL as escaped text and omits absent metadata', function () {
+    $html = render_blade('<x-storyfeed::body.file :body="$body" :entity="$entity" />', [
+        'body' => ['name' => '<invoice>.pdf', 'href' => '/not-from-the-body'],
+        'entity' => Entity::of(['label' => 'Invoice']),
+    ]);
+
+    expect($html)->toContain('<p> &lt;invoice&gt;.pdf </p>')
+        ->not->toContain('<a', '/not-from-the-body', ' · ');
+});
+
+it('uses the entity label when a file name is absent and omits a completely empty file', function () {
+    expect(render_blade('<x-storyfeed::body.file :body="$body" :entity="$entity" />', [
+        'body' => ['size' => 0],
+        'entity' => Entity::of(['label' => 'Invoice']),
+    ]))->toContain('<p> Invoice </p>', '<p>0 B</p>')
+        ->and(render_blade('<x-storyfeed::body.file :body="[]" />'))->toBe('');
 });
 
 it('draws an item list, numbered when ordered, with what was not sent', function () {
@@ -159,4 +181,10 @@ it('draws nothing for a malformed or app-owned body, and an app can add a compon
 
     expect($render())->toContain('<div data-storyfeed-body> <p>plan.pdf</p> </div>')
         ->and(substr_count($render(), 'data-storyfeed-body'))->toBe(1);
+});
+
+it('renders an unordered item list with plain list semantics', function () {
+    expect(render_bodies(ItemList::make(['Margherita', 'Tiramisu'])))
+        ->toContain('<ul> <li> Margherita </li> <li> Tiramisu </li> </ul>')
+        ->not->toContain('<ol>');
 });

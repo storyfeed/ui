@@ -35,11 +35,18 @@ composer require storyfeed/ui
 
 The service provider registers itself through package discovery.
 
-Storyfeed UI uses Tailwind CSS v4. Add the package's views to the sources in
-your application's `resources/css/app.css` file:
+Storyfeed UI uses Tailwind CSS v4 and its Typography plugin. Install the plugin:
+
+```bash
+npm install -D @tailwindcss/typography
+```
+
+Register the plugin and the package's views in your application's
+`resources/css/app.css` file:
 
 ```css
 @source "../../vendor/storyfeed/ui/resources/views";
+@plugin "@tailwindcss/typography";
 ```
 
 Compile your application's CSS with `npm run build`. Your layout must load
@@ -105,7 +112,8 @@ and indigo for links. To change these styles, publish the views and edit their
 utility classes. You may also customize Tailwind's existing theme variables,
 such as `--color-indigo-700` and `--color-indigo-300`, in your application's
 `@theme` block. These changes apply to every component using those colours.
-The kit defines no additional theme variables.
+The kit defines no additional theme variables. Item lists use the Typography
+plugin's `prose` defaults.
 
 The components include `dark:` variants and follow your application's
 [Tailwind dark mode configuration](https://tailwindcss.com/docs/dark-mode).
@@ -142,3 +150,8 @@ The kit's own words, such as "Older activity" and "Show all :count", are plain
 ## Licence
 
 MIT. See [LICENSE.md](LICENSE.md).
+
+The paperclip icon is from [Heroicons](https://github.com/tailwindlabs/heroicons),
+copyright Tailwind Labs, Inc., used under the MIT licence. The full notice is
+included in [licenses/heroicons.txt](licenses/heroicons.txt). The attachment row
+layout is original work.

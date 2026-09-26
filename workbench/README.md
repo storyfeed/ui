@@ -1,6 +1,6 @@
 # Tailwind Workbench
 
-Render the package's Blade components inside Testbench and compile their Tailwind CSS:
+Render the package's Blade components inside Testbench and compile their Tailwind CSS with the Typography plugin:
 
 ```bash
 composer install
@@ -14,6 +14,6 @@ The page is written to `build/workbench/index.html`. The screenshot command star
 
 The page uses Tailwind's default media-query dark mode. Applications may configure their own `dark` variant. No compiled CSS ships with the package. Workbench files and Node tooling are excluded from Composer distribution archives.
 
-The layout and sample SVG are original work. No Tailwind Plus markup, templates, or class lists were used.
+The layout and sample meal SVG are original work. The paperclip icon is from Heroicons (MIT); see the root README and `licenses/heroicons.txt`. No Tailwind Plus markup, templates, or class lists were used.
 
 Stable selectors are `data-sf-intent` and `data-sf-glyph` on icons, `data-storyfeed-body` on a rendered body wrapper, and `data-storyfeed-summary` on a summary row. There are no `sf-*` hook classes. The inline aspect ratio on media comes from the image dimensions; all static presentation uses Tailwind utilities.

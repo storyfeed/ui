@@ -10,7 +10,7 @@
 @endphp
 
 @if ($rows->isNotEmpty())
-    <figure {{ $attributes->class('m-0 flex max-w-lg flex-col rounded-lg border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-sm leading-normal') }}>
+    <figure {{ $attributes->class('m-0 flex max-w-sm flex-col rounded-lg border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-sm leading-normal') }}>
         @if (filled($body['title'] ?? null))
             <figcaption class="border-b border-zinc-200 dark:border-zinc-700 pt-0.5 pb-1 font-semibold text-zinc-900 dark:text-zinc-100">{{ $body['title'] }}</figcaption>
         @endif

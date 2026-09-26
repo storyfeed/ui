@@ -1,3 +1,4 @@
 @import "tailwindcss" source(none);
 @source "../resources/views";
+@plugin "@tailwindcss/typography";
 @source "./page.blade.php";
