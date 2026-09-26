@@ -15,12 +15,12 @@
 @endphp
 
 @if ($quote !== '' || $meta !== '')
-    <div {{ $attributes->class('sf-thread') }}>
+    <div {{ $attributes->class('mt-1.5') }}>
         @if ($quote !== '')
-            <blockquote class="sf-thread__quote">{{ $quote }}@if ($thread->truncated)<span aria-label="{{ __('truncated') }}">…</span>@endif</blockquote>
+            <blockquote class="m-0 border-l-2 border-zinc-200 dark:border-zinc-700 pl-3 text-sm italic text-zinc-600 dark:text-zinc-400">{{ $quote }}@if ($thread->truncated)<span aria-label="{{ __('truncated') }}">…</span>@endif</blockquote>
         @endif
         @if ($meta !== '')
-            <p @class(['sf-thread__meta', 'sf-thread__meta--quoted' => $quote !== ''])>{{ $meta }}</p>
+            <p @class(['m-0 text-xs text-zinc-500 dark:text-zinc-400', 'mt-1 pl-3' => $quote !== ''])>{{ $meta }}</p>
         @endif
     </div>
 @endif

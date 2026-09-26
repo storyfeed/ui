@@ -15,10 +15,18 @@ uses(TestCase::class)->in('Feature');
  */
 function render_blade(string $template, array $data = []): string
 {
-    return trim((string) preg_replace('/\s+/', ' ', Blade::render($template, $data)));
+    return structural_html(Blade::render($template, $data));
 }
 
 function render_feed(?FeedPage $page = null, string $attributes = ''): string
 {
     return render_blade("<x-storyfeed::feed :page=\"\$page\" {$attributes} />", ['page' => $page ?? Storyfeed::feed()->get()]);
+}
+
+/** Ignore presentation classes while retaining semantic markup and attributes. */
+function structural_html(string $html): string
+{
+    $html = preg_replace('/ class="[^"]*"/', '', $html);
+
+    return trim((string) preg_replace('/\s+/', ' ', $html));
 }

@@ -24,18 +24,18 @@
         : ($object?->media()?->get('preview') ?? $object?->media()?->get('url'));
 @endphp
 
-<article {{ $attributes->class('sf-row') }}>
-    <div class="sf-rail">
-        <div class="sf-rail__disc">
+<article {{ $attributes->class('relative flex items-start gap-3') }}>
+    <div class="flex w-8 shrink-0 flex-col items-center self-stretch">
+        <div class="relative flex shrink-0">
             <x-storyfeed::glyph :glyph="$activity->glyph()" :intent="$activity->intent()" />
         </div>
         @unless ($last)
-            <div class="sf-rail__line" aria-hidden="true"></div>
+            <div class="mt-1 w-px flex-1 bg-zinc-200 dark:bg-zinc-700" aria-hidden="true"></div>
         @endunless
     </div>
 
-    <div @class(['sf-body', 'sf-body--spaced' => ! $last, 'sf-body--dense' => $dense])>
-        <div class="sf-head">
+    <div @class(['min-w-0 flex-1', 'pb-5' => ! $last, 'pt-1' => $dense, 'pt-1.5' => ! $dense])>
+        <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
             <x-storyfeed::headline :headline="$headline" />
             <x-storyfeed::time :at="$activity->publishedAt()" />
         </div>

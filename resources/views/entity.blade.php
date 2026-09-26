@@ -4,7 +4,7 @@
     Its words, "Someone" or "a removed order", are core's.
 --}}
 @if ($entity->url() !== null && ! $entity->isTombstone())
-<a {{ (new \Illuminate\View\ComponentAttributeBag($entity->attributes()))->merge(['href' => $entity->url()])->class('sf-entity') }}>{{ $entity->toString() }}</a>
+<a {{ (new \Illuminate\View\ComponentAttributeBag($entity->attributes()))->merge(['href' => $entity->url()])->class('font-medium text-indigo-700 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 dark:text-indigo-300') }}>{{ $entity->toString() }}</a>
 @else
-<span @class(['sf-entity', 'sf-entity--tombstone' => $entity->isTombstone(), 'sf-entity--unknown' => $entity->isDegraded()])>{{ $entity->toString() }}</span>
+<span @class(['text-zinc-900 dark:text-zinc-100 font-medium' => ! $entity->isTombstone() && ! $entity->isDegraded(), 'text-zinc-600 dark:text-zinc-400 font-normal' => $entity->isTombstone() || $entity->isDegraded(), 'italic' => $entity->isDegraded()])>{{ $entity->toString() }}</span>
 @endif

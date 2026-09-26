@@ -13,9 +13,9 @@
     $cursor = $page->nextCursor();
 @endphp
 
-<div {{ $attributes->class('sf-feed') }}>
+<div {{ $attributes->class('text-sm leading-relaxed text-zinc-600 dark:text-zinc-400') }}>
     @if ($items->isEmpty())
-        <div class="sf-empty">{{ $empty ?? __('No activity yet.') }}</div>
+        <div class="rounded-lg border border-dashed border-zinc-200 dark:border-zinc-700 p-10 text-center text-zinc-600 dark:text-zinc-400">{{ $empty ?? __('No activity yet.') }}</div>
     @else
         <div role="feed">
             @foreach ($items as $item)

@@ -10,24 +10,24 @@
 @endphp
 
 @if ($rows->isNotEmpty())
-    <figure {{ $attributes->class('sf-facts') }}>
+    <figure {{ $attributes->class('m-0 flex max-w-sm flex-col rounded-lg border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 text-sm leading-normal') }}>
         @if (filled($body['title'] ?? null))
-            <figcaption class="sf-facts__title">{{ $body['title'] }}</figcaption>
+            <figcaption class="border-b border-zinc-200 dark:border-zinc-700 pt-0.5 pb-1 font-semibold text-zinc-900 dark:text-zinc-100">{{ $body['title'] }}</figcaption>
         @endif
-        <dl class="sf-facts__rows">
+        <dl class="m-0 flex flex-col">
             @foreach ($rows as $row)
                 @php($value = $row['value'] ?? null)
-                <div class="sf-facts__row">
-                    <dt class="sf-facts__label">{{ $row['key'] }}</dt>
+                <div class="grid grid-cols-[minmax(0,1fr)_minmax(0,auto)] items-baseline gap-x-4 gap-y-1 border-b border-zinc-200 dark:border-zinc-700 py-1 last:border-0">
+                    <dt class="min-w-0 [overflow-wrap:anywhere] text-zinc-900 dark:text-zinc-100">{{ $row['key'] }}</dt>
                     @if ($value === null || $value === '')
-                        <dd class="sf-facts__value"><span class="sf-facts__value--absent">{{ $row['missing'] }}</span></dd>
+                        <dd class="m-0 min-w-0 text-right tabular-nums [overflow-wrap:anywhere] text-zinc-600 dark:text-zinc-400"><span class="italic">{{ $row['missing'] }}</span></dd>
                     @else
                         @php($text = is_bool($value) ? ($value ? __('Yes') : __('No')) : $value)
                         @if ($row['verbatim'] ?? false)
                             {{-- Compared, not read: one line, with the whole value on hover. --}}
-                            <dd class="sf-facts__value sf-facts__value--verbatim" title="{{ $text }}">{{ $text }}</dd>
+                            <dd class="m-0 min-w-0 text-right tabular-nums [overflow-wrap:anywhere] text-zinc-600 dark:text-zinc-400 truncate font-mono text-xs" title="{{ $text }}">{{ $text }}</dd>
                         @else
-                            <dd class="sf-facts__value">{{ $text }}</dd>
+                            <dd class="m-0 min-w-0 text-right tabular-nums [overflow-wrap:anywhere] text-zinc-600 dark:text-zinc-400">{{ $text }}</dd>
                         @endif
                     @endif
                 </div>
