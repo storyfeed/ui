@@ -30,5 +30,5 @@
 @endphp
 
 @if ($parts->isNotEmpty())
-    <p {{ $attributes->class('sf-file') }}>{{ $parts->implode(' · ') }}</p>
+    <p {{ $attributes->class('m-0 text-sm text-zinc-600 dark:text-zinc-400') }}>{{ $parts->implode(' · ') }}</p>
 @endif

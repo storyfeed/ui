@@ -7,14 +7,14 @@
 @props(['body', 'entity' => null])
 
 @if (filled($body['content'] ?? null))
-    <figure {{ $attributes->class('sf-prose-block') }}>
+    <figure {{ $attributes->class('m-0') }}>
         @if (filled($body['title'] ?? null))
-            <figcaption class="sf-prose__title">{{ $body['title'] }}</figcaption>
+            <figcaption class="mb-1 font-mono text-xs text-zinc-600 dark:text-zinc-400">{{ $body['title'] }}</figcaption>
         @endif
         @if ($body['verbatim'] ?? false)
-            <pre class="sf-verbatim"><code>{{ $body['content'] }}</code></pre>
+            <pre class="m-0 max-w-lg overflow-x-auto rounded-lg border border-zinc-200 dark:border-zinc-700 px-3 py-2 font-mono text-xs leading-relaxed [&>code]:font-[inherit]"><code>{{ $body['content'] }}</code></pre>
         @else
-            <p class="sf-prose">{{ $body['content'] }}</p>
+            <p class="m-0 text-sm leading-relaxed whitespace-pre-wrap">{{ $body['content'] }}</p>
         @endif
     </figure>
 @endif

@@ -14,16 +14,16 @@
 @endphp
 
 @if ($rows->isNotEmpty())
-    <dl {{ $attributes->class('sf-change') }}>
+    <dl {{ $attributes->class('m-0 flex flex-col gap-0.5 text-sm') }}>
         @foreach ($rows as $field => $pair)
-            <div class="sf-change__row">
-                <dt class="sf-change__field">{{ $field }}</dt>
-                <dd class="sf-change__pair">
+            <div class="flex flex-wrap items-baseline gap-x-3">
+                <dt class="text-zinc-600 dark:text-zinc-400">{{ $field }}</dt>
+                <dd class="m-0 flex flex-wrap items-baseline gap-x-1.5">
                     @if (array_key_exists(0, $pair))
-                        <span class="sf-change__before">{{ $side($pair[0]) }}</span>
+                        <span class="line-through text-zinc-600 dark:text-zinc-400">{{ $side($pair[0]) }}</span>
                     @endif
                     @if (array_key_exists(0, $pair) && array_key_exists(1, $pair))
-                        <span class="sf-change__arrow" aria-hidden="true">→</span>
+                        <span class="text-zinc-500 dark:text-zinc-400" aria-hidden="true">→</span>
                     @endif
                     @if (array_key_exists(1, $pair))
                         <span>{{ $side($pair[1]) }}</span>

@@ -1,0 +1,14 @@
+{
+  "name": "storyfeed-ui-workbench",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "workbench": "vendor/bin/phpunit --no-configuration --bootstrap vendor/autoload.php workbench/WorkbenchTest.php && tailwindcss -i workbench/app.css -o build/workbench/app.css --minify",
+    "screenshots": "node workbench/screenshots.mjs"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.0.0",
+    "tailwindcss": "^4.0.0",
+    "playwright": "^1.58.0"
+  }
+}
