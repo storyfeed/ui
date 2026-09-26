@@ -14,9 +14,9 @@
 @endphp
 
 @if ($items->isNotEmpty())
-    <figure {{ $attributes->class('prose prose-sm prose-zinc dark:prose-invert') }}>
+    <figure {{ $attributes->class('prose prose-sm prose-zinc max-w-lg dark:prose-invert rounded-lg bg-zinc-50 px-4 py-3 dark:bg-white/5 [&>:first-child]:mt-0 [&>:last-child]:mb-0') }}>
         @if (filled($body['title'] ?? null))
-            <figcaption>{{ $body['title'] }}</figcaption>
+            <figcaption class="mt-0 font-medium text-zinc-900 dark:text-zinc-100">{{ $body['title'] }}</figcaption>
         @endif
 
         <{{ $tag }}>
