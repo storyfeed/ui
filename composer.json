@@ -23,7 +23,7 @@
         "illuminate/support": "^12.0||^13.0",
         "illuminate/view": "^12.0||^13.0",
         "league/commonmark": "^2.7",
-        "storyfeed/storyfeed": "dev-wave67-vault-thread as dev-main",
+        "storyfeed/storyfeed": "dev-main",
         "symfony/html-sanitizer": "^7.3 || ^8.0"
     },
     "require-dev": {
