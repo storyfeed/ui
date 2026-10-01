@@ -2,11 +2,30 @@
 
 ## Unreleased
 
-- Remove the built-in thread component alongside core's `FeedThread` removal.
-  Use `Excerpt` for quoted words or register an application body renderer for
+## v0.3.0 — Pictures only when a body asks (2026-10-01)
+
+Requires `storyfeed/storyfeed` `^0.12.0`.
+
+### Added
+
+- **The Image body.** `Storyfeed/Body/Image` draws the picture its body names
+  from the entity's media, with alt text (falling back to the caption) and the
+  caption as a `figcaption`. An empty slot draws nothing.
+
+### Changed
+
+- **No automatic object picture.** An activity no longer paints its object's
+  preview above the bodies, and never treats the entity URL as a picture. A
+  picture appears only when an Image or MediaObject body asks for it. The
+  actor/icon badge is unchanged.
+- **Group samples** come from members' Image bodies; a member without one adds
+  no picture.
+
+### Removed
+
+- **The built-in thread component**, alongside core's `FeedThread` removal. Use
+  `Excerpt` for quoted words, or register an application body renderer for
   discussion content. Historical thread data is no longer drawn automatically.
-- Temporarily pin core to `dev-wave67-vault-thread as dev-main` for coordinated
-  HOLD validation; flip the pin after the upstream merge.
 
 ## v0.2.0 — The Blade kit (2026-09-30)
 
