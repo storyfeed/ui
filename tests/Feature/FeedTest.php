@@ -3,7 +3,6 @@
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Blade;
 use Storyfeed\Facades\Storyfeed;
-use Storyfeed\FeedThread;
 use Storyfeed\Ui\Tests\Fixtures\Customer;
 use Storyfeed\Ui\Tests\Fixtures\Order;
 use Storyfeed\Ui\Tests\Fixtures\User;
@@ -70,25 +69,12 @@ it('draws a deleted model as a tombstone, never a link', function () {
         ->not->toContain('href="/orders/');
 });
 
-it('quotes what the activity quotes, and names who said it once', function () {
+it('leaves historical thread data to the application', function () {
     Storyfeed::activity('place', Order::create(['number' => '3']))->by($this->dana)
-        ->thread(FeedThread::make(text: 'Can it come Thursday?', by: 'Nayani', kind: 'asked', replies: 3, truncated: true))
+        ->data(['$thread' => ['$v' => 1, 'text' => 'Historical quote', 'replies' => 3]])
         ->publish();
 
-    expect(render_feed())->toContain(
-        '<div> <blockquote>Can it come Thursday?<span aria-label="truncated">…</span></blockquote> '
-        .'<p>Nayani asked · 3 replies</p> </div>'
-    );
-});
-
-it('drops the quote\'s author when the headline already named them, and a single reply', function () {
-    Storyfeed::activity('place', Order::create(['number' => '3']))->by($this->dana)
-        ->thread(FeedThread::make(text: 'Shipped.', by: 'Dana', kind: 'said', replies: 1))
-        ->publish();
-
-    expect(render_feed())
-        ->toContain('<blockquote>Shipped.</blockquote>')
-        ->not->toContain('<p>');
+    expect(render_feed())->toContain('placed')->not->toContain('Historical quote', '3 replies');
 });
 
 it('draws a repeat group with its members behind a disclosure', function () {

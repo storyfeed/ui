@@ -61,9 +61,7 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-      # Resolve the published dev-main dependency from Packagist, without a
-      # local path repository. Lowest applies to its dependencies, not core:
-      # core remains dev-main in both lanes. Keep the UI manifest unchanged.
+      # Exercise the held core removal branch until the coordinated release.
       - name: Install dependencies
         run: |
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction

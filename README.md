@@ -94,7 +94,6 @@ can be used on its own:
 | `<x-storyfeed::headline :headline>` | a headline, each entity linked |
 | `<x-storyfeed::glyph :glyph :intent>` | the icon disc |
 | `<x-storyfeed::time :at>` | when it happened |
-| `<x-storyfeed::thread :thread>` | what an activity quotes |
 | `<x-storyfeed::media :image>` | a picture |
 | `<x-storyfeed::body :body>` | one body, by its type |
 | `<x-storyfeed::pager :cursor>` | the link to the next page |
