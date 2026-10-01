@@ -34,9 +34,6 @@
             <x-storyfeed::time :at="$activity->publishedAt()" />
         </div>
 
-        @if ($thread = $activity->thread())
-            <x-storyfeed::thread :thread="$thread" :actor="$activity->actor()" />
-        @endif
 
         @foreach ($bodies as $body)
             <x-storyfeed::body :body="$body" :entity="$object" />

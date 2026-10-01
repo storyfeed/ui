@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Remove the built-in thread component alongside core's `FeedThread` removal.
+  Use `Excerpt` for quoted words or register an application body renderer for
+  discussion content. Historical thread data is no longer drawn automatically.
+- Temporarily pin core to `dev-wave67-vault-thread as dev-main` for coordinated
+  HOLD validation; flip the pin after the upstream merge.
+
 ## v0.2.0 — The Blade kit (2026-09-30)
 
 This package is now the renderers. The data forms it shipped in v0.1.1 are
