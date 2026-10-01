@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v0.2.0 — The Blade kit (2026-09-30)
 
 This package is now the renderers. The data forms it shipped in v0.1.1 are
 core's body types, and it draws them.
