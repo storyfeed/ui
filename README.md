@@ -11,17 +11,15 @@ It works the way Laravel's pagination does. Core hands you the data, a
 `FeedPage` whose items read as `Storyfeed\Support\FeedItem`, and this package
 renders it with default Blade views you can publish and restyle.
 
-> **The detail forms moved to core on 2026-09-14.** `Markdown`,
-> `Fields`, `Excerpt`, `File` and `MediaObject` are
-> `Storyfeed\Detail\*` in `storyfeed/storyfeed`, and their storage names gained
-> a segment: `Storyfeed/Detail/Excerpt`. Their names always said `Storyfeed/`
-> rather than `storyfeed-ui/`, because a detail's name must not contain the
-> library that defined it — so the vocabulary was core's while the classes were
-> not. This package is the renderers.
+> **The data forms moved to core.** v0.1.1's `Storyfeed\Ui\Data\*` classes are
+> core's body types, `Storyfeed\Body\*` in `storyfeed/storyfeed` 0.11, stored as
+> `Storyfeed/Body/Excerpt`. A form's name must not contain the library that
+> defined it, so the vocabulary was always core's. This package is the
+> renderers. See the [changelog](CHANGELOG.md) for the upgrade.
 
-> **Early development.** This package currently depends on Storyfeed's `dev-main`
-> branch. Its API can change without a deprecation cycle. Commit your application's
-> Composer lockfile to keep installations reproducible.
+> **Early development.** Storyfeed is pre-1.0. Minor releases can change the
+> API without a deprecation cycle. Commit your application's Composer lockfile
+> to keep installations reproducible.
 
 ## Installation
 
