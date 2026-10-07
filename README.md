@@ -264,6 +264,7 @@ application callbacks to every row and group child:
 | `body`, `annotations` | `FeedItem` | app content HTML |
 | `removed` | `FeedItem` | optional escaped removal text |
 | `objectIcon` | `FeedItem` | optional image array for the content frame |
+| `fileLabel` | `{name, mediaType}` array | optional file-kind label; null uses the built-in MIME map |
 | `form` | body array, owning `Entity` or null | body HTML; null uses the built-in renderer |
 | `mediaTiles`, `mediaOverflow` | group `FeedItem` | replacement sample tiles or overflow count |
 | `media` | tile array, Tailwind class string | complete picture/tile HTML, including an optional lightbox |
@@ -273,7 +274,24 @@ payloads never supply callbacks. Body text itself is escaped or sanitized.
 Filament can use these seams for its icons, timestamp refresh and lightbox
 (the `media` callback reaches Image and MediaObject bodies as well as sample
 tiles; `form` can override an entire body). Standalone MediaObject also accepts
-`image-placement="beside|below"`; beside is the Vue default.
+`image-placement="beside|below"`; beside is the default in both kits.
+FileAttachment always shows its supplied name and formats decimal byte sizes
+(21 MB, 76 KB). Built-in MIME labels include PDF, images, Word and CSV
+(`Spreadsheet (CSV)`). The `fileLabel` callback overrides those labels, with
+null falling back to the MIME map and then the supplied MIME string. The
+standalone file component accepts `labeller`; `<x-storyfeed::body>` accepts
+`file-labeller`. No extension-based guessing or payload changes occur.
+
+Feeds, items and groups accept `child-rail="activity-only"` independently of
+`rail="actor"`, so expanded members can use glyph discs while their parent
+shows an actor and activity badge. Without a child override, children inherit
+the parent posture and dense rows suppress its badge.
+
+Groups use explicit pinned singular slots and show a summary's remaining
+activity total after the three displayed phrases, including phrases omitted
+by the server. Sample photograph strips read Image bodies across every role,
+objects first, deduplicate image sources, cap at three and hide on summary
+readings or when children are shown.
 The [Filament inventory](workbench/filament-inventory.md) lists the rendering
 boundary and the integration features that stay in the plugin.
 

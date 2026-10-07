@@ -10,14 +10,17 @@ final class Bodies
     /**
      * @param  array<array-key, mixed>  $body
      * @param  (callable(array<array-key, mixed>, string): string)|null  $mediaRenderer
+     * @param  (callable(array{name: ?string, mediaType: ?string}): ?string)|null  $fileLabeller
      */
-    public static function render(string $component, array $body, ?Entity $entity = null, ?callable $mediaRenderer = null): string
+    public static function render(string $component, array $body, ?Entity $entity = null, ?callable $mediaRenderer = null, ?callable $fileLabeller = null): string
     {
         if (! in_array($component, ['storyfeed::body.image', 'storyfeed::body.media-object'], true)) {
             $mediaRenderer = null;
         }
 
-        return Blade::render('<x-dynamic-component :component="$component" :body="$body" :entity="$entity" :media-renderer="$mediaRenderer" />', compact('component', 'body', 'entity', 'mediaRenderer'));
+        $labeller = $component === 'storyfeed::body.file-attachment' ? $fileLabeller : null;
+
+        return Blade::render('<x-dynamic-component :component="$component" :body="$body" :entity="$entity" :media-renderer="$mediaRenderer" :labeller="$labeller" />', compact('component', 'body', 'entity', 'mediaRenderer', 'labeller'));
     }
 
     /** Find forms in app-chosen data keys; stop walking once a body is found.

@@ -1,4 +1,4 @@
-@props(['page' => null, 'items' => null, 'nextCursor' => null, 'cursorName' => 'cursor', 'grouped' => true, 'rail' => null, 'dividers' => [], 'dividerStyle' => 'dot', 'interactive' => true, 'collapsed' => null, 'timezone' => null, 'renderers' => []])
+@props(['page' => null, 'items' => null, 'nextCursor' => null, 'cursorName' => 'cursor', 'grouped' => true, 'rail' => null, 'childRail' => null, 'dividers' => [], 'dividerStyle' => 'dot', 'interactive' => true, 'collapsed' => null, 'timezone' => null, 'renderers' => []])
 @php
     $items = collect($items ?? $page?->collect() ?? [])->map(fn ($item) => \Storyfeed\Support\FeedItem::of($item));
     $cursor = $nextCursor ?? $page?->nextCursor();
@@ -29,7 +29,7 @@
 @if (isset($dividers[$item->id()]))
                     <x-storyfeed::divider :label="$dividers[$item->id()]" :divider-style="$dividerStyle" />
 @endif
-                <x-storyfeed::item :item="$item" :last="$loop->last && $cursor === null" :rail="$rail" :interactive="$interactive" :collapsed="$collapsed" :timezone="$timezone" :renderers="$renderers" />
+                <x-storyfeed::item :item="$item" :last="$loop->last && $cursor === null" :rail="$rail" :child-rail="$childRail" :interactive="$interactive" :collapsed="$collapsed" :timezone="$timezone" :renderers="$renderers" />
 @endforeach
         </div>
 @endif

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue'
-import { FEED_LINK } from '../keys'
+import { FEED_LINK, FEED_MEDIA_OBJECT_PLACEMENT } from '../keys'
 import FeedMedia from '../FeedMedia.vue'
 
 /**
@@ -20,9 +20,12 @@ const props = defineProps<{
     entityLabel?: string | null
     entityUrl?: string | null
     entityMedia?: Record<string, any> | null
+    imagePlacement?: 'beside' | 'below'
 }>()
 
 const linkComponent = inject(FEED_LINK, 'a')
+const defaultPlacement = inject(FEED_MEDIA_OBJECT_PLACEMENT, 'beside')
+const placement = computed(() => props.imagePlacement ?? defaultPlacement)
 
 const subject = computed(() => {
     const value = props.payload.subject
@@ -51,7 +54,7 @@ const footnote = computed(() => {
 
 <template>
     <div class="sf-media-object mt-1.5 flex min-w-0 max-w-lg items-start gap-3 rounded-lg border border-border bg-muted p-3">
-        <div v-if="picture" class="sf-media-object__image w-16 flex-[0_0_64px]">
+        <div v-if="picture && placement === 'beside'" class="sf-media-object__image w-16 flex-[0_0_64px]">
             <FeedMedia :image="picture" class="mt-0! size-16! rounded-md!" />
         </div>
         <div class="sf-media-object__body flex min-w-0 flex-1 flex-col gap-1 [overflow-wrap:anywhere]">
@@ -61,6 +64,8 @@ const footnote = computed(() => {
             </p>
 
             <p v-if="payload.content" class="sf-prose m-0 text-[13.5px] leading-[1.6] whitespace-pre-wrap sf-media-object__content line-clamp-3 text-muted-foreground">{{ payload.content }}</p>
+
+            <FeedMedia v-if="picture && placement === 'below'" :image="picture" />
 
             <ul v-if="files.length" class="sf-media-object__attachments mt-0.5 mb-0 flex list-none flex-col gap-0.5 p-0">
             <li v-for="(file, i) in files ?? []" :key="i" class="sf-file m-0 text-[13.5px] text-muted-foreground">

@@ -21,9 +21,9 @@
 @if (isset($renderers['body'])){!! $renderers['body']($activity) !!}
 @endif
         {{ $slot }}
-@foreach ($forms as $body)<x-storyfeed::body :body="$body" :renderer="$renderers['form'] ?? null" :media-renderer="$renderers['media'] ?? null" />
+@foreach ($forms as $body)<x-storyfeed::body :body="$body" :renderer="$renderers['form'] ?? null" :media-renderer="$renderers['media'] ?? null" :file-labeller="$renderers['fileLabel'] ?? null" />
 @endforeach
-@foreach ($bodies as $body)<x-storyfeed::body :body="$body" :entity="$object" :renderer="$renderers['form'] ?? null" :media-renderer="$renderers['media'] ?? null" />
+@foreach ($bodies as $body)<x-storyfeed::body :body="$body" :entity="$object" :renderer="$renderers['form'] ?? null" :media-renderer="$renderers['media'] ?? null" :file-labeller="$renderers['fileLabel'] ?? null" />
 @endforeach
 @if ($objectIcon)</div></div>
 @endif

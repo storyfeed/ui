@@ -33,7 +33,7 @@
 @if ($remaining > 0 || $more !== null)
             <figcaption class="sf-list__more mt-1 flex gap-2 text-[12.5px] text-muted-foreground">
 @if ($remaining > 0)
-                    <span>{{ __(':count more', ['count' => $remaining]) }}</span>
+                    <span>{{ __('and :count more', ['count' => $remaining]) }}</span>
 @endif
 @if (is_array($more) && filled($more['href'] ?? $entity?->url()))
                     <a class="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline" href="{{ $more['href'] ?? $entity?->url() }}">{{ $more['label'] ?? $more['href'] }}</a>

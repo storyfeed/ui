@@ -10,6 +10,8 @@ withDefaults(
         isLast?: boolean;
         /** Which fact the rail answers first. Null keeps this kit's default. */
         rail?: Rail | RailName | null;
+        /** Override the rail for expanded members independently of their group. */
+        childRail?: Rail | RailName | null;
     }>(),
     { isLast: false, rail: null },
 );
@@ -43,6 +45,7 @@ withDefaults(
     </FeedItem>
     <FeedGroup
         v-else-if="item.kind === 'group'"
+        :child-rail="childRail"
         :item="item"
         :is-last="isLast"
         :rail="rail"

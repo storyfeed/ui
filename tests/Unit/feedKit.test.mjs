@@ -9,7 +9,7 @@ const server = await createServer({
     configFile: false,
     plugins: [vue()],
     optimizeDeps: { noDiscovery: true, include: [] },
-    server: { middlewareMode: true },
+    server: { middlewareMode: true, hmr: false },
     appType: 'custom',
     ssr: { external: ['vue', 'vue/server-renderer', 'lucide-vue-next'] },
 });
@@ -458,4 +458,137 @@ test('generic bodies resolve current and historical forms and reject unknown nam
     const photo = { src: '/photo.svg' };
     assert.equal(imageOf({ media: { preview: photo } }), null);
     assert.deepEqual(imageOf({ media: { preview: photo }, body: [{ $body: 'Storyfeed/Body/Image', alt: 'Photo' }] }), { ...photo, alt: 'Photo' });
+});
+
+const activity = {
+    kind: 'activity', id: 'u5-child', verb: 'post',
+    published_at: '2026-10-07T12:00:00Z', headline_template: ':actor posted',
+    actor: { ...entity, media: null }, glyph: 'file-up', object: null, target: null, context: null,
+};
+const group = {
+    ...activity, kind: 'group', id: 'u5-group', axis: 'repeat', count: 36,
+    children: [activity], sample: { actors: [activity.actor] }, distinct: { actors: 1 },
+    children_truncated: true,
+};
+const textOf = html => html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+
+test('summary remainder includes server-truncated activities and locally capped phrases', async () => {
+    const phrases = [20, 5, 4, 2].map((count, index) => ({
+        count, verb: `verb${index}`, headline_template: `phrase${index} :count`, sample: {}, distinct: {},
+    }));
+    for (const shown of [phrases.slice(0, 3), phrases]) {
+        const html = await render('/resources/js/vue/FeedGroup.vue', {
+            item: { ...group, axis: 'summary', headline_template: null, phrases: shown, phrases_truncated: true },
+        });
+        assert.match(textOf(html), /phrase0 20, phrase1 5, phrase2 4 and 7 more/);
+        assert.doesNotMatch(textOf(html), /phrase3/);
+    }
+});
+
+test('group singular slots use pins even when distinct=1 or samples disagree', async () => {
+    for (const role of ['actor', 'object', 'target', 'context', 'instrument', 'origin', 'result', 'location', 'generator']) {
+        const item = {
+            ...group, actor: null, headline_template: `:${role}`,
+            sample: { [`${role}s`]: [{ ...activity.actor, label: 'Exemplar' }] },
+            distinct: { [`${role}s`]: 1 },
+        };
+        const absent = await render('/resources/js/vue/FeedGroup.vue', { item });
+        assert.doesNotMatch(absent.split('class="sf-head"')[1].split('class="sf-meta"')[0], /Exemplar/);
+        const pinned = await render('/resources/js/vue/FeedGroup.vue', { item: { ...item, [role]: { ...activity.actor, label: 'Pinned' } } });
+        assert.match(textOf(pinned), /Pinned/);
+    }
+});
+
+const photoEntity = src => ({
+    ...activity.actor, id: src, label: 'Artwork', url: `/art/${src}`,
+    body: [{ $body: 'Storyfeed/Body/Image', image: 'preview' }],
+    media: { preview: { src, width: 200, height: 100 } },
+});
+
+test('group strips sample all roles, objects first, deduplicate by source and cap at three', async () => {
+    for (const role of ['objects', 'actors', 'targets', 'contexts', 'origins', 'results', 'instruments', 'locations', 'generators']) {
+        const html = await render('/resources/js/vue/FeedGroup.vue', { item: { ...group, sample: { [role]: [photoEntity('/picture')] } } });
+        assert.match(html, /src="\/picture"/);
+    }
+    const html = await render('/resources/js/vue/FeedGroup.vue', { item: { ...group, sample: {
+        objects: [photoEntity('/a'), photoEntity('/b')],
+        targets: [photoEntity('/a'), photoEntity('/c'), photoEntity('/d')],
+    } } });
+    assert.deepEqual([...html.matchAll(/<img[^>]+src="([^"]+)"/g)].map(match => match[1]), ['/a', '/b', '/c']);
+    assert.match(html, /href="\/art\/\/c"/);
+});
+
+test('Summary and expanded groups suppress sampled media', async () => {
+    const item = { ...group, sample: { actors: [activity.actor], objects: [photoEntity('/suppressed')] } };
+    const summary = await render('/resources/js/vue/FeedGroup.vue', { item: { ...item, axis: 'summary' } });
+    assert.doesNotMatch(summary, /\/suppressed|sf-media-strip/);
+    const expanded = await render('/resources/js/vue/FeedGroup.vue', { item: { ...item, headline_template: null } });
+    assert.match(expanded, /Show less/);
+    assert.doesNotMatch(expanded, /\/suppressed|sf-media-strip/);
+});
+
+test('files retain names, decimal sizes and MIME labels without extension guesses', async () => {
+    const path = '/resources/js/vue/body/FileAttachment.vue';
+    for (const [size, expected] of [[21_000_000, '21 MB'], [76_000, '76 KB'], [2_516_582, '2.5 MB'], [0, '0 bytes']]) {
+        const html = await render(path, { payload: { name: 'report.csv', size, mediaType: 'text/csv' }, entityLabel: 'report.csv' });
+        assert.match(textOf(html), new RegExp(`report.csv Spreadsheet \\(CSV\\) · ${expected}`));
+    }
+    assert.equal(textOf(await render(path, { payload: { name: 'design.fig' } })), 'design.fig');
+    assert.match(textOf(await render(path, { payload: { mediaType: 'application/x-host' } })), /application\/x-host/);
+});
+
+test('host file labeller overrides MIME labels, null falls back, and its text is escaped', async () => {
+    const { FEED_FILE_LABELLER } = await server.ssrLoadModule('/resources/js/vue/keys.ts');
+    const { default: Component } = await server.ssrLoadModule('/resources/js/vue/FeedItem.vue');
+    let received;
+    const renderLabel = async label => {
+        const app = createSSRApp({ render: () => h(Component, { item: { ...activity, object: {
+            ...activity.actor, body: [{ $body: 'Storyfeed/Body/FileAttachment', name: 'design.fig', mediaType: 'application/pdf' }],
+        } } }) });
+        app.provide(FEED_FILE_LABELLER, file => { received = file; return label; });
+        return renderToString(app);
+    };
+    assert.match(await renderLabel('<Figma file>'), /design.fig &lt;Figma file&gt;/);
+    assert.deepEqual(received, { name: 'design.fig', mediaType: 'application/pdf' });
+    assert.match(await renderLabel(null), /design.fig PDF/);
+});
+
+test('ItemList states the conjunction before overflow', async () => {
+    const html = await render('/resources/js/vue/body/ItemList.vue', { payload: { items: ['First'], totalItems: 3 } });
+    assert.match(textOf(html), /Firstand 2 more/);
+});
+
+test('MediaObject below placement draws the full picture after prose; beside stays compact', async () => {
+    const path = '/resources/js/vue/body/MediaObject.vue';
+    const props = { payload: { subject: 'Post', content: 'Words', image: 'preview' }, entityMedia: photoEntity('/photo').media };
+    const below = await renderRaw(path, { ...props, imagePlacement: 'below' });
+    assert.ok(below.indexOf('Words') < below.indexOf('src="/photo"'));
+    assert.doesNotMatch(below, /size-16|sf-media-object__image/);
+    const beside = await renderRaw(path, props);
+    assert.match(beside, /sf-media-object__image|size-16/);
+    assert.ok(beside.indexOf('src="/photo"') < beside.indexOf('Words'));
+});
+
+test('actor rails show glyph badges and childRail independently selects glyph-only children', async () => {
+    assert.match(await render('/resources/js/vue/FeedItem.vue', { item: activity, rail: 'actor' }), /sf-badge/);
+    const item = { ...group, headline_template: null };
+    const html = await render('/resources/js/vue/FeedStream.vue', { items: [item], rail: 'actor', childRail: 'activity-only' });
+    const children = html.split('class="sf-children"')[1];
+    assert.match(children, /sf-icon/);
+    assert.doesNotMatch(children, /sf-avatar|sf-badge/);
+    const crowd = await render('/resources/js/vue/FeedGroup.vue', { item: { ...group, sample: { actors: [activity.actor, { ...activity.actor, id: '2' }, { ...activity.actor, id: '3' }] } }, rail: 'actor' });
+    assert.equal((crowd.match(/sf-avatar--sm/g) ?? []).length, 3);
+    assert.doesNotMatch(crowd, /sf-badge/);
+});
+
+test('hosts can choose below placement for automatic MediaObject bodies', async () => {
+    const { FEED_MEDIA_OBJECT_PLACEMENT } = await server.ssrLoadModule('/resources/js/vue/keys.ts');
+    const { default: Component } = await server.ssrLoadModule('/resources/js/vue/FeedItem.vue');
+    const app = createSSRApp({ render: () => h(Component, { item: { ...activity, object: {
+        ...photoEntity('/automatic'), body: [{ $body: 'Storyfeed/Body/MediaObject', content: 'Full photograph', image: 'preview' }],
+    } } }) });
+    app.provide(FEED_MEDIA_OBJECT_PLACEMENT, 'below');
+    const html = await renderToString(app);
+    assert.ok(html.indexOf('Full photograph') < html.indexOf('src="/automatic"'));
+    assert.doesNotMatch(html, /size-16/);
 });

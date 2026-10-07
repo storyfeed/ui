@@ -28,6 +28,16 @@ invert and code needs a dark surface in both themes.
   components. A `Storyfeed/Body/Component` body's `props` are forwarded. Unknown
   names render nothing. The docs' `Note` and `Orders/Progress` demos are excluded:
   they are consumer-specific body-slot examples, not generic body forms.
+- Provide `FEED_FILE_LABELLER` with a function receiving `{ name, mediaType }`
+  and returning a label or null. A host label wins; null uses `fileLabels.ts`'s
+  MIME map (PDF, CSV, Word, images, etc.), then the supplied MIME string.
+  Filename extensions are never inferred by the kit. File names always show,
+  even when the headline names the entity; sizes use decimal units (21 MB,
+  76 KB). The payload is unchanged.
+- `MediaObject.vue` accepts `image-placement="beside|below"`. Beside is the
+  compact 64px image; below draws the photograph after the prose at its normal
+  media width. Provide `FEED_MEDIA_OBJECT_PLACEMENT` with `'below'` to apply
+  that posture to automatic body rendering throughout a feed; a prop wins.
 - `#body`, `#annotations` and `#time` receive the node on both activities and
   groups, including expanded children. Generic body forms are rendered from the
   activity's data and the object's body/data; other roles are not previewed.
@@ -36,7 +46,18 @@ invert and code needs a dark surface in both themes.
 
 `rail` takes `actor`, `activity`, `actor-only` or `activity-only`, or the
 structured `Rail` type in `rail.ts`. Dense children suppress the secondary badge.
+Use `rail="actor"` for an actor avatar with an activity badge. With that
+parent posture, dense children retain actor discs; pass
+`child-rail="activity-only"` on `FeedStream`, `FeedNode` or `FeedGroup` for
+independent glyph-only members. An omitted child rail inherits the parent.
 Group avatar samples never imply that one actor represents many.
+
+Groups consume core's explicit pinned singular slots; distinct=1 alone does
+not pin a role. Summary readings show at most three phrases and state all
+remaining activities using `count` minus the shown phrase counts, including
+server-truncated phrases. Group photograph strips sample Image bodies in all
+roles, objects first, deduplicate by image source and cap at three. Summary
+readings and expanded groups suppress the strip.
 
 `grouped=false` hides day headings. `dividers` maps item IDs to labels to render
 before those items. `divider-style="dot"` is the default;

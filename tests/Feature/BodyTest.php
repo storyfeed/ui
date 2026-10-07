@@ -114,10 +114,9 @@ it('escapes excerpt text and source and only marks truncated passages', function
         ->not->toContain('…');
 });
 
-it('draws file metadata without repeating its owning entity label', function () {
+it('draws file metadata including its owning entity label', function () {
     expect(render_bodies([FileAttachment::make(2_516_582, 'application/pdf', 'invoice.pdf'), FileAttachment::make(512, name: 'Order #1042')]))
-        ->toContain('<p>invoice.pdf · 2.4 MB · application/pdf</p>', '<p>512 B</p>')
-        ->not->toContain('>Order #1042 ·');
+        ->toContain('<p>invoice.pdf PDF · 2.5 MB</p>', '<p>Order #1042 512 bytes</p>');
 });
 
 it('escapes file names and ignores stored URLs', function () {
@@ -128,7 +127,7 @@ it('escapes file names and ignores stored URLs', function () {
 
 it('shows zero-byte files and omits an empty file form', function () {
     expect(render_blade('<x-storyfeed::body.file-attachment :body="$body" />', ['body' => ['size' => 0]]))
-        ->toContain('<p>0 B</p>')
+        ->toContain('<p>0 bytes</p>')
         ->and(render_blade('<x-storyfeed::body.file-attachment :body="[]" />'))->toBe('');
 });
 
@@ -138,7 +137,7 @@ it('draws an item list, numbered when ordered, with what was not sent', function
     expect($html)->toContain(
         '<figure> <figcaption>Items</figcaption> <ol> '
         .'<li> Margherita </li> <li> <a href="/menu/tiramisu">Tiramisu</a> </li> </ol> '
-        .'<figcaption> <span>3 more</span> <a href="/orders/1042">See all</a> </figcaption> </figure>'
+        .'<figcaption> <span>and 3 more</span> <a href="/orders/1042">See all</a> </figcaption> </figure>'
     );
 });
 
@@ -218,7 +217,7 @@ it('renders stored File, KeyValue v1 and MediaObject v1 bodies without rewriting
     $item = FeedItem::of(['kind' => 'activity', 'object' => ['type' => 'order', 'body' => $bodies]]);
     $html = render_blade('<x-storyfeed::activity :activity="$item" />', ['item' => $item]);
 
-    expect($html)->toContain('legacy.zip', '512 B', 'Not seated', 'Unknown', 'href="/legacy.pdf"', 'Legacy file')
+    expect($html)->toContain('legacy.zip', '512 bytes', 'Not seated', 'Unknown', 'href="/legacy.pdf"', 'Legacy file')
         ->not->toContain('Silent')
         ->and($bodies[0]['$body'])->toBe('Storyfeed/Body/File')
         ->and($bodies[2])->toHaveKey('attachments');

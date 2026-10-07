@@ -18,6 +18,8 @@ const props = withDefaults(
         isLast?: boolean;
         /** Which fact the rail answers first. Null keeps this kit's default. */
         rail?: Rail | RailName | null;
+        /** Override the rail for expanded members independently of their group. */
+        childRail?: Rail | RailName | null;
     }>(),
     { isLast: false, rail: null },
 );
@@ -54,27 +56,8 @@ const expanded = ref(unnamed.value);
 
 const time = useRelativeTime(toRef(() => props.item.published_at));
 
-// The server names a group's pinned roles for us (v0.9) — this used to
-// reconstruct them from `sample[0] ?? children[0]`, which is the thing that
-// release removed the need for, and which quietly names one entity out of many
-// the first time a group is not uniform.
-//
-// Recover a singular from the sample ONLY when the group genuinely has one.
-// `distinct` is the true total from the aggregate query, so a one-item sample
-// list is not on its own proof.
-const singular = (role: FeedSingularRole) => {
-    const named = props.item[role];
-
-    if (named) {
-        return named;
-    }
-
-    const shown = props.item.sample[`${role}s`] ?? [];
-
-    return shown.length === 1 && props.item.distinct[`${role}s`] === 1
-        ? shown[0]
-        : null;
-};
+// Only core's explicit slots pin a group role; distinct=1 is not a pin.
+const singular = (role: FeedSingularRole) => props.item[role] ?? null;
 
 /**
  * A summary row with no headline of its own reads as its actor and its
@@ -91,9 +74,7 @@ const phrases = computed(() =>
 );
 
 const phrasesBeyond = computed(() =>
-    (props.item.phrases ?? [])
-        .slice(PHRASES_SHOWN)
-        .reduce((sum, phrase) => sum + phrase.count, 0),
+    Math.max(0, props.item.count - phrases.value.reduce((sum, phrase) => sum + phrase.count, 0)),
 );
 
 /** A phrase's own singulars, where its sample genuinely has one. */
@@ -142,22 +123,29 @@ const entities = computed(() => ({
 }));
 
 /**
- * A collapsed group shows a SAMPLE of its members' photographs, and says how
- * many entities it is not showing. A tile stands for an entity, so it keeps
- * that entity's link; the overflow reads `distinct`, not `count`, because the
- * number is entities not shown rather than members.
+ * A collapsed group samples at most three Image bodies, objects first and
+ * then the other roles. The same image source appears only once, with its
+ * first entity's link. Distinct role totals cannot count unseen photographs,
+ * so the default strip makes no media overflow claim.
  *
  * The strip hides when the members themselves are visible — a sample of a list
  * you are already looking at is noise.
  */
 const strip = computed(() => {
-    const sample = (props.item as any).sample?.objects ?? [];
-    const tiles = sample
-        .map((entity: any) => ({
-            image: imageOf(entity),
-            href: entity.url ?? null,
-        }))
-        .filter((tile: any) => tile.image !== null);
+    if (props.item.axis === 'summary' || props.item.phrases?.length || expanded.value) {
+        return { tiles: [], overflow: 0 };
+    }
+
+    const seen = new Set<string>();
+    const tiles = ['objects', 'actors', 'targets', 'contexts', 'origins', 'results', 'instruments', 'locations', 'generators']
+        .flatMap(role => props.item.sample[role as keyof typeof props.item.sample] ?? [])
+        .flatMap(entity => {
+            const image = imageOf(entity);
+            if (!image || seen.has(image.src)) return [];
+            seen.add(image.src);
+            return [{ image, href: entity.url ?? null }];
+        })
+        .slice(0, 3);
 
     return { tiles, overflow: 0 };
 });
@@ -312,7 +300,7 @@ const hiddenBeyondChildren = computed(
                     :key="child.id"
                     :item="child"
                     dense
-                    :rail="rail"
+                    :rail="childRail ?? rail"
                     :is-last="
                         index === item.children.length - 1 &&
                         hiddenBeyondChildren === 0

@@ -49,7 +49,7 @@ const remaining = computed(() => {
         </component>
 
         <figcaption v-if="remaining || more" class="sf-list__more mt-1 flex gap-2 text-[12.5px] text-muted-foreground">
-            <span v-if="remaining">{{ remaining }} more</span>
+            <span v-if="remaining">and {{ remaining }} more</span>
             <component
                 :is="linkComponent"
                 v-if="more?.href"

@@ -34,7 +34,7 @@ try {
                 await frames[1].locator('details').evaluateAll(nodes=>nodes.forEach(node=>node.open=true));
             }
             const geometry=await Promise.all(frames.map(frame=>frame.evaluate(()=>{
-                const selectors=['.sf-feed','.sf-row','.sf-head','.sf-meta','.sf-body-form','.sf-avatar','.sf-rail__line','.sf-day','.sf-toggle','.sf-children'];
+                const selectors=['.sf-feed','.sf-row','.sf-head','.sf-meta','.sf-body-form','.sf-avatar','.sf-rail__line','.sf-day','.sf-toggle','.sf-children','.sf-media-strip','.sf-media-object','.sf-media-object__image','.sf-media-object__body'];
                 return Object.fromEntries(selectors.map(selector=>[selector,[...document.querySelectorAll(selector)].filter(e=>!e.closest('details:not([open]) .sf-children') && e.getClientRects().length && e.getBoundingClientRect().height>0).map(e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height,text:e.textContent.trim().replace(/\s+/g,' ')}})]));
             })));
             const differences=[];let count=0,max=0;

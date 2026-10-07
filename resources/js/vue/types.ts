@@ -113,6 +113,8 @@ export interface GroupNode extends BaseNode {
     period?: string;
     /** A summary row's members by verb, in the order they first happened. */
     phrases?: FeedPhrase[];
+    /** True when the server omitted phrases; count still covers all activities. */
+    phrases_truncated?: boolean;
     /**
      * Supplied ONLY where the axis pins that role — one sampled entity, one distinct
      * value. Absent everywhere else on purpose: an unpinned role has no single

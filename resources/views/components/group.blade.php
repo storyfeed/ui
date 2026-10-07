@@ -1,15 +1,15 @@
-@props(['group', 'last' => false, 'rail' => null, 'interactive' => true, 'collapsed' => null, 'timezone' => null, 'renderers' => [], 'removed' => null, 'objectIcon' => null, 'mediaTiles' => null, 'mediaOverflow' => 0])
+@props(['group', 'last' => false, 'rail' => null, 'childRail' => null, 'interactive' => true, 'collapsed' => null, 'timezone' => null, 'renderers' => [], 'removed' => null, 'objectIcon' => null, 'mediaTiles' => null, 'mediaOverflow' => 0])
 @php
     $group = \Storyfeed\Support\FeedItem::of($group);
     $removed ??= isset($renderers['removed']) ? $renderers['removed']($group) : null;
     $objectIcon ??= isset($renderers['objectIcon']) ? $renderers['objectIcon']($group) : null;
-    $headline = $group->headline();
+    $headline = \Storyfeed\Ui\Support\GroupHeadline::of($group);
     if ($headline->isFallback() && $group->phrases()->isNotEmpty()) {
         // Match Vue's three-phrase reading without changing the input payload.
         $headline = (new \Storyfeed\Support\FeedItem([
             ...$group->toArray(), 'kind' => 'group', 'axis' => 'summary',
             'phrases' => $group->phrases()->take(3)->map(fn ($phrase) => $phrase->toArray())->all(),
-            'count' => $group->phrases()->sum(fn ($phrase) => $phrase->count()),
+            'count' => $group->count(),
         ]))->headline();
     }
     $children = $group->children();
@@ -17,16 +17,27 @@
     $tiles = $mediaTiles ?? (isset($renderers['mediaTiles']) ? $renderers['mediaTiles']($group) : null);
     $mediaOverflow = isset($renderers['mediaOverflow']) ? $renderers['mediaOverflow']($group) : $mediaOverflow;
     if ($tiles === null) {
-    $tiles = [];
-    foreach ($group->objects() as $entity) {
-        foreach ($entity->bodies()->merge(\Storyfeed\Ui\Support\Bodies::in($entity->get('data'))) as $body) {
-            if (($body['$body'] ?? null) === 'Storyfeed/Body/Image') {
-                $imageSlot = $body['image'] ?? 'preview';
-                $image = in_array($imageSlot, ['icon', 'preview', 'image'], true) ? $entity->media()?->get($imageSlot) : null;
-                if (is_array($image) && ! empty($image['src'])) { $image['alt'] = $body['alt'] ?? $body['caption'] ?? ''; $tiles[] = ['image' => $image, 'href' => $entity->url()]; break; }
+        $tiles = [];
+        $seen = [];
+        if (! $group->isDigest() && $group->phrases()->isEmpty()) {
+            foreach (['object', 'actor', 'target', 'context', 'origin', 'result', 'instrument', 'location', 'generator'] as $role) {
+                foreach ($group->entities($role) as $entity) {
+                    foreach ($entity->bodies()->merge(\Storyfeed\Ui\Support\Bodies::in($entity->get('data'))) as $body) {
+                        if (($body['$body'] ?? null) !== 'Storyfeed/Body/Image') { continue; }
+                        $imageSlot = $body['image'] ?? 'preview';
+                        $image = in_array($imageSlot, ['icon', 'preview', 'image'], true) ? $entity->media()?->get($imageSlot) : null;
+                        if (! is_array($image) || empty($image['src'])) { continue; }
+                        if (! isset($seen[$image['src']])) {
+                            $seen[$image['src']] = true;
+                            $image['alt'] = $body['alt'] ?? $body['caption'] ?? '';
+                            $tiles[] = ['image' => $image, 'href' => $entity->url()];
+                        }
+                        break;
+                    }
+                    if (count($tiles) === 3) { break 2; }
+                }
             }
         }
-    }
     }
     $open = ($group->get('expanded') ?? false) || ($collapsed === null ? (! $interactive || ($headline->isFallback() && $group->phrases()->isEmpty())) : ! $collapsed);
 @endphp
@@ -58,7 +69,7 @@
             @if ($interactive || $open)
                 <div class="sf-children mt-3">
                     @foreach ($children as $child)
-                        <x-storyfeed::activity :activity="$child" dense :rail="$rail" :last="$loop->last && $hidden === 0" :timezone="$timezone" :renderers="$renderers" />
+                        <x-storyfeed::activity :activity="$child" dense :rail="$childRail ?? $rail" :last="$loop->last && $hidden === 0" :timezone="$timezone" :renderers="$renderers" />
                     @endforeach
                     @if ($hidden > 0)
                         <p class="sf-overflow pl-[calc(var(--sf-gutter)+var(--sf-gap))] text-xs leading-[1.6] text-muted-foreground">{{ __('…and :count more not shown', ['count' => $hidden]) }}</p>

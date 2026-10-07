@@ -13,6 +13,7 @@ use Storyfeed\Facades\Storyfeed;
 use Storyfeed\FeedImage;
 use Storyfeed\FeedLink;
 use Storyfeed\FeedResource;
+use Storyfeed\Support\Entity;
 use Storyfeed\Ui\Support\BodyComponents;
 use Storyfeed\Ui\Tests\Fixtures\Order;
 use Storyfeed\Ui\Tests\Fixtures\User;
@@ -73,8 +74,8 @@ final class WorkbenchTest extends TestCase
         $bodies = json_decode(file_get_contents(__DIR__.'/vue/body-payload.json'), true, flags: JSON_THROW_ON_ERROR);
         $icons = json_decode(file_get_contents(dirname(__DIR__).'/build/workbench-icons.json'), true, flags: JSON_THROW_ON_ERROR);
         $renderers = ['glyph' => fn ($token, $variant) => $icons[$token] ?? $icons['activity']];
-        $render = fn ($items, $options = []) => Blade::render('<x-storyfeed::feed :items="$items" :grouped="$grouped" :rail="$rail" :dividers="$dividers" :divider-style="$dividerStyle" :renderers="$renderers" />', [
-            'renderers' => $renderers, 'items' => $items, 'grouped' => true, 'rail' => null, 'dividers' => [], 'dividerStyle' => 'dot', ...$options,
+        $render = fn ($items, $options = []) => Blade::render('<x-storyfeed::feed :items="$items" :grouped="$grouped" :rail="$rail" :child-rail="$childRail" :dividers="$dividers" :divider-style="$dividerStyle" :renderers="$renderers" />', [
+            'renderers' => $renderers, 'items' => $items, 'grouped' => true, 'rail' => null, 'childRail' => null, 'dividers' => [], 'dividerStyle' => 'dot', ...$options,
         ]);
         $main = $render($payload['items']);
         $examples = ['Generic body forms' => $render($bodies, ['grouped' => false])];
@@ -86,8 +87,12 @@ final class WorkbenchTest extends TestCase
         }
         $cases = json_decode(file_get_contents(__DIR__.'/vue/cases.json'), true, flags: JSON_THROW_ON_ERROR);
         foreach ($cases as $case) {
-            $examples[$case['name']] = $render($case['items'], ['grouped' => $case['grouped'] ?? false, 'rail' => $case['rail'] ?? null]);
+            $examples[$case['name']] = $render($case['items'], ['grouped' => $case['grouped'] ?? false, 'rail' => $case['rail'] ?? null, 'childRail' => $case['childRail'] ?? null]);
         }
+        $post = collect($bodies)->first(fn ($item) => ($item['object']['body'][0]['$body'] ?? null) === 'Storyfeed/Body/MediaObject')['object'];
+        $postEntity = Entity::of($post);
+        $postBody = $post['body'][0];
+        $examples['MediaObject below'] = Blade::render('<div class="sf-feed text-sm leading-[1.6] text-muted-foreground"><x-storyfeed::body.media-object :body="$postBody" :entity="$postEntity" image-placement="below" /></div>', compact('postBody', 'postEntity'));
         file_put_contents($output.'/parity.html', Blade::render(file_get_contents(__DIR__.'/parity.blade.php'), compact('main', 'examples')));
 
     }

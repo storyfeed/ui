@@ -1,4 +1,11 @@
 import type { Component, InjectionKey } from 'vue';
+import type { FileLabeller } from './fileLabels';
+
+/** Host file-kind presentation; null delegates to the built-in MIME labels. */
+export const FEED_FILE_LABELLER = Symbol('feedFileLabeller') as InjectionKey<FileLabeller>;
+
+/** Default picture placement for automatic MediaObject bodies; a body prop wins. */
+export const FEED_MEDIA_OBJECT_PLACEMENT = Symbol('feedMediaObjectPlacement') as InjectionKey<'beside' | 'below'>;
 
 /**
  * The component used to render an entity link. Defaults to a plain `<a>`.

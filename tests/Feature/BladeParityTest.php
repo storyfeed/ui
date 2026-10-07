@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Blade;
 use Storyfeed\Support\Entity;
 use Storyfeed\Support\FeedItem;
 use Storyfeed\Ui\Support\Avatar;
@@ -120,4 +121,67 @@ it('hands pictures to host integration while retaining the body caption and medi
     $body = ['$body' => 'Storyfeed/Body/Prose', 'content' => 'Plain words'];
     expect(render_blade('<x-storyfeed::body :body="$body" :media-renderer="$mediaRenderer" />', compact('body', 'mediaRenderer')))
         ->toContain('Plain words')->not->toContain('media-renderer');
+});
+
+it('keeps server-truncated summary activity totals after capping phrases', function () {
+    $phrases = array_map(fn ($count, $n) => ['count' => $count, 'headline_template' => 'phrase'.$n.' :count'], [20, 5, 4, 2], range(0, 3));
+    foreach ([array_slice($phrases, 0, 3), $phrases] as $shown) {
+        $item = ['kind' => 'group', 'axis' => 'summary', 'count' => 36, 'phrases_truncated' => true, 'actor' => ['label' => 'Dana'], 'phrases' => $shown];
+        expect(render_blade('<x-storyfeed::group :group="$item" />', compact('item')))
+            ->toContain('phrase0 20, phrase1 5, phrase2 4 and 7 more')->not->toContain('phrase3');
+    }
+});
+
+it('uses only pinned group singulars', function () {
+    foreach (['actor', 'object', 'target', 'context', 'instrument', 'origin', 'result', 'location', 'generator'] as $role) {
+        $item = ['kind' => 'group', 'count' => 2, 'headline_template' => ':'.$role, 'sample' => [$role.'s' => [['label' => 'Exemplar']]], 'distinct' => [$role.'s' => 1]];
+        $html = Blade::render('<x-storyfeed::group :group="$item" />', compact('item'));
+        $head = explode('<div class="sf-meta', explode('class="sf-head ', $html)[1])[0];
+        expect($head)->not->toContain('Exemplar');
+        $item[$role] = ['label' => 'Pinned'];
+        expect(render_blade('<x-storyfeed::group :group="$item" />', compact('item')))->toContain('Pinned');
+    }
+});
+
+it('samples Image bodies across every group role and deduplicates and caps strips', function () {
+    $photo = fn ($src) => ['type' => 'document', 'id' => $src, 'label' => 'Artwork', 'url' => '/art'.$src, 'body' => [['$body' => 'Storyfeed/Body/Image', 'image' => 'preview']], 'media' => ['preview' => ['src' => $src]]];
+    $base = ['kind' => 'group', 'headline' => 'Updates', 'count' => 4];
+    foreach (['objects', 'actors', 'targets', 'contexts', 'origins', 'results', 'instruments', 'locations', 'generators'] as $role) {
+        $item = [...$base, 'sample' => [$role => [$photo('/picture')]]];
+        expect(render_blade('<x-storyfeed::group :group="$item" />', compact('item')))->toContain('src="/picture"');
+    }
+    $item = [...$base, 'sample' => ['objects' => [$photo('/a'), $photo('/b')], 'targets' => [$photo('/a'), $photo('/c'), $photo('/d')]]];
+    $html = render_blade('<x-storyfeed::group :group="$item" />', compact('item'));
+    expect(substr_count($html, '<img'))->toBe(3)->and($html)->toContain('src="/a"', 'src="/b"', 'src="/c"')->not->toContain('src="/d"');
+    $item['axis'] = 'summary';
+    expect(render_blade('<x-storyfeed::group :group="$item" />', compact('item')))->not->toContain('sf-media-strip', 'src="/a"');
+});
+
+it('supports file MIME labels and host labellers through the feed without changing the body', function () {
+    $body = ['$body' => 'Storyfeed/Body/FileAttachment', 'name' => 'report.csv', 'size' => 21_000_000, 'mediaType' => 'text/csv'];
+    $item = ['kind' => 'activity', 'object' => ['label' => 'report.csv', 'body' => [$body]]];
+    expect(render_blade('<x-storyfeed::feed :items="[$item]" />', compact('item')))->toContain('report.csv Spreadsheet (CSV) · 21 MB');
+    $received = null;
+    $renderers = ['fileLabel' => function ($file) use (&$received) {
+        $received = $file;
+
+        return '<Host label>';
+    }];
+    expect(render_blade('<x-storyfeed::feed :items="[$item]" :renderers="$renderers" />', compact('item', 'renderers')))->toContain('report.csv &lt;Host label&gt; · 21 MB');
+    expect($received)->toBe(['name' => 'report.csv', 'mediaType' => 'text/csv'])->and($item['object']['body'][0])->toBe($body);
+    $renderers = ['fileLabel' => fn ($file) => null];
+    expect(render_blade('<x-storyfeed::feed :items="[$item]" :renderers="$renderers" />', compact('item', 'renderers')))->toContain('Spreadsheet (CSV)');
+    foreach ([[76_000, '76 KB'], [2_516_582, '2.5 MB']] as [$size, $label]) {
+        $body = ['name' => 'design.fig', 'size' => $size];
+        expect(render_blade('<x-storyfeed::body.file-attachment :body="$body" />', compact('body')))->toContain('design.fig '.$label)->not->toContain('Figma');
+    }
+});
+
+it('lets dense child rails answer a different question from the actor-badged parent', function () {
+    $child = ['kind' => 'activity', 'headline' => 'Child', 'actor' => ['label' => 'Dana'], 'glyph' => 'file-up'];
+    $item = ['kind' => 'group', 'headline' => 'Group', 'count' => 1, 'children' => [$child], 'glyph' => 'file-up', 'sample' => ['actors' => [['label' => 'Dana']]]];
+    $html = Blade::render('<x-storyfeed::feed :items="[$item]" rail="actor" child-rail="activity-only" :interactive="false" />', compact('item'));
+    expect($html)->toContain('sf-badge');
+    $children = explode('class="sf-children', $html)[1];
+    expect($children)->toContain('sf-icon')->not->toContain('sf-avatar', 'sf-badge');
 });

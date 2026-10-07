@@ -19,6 +19,8 @@ const props = withDefaults(
          * `rail.ts` and `/basics/the-rail`.
          */
         rail?: Rail | RailName | null;
+        /** Override the rail for expanded members independently of their group. */
+        childRail?: Rail | RailName | null;
         /**
          * Labels to draw on the rail before particular items, keyed by item
          * id: `{ [firstTimelineId]: 'Timeline' }`. Drawn like a day heading,
@@ -115,6 +117,7 @@ const days = useFeedDays(toRef(() => props.items));
                             !nextCursor
                         "
                         :rail="rail"
+                        :child-rail="childRail"
                     >
                         <template #body="slotProps"
                             ><slot name="body" v-bind="slotProps"

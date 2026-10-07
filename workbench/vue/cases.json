@@ -545,5 +545,437 @@
         "missing_headline_template": ":object was removed"
       }
     ]
+  },
+  {
+    "name": "Server-truncated summary",
+    "items": [
+      {
+        "kind": "group",
+        "id": "group",
+        "axis": "summary",
+        "count": 36,
+        "verb": "posted",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": null,
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ada",
+              "label": "Ada Lovelace",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": []
+        },
+        "distinct": {
+          "actors": 1,
+          "objects": 0
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "child",
+            "verb": "posted",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline_template": ":actor posted :object",
+            "actor": {
+              "type": "person",
+              "id": "ada",
+              "label": "Ada Lovelace",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "object-0",
+              "label": "a status",
+              "url": "#ada",
+              "media": {
+                "preview": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+                  "width": 160,
+                  "height": 100,
+                  "alt": "Illustrated preview"
+                }
+              },
+              "data": null,
+              "tombstone": null,
+              "body": []
+            },
+            "target": null,
+            "context": null,
+            "glyph": "file-up"
+          }
+        ],
+        "phrases_truncated": true,
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "phrases": [
+          {
+            "verb": "v0",
+            "count": 20,
+            "headline_template": "phrase0 :count",
+            "sample": {},
+            "distinct": {}
+          },
+          {
+            "verb": "v1",
+            "count": 5,
+            "headline_template": "phrase1 :count",
+            "sample": {},
+            "distinct": {}
+          },
+          {
+            "verb": "v2",
+            "count": 4,
+            "headline_template": "phrase2 :count",
+            "sample": {},
+            "distinct": {}
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Pinned singular roles",
+    "items": [
+      {
+        "kind": "group",
+        "id": "group",
+        "axis": "repeat",
+        "count": 3,
+        "verb": "posted",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":result via :instrument",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ada",
+              "label": "Ada Lovelace",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": [],
+          "results": [
+            {
+              "type": "person",
+              "id": "pin",
+              "label": "Wrong sample",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "instruments": [
+            {
+              "type": "person",
+              "id": "pin",
+              "label": "Wrong sample",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ]
+        },
+        "distinct": {
+          "actors": 1,
+          "objects": 0,
+          "results": 1,
+          "instruments": 1
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "child",
+            "verb": "posted",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline_template": ":actor posted :object",
+            "actor": {
+              "type": "person",
+              "id": "ada",
+              "label": "Ada Lovelace",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "object-0",
+              "label": "a status",
+              "url": "#ada",
+              "media": {
+                "preview": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+                  "width": 160,
+                  "height": 100,
+                  "alt": "Illustrated preview"
+                }
+              },
+              "data": null,
+              "tombstone": null,
+              "body": []
+            },
+            "target": null,
+            "context": null,
+            "glyph": "file-up"
+          }
+        ],
+        "result": {
+          "type": "person",
+          "id": "pin",
+          "label": "Pinned role",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "instrument": {
+          "type": "person",
+          "id": "pin",
+          "label": "Pinned role",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        }
+      }
+    ]
+  },
+  {
+    "name": "Cross-role deduplicated media",
+    "items": [
+      {
+        "kind": "group",
+        "id": "group",
+        "axis": "repeat",
+        "count": 3,
+        "verb": "posted",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actors posted :count updates",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ada",
+              "label": "Ada Lovelace",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": [
+            {
+              "type": "person",
+              "id": "photo",
+              "label": "a photograph",
+              "url": "#ada",
+              "media": {
+                "preview": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+                  "width": 160,
+                  "height": 100,
+                  "alt": "Illustrated preview"
+                }
+              },
+              "data": null,
+              "tombstone": null,
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "image": "preview"
+                }
+              ]
+            }
+          ],
+          "targets": [
+            {
+              "type": "person",
+              "id": "photo",
+              "label": "a photograph",
+              "url": "#ada",
+              "media": {
+                "preview": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+                  "width": 160,
+                  "height": 100,
+                  "alt": "Illustrated preview"
+                }
+              },
+              "data": null,
+              "tombstone": null,
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "image": "preview"
+                }
+              ]
+            }
+          ],
+          "results": [
+            {
+              "type": "person",
+              "id": "another",
+              "label": "a photograph",
+              "url": "#ada",
+              "media": {
+                "preview": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%238b5cf6%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+                  "width": 160,
+                  "height": 100,
+                  "alt": "Illustrated preview"
+                }
+              },
+              "data": null,
+              "tombstone": null,
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "image": "preview"
+                }
+              ]
+            }
+          ]
+        },
+        "distinct": {
+          "actors": 1,
+          "objects": 0
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "child",
+            "verb": "posted",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline_template": ":actor posted :object",
+            "actor": {
+              "type": "person",
+              "id": "ada",
+              "label": "Ada Lovelace",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "object-0",
+              "label": "a status",
+              "url": "#ada",
+              "media": {
+                "preview": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+                  "width": 160,
+                  "height": 100,
+                  "alt": "Illustrated preview"
+                }
+              },
+              "data": null,
+              "tombstone": null,
+              "body": []
+            },
+            "target": null,
+            "context": null,
+            "glyph": "file-up"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Actor parent with glyph-only children",
+    "rail": "actor",
+    "childRail": "activity-only",
+    "items": [
+      {
+        "kind": "group",
+        "id": "group",
+        "axis": "repeat",
+        "count": 3,
+        "verb": "posted",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actors posted :count updates",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ada",
+              "label": "Ada Lovelace",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": []
+        },
+        "distinct": {
+          "actors": 1,
+          "objects": 0
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "child",
+            "verb": "posted",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline_template": ":actor posted :object",
+            "actor": {
+              "type": "person",
+              "id": "ada",
+              "label": "Ada Lovelace",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "object-0",
+              "label": "a status",
+              "url": "#ada",
+              "media": {
+                "preview": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+                  "width": 160,
+                  "height": 100,
+                  "alt": "Illustrated preview"
+                }
+              },
+              "data": null,
+              "tombstone": null,
+              "body": []
+            },
+            "target": null,
+            "context": null,
+            "glyph": "file-up"
+          }
+        ]
+      }
+    ]
   }
 ]
