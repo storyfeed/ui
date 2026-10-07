@@ -23,7 +23,7 @@ it('publishes the views, and a published view replaces the package\'s', function
 
     $published = resource_path('views/vendor/storyfeed');
 
-    foreach (['feed', 'item', 'activity', 'group', 'digest', 'glyph', 'time', 'body', 'pager', 'body/key-value', 'body/media-object'] as $component) {
+    foreach (['feed', 'item', 'activity', 'group', 'digest', 'glyph', 'headline', 'meta', 'time', 'body', 'pager', 'body/key-value', 'body/media-object'] as $component) {
         expect("{$published}/components/{$component}.blade.php")->toBeFile();
     }
 

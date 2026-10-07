@@ -25,10 +25,10 @@
     </div>
 
     <div @class(['min-w-0 flex-1 pt-1.5', 'pb-5' => ! $last || $children->isNotEmpty()])>
-        <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+        <div class="leading-relaxed">
             <x-storyfeed::headline :headline="$headline" />
-            <x-storyfeed::time :at="$group->publishedAt()" />
         </div>
+        <x-storyfeed::meta :item="$group" :headline="$headline" />
 
         {{ $slot }}
 

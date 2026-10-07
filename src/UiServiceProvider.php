@@ -19,6 +19,8 @@ class UiServiceProvider extends ServiceProvider
     {
         // Core registers the `storyfeed` TRANSLATION namespace and no views,
         // so the view namespace is this package's to take.
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'storyfeed-ui');
+
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'storyfeed');
 
         if ($this->app->runningInConsole()) {

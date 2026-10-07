@@ -29,10 +29,10 @@
     </div>
 
     <div @class(['min-w-0 flex-1', 'pb-5' => ! $last, 'pt-1' => $dense, 'pt-1.5' => ! $dense])>
-        <div class="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+        <div class="leading-relaxed">
             <x-storyfeed::headline :headline="$headline" />
-            <x-storyfeed::time :at="$activity->publishedAt()" />
         </div>
+        <x-storyfeed::meta :item="$activity" :headline="$headline" />
 
 
         @foreach ($bodies as $body)

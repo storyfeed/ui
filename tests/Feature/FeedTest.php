@@ -33,7 +33,7 @@ it('draws an activity row: glyph, linked headline and time', function () {
         ->toContain('<div> <div role="feed"> <article>')
         ->toContain('<span data-sf-intent="success" data-sf-glyph="shopping-bag" aria-hidden="true"><svg')
         ->toContain('<span><a href="/users/1">Dana</a> placed <a href="/orders/1" target="_blank">Order #1042</a></span>')
-        ->toContain('<time datetime="2026-09-25T12:00:00+00:00" title="Fri, Sep 25, 2026 12:00 PM">0 seconds ago</time>')
+        ->toContain('</span> </div> <div> <time datetime="2026-09-25T12:00:00+00:00" title="Fri, Sep 25, 2026 12:00 PM">0 seconds ago</time>')
         // The last row on the last page ends the rail.
         ->not->toContain('<div aria-hidden="true"></div>')
         ->not->toContain('<nav');
