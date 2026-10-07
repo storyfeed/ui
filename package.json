@@ -3,13 +3,24 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "workbench": "vendor/bin/phpunit --no-configuration --bootstrap vendor/autoload.php workbench/WorkbenchTest.php && tailwindcss -i workbench/app.css -o build/workbench/app.css --minify",
-    "screenshots": "node workbench/screenshots.mjs"
+    "workbench": "npm run workbench:blade && npm run workbench:vue",
+    "screenshots": "node workbench/screenshots.mjs",
+    "test:vue": "node --test tests/Unit/feedKit.test.mjs",
+    "workbench:blade": "vendor/bin/phpunit --no-configuration --bootstrap vendor/autoload.php workbench/WorkbenchTest.php && tailwindcss -i workbench/app.css -o build/workbench/app.css --minify",
+    "workbench:vue": "tailwindcss -i workbench/vue/app.css -o build/vue-tokens.css --minify && vite build --config workbench/vue/vite.config.mjs",
+    "vue:parity": "node workbench/vue/screenshots.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.0.0",
     "@tailwindcss/typography": "^0.5.20",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "lucide-vue-next": "^1.0.0",
+    "markdown-it": "^15.0.2",
     "playwright": "^1.58.0",
-    "tailwindcss": "^4.0.0"
+    "sanitize-html": "^2.18.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.3",
+    "vue": "^3.5.43"
   }
 }

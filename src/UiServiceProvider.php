@@ -3,6 +3,7 @@
 namespace Storyfeed\Ui;
 
 use Illuminate\Support\ServiceProvider;
+use Storyfeed\Ui\Commands\InstallUiCommand;
 
 /**
  * The Blade kit, registered the way Laravel's package documentation says:
@@ -24,6 +25,7 @@ class UiServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'storyfeed');
 
         if ($this->app->runningInConsole()) {
+            $this->commands([InstallUiCommand::class]);
             $this->publishes([
                 __DIR__.'/../resources/views' => resource_path('views/vendor/storyfeed'),
             ], 'storyfeed-views');

@@ -1,0 +1,36 @@
+name: Vue kit
+
+on:
+  push:
+    paths:
+      - 'resources/js/**'
+      - 'tests/Unit/**'
+      - 'workbench/**'
+      - 'package*.json'
+      - '.github/workflows/vue.yml'
+  pull_request:
+    paths:
+      - 'resources/js/**'
+      - 'tests/Unit/**'
+      - 'workbench/**'
+      - 'package*.json'
+      - '.github/workflows/vue.yml'
+
+jobs:
+  vue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          coverage: none
+      - uses: ramsey/composer-install@v4
+      - run: npm ci
+      - run: npm run test:vue
+      - run: npm run workbench
