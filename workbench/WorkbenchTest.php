@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Blade;
 use Storyfeed\Body\Excerpt;
-use Storyfeed\Body\File;
+use Storyfeed\Body\FileAttachment;
+use Storyfeed\Body\Image;
 use Storyfeed\Body\ItemList;
 use Storyfeed\Body\KeyValue;
 use Storyfeed\Body\MediaObject;
@@ -34,10 +35,11 @@ final class WorkbenchTest extends TestCase
         $sections['Summary row'] = $render(Storyfeed::feed()->summary()->get());
 
         $bodies = [
-            'KeyValue' => KeyValue::make(['Pickup' => '12:10 pm', 'Paid' => true, 'Reference' => KeyValue::verbatim('ORD-1042'), 'Table' => KeyValue::missingAs(null, 'not seated')], title: 'Order #1042'),
-            'MediaObject' => MediaObject::make(subject: FeedLink::make('Dinner for two', '/orders/1042'), content: 'Two pizzas and a dessert, ready for pickup at the kitchen.', footnote: FeedLink::make('Receipt', '/receipts/1042'))->withPreview()->withAttachments(FeedResource::make('/files/menu.pdf', mediaType: 'application/pdf', name: 'menu.pdf')),
+            'KeyValue' => KeyValue::make(['Pickup' => '12:10 pm', 'Paid' => true, 'Reference' => KeyValue::verbatim('ORD-1042'), 'Table' => KeyValue::placeholder(null, 'not seated')], title: 'Order #1042'),
+            'MediaObject' => MediaObject::make(subject: FeedLink::make('Dinner for two', '/orders/1042'), content: 'Two pizzas and a dessert, ready for pickup at the kitchen.', footnote: FeedLink::make('Receipt', '/receipts/1042'))->withPreview()->withFiles(FeedResource::make('/files/menu.pdf', mediaType: 'application/pdf', name: 'menu.pdf')),
+            'Image' => Image::make(caption: 'Dinner is ready', alt: 'A pizza on a plate')->withPreview(),
             'ItemList' => ItemList::ordered(['Margherita', FeedLink::make('Tiramisu', '/menu/tiramisu')], title: 'Items', totalItems: 5, more: FeedLink::make('See all', '/orders/1042')),
-            'File' => File::make(2516582, 'application/pdf', 'invoice.pdf'),
+            'FileAttachment' => FileAttachment::make(2516582, 'application/pdf', 'invoice.pdf'),
             'Prose plain' => Prose::make("Please ring the bell on arrival.\nLeave the order with reception if no one answers.", title: 'Delivery instructions'),
             'Prose Markdown' => Prose::markdown("**Ready for pickup**\n\nPlease bring your [order confirmation](/orders/1042).\n\n- Two pizzas\n- One dessert", title: 'Pickup note'),
             'Prose HTML' => Prose::html('<p><strong>Order confirmed.</strong> Your pickup is at <em>12:10 pm</em>.</p><p><a href="/orders/1042">View order</a></p>', title: 'Confirmation'),
@@ -47,7 +49,7 @@ final class WorkbenchTest extends TestCase
 
         foreach ($bodies as $label => $body) {
             Order::$body = $body;
-            Order::$preview = $label === 'MediaObject' ? FeedImage::make('meal.svg', width: 160, height: 160, alt: 'A pizza on a plate') : null;
+            Order::$preview = in_array($label, ['MediaObject', 'Image'], true) ? FeedImage::make('meal.svg', width: 160, height: 160, alt: 'A pizza on a plate') : null;
             $order = Order::create(['number' => $label]);
             Storyfeed::activity('place', $order)->by($user)->publish();
             $sections[$label] = $render(Storyfeed::feed()->object($order)->log()->get());
