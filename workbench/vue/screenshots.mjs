@@ -47,6 +47,17 @@ try {
                         `${theme} ${width} ${common[i].hook}[${i}].${axis}: ${common[i][axis]} vs ${geometry.reference[i][axis]}`);
                 }
             }
+            const avatarColours = await page.evaluate(() => {
+                const read = name => [...document.querySelectorAll(`.${name} .sf-avatar`)].map(el => {
+                    const style = getComputedStyle(el);
+                    return { label: el.getAttribute('aria-label'), background: style.backgroundColor, text: style.color };
+                });
+                return { reference: read('reference'), converted: read('converted') };
+            });
+            assert.ok(avatarColours.reference.length > 0);
+            assert.deepEqual(avatarColours.converted.slice(0, avatarColours.reference.length), avatarColours.reference,
+                `${theme} ${width}: live avatar colours match the reference`);
+            measurements.at(-1).avatarColours = avatarColours;
             assert.equal(await page.locator('.converted').evaluate(el => el.scrollWidth > el.clientWidth), false, 'No converted-pane overflow');
             const refToggle = page.locator('.reference .sf-toggle').first();
             const newToggle = page.locator('.converted .sf-toggle').first();
@@ -57,7 +68,7 @@ try {
             assert.equal(await refToggle.getAttribute('aria-expanded'), 'true');
             await page.screenshot({ path: resolve(output, `${theme}-${width}-expanded.png`), fullPage: true });
             assert.equal(await page.locator('.converted .sf-children .sf-row').count(), await page.locator('.reference .sf-children .sf-row').count());
-            console.log(`${theme} ${width}: paired screenshots, keyboard disclosure and overflow checked`);
+            console.log(`${theme} ${width}: paired screenshots, avatar colour parity, keyboard disclosure and overflow checked`);
         }
         await page.close();
     }

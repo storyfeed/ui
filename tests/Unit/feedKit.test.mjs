@@ -18,11 +18,12 @@ const structural = html => html.replace(/ class="([^"]*)"/g, (_, classes) => {
     const hooks = classes.split(/\s+/).filter(value => /^sf-[\w-]+$/.test(value));
     return hooks.length ? ` class="${hooks.join(' ')}"` : '';
 });
-const render = async (path, props) => {
+const renderRaw = async (path, props) => {
     const { default: component } = await server.ssrLoadModule(path);
 
-    return structural(await renderToString(createSSRApp({ render: () => h(component, props) })));
+    return renderToString(createSSRApp({ render: () => h(component, props) }));
 };
+const render = async (path, props) => structural(await renderRaw(path, props));
 const entity = {
     type: 'user',
     id: '1',
@@ -52,6 +53,29 @@ test('avatars show icons and deleted entities remain muted and unlinked', async 
         size: 'badge',
     });
     assert.match(badge.replace(/<!--.*?-->/g, ''), />A<\/span>/);
+});
+
+test('avatar colours prefer snapshot data, retain the source hash and mute tombstones', async () => {
+    const path = '/resources/js/vue/EntityAvatar.vue';
+    const provided = { ...entity, media: null, data: { avatar_color: '#FAF6EF' } };
+    const html = await renderRaw(path, { entity: provided });
+    assert.match(html, /background-color:#FAF6EF/);
+    assert.match(html, /class="[^"]*\btext-white\b/);
+
+    const background = html => html.match(/background-color:([^;"\s]+)/)?.[1];
+    const first = await renderRaw(path, { entity: { ...entity, media: null } });
+    const repeated = await renderRaw(path, { entity: { ...entity, media: null } });
+    // Source palette index for user:1; label changes do not change identity colour.
+    assert.equal(background(first), '#6366f1');
+    assert.equal(background(repeated), background(first));
+    assert.equal(background(await renderRaw(path, { entity: { ...entity, media: null, label: 'Ada' } })), background(first));
+    assert.equal(background(await renderRaw(path, { entity: { ...entity, media: null, data: { avatar_color: '' } } })), background(first));
+
+    const deleted = await renderRaw(path, {
+        entity: { ...provided, media: entity.media, tombstone: { formerType: 'user' } },
+    });
+    assert.match(deleted, /class="[^"]*\bbg-muted\b/);
+    assert.doesNotMatch(deleted, /background-color|#FAF6EF|<img/);
 });
 
 test('summary phrases render while truncated member totals stay visible', async () => {

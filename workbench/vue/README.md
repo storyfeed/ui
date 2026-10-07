@@ -12,8 +12,9 @@ Each pane is 1512 or 500 CSS pixels wide. The paired screenshot is twice that
 width; separate reference and converted screenshots are also saved. Both
 light/dark themes and collapsed/expanded groups are exercised with a pinned
 clock. All shared row/head/meta/body/disc rectangles must agree within 0.05px;
-keyboard disclosure and horizontal overflow are checked. `geometry.json`
-records measurements. The extra branch section appears only in the new kit.
+keyboard disclosure and horizontal overflow are checked. Shared live avatar
+background and text colours are compared against the reference in both themes.
+`geometry.json` records measurements. The extra branch section appears only in the new kit.
 
 The sample payload is the docs kit's production example, copied unchanged.
 Additional fixtures cover generic bodies, the four rails and per-item dividers.
@@ -22,8 +23,8 @@ Reference CSS is scoped to its pane so it cannot style the converted kit.
 
 Intentional differences from the legacy reference:
 
-- Avatar initials use primary/primary-foreground, and tombstones use muted tokens,
-  instead of snapshot or hashed hex colours.
+- Tombstones use the muted token. Live avatars match the reference
+  snapshot/hash palette and white text; avatar colours are content, not theme.
 - Secondary dates/divider marks use muted-foreground; the source's separate
   faint colour is not a starter-kit token.
 - Prose/list surfaces use card tokens. This corrects the source's dark

@@ -7,9 +7,11 @@ Install `lucide-vue-next`, `markdown-it` and `sanitize-html`.
 
 Use the Laravel Vue starter-kit tokens: `background`, `foreground`, `card`,
 `muted`, `muted-foreground`, `primary`, `primary-foreground`, `border` and `ring`.
-Define these tokens in a non-starter-kit app. All colour comes from tokens.
-Initials use primary colours; tombstones use muted colours. The payload's
-`avatar_color` is intentionally not applied by this token-based renderer.
+Define these tokens in a non-starter-kit app. Theme colours come from tokens.
+Avatar colours are content: `entity.data.avatar_color` wins when supplied;
+otherwise the source palette and stable `type:id` hash distinguish identities.
+Live avatars retain white text. Tombstones use `bg-muted` and never apply their
+former colour or icon. Primary tokens are a fallback if no colour is derived.
 Glyph intent is preserved as `data-sf-intent`, with no built-in intent vocabulary
 or colour map. Edit `FeedIcon.vue` to map your app's intents to token utilities.
 Verbatim code has a `dark:` override because foreground/background tokens

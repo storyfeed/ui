@@ -16,6 +16,17 @@ const props = withDefaults(
     { size: 'md' },
 );
 
+const FALLBACK_COLORS = [
+    '#0ea5e9',
+    '#8b5cf6',
+    '#ec4899',
+    '#f59e0b',
+    '#10b981',
+    '#ef4444',
+    '#6366f1',
+    '#14b8a6',
+];
+
 // An entity's icon is its face when it has one; a broken image falls back to
 // initials rather than an empty disc.
 // A deleted entity stays a grey disc, so it never shows its former icon.
@@ -46,6 +57,30 @@ const initials = computed(() => {
     );
 });
 
+// Prefer a color the entity carries in its snapshot; otherwise derive one
+// deterministically so the same entity is always the same color — and so the
+// server and the client agree, which a random pick would not.
+const color = computed(() => {
+    // Tombstones use the muted theme token; never apply their former colour.
+    if (props.entity?.tombstone) {
+        return null;
+    }
+
+    const provided = props.entity?.data?.avatar_color;
+
+    if (typeof provided === 'string' && provided.length > 0) {
+        return provided;
+    }
+
+    const key = `${props.entity?.type ?? ''}:${props.entity?.id ?? ''}`;
+    let hash = 0;
+
+    for (const char of key) {
+        hash = (hash * 31 + char.charCodeAt(0)) | 0;
+    }
+
+    return FALLBACK_COLORS[Math.abs(hash) % FALLBACK_COLORS.length] ?? null;
+});
 </script>
 
 <template>
@@ -54,7 +89,8 @@ const initials = computed(() => {
         :aria-label="entity?.label ?? 'Someone'"
         :title="entity?.label ?? 'Someone'"
         class="sf-avatar flex shrink-0 items-center justify-center rounded-full font-semibold select-none ring-2 ring-background"
-        :class="[{ 'sf-avatar--md size-[var(--sf-disc,2rem)] text-xs': size === 'md', 'sf-avatar--sm size-6 text-[0.625rem]': size === 'sm', 'sf-avatar--badge [--sf-badge:var(--sf-badge-face)] absolute top-[calc(var(--sf-disc)-var(--sf-badge)+0.125rem)] left-[calc(50%+var(--sf-disc)/2-var(--sf-badge))] size-(--sf-badge) text-[0.5625rem]': size === 'badge' }, entity?.tombstone ? 'bg-muted text-muted-foreground' : 'bg-primary text-primary-foreground']"
+        :class="[{ 'sf-avatar--md size-[var(--sf-disc,2rem)] text-xs': size === 'md', 'sf-avatar--sm size-6 text-[0.625rem]': size === 'sm', 'sf-avatar--badge [--sf-badge:var(--sf-badge-face)] absolute top-[calc(var(--sf-disc)-var(--sf-badge)+0.125rem)] left-[calc(50%+var(--sf-disc)/2-var(--sf-badge))] size-(--sf-badge) text-[0.5625rem]': size === 'badge' }, entity?.tombstone ? 'bg-muted text-white' : color ? 'text-white' : 'bg-primary text-primary-foreground']"
+        :style="color ? { backgroundColor: color } : undefined"
     >
         <img
             v-if="icon && !imageFailed"
