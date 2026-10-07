@@ -83,7 +83,7 @@ it('keeps plain text and unknown encodings escaped', function () {
             'body' => ['content' => "**Rush** <script>alert(1)</script>\nSecond line", 'mediaType' => $mediaType, 'title' => '<Note>'],
         ]);
 
-        expect($html)->toContain('<figcaption>&lt;Note&gt;</figcaption>', '<p>**Rush** &lt;script&gt;alert(1)&lt;/script&gt; Second line</p>')
+        expect($html)->toContain('<figcaption>&lt;Note&gt;</figcaption>', '<p tabindex="0">**Rush** &lt;script&gt;alert(1)&lt;/script&gt; Second line</p>')
             ->not->toContain('<script>', '<strong>');
     }
 });
@@ -96,7 +96,7 @@ it('preserves exact source whitespace and escapes verbatim regardless of encodin
             'body' => ['content' => $source, 'mediaType' => $mediaType, 'verbatim' => true],
         ]);
 
-        expect($html)->toContain('<pre><code>'.e($source).'</code></pre>')
+        expect($html)->toContain('<code>'.e($source).'</code></pre>')
             ->not->toContain('<b>', '<strong>');
     }
 });
@@ -114,30 +114,21 @@ it('escapes excerpt text and source and only marks truncated passages', function
         ->not->toContain('…');
 });
 
-it('draws a file attachment with its resolved name link and a separate metadata line', function () {
+it('draws file metadata without repeating its owning entity label', function () {
     expect(render_bodies([FileAttachment::make(2_516_582, 'application/pdf', 'invoice.pdf'), FileAttachment::make(512, name: 'Order #1042')]))
-        ->toContain('<span aria-hidden="true"><svg')
-        ->toContain('<p> <a href="/orders/1" target="_blank">invoice.pdf</a> </p>')
-        ->toContain('<p>2.4 MB · application/pdf</p>')
-        ->toContain('<p> <a href="/orders/1" target="_blank">Order #1042</a> </p>')
-        ->toContain('<p>512 B</p>');
+        ->toContain('<p>invoice.pdf · 2.4 MB · application/pdf</p>', '<p>512 B</p>')
+        ->not->toContain('>Order #1042 ·');
 });
 
-it('renders file names without a URL as escaped text and omits absent metadata', function () {
-    $html = render_blade('<x-storyfeed::body.file-attachment :body="$body" :entity="$entity" />', [
+it('escapes file names and ignores stored URLs', function () {
+    expect(render_blade('<x-storyfeed::body.file-attachment :body="$body" />', [
         'body' => ['name' => '<invoice>.pdf', 'href' => '/not-from-the-body'],
-        'entity' => Entity::of(['label' => 'Invoice']),
-    ]);
-
-    expect($html)->toContain('<p> &lt;invoice&gt;.pdf </p>')
-        ->not->toContain('<a', '/not-from-the-body', ' · ');
+    ]))->toContain('<p>&lt;invoice&gt;.pdf</p>')->not->toContain('<a', '/not-from-the-body');
 });
 
-it('uses the entity label when a file name is absent and omits a completely empty file', function () {
-    expect(render_blade('<x-storyfeed::body.file-attachment :body="$body" :entity="$entity" />', [
-        'body' => ['size' => 0],
-        'entity' => Entity::of(['label' => 'Invoice']),
-    ]))->toContain('<p> Invoice </p>', '<p>0 B</p>')
+it('shows zero-byte files and omits an empty file form', function () {
+    expect(render_blade('<x-storyfeed::body.file-attachment :body="$body" />', ['body' => ['size' => 0]]))
+        ->toContain('<p>0 B</p>')
         ->and(render_blade('<x-storyfeed::body.file-attachment :body="[]" />'))->toBe('');
 });
 
@@ -160,12 +151,7 @@ it('draws a media object with the entity\'s current picture, once', function () 
         footnote: FeedLink::make('Receipt', '/receipts/1042'),
     )->withPreview()->withFiles(FeedResource::make('/files/menu.pdf', mediaType: 'application/pdf', name: 'menu.pdf')));
 
-    expect($html)
-        ->toContain('<div> <div><div style="aspect-ratio: 800 / 600"><img src="/img/1042.jpg" alt="The order" loading="lazy"></div> </div> '
-            .'<div> <p> Dinner for two </p> <p>Two pizzas and a dessert.</p> '
-            .'<ul> <li><a href="/files/menu.pdf">menu.pdf</a> · application/pdf</li> </ul> '
-            .'<p> <a href="/receipts/1042">Receipt</a> </p> </div> </div>')
-        // The form draws the preview, so the row does not draw it again.
+    expect($html)->toContain('src="/img/1042.jpg"', 'width="800"', 'height="600"', 'Dinner for two', 'Two pizzas and a dessert.', 'href="/files/menu.pdf"', 'href="/receipts/1042"')
         ->and(substr_count($html, '/img/1042.jpg'))->toBe(1);
 });
 

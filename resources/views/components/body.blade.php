@@ -11,7 +11,7 @@
     `entity` is the entity the body belongs to; a form that names one of its
     image slots, or avoids repeating its label, reads it.
 --}}
-@props(['body', 'entity' => null])
+@props(['body', 'entity' => null, 'renderer' => null, 'mediaRenderer' => null])
 
 @php
     $type = is_array($body) ? ($body['$body'] ?? null) : null;
@@ -25,9 +25,12 @@
             ->implode('.')
         : null;
 @endphp
-
 @if ($component !== null && view()->exists("storyfeed::components.{$component}"))
-    <div data-storyfeed-body {{ $attributes->class('mt-2 max-w-[44rem]') }}>
-        <x-dynamic-component :component="'storyfeed::'.$component" :body="$body" :entity="$entity" />
-    </div>
+    @php
+        $rendered = $renderer ? $renderer($body, $entity) : null;
+        $rendered ??= \Storyfeed\Ui\Support\Bodies::render('storyfeed::'.$component, $body, $entity, $mediaRenderer);
+    @endphp
+@if (trim(preg_replace('/<!--.*?-->/s', '', $rendered)) !== '')
+        <div data-storyfeed-body {{ $attributes->class('sf-body-form mt-2 max-w-[44rem] empty:hidden') }}> {!! $rendered !!} </div>
+@endif
 @endif

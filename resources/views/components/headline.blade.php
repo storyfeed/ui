@@ -4,4 +4,4 @@
 --}}
 @props(['headline'])
 
-<span {{ $attributes->class('leading-relaxed text-zinc-600 dark:text-zinc-400') }}>{!! $headline->toHtml(fn (\Storyfeed\Support\Entity $entity): string => trim(view('storyfeed::entity', ['entity' => $entity])->render())) !!}</span>
+<span {{ $attributes->class('sf-headline leading-[1.6] text-muted-foreground') }}>{!! $headline->toHtml(fn (\Storyfeed\Support\Entity $entity): string => trim(view('storyfeed::entity', ['entity' => $entity])->render())) !!}</span>

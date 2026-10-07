@@ -12,7 +12,7 @@ it('puts activity and group metadata after the headline row', function (string $
         ...$extra,
     ]);
     $html = render_blade('<x-storyfeed::'.$component.' :'.$component.'="$item" />', compact('item'));
-    expect($html)->toContain('<div> <span>An update</span> </div> <div> <time')
+    expect($html)->toContain('<div><span>An update</span> </div> <div> <time')
         ->toContain('</time> · via <a href="/tools/claude">Claude</a>');
 })->with([
     'activity' => ['activity', []],
@@ -72,7 +72,7 @@ it('joins group samples and their remaining count like the headline', function (
 it('formats the calendar ladder while keeping the machine date and absolute hover', function (string $date, string $label) {
     $at = CarbonImmutable::parse($date);
     expect(render_blade('<x-storyfeed::time :at="$at" />', compact('at')))->toBe(
-        '<time datetime="'.$at->toAtomString().'" title="'.$at->toDayDateTimeString().'">'.$label.'</time>'
+        '<time datetime="'.$at->toAtomString().'" title="'.$at->isoFormat('dddd, D MMMM YYYY, LTS').'">'.$label.'</time>'
     );
 })->with([
     'today' => ['2026-09-25T10:00:00+00:00', '2 hours ago'],

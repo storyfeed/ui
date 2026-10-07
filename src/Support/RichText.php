@@ -22,15 +22,23 @@ final class RichText
             default => htmlspecialchars($content, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
         };
 
-        self::$sanitizer ??= new HtmlSanitizer(
-            (new HtmlSanitizerConfig)
-                ->allowSafeElements()
-                ->allowRelativeLinks()
-                ->allowMediaSchemes(['http', 'https'])
-                ->allowRelativeMedias()
-                // Prose has no truncation flag: do not silently cut its content.
-                ->withMaxInputLength(-1)
-        );
+        if (self::$sanitizer === null) {
+            $config = (new HtmlSanitizerConfig);
+            foreach (['p', 'br', 'strong', 'em', 's', 'blockquote', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'code', 'a', 'hr'] as $element) {
+                $config = $config->allowElement($element, match ($element) {
+                    'a' => ['href', 'title'], 'ol' => ['start'], default => []
+                });
+            }
+            self::$sanitizer = new HtmlSanitizer(
+                $config
+                    ->allowLinkSchemes(['http', 'https', 'mailto'])
+                    ->allowRelativeLinks()
+                    ->allowMediaSchemes(['http', 'https'])
+                    ->allowRelativeMedias()
+                    // Prose has no truncation flag: do not silently cut its content.
+                    ->withMaxInputLength(-1)
+            );
+        }
 
         return self::$sanitizer->sanitize($html);
     }

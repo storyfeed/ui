@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Blade;
 use Storyfeed\Body\Excerpt;
 use Storyfeed\Body\FileAttachment;
@@ -12,6 +13,7 @@ use Storyfeed\Facades\Storyfeed;
 use Storyfeed\FeedImage;
 use Storyfeed\FeedLink;
 use Storyfeed\FeedResource;
+use Storyfeed\Ui\Support\BodyComponents;
 use Storyfeed\Ui\Tests\Fixtures\Order;
 use Storyfeed\Ui\Tests\Fixtures\User;
 use Storyfeed\Ui\Tests\TestCase;
@@ -63,5 +65,30 @@ final class WorkbenchTest extends TestCase
         file_put_contents($output.'/index.html', Blade::render(file_get_contents(__DIR__.'/page.blade.php'), compact('sections')));
         copy(__DIR__.'/meal.svg', $output.'/meal.svg');
         $this->assertFileExists($output.'/index.html');
+
+        Carbon::setTestNow('2026-08-14T15:00:00Z');
+        app(BodyComponents::class)->register('App/Message', 'workbench::message');
+        app('view')->addNamespace('workbench', __DIR__);
+        $payload = json_decode(file_get_contents(__DIR__.'/vue/sample-payload.json'), true, flags: JSON_THROW_ON_ERROR);
+        $bodies = json_decode(file_get_contents(__DIR__.'/vue/body-payload.json'), true, flags: JSON_THROW_ON_ERROR);
+        $icons = json_decode(file_get_contents(dirname(__DIR__).'/build/workbench-icons.json'), true, flags: JSON_THROW_ON_ERROR);
+        $renderers = ['glyph' => fn ($token, $variant) => $icons[$token] ?? $icons['activity']];
+        $render = fn ($items, $options = []) => Blade::render('<x-storyfeed::feed :items="$items" :grouped="$grouped" :rail="$rail" :dividers="$dividers" :divider-style="$dividerStyle" :renderers="$renderers" />', [
+            'renderers' => $renderers, 'items' => $items, 'grouped' => true, 'rail' => null, 'dividers' => [], 'dividerStyle' => 'dot', ...$options,
+        ]);
+        $main = $render($payload['items']);
+        $examples = ['Generic body forms' => $render($bodies, ['grouped' => false])];
+        foreach (['actor', 'activity', 'actor-only', 'activity-only'] as $rail) {
+            $examples[$rail] = $render([$bodies[0]], ['grouped' => false, 'rail' => $rail]);
+        }
+        foreach (['dot', 'branch'] as $style) {
+            $examples[$style === 'dot' ? 'Per-item divider' : 'Branch divider (extension)'] = $render([$bodies[0]], ['grouped' => false, 'dividers' => ['body-0' => 'Timeline'], 'dividerStyle' => $style]);
+        }
+        $cases = json_decode(file_get_contents(__DIR__.'/vue/cases.json'), true, flags: JSON_THROW_ON_ERROR);
+        foreach ($cases as $case) {
+            $examples[$case['name']] = $render($case['items'], ['grouped' => $case['grouped'] ?? false, 'rail' => $case['rail'] ?? null]);
+        }
+        file_put_contents($output.'/parity.html', Blade::render(file_get_contents(__DIR__.'/parity.blade.php'), compact('main', 'examples')));
+
     }
 }

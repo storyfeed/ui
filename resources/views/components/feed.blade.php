@@ -1,28 +1,41 @@
-{{--
-    A page of the feed: every item, then the link to older activity.
-
-    <x-storyfeed::feed :page="$page" />
-
-    Attributes on the tag land on the root. The `empty` slot replaces the
-    words drawn when the page has no items.
---}}
-@props(['page', 'cursorName' => 'cursor'])
-
+@props(['page' => null, 'items' => null, 'nextCursor' => null, 'cursorName' => 'cursor', 'grouped' => true, 'rail' => null, 'dividers' => [], 'dividerStyle' => 'dot', 'interactive' => true, 'collapsed' => null, 'timezone' => null, 'renderers' => []])
 @php
-    $items = $page->collect();
-    $cursor = $page->nextCursor();
+    $items = collect($items ?? $page?->collect() ?? [])->map(fn ($item) => \Storyfeed\Support\FeedItem::of($item));
+    $cursor = $nextCursor ?? $page?->nextCursor();
+    $previousDay = null;
 @endphp
-
-<div {{ $attributes->class('text-sm leading-relaxed text-zinc-600 dark:text-zinc-400') }}>
-    @if ($items->isEmpty())
-        <div class="rounded-lg border border-dashed border-zinc-200 dark:border-zinc-700 p-10 text-center text-zinc-600 dark:text-zinc-400">{{ $empty ?? __('No activity yet.') }}</div>
-    @else
+<div {{ $attributes->class('sf-feed [--sf-gutter:2rem] [--sf-gap:0.75rem] [--sf-disc:2rem] [--sf-badge:0.875rem] [--sf-badge-face:1.125rem] text-sm leading-[1.6] text-muted-foreground') }}>
+@if ($items->isEmpty())
+        <div class="sf-empty rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">{{ $empty ?? __('No activity yet.') }}</div>
+@else
         <div role="feed">
-            @foreach ($items as $item)
-                <x-storyfeed::item :item="$item" :last="$loop->last && $cursor === null" />
-            @endforeach
+@foreach ($items as $item)
+                @php
+                    $at = $item->publishedAt();
+                    $at = $timezone && $at ? $at->timezone($timezone) : $at;
+                    $day = $at?->toDateString();
+                    $daysAgo = $at ? (int) $at->startOfDay()->diffInDays(now($at->timezone)->startOfDay(), false) : null;
+                    $label = match (true) {
+                        $daysAgo === 0 => __('Today'),
+                        $daysAgo === 1 => __('Yesterday'),
+                        $daysAgo !== null && $daysAgo < 7 => $at->isoFormat('dddd'),
+                        default => $at?->isoFormat('MMM D, YYYY'),
+                    };
+                @endphp
+@if ($grouped && $day !== null && $day !== $previousDay)
+                    <x-storyfeed::divider :label="$label" :divider-style="$dividerStyle" />
+@endif
+                @php($previousDay = $day)
+@if (isset($dividers[$item->id()]))
+                    <x-storyfeed::divider :label="$dividers[$item->id()]" :divider-style="$dividerStyle" />
+@endif
+                <x-storyfeed::item :item="$item" :last="$loop->last && $cursor === null" :rail="$rail" :interactive="$interactive" :collapsed="$collapsed" :timezone="$timezone" :renderers="$renderers" />
+@endforeach
         </div>
-    @endif
-
-    <x-storyfeed::pager :cursor="$cursor" :name="$cursorName" />
+@endif
+@if (isset($footer))
+        {{ $footer }}
+@else
+        <x-storyfeed::pager :cursor="$cursor" :name="$cursorName" />
+@endif
 </div>

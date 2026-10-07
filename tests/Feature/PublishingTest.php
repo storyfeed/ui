@@ -41,7 +41,7 @@ it('draws an icon an app adds for its glyph token', function () {
     Storyfeed::grammar(['order.place' => ':actor placed :object'])->icons(['order.place' => 'shopping-bag']);
     Storyfeed::activity('place', Order::create(['number' => '1']))->by(User::create(['name' => 'Dana', 'email' => 'd@example.com']))->publish();
 
-    expect(render_feed())->toContain('aria-hidden="true"><svg></svg>');
+    expect(render_feed())->toContain('aria-hidden="true"> <svg></svg>');
 });
 
 it('falls back to the default icon for a token with no view, or one that is not a view name', function () {

@@ -1,11 +1,8 @@
-{{-- Storyfeed/Body/Excerpt: a passage, and where it came from. --}}
 @props(['body', 'entity' => null])
-
 @if (filled($body['text'] ?? null))
-    <figure {{ $attributes->class('prose prose-sm prose-zinc max-w-lg dark:prose-invert rounded-lg bg-zinc-50 px-4 py-3 dark:bg-white/5 [&>:first-child]:mt-0 [&>:last-child]:mb-0 [&_blockquote]:my-0') }}>
-        <blockquote class="whitespace-pre-wrap text-pretty break-words">{{ $body['text'] }}@if ($body['truncated'] ?? false)<span aria-hidden="true">…</span>@endif</blockquote>
-        @if (filled($body['from'] ?? null))
-            <figcaption>{{ $body['from'] }}</figcaption>
-        @endif
+    <figure {{ $attributes->class('sf-excerpt-block m-0') }}>
+        <blockquote class="sf-excerpt m-0 border-l-2 border-border pl-3 text-[13.5px] whitespace-pre-wrap text-muted-foreground italic">{!! e($body['text']).(($body['truncated'] ?? false) ? '<span aria-hidden="true">…</span>' : '') !!}</blockquote>
+@if (filled($body['from'] ?? null))<figcaption class="sf-excerpt__from mt-0.5 text-[12.5px] text-muted-foreground">{{ $body['from'] }}</figcaption>
+@endif
     </figure>
 @endif

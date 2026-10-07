@@ -33,18 +33,12 @@ composer require storyfeed/ui
 
 The service provider registers itself through package discovery.
 
-The Blade kit uses Tailwind CSS v4 and its Typography plugin. Install the plugin:
-
-```bash
-npm install -D @tailwindcss/typography
-```
-
-Register the plugin and the package's views in your application's
+The Blade and Vue kits use Tailwind CSS v4 and Laravel starter-kit colour
+tokens. No Typography plugin or package stylesheet is needed. Register the package's views in your application's
 `resources/css/app.css` file:
 
 ```css
 @source "../../vendor/storyfeed/ui/resources/views";
-@plugin "@tailwindcss/typography";
 ```
 
 Compile your application's CSS with `npm run build`. Your layout must load
@@ -141,7 +135,8 @@ can be used on its own:
 | `<x-storyfeed::pager :cursor>` | the link to the next page |
 
 Each of core's body types has a component in `components/body`: `key-value`,
-`excerpt`, `prose`, `file`, `item-list` and `media-object`. A body
+`excerpt`, `prose`, `file-attachment` (including stored `File`), `item-list`,
+`image`, `component` and `media-object`. A body
 type with no component draws nothing.
 
 Prose displays plain text and unknown media types as escaped text. It parses
@@ -151,20 +146,136 @@ and preserves its source whitespace.
 
 ### Styling
 
-The components use Tailwind's zinc palette for text, borders, and surfaces,
-and indigo for links. To change these styles, publish the views and edit their
-utility classes. You may also customize Tailwind's existing theme variables,
-such as `--color-indigo-700` and `--color-indigo-300`, in your application's
-`@theme` block. These changes apply to every component using those colours.
-The kit defines no additional theme variables. ItemList, Prose, and Excerpt use the
-Typography plugin's `prose` styles.
+Blade uses the same starter-kit tokens as Vue. A starter-kit app already has
+these. For another Tailwind v4 app, add this minimal theme to `app.css` after
+`@import "tailwindcss"`; change the values to your application's palette:
 
-The components include `dark:` variants and follow your application's
-[Tailwind dark mode configuration](https://tailwindcss.com/docs/dark-mode).
+```css
+@custom-variant dark (&:where(.dark, .dark *));
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-border: var(--border);
+    --color-ring: var(--ring);
+}
+:root {
+    --background: #fff;
+    --foreground: #1f2933;
+    --card: #fafafa;
+    --muted: #f6f6f7;
+    --muted-foreground: #6b7785;
+    --primary: #1f2933;
+    --primary-foreground: #fff;
+    --border: #e2e5e9;
+    --ring: #1f2933;
+}
+.dark {
+    --background: #1b1b1f;
+    --foreground: #dfdfd6;
+    --card: #26262b;
+    --muted: #202127;
+    --muted-foreground: #98989f;
+    --primary: #dfdfd6;
+    --primary-foreground: #1b1b1f;
+    --border: #3c3f44;
+    --ring: #dfdfd6;
+}
+```
+
+Add or remove the `dark` class on your layout to choose the theme. The kit is
+all Tailwind utilities; the avatar's snapshot colour and a picture's aspect
+ratio are data-driven inline styles. Verbatim prose keeps a dark code surface
+in both themes. Prose, lists and quotations carry their own utility styles.
 
 Icon intents are application-defined strings exposed through `data-sf-intent`.
 To assign colours to your intent values, add the corresponding Tailwind
 utilities to the published `components/glyph.blade.php` view.
+
+### Rails, dividers and group state
+
+```blade
+<x-storyfeed::feed :page="$page" rail="actor"
+    :dividers="[$timelineId => 'Timeline']" divider-style="branch" />
+```
+
+`rail` accepts `actor` (face + glyph badge), `activity` (glyph + face badge),
+`actor-only` and `activity-only`. The default matches Vue: `actor-only`, and
+`activity-only` for group children. A missing primary falls back to the other
+subject, then a blank disc; several actors suppress the badge. Avatars use
+`data.avatar_color`, then Vue's deterministic type/id palette;
+`data.initials` overrides initials. Tombstones suppress former pictures and
+colours. The default image fallback uses an inline error handler; apps with
+strict script CSP can supply an avatar renderer with their own fallback.
+
+Day dividers are on by default; `:grouped="false"` hides them. Per-item
+`dividers` are keyed by public item id and work in either mode.
+`divider-style="dot|branch"` applies to both. `timezone` controls the display
+zone for days, the timestamp ladder and its absolute hover title. Timestamps
+are rendered on the server; the host owns any live refresh.
+
+`interactive` and `collapsed` control groups independently. Native `details`
+works without JavaScript and supports keyboard disclosure. An unspecified
+state opens unnamed groups, or all groups when `interactive` is false.
+`:collapsed="true"` overrides that default; payload `expanded` still opens a
+group. With `:interactive="false"`, no toggle is rendered and only the chosen
+server state is drawn. Groups show honest truncated-member counts and up to
+three sampled faces. Image bodies opt sampled objects into a linked media
+strip, hidden while the group's children are visible.
+
+A raw JSON feed can also be rendered with `:items="$payload['items']"` and
+`:next-cursor="$payload['next_cursor']"`; `page` is optional on that path.
+The `footer` slot replaces the pager (for example, with a Livewire load-more
+control). `divider`, `avatar`, `rail` and `media-strip` are standalone
+components; `media-strip` accepts `tiles`, `overflow`, and a `renderer` callback.
+
+### Component bodies and host seams
+
+Register an app Blade component in a service provider:
+
+```php
+use Storyfeed\Ui\Support\BodyComponents;
+
+app(BodyComponents::class)->register('App/Message', 'feed.message');
+```
+
+`Storyfeed/Body/Component` with `name: "App/Message"` renders
+`<x-feed.message>` using its `props` as typed component props. Stored names
+cannot choose arbitrary views: unregistered names draw nothing. The mapped
+component must exist. Regular custom body types remain supported as below.
+Forms are read from activity `data`, the object's `body` slot and object
+`data`, with data walking bounded to four levels like Vue; other roles' bodies
+are left to the app. Empty and unknown forms produce no wrapper.
+
+Standalone activity/group components accept their default body slot, `time`
+and `annotations` slots, a `removed` text prop, and an `object-icon` image prop
+that frames the content stack. For a whole feed, `renderers` propagates trusted
+application callbacks to every row and group child:
+
+| Key | Callback receives | Returns |
+|---|---|---|
+| `time` | `FeedItem` | timestamp/permalink HTML (including any refresh attributes) |
+| `glyph` | token, `disc` or `badge` | icon SVG/HTML inside the kit's disc |
+| `avatar` | `Entity`, `md`, `sm` or `badge` | complete avatar HTML |
+| `body`, `annotations` | `FeedItem` | app content HTML |
+| `removed` | `FeedItem` | optional escaped removal text |
+| `objectIcon` | `FeedItem` | optional image array for the content frame |
+| `form` | body array, owning `Entity` or null | body HTML; null uses the built-in renderer |
+| `mediaTiles`, `mediaOverflow` | group `FeedItem` | replacement sample tiles or overflow count |
+| `media` | tile array, Tailwind class string | complete picture/tile HTML, including an optional lightbox |
+
+Callbacks are trusted application code and their HTML is not sanitized; stored
+payloads never supply callbacks. Body text itself is escaped or sanitized.
+Filament can use these seams for its icons, timestamp refresh and lightbox
+(the `media` callback reaches Image and MediaObject bodies as well as sample
+tiles; `form` can override an entire body). Standalone MediaObject also accepts
+`image-placement="beside|below"`; beside is the Vue default.
+The [Filament inventory](workbench/filament-inventory.md) lists the rendering
+boundary and the integration features that stay in the plugin.
 
 ## Customising the Views
 
@@ -177,7 +288,7 @@ php artisan vendor:publish --tag=storyfeed-views
 They land in `resources/views/vendor/storyfeed`, and a view there replaces
 the package's. You only need to keep the files you change.
 
-**Icons.** The payload's glyph is a token, such as `shopping-bag`, and the kit
+**Icons.** The default Blade kit ships only its generic activity fallback. The payload's glyph is a token, such as `shopping-bag`, and the kit
 ships no icon set. Draw a token by adding
 `resources/views/vendor/storyfeed/icons/shopping-bag.blade.php`. A token with
 no view draws `icons/activity`.

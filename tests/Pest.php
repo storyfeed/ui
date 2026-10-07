@@ -20,7 +20,7 @@ function render_blade(string $template, array $data = []): string
 
 function render_feed(?FeedPage $page = null, string $attributes = ''): string
 {
-    return render_blade("<x-storyfeed::feed :page=\"\$page\" {$attributes} />", ['page' => $page ?? Storyfeed::feed()->get()]);
+    return render_blade("<x-storyfeed::feed :page=\"\$page\" :grouped=\"false\" rail=\"activity-only\" {$attributes} />", ['page' => $page ?? Storyfeed::feed()->get()]);
 }
 
 /** Ignore presentation classes while retaining semantic markup and attributes. */

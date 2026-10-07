@@ -1,13 +1,9 @@
-{{--
-    One item of a page, drawn by its kind. A kind this kit does not know
-    draws nothing, as an unknown body type does.
---}}
-@props(['item', 'last' => false])
-
+@props(['item', 'last' => false, 'rail' => null, 'interactive' => true, 'collapsed' => null, 'timezone' => null, 'renderers' => []])
+@php($item = \Storyfeed\Support\FeedItem::of($item))
 @if ($item->isDigest())
-    <x-storyfeed::digest :digest="$item" :last="$last" {{ $attributes }} />
+    <x-storyfeed::digest :digest="$item" :last="$last" :rail="$rail" :interactive="$interactive" :collapsed="$collapsed" :timezone="$timezone" :renderers="$renderers" {{ $attributes }}>{{ $slot }}</x-storyfeed::digest>
 @elseif ($item->isGroup())
-    <x-storyfeed::group :group="$item" :last="$last" {{ $attributes }} />
+    <x-storyfeed::group :group="$item" :last="$last" :rail="$rail" :interactive="$interactive" :collapsed="$collapsed" :timezone="$timezone" :renderers="$renderers" {{ $attributes }}>{{ $slot }}</x-storyfeed::group>
 @elseif ($item->isActivity())
-    <x-storyfeed::activity :activity="$item" :last="$last" {{ $attributes }} />
+    <x-storyfeed::activity :activity="$item" :last="$last" :rail="$rail" :timezone="$timezone" :renderers="$renderers" {{ $attributes }}>{{ $slot }}</x-storyfeed::activity>
 @endif

@@ -54,8 +54,8 @@ const days = useFeedDays(toRef(() => props.items));
                 <div
                     v-if="grouped"
                     :class="[
-                        'sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail__line]:mt-[0.3125rem]',
-                        dividerStyle === 'branch' ? 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail__line]:mt-[22px]' : 'sf-divider--dot',
+                        'sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail>div:last-child]:mt-[0.3125rem]',
+                        dividerStyle === 'branch' ? 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-[22px]' : 'sf-divider--dot',
                     ]"
                 >
                     <div class="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
@@ -83,8 +83,8 @@ const days = useFeedDays(toRef(() => props.items));
                     <div
                         v-if="dividers[item.id]"
                         :class="[
-                            'sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail__line]:mt-[0.3125rem]',
-                            dividerStyle === 'branch' ? 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail__line]:mt-[22px]' : 'sf-divider--dot',
+                            'sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail>div:last-child]:mt-[0.3125rem]',
+                            dividerStyle === 'branch' ? 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-[22px]' : 'sf-divider--dot',
                         ]"
                     >
                         <div class="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">

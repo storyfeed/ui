@@ -6,9 +6,10 @@
     "workbench": "npm run workbench:blade && npm run workbench:vue",
     "screenshots": "node workbench/screenshots.mjs",
     "test:vue": "node --test tests/Unit/feedKit.test.mjs",
-    "workbench:blade": "vendor/bin/phpunit --no-configuration --bootstrap vendor/autoload.php workbench/WorkbenchTest.php && tailwindcss -i workbench/app.css -o build/workbench/app.css --minify",
+    "workbench:blade": "node workbench/icons.mjs && vendor/bin/phpunit --no-configuration --bootstrap vendor/autoload.php workbench/WorkbenchTest.php && tailwindcss -i workbench/app.css -o build/workbench/app.css --minify",
     "workbench:vue": "tailwindcss -i workbench/vue/app.css -o build/vue-tokens.css --minify && vite build --config workbench/vue/vite.config.mjs",
-    "vue:parity": "node workbench/vue/screenshots.mjs"
+    "vue:parity": "node workbench/vue/screenshots.mjs",
+    "blade:parity": "STORYFEED_STRICT_PARITY=1 node workbench/blade-parity.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.0.0",

@@ -40,3 +40,7 @@ Intentional differences from the legacy reference:
 
 There are no residual kit CSS rules. The CSS here contains only token definitions
 and workbench framing; all distributed kit presentation is in Tailwind utilities.
+
+`npm run blade:parity` compares this Vue build to the Blade kit using the same
+`sample-payload.json`, `body-payload.json` and `cases.json`. See the parent
+workbench README for the B1 geometry and screenshot gate.

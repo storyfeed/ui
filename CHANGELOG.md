@@ -2,8 +2,32 @@
 
 ## Unreleased
 
+### Added
+
+- Blade/Vue parity: starter-kit tokens, actor/activity rails, snapshot-coloured
+  avatars and stacked group faces, dot/branch day and item dividers, sampled
+  media strips, and an allowlisted app Blade Component body registry.
+- Raw payload `items`/`nextCursor` feed input alongside `FeedPage`; independent
+  interactive/collapsed group state, body/time/annotation slots and trusted
+  application rendering hooks for Filament's integration.
+- Shared Vue/Blade workbench fixtures and visual geometry checks at 1512 and
+  500 pixels, light/dark, collapsed/expanded. Filament presentation inventory.
+
 ### Changed
 
+- Blade body geometry and tokens match Vue, including list markers, facts,
+  cards, wrapping verbatim code, quotations and compact file metadata. The
+  Typography plugin is no longer required; apps without starter-kit tokens can
+  use the theme block in the README.
+- Forms are discovered in activity/object data as well as the object's body
+  slot, preserving historical File, KeyValue and MediaObject payloads. Empty
+  renderers leave no wrapper. Summary readings cap at three phrases like Vue.
+- Prose's sanitized HTML element allowlist matches Vue's supported rich text.
+- Vue divider rail selectors now compile correctly in Tailwind, retaining the
+  intended dot/branch line offsets shared by the Blade kit.
+- Relative today labels use Vue's minute/hour rounding and `just now` below
+  45 seconds; absolute hover titles include weekday and seconds in the display
+  timezone. File bodies no longer repeat an owning entity's name or URL.
 - Activity, group and digest timestamps now sit on a small meta line beneath the
   headline, followed by translated leftover role details and entity links. Roles
   already used in the headline are omitted.

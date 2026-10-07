@@ -1,0 +1,628 @@
+[
+  {
+    "kind": "activity",
+    "id": "body-0",
+    "verb": "posted",
+    "published_at": "2026-08-14T12:00:00Z",
+    "headline_template": ":actor posted :object",
+    "actor": {
+      "type": "person",
+      "id": "ada",
+      "label": "Ada Lovelace",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "object": {
+      "type": "person",
+      "id": "object-0",
+      "label": "Order",
+      "url": "#ada",
+      "media": {
+        "preview": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+          "width": 160,
+          "height": 100,
+          "alt": "Illustrated preview"
+        }
+      },
+      "data": null,
+      "tombstone": null,
+      "body": [
+        {
+          "$body": "Storyfeed/Body/KeyValue",
+          "title": "Order",
+          "items": [
+            {
+              "key": "Status",
+              "value": "Ready"
+            },
+            {
+              "key": "Paid",
+              "value": true
+            },
+            {
+              "key": "Notes",
+              "value": null,
+              "placeholder": "None"
+            },
+            {
+              "key": "ID",
+              "value": "ABC-123-456",
+              "verbatim": true
+            }
+          ]
+        }
+      ]
+    },
+    "target": null,
+    "context": null,
+    "glyph": "file-up"
+  },
+  {
+    "kind": "activity",
+    "id": "body-1",
+    "verb": "posted",
+    "published_at": "2026-08-14T12:00:00Z",
+    "headline_template": ":actor posted :object",
+    "actor": {
+      "type": "person",
+      "id": "ada",
+      "label": "Ada Lovelace",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "object": {
+      "type": "person",
+      "id": "object-1",
+      "label": "Plain prose",
+      "url": "#ada",
+      "media": {
+        "preview": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+          "width": 160,
+          "height": 100,
+          "alt": "Illustrated preview"
+        }
+      },
+      "data": null,
+      "tombstone": null,
+      "body": [
+        {
+          "$body": "Storyfeed/Body/Prose",
+          "title": "Plain prose",
+          "content": "A line of authored text.\nA second line stays separate."
+        }
+      ]
+    },
+    "target": null,
+    "context": null,
+    "glyph": "file-up"
+  },
+  {
+    "kind": "activity",
+    "id": "body-2",
+    "verb": "posted",
+    "published_at": "2026-08-14T12:00:00Z",
+    "headline_template": ":actor posted :object",
+    "actor": {
+      "type": "person",
+      "id": "ada",
+      "label": "Ada Lovelace",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "object": {
+      "type": "person",
+      "id": "object-2",
+      "label": "Rich prose",
+      "url": "#ada",
+      "media": {
+        "preview": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+          "width": 160,
+          "height": 100,
+          "alt": "Illustrated preview"
+        }
+      },
+      "data": null,
+      "tombstone": null,
+      "body": [
+        {
+          "$body": "Storyfeed/Body/Prose",
+          "title": "Rich prose",
+          "mediaType": "text/markdown",
+          "content": "## Ready\n\n**Confirmed** with [details](https://example.com).\n\n- First\n- Second\n\n> A quotation\n\n```\ncode\n```"
+        }
+      ]
+    },
+    "target": null,
+    "context": null,
+    "glyph": "file-up"
+  },
+  {
+    "kind": "activity",
+    "id": "body-3",
+    "verb": "posted",
+    "published_at": "2026-08-14T12:00:00Z",
+    "headline_template": ":actor posted :object",
+    "actor": {
+      "type": "person",
+      "id": "ada",
+      "label": "Ada Lovelace",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "object": {
+      "type": "person",
+      "id": "object-3",
+      "label": "Verbatim",
+      "url": "#ada",
+      "media": {
+        "preview": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+          "width": 160,
+          "height": 100,
+          "alt": "Illustrated preview"
+        }
+      },
+      "data": null,
+      "tombstone": null,
+      "body": [
+        {
+          "$body": "Storyfeed/Body/Prose",
+          "title": "Verbatim",
+          "verbatim": true,
+          "content": "Order #1042\n  status: ready\n  result: <confirmed>"
+        }
+      ]
+    },
+    "target": null,
+    "context": null,
+    "glyph": "file-up"
+  },
+  {
+    "kind": "activity",
+    "id": "body-4",
+    "verb": "posted",
+    "published_at": "2026-08-14T12:00:00Z",
+    "headline_template": ":actor posted :object",
+    "actor": {
+      "type": "person",
+      "id": "ada",
+      "label": "Ada Lovelace",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "object": {
+      "type": "person",
+      "id": "object-4",
+      "label": "a preview",
+      "url": "#ada",
+      "media": {
+        "preview": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+          "width": 160,
+          "height": 100,
+          "alt": "Illustrated preview"
+        }
+      },
+      "data": null,
+      "tombstone": null,
+      "body": [
+        {
+          "$body": "Storyfeed/Body/Excerpt",
+          "text": "A lovely afternoon.\nWe will return",
+          "from": "Review",
+          "truncated": true
+        }
+      ]
+    },
+    "target": null,
+    "context": null,
+    "glyph": "file-up"
+  },
+  {
+    "kind": "activity",
+    "id": "body-5",
+    "verb": "posted",
+    "published_at": "2026-08-14T12:00:00Z",
+    "headline_template": ":actor posted :object",
+    "actor": {
+      "type": "person",
+      "id": "ada",
+      "label": "Ada Lovelace",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "object": {
+      "type": "person",
+      "id": "object-5",
+      "label": "Checklist",
+      "url": "#ada",
+      "media": {
+        "preview": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+          "width": 160,
+          "height": 100,
+          "alt": "Illustrated preview"
+        }
+      },
+      "data": null,
+      "tombstone": null,
+      "body": [
+        {
+          "$body": "Storyfeed/Body/ItemList",
+          "title": "Checklist",
+          "ordered": true,
+          "items": [
+            "First",
+            {
+              "label": "Second",
+              "href": "#second"
+            }
+          ],
+          "totalItems": 4,
+          "more": {
+            "label": "See all",
+            "href": "#all"
+          }
+        }
+      ]
+    },
+    "target": null,
+    "context": null,
+    "glyph": "file-up"
+  },
+  {
+    "kind": "activity",
+    "id": "body-6",
+    "verb": "posted",
+    "published_at": "2026-08-14T12:00:00Z",
+    "headline_template": ":actor posted :object",
+    "actor": {
+      "type": "person",
+      "id": "ada",
+      "label": "Ada Lovelace",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "object": {
+      "type": "person",
+      "id": "object-6",
+      "label": "a preview",
+      "url": "#ada",
+      "media": {
+        "preview": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+          "width": 160,
+          "height": 100,
+          "alt": "Illustrated preview"
+        }
+      },
+      "data": null,
+      "tombstone": null,
+      "body": [
+        {
+          "$body": "Storyfeed/Body/FileAttachment",
+          "name": "invoice.pdf",
+          "size": 2400000,
+          "mediaType": "application/pdf"
+        }
+      ]
+    },
+    "target": null,
+    "context": null,
+    "glyph": "file-up"
+  },
+  {
+    "kind": "activity",
+    "id": "body-7",
+    "verb": "posted",
+    "published_at": "2026-08-14T12:00:00Z",
+    "headline_template": ":actor posted :object",
+    "actor": {
+      "type": "person",
+      "id": "ada",
+      "label": "Ada Lovelace",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "object": {
+      "type": "person",
+      "id": "object-7",
+      "label": "a preview",
+      "url": "#ada",
+      "media": {
+        "preview": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+          "width": 160,
+          "height": 100,
+          "alt": "Illustrated preview"
+        }
+      },
+      "data": null,
+      "tombstone": null,
+      "body": [
+        {
+          "$body": "Storyfeed/Body/Image",
+          "image": "preview",
+          "caption": "An illustrated preview"
+        }
+      ]
+    },
+    "target": null,
+    "context": null,
+    "glyph": "file-up"
+  },
+  {
+    "kind": "activity",
+    "id": "body-8",
+    "verb": "posted",
+    "published_at": "2026-08-14T12:00:00Z",
+    "headline_template": ":actor posted :object",
+    "actor": {
+      "type": "person",
+      "id": "ada",
+      "label": "Ada Lovelace",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "object": {
+      "type": "person",
+      "id": "object-8",
+      "label": "a preview",
+      "url": "#ada",
+      "media": {
+        "preview": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+          "width": 160,
+          "height": 100,
+          "alt": "Illustrated preview"
+        }
+      },
+      "data": null,
+      "tombstone": null,
+      "body": [
+        {
+          "$body": "Storyfeed/Body/MediaObject",
+          "subject": {
+            "label": "A post",
+            "href": "#post"
+          },
+          "content": "Some text accompanies this image.",
+          "image": "preview",
+          "files": [
+            {
+              "name": "menu.pdf",
+              "href": "#menu",
+              "mediaType": "application/pdf"
+            }
+          ],
+          "footnote": "Small print"
+        }
+      ]
+    },
+    "target": null,
+    "context": null,
+    "glyph": "file-up"
+  },
+  {
+    "kind": "activity",
+    "id": "html",
+    "verb": "posted",
+    "published_at": "2026-08-14T12:00:00Z",
+    "headline_template": ":actor posted :object",
+    "actor": {
+      "type": "person",
+      "id": "ada",
+      "label": "Ada Lovelace",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "object": {
+      "type": "person",
+      "id": "object-1",
+      "label": "HTML prose",
+      "url": "#ada",
+      "media": {
+        "preview": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+          "width": 160,
+          "height": 100,
+          "alt": "Illustrated preview"
+        }
+      },
+      "data": null,
+      "tombstone": null,
+      "body": [
+        {
+          "$body": "Storyfeed/Body/Prose",
+          "title": "HTML prose",
+          "mediaType": "text/html",
+          "content": "<p><strong>Confirmed</strong> with <a href=\"https://example.com\">details</a>.</p>"
+        }
+      ]
+    },
+    "target": null,
+    "context": null,
+    "glyph": "file-up"
+  },
+  {
+    "kind": "activity",
+    "id": "component",
+    "verb": "posted",
+    "published_at": "2026-08-14T12:00:00Z",
+    "headline_template": ":actor posted :object",
+    "actor": {
+      "type": "person",
+      "id": "ada",
+      "label": "Ada Lovelace",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "object": {
+      "type": "person",
+      "id": "object-0",
+      "label": "Component",
+      "url": "#ada",
+      "media": {
+        "preview": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+          "width": 160,
+          "height": 100,
+          "alt": "Illustrated preview"
+        }
+      },
+      "data": null,
+      "tombstone": null,
+      "body": [
+        {
+          "$body": "Storyfeed/Body/Component",
+          "name": "App/Message",
+          "props": {
+            "message": "Application component"
+          }
+        }
+      ]
+    },
+    "target": null,
+    "context": null,
+    "glyph": "file-up"
+  },
+  {
+    "kind": "activity",
+    "id": "metadata",
+    "verb": "posted",
+    "published_at": "2026-08-14T12:00:00Z",
+    "headline_template": ":actor posted :object",
+    "actor": {
+      "type": "person",
+      "id": "ada",
+      "label": "Ada Lovelace",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "object": {
+      "type": "person",
+      "id": "object-0",
+      "label": "a status",
+      "url": "#ada",
+      "media": {
+        "preview": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+          "width": 160,
+          "height": 100,
+          "alt": "Illustrated preview"
+        }
+      },
+      "data": null,
+      "tombstone": null,
+      "body": [
+        {
+          "$body": "Storyfeed/Body/KeyValue",
+          "title": "Order",
+          "items": [
+            {
+              "key": "Status",
+              "value": "Ready"
+            },
+            {
+              "key": "Paid",
+              "value": true
+            },
+            {
+              "key": "Notes",
+              "value": null,
+              "placeholder": "None"
+            },
+            {
+              "key": "ID",
+              "value": "ABC-123-456",
+              "verbatim": true
+            }
+          ]
+        }
+      ]
+    },
+    "target": null,
+    "context": {
+      "type": "person",
+      "id": "ada",
+      "label": "NEVER META",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "glyph": "file-up",
+    "instrument": {
+      "type": "person",
+      "id": "ada",
+      "label": "CLI",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "origin": {
+      "type": "person",
+      "id": "ada",
+      "label": "Backlog",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "result": {
+      "type": "person",
+      "id": "ada",
+      "label": "Done",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "location": {
+      "type": "person",
+      "id": "ada",
+      "label": "Toronto",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "generator": {
+      "type": "person",
+      "id": "ada",
+      "label": "Storyfeed",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    }
+  }
+]

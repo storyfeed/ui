@@ -4,6 +4,7 @@ namespace Storyfeed\Ui;
 
 use Illuminate\Support\ServiceProvider;
 use Storyfeed\Ui\Commands\InstallUiCommand;
+use Storyfeed\Ui\Support\BodyComponents;
 
 /**
  * The Blade kit, registered the way Laravel's package documentation says:
@@ -16,6 +17,11 @@ use Storyfeed\Ui\Commands\InstallUiCommand;
  */
 class UiServiceProvider extends ServiceProvider
 {
+    public function register(): void
+    {
+        $this->app->singleton(BodyComponents::class);
+    }
+
     public function boot(): void
     {
         // Core registers the `storyfeed` TRANSLATION namespace and no views,

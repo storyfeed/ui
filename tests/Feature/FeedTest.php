@@ -31,9 +31,9 @@ it('draws an activity row: glyph, linked headline and time', function () {
 
     expect($html)
         ->toContain('<div> <div role="feed"> <article>')
-        ->toContain('<span data-sf-intent="success" data-sf-glyph="shopping-bag" aria-hidden="true"><svg')
+        ->toContain('<span data-sf-intent="success" data-sf-glyph="shopping-bag" aria-hidden="true"> <svg')
         ->toContain('<span><a href="/users/1">Dana</a> placed <a href="/orders/1" target="_blank">Order #1042</a></span>')
-        ->toContain('</span> </div> <div> <time datetime="2026-09-25T12:00:00+00:00" title="Fri, Sep 25, 2026 12:00 PM">0 seconds ago</time>')
+        ->toContain('</span> </div> <div> <time datetime="2026-09-25T12:00:00+00:00" title="Friday, 25 September 2026, 12:00:00 PM">just now</time>')
         // The last row on the last page ends the rail.
         ->not->toContain('<div aria-hidden="true"></div>')
         ->not->toContain('<nav');
@@ -46,10 +46,10 @@ it('lands attributes on the feed root', function () {
 });
 
 it('draws the blank disc for a verb with no glyph', function () {
-    Storyfeed::activity('ship', Order::create(['number' => '7']))->by($this->dana)->publish();
+    Storyfeed::anonymous()->action('ship', Order::create(['number' => '7']))->publish();
 
     expect(render_feed())
-        ->toContain('<span aria-hidden="true"></span>')
+        ->toContain('<span aria-hidden="true"> </span>')
         ->not->toContain('data-sf-intent');
 });
 
@@ -93,7 +93,7 @@ it('draws a repeat group with its members behind a disclosure', function () {
 
     expect($html)
         ->toContain('<span>'.structural_html($group->headline()->toHtml(fn ($entity) => trim(view('storyfeed::entity', ['entity' => $entity])->render()))).'</span>')
-        ->toContain('<summary> <span>Show all 3</span> <span>Show less</span> </summary>')
+        ->toContain('<summary> <span>Show all 3</span><span>Show less</span> </summary>')
         ->toContain('<p>…and 1 more not shown</p>')
         ->and(substr_count($html, '<article>'))->toBe(3);
 });
@@ -109,7 +109,7 @@ it('opens a group with no headline on its members', function () {
     expect($group->headline()->isFallback())->toBeTrue()
         ->and(render_feed($page))
         ->toContain('<span>2 activities</span>')
-        ->toContain('<details open>');
+        ->toContain('<details open >');
 });
 
 it('draws a digest row with core\'s sentence', function () {
@@ -174,7 +174,7 @@ it('renders each part on its own', function () {
     expect(render_blade('<x-storyfeed::item :item="$item" last />', ['item' => $item]))->toStartWith('<article>')
         ->and(render_blade('<x-storyfeed::activity :activity="$item" />', ['item' => $item]))->toStartWith('<article>')
         ->and(render_blade('<x-storyfeed::headline :headline="$item->headline()" />', ['item' => $item]))->toStartWith('<span><a')
-        ->and(render_blade('<x-storyfeed::time :at="$item->publishedAt()" />', ['item' => $item]))->toEndWith('>0 seconds ago</time>')
+        ->and(render_blade('<x-storyfeed::time :at="$item->publishedAt()" />', ['item' => $item]))->toEndWith('>just now</time>')
         ->and(render_blade('<x-storyfeed::glyph :glyph="$item->glyph()" :intent="$item->intent()" />', ['item' => $item]))->toStartWith('<span data-sf-intent="success"')
         ->and(render_blade('<x-storyfeed::pager :cursor="null" />'))->toBe('');
 });
