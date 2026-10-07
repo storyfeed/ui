@@ -114,8 +114,8 @@ test('diff keeps surrounding context and reports a missing final newline', funct
         ->not->toContain('Unknown kinds');
     expect(file_get_contents($target))->toBe($edited);
 
-    file_put_contents($target, rtrim($source, "\n"));
+    file_put_contents($target, rtrim($source, "\r\n"));
     Artisan::call('storyfeed:ui', ['kit' => 'vue', '--path' => $this->kitPath, '--diff' => true]);
     expect(Artisan::output())->toContain("-</template>\n\\ No newline at end of file\n+</template>");
-    expect(file_get_contents($target))->toBe(rtrim($source, "\n"));
+    expect(file_get_contents($target))->toBe(rtrim($source, "\r\n"));
 });

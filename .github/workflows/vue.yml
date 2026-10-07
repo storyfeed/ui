@@ -5,6 +5,9 @@ on:
     paths:
       - 'resources/js/**'
       - 'tests/Unit/**'
+      - 'tests/Feature/InstallUiCommandTest.php'
+      - 'src/Commands/**'
+      - 'src/UiServiceProvider.php'
       - 'workbench/**'
       - 'package*.json'
       - '.github/workflows/vue.yml'
@@ -12,6 +15,9 @@ on:
     paths:
       - 'resources/js/**'
       - 'tests/Unit/**'
+      - 'tests/Feature/InstallUiCommandTest.php'
+      - 'src/Commands/**'
+      - 'src/UiServiceProvider.php'
       - 'workbench/**'
       - 'package*.json'
       - '.github/workflows/vue.yml'
