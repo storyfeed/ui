@@ -40,7 +40,7 @@ it('uses the selected missing headline when deciding leftover roles', function (
         ->toContain('An update was removed')->toContain('via <span>Claude</span>');
 });
 
-it('joins leftover roles in order with translated lead-ins and headline entity rendering', function () {
+it('joins leftover roles in order with translated lead-ins, leaving context off the meta line', function () {
     $item = FeedItem::of([
         'headline' => 'An update',
         'instrument' => ['label' => '<Claude>', 'url' => '/claude', 'attributes' => ['target' => '_blank']],
@@ -53,7 +53,7 @@ it('joins leftover roles in order with translated lead-ins and headline entity r
     __('storyfeed-ui::meta.instrument');
     app('translator')->addLines(['meta.instrument' => 'using'], 'en', 'storyfeed-ui');
     expect(render_blade('<x-storyfeed::meta :item="$item" />', compact('item')))->toBe(
-        '<div> using <a href="/claude" target="_blank">&lt;Claude&gt;</a> · from <span>Backlog</span> · to <span>Done</span> · in <span>Sprint 12</span> · at <span>Toronto</span> · from <span>Storyfeed</span> </div>'
+        '<div> using <a href="/claude" target="_blank">&lt;Claude&gt;</a> · from <span>Backlog</span> · to <span>Done</span> · at <span>Toronto</span> · from <span>Storyfeed</span> </div>'
     );
 });
 

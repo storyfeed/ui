@@ -7,6 +7,9 @@
 - Activity, group and digest timestamps now sit on a small meta line beneath the
   headline, followed by translated leftover role details and entity links. Roles
   already used in the headline are omitted.
+- Context never appears on the meta line: it groups activities (what a feed is
+  often read by) rather than describing them. A headline template that names
+  `:context` still renders it.
 - Timestamps use relative time today, yesterday with time, weekday and date this
   year, and the full date in older years, retaining the absolute hover title.
 

@@ -4,7 +4,7 @@
 @php
     $headline ??= $item->headline();
     $used = $headline->segments()->pluck('role')->filter()->all();
-    $roles = ['instrument', 'origin', 'result', 'context', 'location', 'generator'];
+    $roles = ['instrument', 'origin', 'result', 'location', 'generator'];
     $details = [];
 
     foreach ($roles as $role) {
