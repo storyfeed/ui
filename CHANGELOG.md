@@ -12,7 +12,8 @@
 
 - Up to three actor avatars start at the single-avatar rail position and overlap
   downward by 12px along the rail in Blade, Vue and React, with aligned headlines
-  and the line continuing below the last face.
+  and the line continuing below the last face. The first-named actor stays on
+  top, with each lower face tucked behind the one above it.
 
 ## v0.4.0 - 2026-10-08
 

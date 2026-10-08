@@ -112,7 +112,7 @@ const hiddenBeyondChildren = computed(
         <!-- Faces overlap downward on the rail without shifting the text column. -->
         <div class="sf-rail box-content flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
             <div class="sf-rail__disc relative flex w-(--sf-disc) shrink-0">
-                <div v-if="slots.disc === 'actor'" class="sf-avatars flex flex-col [&>*+*]:-mt-3">
+                <div v-if="slots.disc === 'actor'" class="sf-avatars flex flex-col [&>*+*]:-mt-3 [&>:first-child:nth-last-child(n+2)]:z-20 [&>:nth-child(2)]:z-10 [&>:nth-child(3)]:z-0">
                     <EntityAvatar
                         v-for="actor in faces"
                         :key="actor.id"

@@ -50,14 +50,27 @@ try {
                         const rows = [...section.querySelectorAll('.sf-row')].filter(row => !row.closest('.sf-children') && row.querySelector(':scope > .sf-body > .sf-head'));
                         return rows.map(row => {
                             const rail = row.querySelector(':scope > .sf-rail');
-                            const faces = [...rail.querySelectorAll('.sf-avatar')].map(e => e.getBoundingClientRect());
+                            const elements = [...rail.querySelectorAll('.sf-avatar')];
+                            const faces = elements.map(e => e.getBoundingClientRect());
+                            const overlapOwners = faces.slice(1).map((r, i) => {
+                                const hit = document.elementFromPoint(r.x + r.width / 2, r.y + 6);
+                                return hit?.closest('.sf-avatar') === elements[i];
+                            });
+                            const before = faces.map(r => [r.x, r.y, r.width, r.height]);
+                            const savedZ = elements.map(e => e.style.zIndex);
+                            elements.forEach(e => { e.style.zIndex = 'auto'; });
+                            const withoutOrder = elements.map(e => {
+                                const r = e.getBoundingClientRect();
+                                return [r.x, r.y, r.width, r.height];
+                            });
+                            elements.forEach((e, i) => { e.style.zIndex = savedZ[i]; });
                             const line = rail.querySelector('.sf-rail__line')?.getBoundingClientRect();
                             const head = row.querySelector('.sf-head').getBoundingClientRect();
-                            return { faces: faces.map(r => ({ x: r.x, y: r.y, w: r.width, h: r.height })),
+                            return { faces: faces.map((r, i) => ({ x: r.x, y: r.y, w: r.width, h: r.height, z: getComputedStyle(elements[i]).zIndex })),
                                 line: line ? line.x + line.width / 2 : null, lineY: line?.y, head: head.x,
                                 top: row.getBoundingClientRect().y, bottom: row.getBoundingClientRect().bottom,
                                 left: rail.getBoundingClientRect().x, right: rail.getBoundingClientRect().right,
-                                badge: rail.querySelectorAll('.sf-badge').length };
+                                badge: rail.querySelectorAll('.sf-badge').length, overlapOwners, before, withoutOrder };
                         });
                     });
                     assert.equal(joints.length, 4);
@@ -71,9 +84,12 @@ try {
                         assert.equal(joint.head, joints[0].head, 'headline aligns with single actor');
                         assert.equal(joint.line, first.x + first.w / 2, `${renderers[i]}: rail through first face`);
                         assert.equal(joint.badge, 0);
+                        assert.deepEqual(joint.before, joint.withoutOrder, 'paint order does not change geometry');
+                        assert.ok(joint.overlapOwners.every(Boolean), 'upper face owns each visible overlap');
                         joint.faces.slice(1).forEach((face, j) => {
                             assert.equal(face.x, first.x, 'faces share the rail centre');
                             assert.equal(face.y, joint.faces[j].y + face.h - 12, 'retain 12px vertical overlap');
+                            assert.ok(Number(joint.faces[j].z) > Number(face.z), 'earlier face paints above the next');
                         });
                         const last = joint.faces.at(-1);
                         assert.ok(joint.faces.every(face => face.x >= joint.left && face.x + face.w <= joint.right), 'stack fits gutter');

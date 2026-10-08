@@ -46,7 +46,7 @@ export default function Rail({
         <div className="sf-rail box-content flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
             <div className="sf-rail__disc relative flex w-(--sf-disc) shrink-0">
                 {slots.disc === 'actor' && faces.length > 1 ? (
-                    <div className="sf-avatars flex flex-col [&>*+*]:-mt-3">{disc}</div>
+                    <div className="sf-avatars flex flex-col [&>*+*]:-mt-3 [&>:first-child:nth-last-child(n+2)]:z-20 [&>:nth-child(2)]:z-10 [&>:nth-child(3)]:z-0">{disc}</div>
                 ) : (
                     disc
                 )}
