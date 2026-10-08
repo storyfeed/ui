@@ -10,9 +10,9 @@
 
 ### Fixed
 
-- Stacked actor avatars start at the single-avatar rail position and overlap
-  downward along the rail in Blade, Vue and React, with aligned headlines and
-  the line continuing below the last face.
+- Up to three actor avatars start at the single-avatar rail position and overlap
+  downward by 12px along the rail in Blade, Vue and React, with aligned headlines
+  and the line continuing below the last face.
 
 ## v0.4.0 - 2026-10-08
 
