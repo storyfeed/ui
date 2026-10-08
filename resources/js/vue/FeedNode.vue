@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import FeedGroup from './FeedGroup.vue';
 import FeedItem from './FeedItem.vue';
-import type { Rail, RailName } from './rail';
-import type { FeedNode } from './types';
+import type { Rail, RailName } from '../shared/rail';
+import type { FeedNode } from '../shared/types';
 
 withDefaults(
     defineProps<{

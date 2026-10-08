@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import type { FeedEntity } from './types';
+import type { FeedEntity } from '../shared/types';
 
 const props = withDefaults(
     defineProps<{

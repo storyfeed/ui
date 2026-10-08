@@ -1,5 +1,5 @@
 import type { Component, InjectionKey } from 'vue';
-import type { FileLabeller } from './fileLabels';
+import type { FileLabeller } from '../shared/fileLabels';
 
 /** Host file-kind presentation; null delegates to the built-in MIME labels. */
 export const FEED_FILE_LABELLER = Symbol('feedFileLabeller') as InjectionKey<FileLabeller>;

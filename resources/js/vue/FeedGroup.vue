@@ -7,9 +7,9 @@ import FeedIcon from './FeedIcon.vue';
 import FeedItem from './FeedItem.vue';
 import FeedMediaStrip from './FeedMediaStrip.vue';
 import FeedMeta from './FeedMeta.vue';
-import { rail as parseRail, railFor } from './rail';
-import type { Rail, RailName } from './rail';
-import type { FeedPhrase, GroupNode, FeedSingularRole } from './types';
+import { rail as parseRail, railFor } from '../shared/rail';
+import type { Rail, RailName } from '../shared/rail';
+import type { FeedPhrase, GroupNode, FeedSingularRole } from '../shared/types';
 import { useRelativeTime } from './useRelativeTime';
 
 const props = withDefaults(

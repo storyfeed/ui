@@ -1,7 +1,8 @@
+import { feedDays, refreshDelay } from '../shared/days';
 import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue';
 import type { Ref } from 'vue';
 import { FEED_NOW } from './keys';
-import { formatTimestamp } from './timestamp';
+import { formatTimestamp } from '../shared/timestamp';
 
 /**
  * Re-exported for callers that import the key from here. It MUST come from
@@ -25,13 +26,7 @@ export function useRelativeTime(iso: Ref<string>) {
     let timer: ReturnType<typeof setTimeout> | null = null;
 
     function schedule(): void {
-        const age = now.value - new Date(iso.value).getTime();
-        const delay =
-            age < 60_000
-                ? 1_000
-                : age < 3_600_000
-                  ? 60_000
-                  : 3_600_000;
+        const delay = refreshDelay(iso.value, now.value);
 
         timer = setTimeout(() => {
             now.value = Date.now();
@@ -68,58 +63,7 @@ export interface FeedDay {
     items: { published_at: string }[];
 }
 
-/**
- * Bucket a sorted stream into renderable day groups
- * (Today / Yesterday / weekday within a week / full date).
- */
-export function useFeedDays<T extends { published_at: string }>(
-    items: Ref<T[]>,
-) {
+export function useFeedDays<T extends { published_at: string }>(items: Ref<T[]>) {
     const pinned = inject<number | null>(FEED_NOW, null);
-
-    return computed(() => {
-        const days: { label: string; items: T[] }[] = [];
-        let currentKey: string | null = null;
-
-        for (const item of items.value) {
-            const date = new Date(item.published_at);
-            const key = date.toDateString();
-
-            if (key !== currentKey) {
-                currentKey = key;
-                days.push({ label: dayLabel(date, pinned), items: [] });
-            }
-
-            days[days.length - 1]!.items.push(item);
-        }
-
-        return days;
-    });
-}
-
-function dayLabel(date: Date, pinned: number | null): string {
-    const today = new Date(pinned ?? Date.now());
-    const startOfDay = (d: Date) =>
-        new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
-    const diffDays = Math.round(
-        (startOfDay(today) - startOfDay(date)) / 86_400_000,
-    );
-
-    if (diffDays === 0) {
-        return 'Today';
-    }
-
-    if (diffDays === 1) {
-        return 'Yesterday';
-    }
-
-    if (diffDays < 7) {
-        return date.toLocaleDateString(undefined, { weekday: 'long' });
-    }
-
-    return date.toLocaleDateString(undefined, {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-    });
+    return computed(() => feedDays(items.value, pinned));
 }

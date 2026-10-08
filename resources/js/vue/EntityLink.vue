@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue';
 import { FEED_LINK } from './keys';
-import type { FeedEntity } from './types';
+import type { FeedEntity } from '../shared/types';
 
 const props = defineProps<{
     entity: FeedEntity | null;

@@ -3,8 +3,8 @@ import { Comment, Fragment, Text, computed, useSlots } from 'vue';
 import type { VNode } from 'vue';
 
 import EntityLink from './EntityLink.vue';
-import { leftoverRoles } from './meta';
-import type { FeedNode } from './types';
+import { leftoverRoles } from '../shared/meta';
+import type { FeedNode } from '../shared/types';
 const props = defineProps<{
     node: FeedNode;
     templates: (string | null | undefined)[];

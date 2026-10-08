@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue'
 import { FEED_FILE_LABELLER } from '../keys'
-import { fileLabel } from '../fileLabels'
+import { fileLabel } from '../../shared/fileLabels'
 
 /**
  * `Storyfeed/Body/FileAttachment` — what an artefact is and how big, never its URL.

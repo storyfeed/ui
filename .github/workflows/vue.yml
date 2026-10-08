@@ -1,4 +1,4 @@
-name: Vue kit
+name: Vue and React kits
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
       - 'resources/js/**'
       - 'tests/Unit/**'
       - 'tests/Feature/InstallUiCommandTest.php'
+      - 'tests/Fixtures/InstallKitsTest.php'
       - 'src/Commands/**'
       - 'src/UiServiceProvider.php'
       - 'workbench/**'
@@ -16,6 +17,7 @@ on:
       - 'resources/js/**'
       - 'tests/Unit/**'
       - 'tests/Feature/InstallUiCommandTest.php'
+      - 'tests/Fixtures/InstallKitsTest.php'
       - 'src/Commands/**'
       - 'src/UiServiceProvider.php'
       - 'workbench/**'
@@ -25,7 +27,7 @@ on:
 jobs:
   vue:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
@@ -39,4 +41,17 @@ jobs:
       - uses: ramsey/composer-install@v4
       - run: npm ci
       - run: npm run test:vue
+      - run: npm run test:react
+      - run: npm run test:installed
+      - run: npm run typecheck:react
       - run: npm run workbench
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:hydrate
+      - run: npm run kit:parity
+        env:
+          STORYFEED_SCREENSHOTS: ${{ runner.temp }}/kit-parity
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: kit-parity
+          path: ${{ runner.temp }}/kit-parity

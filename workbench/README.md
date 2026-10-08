@@ -28,3 +28,16 @@ Each paired image is twice the per-kit viewport width. The gate fails above
 Blade and the Vue toggle on Vue, checking both collapsed and expanded states.
 The workbench supplies the same Lucide icon mapping to Blade via the glyph
 callback; icon sets remain the consuming application's choice.
+
+## React and three-kit parity
+
+`npm run workbench` builds Blade, Vue and React from the same payload fixtures.
+`npm run test:react` covers React SSR; `npm run typecheck:react` checks its public
+TypeScript. `npm run test:hydrate` exercises all supported fixtures across server
+and browser timezones, live/pinned clocks, native keyboard disclosure and cleanup.
+
+`npm run kit:parity` (also `npm run blade:parity`) retains full Vue/Blade checks,
+including Summary, then compares all three renderer pairs without Summary-only
+fixtures. It requires exactly 0px for every measured rectangle at 1512px/500px,
+light/dark, collapsed/expanded. Screenshots, zoomed rail joints and the JSON
+report use the `r1-` prefix; set `STORYFEED_SCREENSHOTS` to override the output.

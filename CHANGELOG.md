@@ -4,6 +4,13 @@
 
 ### Added
 
+- React 19 kit with shared framework-free TypeScript, Tailwind starter-kit
+  tokens, provider/render-prop seams, native disclosure and SSR-safe clocks.
+  `storyfeed:ui react` copies the kit and shared core with the same preservation,
+  diff and force semantics as Vue. Summary-only presentation is excluded.
+- React SSR, installed-kit imports, cross-timezone hydration, strict TypeScript,
+  and exact-zero Vue/Blade/React geometry checks in CI.
+
 - Blade/Vue parity: starter-kit tokens, actor/activity rails, snapshot-coloured
   avatars and stacked group faces, dot/branch day and item dividers, sampled
   media strips, and an allowlisted app Blade Component body registry.
@@ -14,6 +21,10 @@
   500 pixels, light/dark, collapsed/expanded. Filament presentation inventory.
 
 ### Changed
+
+- Vue imports the shared TypeScript core, body discovery and rich-text sanitizer;
+  compatibility entry points and existing Summary behavior remain available.
+  Both copy commands include shared files within the destination.
 
 - Blade body geometry and tokens match Vue, including list markers, facts,
   cards, wrapping verbatim code, quotations and compact file metadata. The

@@ -1,6 +1,6 @@
 {
     "name": "storyfeed/ui",
-    "description": "Renderers for Storyfeed activity feeds: a Blade component kit, with Vue/Inertia, Livewire and React following.",
+    "description": "Renderers for Storyfeed activity feeds: Blade, Vue/Inertia and React/Inertia component kits.",
     "keywords": [
         "laravel",
         "storyfeed",

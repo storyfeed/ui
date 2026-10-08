@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import EntityLink from './EntityLink.vue';
-import type { FeedEntities, FeedEntity, FeedRole, FeedSingularRole } from './types';
+import type { FeedEntities, FeedEntity, FeedRole, FeedSingularRole } from '../shared/types';
 
 const props = defineProps<{
     template: string | null;

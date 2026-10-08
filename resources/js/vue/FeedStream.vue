@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { toRef } from 'vue';
 import FeedNodeView from './FeedNode.vue';
-import type { Rail, RailName } from './rail';
-import type { FeedNode } from './types';
+import type { Rail, RailName } from '../shared/rail';
+import type { FeedNode } from '../shared/types';
 import { useFeedDays } from './useRelativeTime';
 
 const props = withDefaults(

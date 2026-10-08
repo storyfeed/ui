@@ -7,9 +7,9 @@ import FeedHeadline from './FeedHeadline.vue';
 import FeedIcon from './FeedIcon.vue';
 import FeedMediaStrip from './FeedMediaStrip.vue';
 import FeedMeta from './FeedMeta.vue';
-import { rail as parseRail, railFor, withoutSecondary } from './rail';
-import type { Rail, RailName } from './rail';
-import type { ActivityNode } from './types';
+import { rail as parseRail, railFor, withoutSecondary } from '../shared/rail';
+import type { Rail, RailName } from '../shared/rail';
+import type { ActivityNode } from '../shared/types';
 import { useRelativeTime } from './useRelativeTime';
 
 const props = withDefaults(

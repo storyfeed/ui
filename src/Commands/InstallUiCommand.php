@@ -8,7 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class InstallUiCommand extends Command
 {
-    protected $signature = 'storyfeed:ui {kit : The kit to copy (vue)}
+    protected $signature = 'storyfeed:ui {kit : The kit to copy (vue or react)}
         {--path=resources/js/components/storyfeed : Destination directory, relative to the app or absolute}
         {--force : Overwrite files that differ}
         {--diff : Print unified diffs for files that differ}';
@@ -17,8 +17,9 @@ class InstallUiCommand extends Command
 
     public function handle(Filesystem $files): int
     {
-        if ($this->argument('kit') !== 'vue') {
-            $this->error('Unknown kit. Run php artisan storyfeed:ui vue.');
+        $kit = $this->argument('kit');
+        if (! in_array($kit, ['vue', 'react'], true)) {
+            $this->error('Unknown kit. Run php artisan storyfeed:ui vue or php artisan storyfeed:ui react.');
 
             return self::FAILURE;
         }
@@ -32,37 +33,47 @@ class InstallUiCommand extends Command
 
         $destination = str_starts_with($path, '/') || preg_match('/^[A-Za-z]:[\\\\\/]/', $path)
             ? $path : base_path($path);
-        $source = dirname(__DIR__, 2).'/resources/js/vue';
+        $source = dirname(__DIR__, 2).'/resources/js/'.$kit;
+        $sources = [$source => '', dirname(__DIR__, 2).'/resources/js/shared' => 'shared/'];
         $written = $unchanged = $differs = 0;
 
-        foreach ($files->allFiles($source) as $file) {
-            $relative = $file->getRelativePathname();
-            $target = $destination.DIRECTORY_SEPARATOR.$relative;
-            $incoming = $files->get($file->getPathname());
-
-            if ($files->exists($target)) {
-                if ($files->get($target) === $incoming) {
-                    $unchanged++;
-
-                    continue;
+        foreach ($sources as $directory => $prefix) {
+            foreach ($files->allFiles($directory) as $file) {
+                $relative = $prefix.$file->getRelativePathname();
+                $target = $destination.DIRECTORY_SEPARATOR.$relative;
+                $incoming = $files->get($file->getPathname());
+                // Keep each copied kit self-contained, including a custom --path.
+                if ($prefix === '' && in_array($file->getExtension(), ['ts', 'tsx', 'vue'], true)) {
+                    $incoming = strtr($incoming, [
+                        "'../shared/" => "'./shared/",
+                        "'../../shared/" => "'../shared/",
+                    ]);
                 }
 
-                if ($this->option('diff')) {
-                    $this->output->write($this->unifiedDiff($files->get($target), $incoming, $relative), false, OutputInterface::OUTPUT_RAW);
+                if ($files->exists($target)) {
+                    if ($files->get($target) === $incoming) {
+                        $unchanged++;
+
+                        continue;
+                    }
+
+                    if ($this->option('diff')) {
+                        $this->output->write($this->unifiedDiff($files->get($target), $incoming, $relative), false, OutputInterface::OUTPUT_RAW);
+                    }
+
+                    if (! $this->option('force')) {
+                        $differs++;
+                        $this->warn('Differs: '.$relative.' (kept). Use --diff to review or --force to overwrite.');
+
+                        continue;
+                    }
                 }
 
-                if (! $this->option('force')) {
-                    $differs++;
-                    $this->warn('Differs: '.$relative.' (kept). Use --diff to review or --force to overwrite.');
-
-                    continue;
-                }
+                $files->ensureDirectoryExists(dirname($target));
+                $files->put($target, $incoming);
+                $written++;
+                $this->line('Written: '.$relative);
             }
-
-            $files->ensureDirectoryExists(dirname($target));
-            $files->put($target, $incoming);
-            $written++;
-            $this->line('Written: '.$relative);
         }
 
         $this->info("Written: {$written}; unchanged: {$unchanged}; differs: {$differs}.");
@@ -71,8 +82,10 @@ class InstallUiCommand extends Command
         $cssSource = $this->relativePath($cssDirectory, $destination);
         $this->line('In resources/css/app.css, add once if this path is not already scanned:');
         $this->line('@source "'.str_replace(['\\', '"'], ['/', '\\"'], $cssSource).'";');
-        $this->line('Components expect the Laravel Vue starter-kit colour tokens and Tailwind v4.');
-        $this->line('Install Vue 3, lucide-vue-next, markdown-it and sanitize-html in your app.');
+        $this->line('Components expect the Laravel '.($kit === 'vue' ? 'Vue' : 'React').' starter-kit colour tokens and Tailwind v4.');
+        $this->line($kit === 'vue'
+            ? 'Install Vue 3, lucide-vue-next, markdown-it and sanitize-html in your app.'
+            : 'Install React 19, react-dom, lucide-react, markdown-it and sanitize-html in your app.');
         $this->line('Copied files belong to your app. Edit freely; rerun with --diff to review updates.');
 
         return self::SUCCESS;
