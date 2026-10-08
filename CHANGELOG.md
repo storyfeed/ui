@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v0.4.1 - 2026-10-08
+
+### Changed
+
+- Requires `storyfeed/storyfeed` `^0.13 || ^0.14`, so the kits install alongside core v0.14.
+
 ### Fixed
 
 - Stacked actor avatars start at the single-avatar rail position and overlap
