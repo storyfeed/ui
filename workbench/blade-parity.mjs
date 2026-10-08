@@ -43,6 +43,51 @@ try {
                     await frames[0].locator('.sf-toggle').evaluateAll(buttons => buttons.forEach(button => { if (button.getAttribute('aria-expanded') === 'false') button.click(); }));
                     for (const frame of frames.slice(1)) await frame.locator('details').evaluateAll(nodes => nodes.forEach(node => node.open = true));
                 }
+                // A stack starts on the same rail as a single face, then grows inward.
+                for (let i = 0; i < frames.length; i++) {
+                    const fixture = frames[i].locator('.example:has(>h2:text-is("Stacked actors and truncated members"))');
+                    const joints = await fixture.evaluate(section => {
+                        const rows = [...section.querySelectorAll('.sf-row')].filter(row => !row.closest('.sf-children') && row.querySelector(':scope > .sf-body > .sf-head'));
+                        return rows.map(row => {
+                            const rail = row.querySelector(':scope > .sf-rail');
+                            const faces = [...rail.querySelectorAll('.sf-avatar')].map(e => e.getBoundingClientRect());
+                            const line = rail.querySelector('.sf-rail__line')?.getBoundingClientRect();
+                            const head = row.querySelector('.sf-head').getBoundingClientRect();
+                            return { faces: faces.map(r => ({ x: r.x, w: r.width })),
+                                line: line ? line.x + line.width / 2 : null, head: head.x,
+                                badge: rail.querySelectorAll('.sf-badge').length };
+                        });
+                    });
+                    assert.equal(joints.length, 4);
+                    const first = joints[0].faces[0];
+                    for (const [index, count] of [[1, 2], [2, 3]]) {
+                        const joint = joints[index];
+                        assert.equal(joint.faces.length, count);
+                        assert.equal(joint.faces[0].x, first.x, `${renderers[i]}: first stacked face left edge`);
+                        assert.equal(joint.faces[0].w, first.w);
+                        assert.equal(joint.line, first.x + first.w / 2, `${renderers[i]}: rail through first face`);
+                        assert.equal(joint.badge, 0);
+                        joint.faces.slice(1).forEach((face, j) => {
+                            assert.equal(face.x, joint.faces[j].x + face.w - 12, 'retain 12px overlap');
+                        });
+                        const last = joint.faces.at(-1);
+                        assert.ok(last.x + last.w < joint.head, 'stack clears headline');
+                    }
+                    assert.ok(joints[0].badge > 0, 'single actor retains activity badge');
+                    await fixture.screenshot({ path: `${output}/k1-${renderers[i]}-${state}-${theme}-${width}.png` });
+                    if (state === 'collapsed') {
+                        await fixture.scrollIntoViewIfNeeded();
+                        const box = await fixture.boundingBox();
+                        const scroll = await page.evaluate(() => ({ x: scrollX, y: scrollY }));
+                        const session = await page.context().newCDPSession(page);
+                        const capture = await session.send('Page.captureScreenshot', {
+                            format: 'png', captureBeyondViewport: true,
+                            clip: { x: box.x + scroll.x, y: box.y + scroll.y + 32, width: 240, height: box.height - 32, scale: 3 },
+                        });
+                        await writeFile(`${output}/k1-zoom-${renderers[i]}-${theme}-${width}.png`, Buffer.from(capture.data, 'base64'));
+                        await session.detach();
+                    }
+                }
                 const geometry = await Promise.all(frames.map(frame => frame.evaluate(() => {
                     const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media'];
                     return Object.fromEntries(selectors.map(selector => [selector, [...document.querySelectorAll(selector)].filter(e => !e.closest('details:not([open]) .sf-children') && e.getClientRects().length && e.getBoundingClientRect().height > 0).map(e => {

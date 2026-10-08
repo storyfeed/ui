@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Fixed
+
+- Stacked actor avatars start at the single-avatar rail position and overlap
+  to the right in Blade, Vue and React, with space reserved before the headline.
+
 ## v0.4.0 - 2026-10-08
 
 Requires `storyfeed/storyfeed` `^0.13 || 0.13.x-dev`.

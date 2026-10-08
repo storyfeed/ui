@@ -2,16 +2,18 @@
 @php
     $faces = $item->isGroup() ? $item->actors()->take(3) : collect([$item->actor()])->filter();
     $slots = \Storyfeed\Ui\Support\Rail::slots($rail, $faces->count(), $item->glyph() !== null, $dense);
+    $stacked = $slots['disc'] === 'actor' && $faces->count() > 1;
 @endphp
-<div class="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
-    <div class="sf-rail__disc relative flex shrink-0">
+{{-- Keep the disc and line on the first face; reserve only the right-hand overlap. --}}
+<div class="sf-rail box-content flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch" @if ($stacked) style="padding-right: calc({{ $faces->count() - 1 }} * (var(--sf-disc) - 0.75rem))" @endif>
+    <div class="sf-rail__disc relative flex w-(--sf-disc) shrink-0">
 @if ($slots['disc'] === 'actor')
             <div class="sf-avatars flex [&>*+*]:-ml-3">
 @foreach ($faces as $face)
 @if (isset($renderers['avatar']))
-                        {!! $renderers['avatar']($face, $faces->count() > 1 ? 'sm' : 'md') !!}
+                        {!! $renderers['avatar']($face, 'md') !!}
 @else
-                        <x-storyfeed::avatar :entity="$face" :size="$faces->count() > 1 ? 'sm' : 'md'" />
+                        <x-storyfeed::avatar :entity="$face" size="md" />
 @endif
 @endforeach
             </div>

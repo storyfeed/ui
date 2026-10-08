@@ -491,7 +491,7 @@ test('actor rails show glyph badges and childRail independently selects glyph-on
     assert.match(children, /sf-icon/);
     assert.doesNotMatch(children, /sf-avatar|sf-badge/);
     const crowd = await render('/resources/js/vue/FeedGroup.vue', { item: { ...group, sample: { actors: [activity.actor, { ...activity.actor, id: '2' }, { ...activity.actor, id: '3' }] } }, rail: 'actor' });
-    assert.equal((crowd.match(/sf-avatar--sm/g) ?? []).length, 3);
+    assert.equal((crowd.split('sf-avatars')[1].split('</div>')[0].match(/sf-avatar--md/g) ?? []).length, 3);
     assert.doesNotMatch(crowd, /sf-badge/);
 });
 

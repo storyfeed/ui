@@ -109,14 +109,18 @@ const hiddenBeyondChildren = computed(
 
 <template>
     <div class="sf-row relative flex items-start gap-(--sf-gap)">
-        <div class="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
-            <div class="sf-rail__disc relative flex shrink-0">
+        <!-- Keep the line on the first face and reserve the stack's right-hand overlap. -->
+        <div
+            class="sf-rail box-content flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch"
+            :style="slots.disc === 'actor' && faces.length > 1 ? { paddingRight: `calc(${faces.length - 1} * (var(--sf-disc) - 0.75rem))` } : undefined"
+        >
+            <div class="sf-rail__disc relative flex w-(--sf-disc) shrink-0">
                 <div v-if="slots.disc === 'actor'" class="sf-avatars flex [&>*+*]:-ml-3">
                     <EntityAvatar
                         v-for="actor in faces"
                         :key="actor.id"
                         :entity="actor"
-                        :size="faces.length > 1 ? 'sm' : 'md'"
+                        size="md"
                     />
                 </div>
                 <!--

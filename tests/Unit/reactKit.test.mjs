@@ -375,7 +375,7 @@ test('all rail configurations preserve fallback and dense/crowd badge suppressio
         },
         rail: 'actor',
     });
-    assert.equal((html.match(/sf-avatar--sm/g) ?? []).length, 3);
+    assert.equal((html.split('sf-avatars')[1].split('</div>')[0].match(/sf-avatar--md/g) ?? []).length, 3);
     assert.doesNotMatch(html, /sf-badge absolute/);
 });
 test('body discovery handles current/historical names, depth bounds and unknown tokens', () => {

@@ -31,7 +31,7 @@ export default function Rail({
                 <EntityAvatar
                     key={`${face.type}:${face.id}:${i}`}
                     entity={face}
-                    size={faces.length > 1 ? 'sm' : 'md'}
+                    size="md"
                 />
             ))
         ) : slots.disc === 'activity' ? (
@@ -43,8 +43,12 @@ export default function Rail({
             />
         );
     return (
-        <div className="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
-            <div className="sf-rail__disc relative flex shrink-0">
+        <div
+            className="sf-rail box-content flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch"
+            // Padding reserves the overlap without moving the first face or line.
+            style={slots.disc === 'actor' && faces.length > 1 ? { paddingRight: `calc(${faces.length - 1} * (var(--sf-disc) - 0.75rem))` } : undefined}
+        >
+            <div className="sf-rail__disc relative flex w-(--sf-disc) shrink-0">
                 {slots.disc === 'actor' && faces.length > 1 ? (
                     <div className="sf-avatars flex [&>*+*]:-ml-3">{disc}</div>
                 ) : (
