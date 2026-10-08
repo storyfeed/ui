@@ -49,8 +49,8 @@ it('draws a key-value body as labelled rows', function () {
 
     expect($html)->toContain(
         '<div data-storyfeed-body> <figure> <figcaption>Order #1042</figcaption> <dl> '
-        .'<div> <dt>Pickup</dt> <dd>12:10 pm</dd> </div> '
-        .'<div> <dt>Paid</dt> <dd>Yes</dd> </div> '
+        .'<div> <dt>Pickup</dt> <dd><span>12:10 pm</span></dd> </div> '
+        .'<div> <dt>Paid</dt> <dd><span>Yes</span></dd> </div> '
         .'<div> <dt>Reference</dt> <dd title="ORD-1042">ORD-1042</dd> </div> '
         .'<div> <dt>Table</dt> <dd><span>not seated</span></dd> </div> '
         .'</dl> </figure> </div>'

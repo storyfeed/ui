@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- Key-value labels retain their width and wrapped values read left-aligned in Blade, Vue and React.
+
 ## v0.4.1 - 2026-10-08
 
 ### Changed

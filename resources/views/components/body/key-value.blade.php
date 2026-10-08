@@ -14,20 +14,20 @@
 @if (filled($body['title'] ?? null))
             <figcaption class="border-b border-border pt-[3px] pb-[5px] font-semibold text-foreground">{{ $body['title'] }}</figcaption>
 @endif
-        <dl class="m-0 flex flex-col">
+        <dl class="sf-facts__rows m-0 flex flex-col">
 @foreach ($rows as $row)
                 @php($value = $row['value'] ?? null)
-                <div class="grid grid-cols-[minmax(0,1fr)_minmax(0,auto)] items-baseline gap-x-4 gap-y-1 border-b border-border py-[3px] last:border-b-0">
-                    <dt class="min-w-0 [overflow-wrap:anywhere] text-foreground">{{ $row['key'] }}</dt>
+                <div class="sf-facts__row grid grid-cols-[max-content_minmax(0,1fr)] items-baseline gap-x-4 gap-y-1 border-b border-border py-[3px] last:border-b-0">
+                    <dt class="sf-facts__label whitespace-nowrap text-foreground">{{ $row['key'] }}</dt>
 @if ($value === null || $value === '')
-                        <dd class="m-0 min-w-0 text-right tabular-nums [overflow-wrap:anywhere] text-muted-foreground"><span class="italic">{{ $row['placeholder'] }}</span></dd>
+                        <dd class="sf-facts__value m-0 min-w-0 text-right tabular-nums [overflow-wrap:anywhere] text-muted-foreground"><span class="ml-auto block w-fit max-w-full text-left italic">{{ $row['placeholder'] }}</span></dd>
 @else
                         @php($text = is_bool($value) ? ($value ? __('Yes') : __('No')) : $value)
 @if ($row['verbatim'] ?? false)
                             {{-- Compared, not read: one line, with the whole value on hover. --}}
-                            <dd class="m-0 min-w-0 text-right tabular-nums [overflow-wrap:anywhere] text-muted-foreground truncate font-mono text-[12.5px]" title="{{ $text }}">{{ $text }}</dd>
+                            <dd class="sf-facts__value m-0 min-w-0 text-right tabular-nums [overflow-wrap:anywhere] text-muted-foreground truncate font-mono text-[12.5px]" title="{{ $text }}">{{ $text }}</dd>
 @else
-                            <dd class="m-0 min-w-0 text-right tabular-nums [overflow-wrap:anywhere] text-muted-foreground">{{ $text }}</dd>
+                            <dd class="sf-facts__value m-0 min-w-0 text-right tabular-nums [overflow-wrap:anywhere] text-muted-foreground"><span class="ml-auto block w-fit max-w-full text-left">{{ $text }}</span></dd>
 @endif
 @endif
                 </div>

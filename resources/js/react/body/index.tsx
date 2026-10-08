@@ -169,6 +169,8 @@ export function KeyValue({ payload }: BodyProps) {
                 !(row.value === null || row.value === '') ||
                 row.placeholder != null,
         );
+    const text = (value: unknown) =>
+        typeof value === 'boolean' ? (value ? 'Yes' : 'No') : String(value);
     if (!rows.length) return null;
     return (
         <figure className="sf-facts m-0 flex max-w-lg flex-col rounded-lg border border-border px-3 py-1.5 text-[13.5px] leading-[1.5]">
@@ -181,9 +183,9 @@ export function KeyValue({ payload }: BodyProps) {
                 {rows.map((row: any, i: number) => (
                     <div
                         key={i}
-                        className="sf-facts__row grid grid-cols-[minmax(0,1fr)_minmax(0,auto)] items-baseline gap-x-4 gap-y-1 border-b border-border py-[3px] last:border-b-0"
+                        className="sf-facts__row grid grid-cols-[max-content_minmax(0,1fr)] items-baseline gap-x-4 gap-y-1 border-b border-border py-[3px] last:border-b-0"
                     >
-                        <dt className="sf-facts__label min-w-0 text-foreground [overflow-wrap:anywhere]">
+                        <dt className="sf-facts__label whitespace-nowrap text-foreground">
                             {row.key}
                         </dt>
                         <dd
@@ -195,17 +197,15 @@ export function KeyValue({ payload }: BodyProps) {
                             }
                         >
                             {row.value === null || row.value === '' ? (
-                                <span className="sf-facts__value--absent text-muted-foreground italic">
+                                <span className="sf-facts__value--absent ml-auto block w-fit max-w-full text-left text-muted-foreground italic">
                                     {row.placeholder}
                                 </span>
-                            ) : typeof row.value === 'boolean' ? (
-                                row.value ? (
-                                    'Yes'
-                                ) : (
-                                    'No'
-                                )
+                            ) : row.verbatim ? (
+                                text(row.value)
                             ) : (
-                                String(row.value)
+                                <span className="ml-auto block w-fit max-w-full text-left">
+                                    {text(row.value)}
+                                </span>
                             )}
                         </dd>
                     </div>

@@ -38,6 +38,10 @@ and browser timezones, live/pinned clocks, native keyboard disclosure and cleanu
 
 `npm run kit:parity` (also `npm run blade:parity`) compares all three renderer
 pairs with the same ordinary group fixtures. Summary rendering is removed.
-It requires exactly 0px for every measured rectangle at 1512px/500px,
+It requires exactly 0px for every measured rectangle at 1512px/500px and 1440px/390px,
 light/dark, collapsed/expanded. Screenshots, zoomed rail joints and the JSON
 report use the `r1-` prefix; set `STORYFEED_SCREENSHOTS` to override the output.
+
+KeyValue short/paragraph fixtures protect label widths and first-line alignment,
+check wrapped prose starts at the value column, and compare short-value pixels
+with the previous layout. Their light/dark 1440px/390px captures use `k3-`.

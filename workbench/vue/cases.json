@@ -1286,5 +1286,85 @@
     ],
     "interactive": false,
     "collapsed": false
+  },
+  {
+    "name": "KeyValue short values",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "key-value-short",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "label": "Agreement",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/KeyValue",
+              "$v": 2,
+              "items": [
+                {
+                  "key": "Before · Wording",
+                  "value": "Yearly in advance."
+                },
+                {
+                  "key": "After · Wording",
+                  "value": "Quarterly in advance."
+                }
+              ]
+            }
+          ]
+        },
+        "glyph": "file-up",
+        "headline": "Updated agreement wording"
+      }
+    ]
+  },
+  {
+    "name": "KeyValue paragraph values",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "key-value-paragraph",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "label": "Agreement",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/KeyValue",
+              "$v": 2,
+              "items": [
+                {
+                  "key": "Before · Wording",
+                  "value": "Yearly in advance."
+                },
+                {
+                  "key": "After · Wording",
+                  "value": "The Client will pay the fee quarterly in advance, invoiced on the first business day of each quarter, with payment due within fifteen days of the invoice date. Late amounts accrue no interest but pause further work until settled, and either party may raise a billing question in writing within thirty days."
+                }
+              ]
+            }
+          ]
+        },
+        "glyph": "file-up",
+        "headline": "Updated agreement wording"
+      }
+    ]
   }
 ]
