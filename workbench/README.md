@@ -42,6 +42,9 @@ It requires exactly 0px for every measured rectangle at 1512px/500px and 1440px/
 light/dark, collapsed/expanded. Screenshots, zoomed rail joints and the JSON
 report use the `r1-` prefix; set `STORYFEED_SCREENSHOTS` to override the output.
 
-KeyValue short/paragraph fixtures protect label widths and first-line alignment,
-check wrapped prose starts at the value column, and compare short-value pixels
-with the previous layout. Their light/dark 1440px/390px captures use `k3-`.
+KeyValue short/paragraph fixtures check container-driven stacking at exact card
+widths 280/360/520/720px and the 28rem content-width boundary, independently of
+1512px/390px viewports. Values must have at least 16em of width or stack below
+their labels at full row width. Wide cards retain the v0.4.2 PNGs byte for byte;
+all three kits require 0px geometry parity. Light/dark card captures
+and measurements use `k4-`.

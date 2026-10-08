@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Key-value rows stack values below their labels in narrow cards in Blade, Vue and React.
+
 ## v0.4.2 - 2026-10-08
 
 ### Fixed

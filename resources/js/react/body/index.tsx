@@ -173,7 +173,7 @@ export function KeyValue({ payload }: BodyProps) {
         typeof value === 'boolean' ? (value ? 'Yes' : 'No') : String(value);
     if (!rows.length) return null;
     return (
-        <figure className="sf-facts m-0 flex max-w-lg flex-col rounded-lg border border-border px-3 py-1.5 text-[13.5px] leading-[1.5]">
+        <figure className="sf-facts @container/facts m-0 flex max-w-lg flex-col rounded-lg border border-border px-3 py-1.5 text-[13.5px] leading-[1.5]">
             {payload.title && (
                 <figcaption className="sf-facts__title border-b border-border pt-[3px] pb-[5px] font-semibold text-foreground">
                     {payload.title}
@@ -183,13 +183,13 @@ export function KeyValue({ payload }: BodyProps) {
                 {rows.map((row: any, i: number) => (
                     <div
                         key={i}
-                        className="sf-facts__row grid grid-cols-[max-content_minmax(0,1fr)] items-baseline gap-x-4 gap-y-1 border-b border-border py-[3px] last:border-b-0"
+                        className="sf-facts__row grid grid-cols-[max-content_minmax(0,1fr)] @max-[28rem]/facts:grid-cols-1 items-baseline gap-x-4 gap-y-1 border-b border-border py-[3px] last:border-b-0"
                     >
-                        <dt className="sf-facts__label whitespace-nowrap text-foreground">
+                        <dt className="sf-facts__label whitespace-nowrap @max-[28rem]/facts:whitespace-normal @max-[28rem]/facts:[overflow-wrap:anywhere] text-foreground">
                             {row.key}
                         </dt>
                         <dd
-                            className={`sf-facts__value m-0 min-w-0 text-right text-muted-foreground tabular-nums [overflow-wrap:anywhere]${row.verbatim ? ' sf-facts__value--verbatim truncate font-mono text-[12.5px]' : ''}`}
+                            className={`sf-facts__value m-0 min-w-0 text-right @max-[28rem]/facts:text-left text-muted-foreground tabular-nums [overflow-wrap:anywhere]${row.verbatim ? ' sf-facts__value--verbatim truncate font-mono text-[12.5px]' : ''}`}
                             title={
                                 row.verbatim && typeof row.value === 'string'
                                     ? row.value
@@ -197,13 +197,13 @@ export function KeyValue({ payload }: BodyProps) {
                             }
                         >
                             {row.value === null || row.value === '' ? (
-                                <span className="sf-facts__value--absent ml-auto block w-fit max-w-full text-left text-muted-foreground italic">
+                                <span className="sf-facts__value--absent ml-auto @max-[28rem]/facts:ml-0 block w-fit max-w-full text-left text-muted-foreground italic">
                                     {row.placeholder}
                                 </span>
                             ) : row.verbatim ? (
                                 text(row.value)
                             ) : (
-                                <span className="ml-auto block w-fit max-w-full text-left">
+                                <span className="ml-auto @max-[28rem]/facts:ml-0 block w-fit max-w-full text-left">
                                     {text(row.value)}
                                 </span>
                             )}

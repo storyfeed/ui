@@ -3,6 +3,7 @@ import { createServer } from 'node:http';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { resolve, extname } from 'node:path';
 import assert from 'node:assert/strict';
+import { checkKeyValue } from './key-value-parity.mjs';
 const output = process.env.STORYFEED_SCREENSHOTS ?? '/private/tmp/claude-501/-Users-jasper-Dev-projects-storyfeed/2b79c0b9-803e-4825-b1bd-040d9078ad01/scratchpad/kit-adopt';
 await mkdir(output, { recursive: true });
 const server = createServer(async (req, res) => {
@@ -38,69 +39,10 @@ try {
             }));
             // Wait for React's post-hydration local clock and day grouping.
             await Promise.all(frames.map(f => f.waitForFunction(() => !document.querySelector('.sf-time')?.textContent.includes('T15:'))));
-            // KeyValue must preserve labels and the original single-line appearance.
-            for (let i = 0; i < frames.length; i++) {
-                const frame = frames[i];
-                const labels = await frame.locator('.sf-facts dt').evaluateAll(nodes => nodes.map(label => {
-                    const range = document.createRange();
-                    range.selectNodeContents(label);
-                    const box = label.getBoundingClientRect();
-                    const text = range.getBoundingClientRect();
-                    return { label: label.textContent, width: box.width, textWidth: text.width, height: box.height, lineHeight: parseFloat(getComputedStyle(label).lineHeight) };
-                }));
-                assert.ok(labels.length > 0);
-                for (const label of labels) {
-                    assert.ok(label.width >= label.textWidth, `${renderers[i]}: label fits: ${JSON.stringify(label)}`);
-                    assert.equal(label.height, label.lineHeight, `${renderers[i]}: label stays on one line`);
-                }
-                for (const kind of ['short', 'paragraph']) {
-                    const fixture = frame.locator(`.example:has(>h2:text-is("KeyValue ${kind} values"))`);
-                    const rows = await fixture.locator('.sf-facts__row').evaluateAll(nodes => nodes.map(row => {
-                        const label = row.querySelector('dt').getBoundingClientRect();
-                        const value = row.querySelector('dd');
-                        const span = value.querySelector('span');
-                        const range = document.createRange();
-                        range.selectNodeContents(span);
-                        const lines = [...range.getClientRects()];
-                        const box = value.getBoundingClientRect();
-                        return { labelY: label.y, valueY: box.y, left: box.x, right: box.right,
-                            align: getComputedStyle(span).textAlign,
-                            lines: lines.map(r => ({ x: r.x, right: r.right, y: r.y })) };
-                    }));
-                    assert.equal(rows.length, 2);
-                    for (const row of rows) {
-                        assert.equal(row.labelY, row.valueY, `${renderers[i]}: label aligns with first value line`);
-                        if (row.lines.length === 1) assert.ok(Math.abs(row.lines[0].right - row.right) < 0.02, 'short value stays right-aligned');
-                        else {
-                            assert.equal(row.align, 'left');
-                            assert.ok(row.lines.every(line => Math.abs(line.x - row.left) < 0.02), 'wrapped prose starts at value column');
-                        }
-                    }
-                    if (kind === 'paragraph') assert.ok(rows[1].lines.length > 1, 'paragraph fixture really wraps');
-                    if ([1440, 390].includes(width)) await fixture.screenshot({ path: `${output}/k3-${renderers[i]}-${kind}-${theme}-${width}.png` });
-                }
-                const short = frame.locator('.example:has(>h2:text-is("KeyValue short values")) .sf-facts');
-                const current = await short.screenshot();
-                const saved = await short.evaluate(figure => {
-                    const saved = figure.innerHTML;
-                    for (const row of figure.querySelectorAll('.sf-facts__row')) {
-                        row.style.gridTemplateColumns = 'minmax(0, 1fr) minmax(0, auto)';
-                        const label = row.querySelector('dt');
-                        label.style.whiteSpace = 'normal';
-                        label.style.minWidth = '0';
-                        label.style.overflowWrap = 'anywhere';
-                        row.querySelector('dd > span').replaceWith(...row.querySelector('dd > span').childNodes);
-                    }
-                    return saved;
-                });
-                const original = await short.screenshot();
-                await short.evaluate((figure, saved) => { figure.innerHTML = saved; }, saved);
-                assert.ok(current.equals(original), `${renderers[i]}: short values retain the original pixels`);
-            }
-            if ([1440, 390].includes(width)) for (const kind of ['short', 'paragraph']) {
-                const captures = await Promise.all(renderers.map(kit => readFile(`${output}/k3-${kit}-${kind}-${theme}-${width}.png`)));
-                assert.ok(captures.every(capture => capture.equals(captures[0])), `KeyValue ${kind}: three-kit screenshots must match pixel for pixel`);
-            }
+            // Stacked cards can extend beyond the initial iframe height.
+            const fixtureHeights = await Promise.all(frames.map(frame => frame.evaluate(() => document.body.scrollHeight)));
+            await page.locator('iframe').evaluateAll((nodes, height) => nodes.forEach(node => node.style.height = `${height + 2000}px`), Math.max(...fixtureHeights));
+            await checkKeyValue({ frames, renderers, width, theme, output });
             for (const state of ['collapsed', 'expanded']) {
                 if (state === 'expanded') {
                     await frames[0].locator('.sf-toggle').evaluateAll(buttons => buttons.forEach(button => { if (button.getAttribute('aria-expanded') === 'false') button.click(); }));
