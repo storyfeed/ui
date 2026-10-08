@@ -67,7 +67,8 @@ trailing rail; a next cursor keeps it connected to the pager.
 The root's Tailwind arbitrary properties expose `--sf-gutter`, `--sf-gap`,
 `--sf-disc`, `--sf-badge` and `--sf-badge-face`. Override on the `FeedStream`
 element, for example `style="--sf-gutter: 2.5rem"`. The primary avatar/icon
-size follows `--sf-disc`; stacked faces share that size and overlap to the right.
+size follows `--sf-disc`; stacked faces share that size and overlap downward
+along the rail, keeping the headline aligned with single-actor rows.
 The `sf-*` classes remain semantic hooks; styling lives in utilities.
 
 Metadata follows the headline: date, then unused instrument/origin/result/

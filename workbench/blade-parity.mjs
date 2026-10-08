@@ -43,7 +43,7 @@ try {
                     await frames[0].locator('.sf-toggle').evaluateAll(buttons => buttons.forEach(button => { if (button.getAttribute('aria-expanded') === 'false') button.click(); }));
                     for (const frame of frames.slice(1)) await frame.locator('details').evaluateAll(nodes => nodes.forEach(node => node.open = true));
                 }
-                // A stack starts on the same rail as a single face, then grows inward.
+                // A stack starts on the same rail as a single face, then grows downward.
                 for (let i = 0; i < frames.length; i++) {
                     const fixture = frames[i].locator('.example:has(>h2:text-is("Stacked actors and truncated members"))');
                     const joints = await fixture.evaluate(section => {
@@ -53,8 +53,10 @@ try {
                             const faces = [...rail.querySelectorAll('.sf-avatar')].map(e => e.getBoundingClientRect());
                             const line = rail.querySelector('.sf-rail__line')?.getBoundingClientRect();
                             const head = row.querySelector('.sf-head').getBoundingClientRect();
-                            return { faces: faces.map(r => ({ x: r.x, w: r.width })),
-                                line: line ? line.x + line.width / 2 : null, head: head.x,
+                            return { faces: faces.map(r => ({ x: r.x, y: r.y, w: r.width, h: r.height })),
+                                line: line ? line.x + line.width / 2 : null, lineY: line?.y, head: head.x,
+                                top: row.getBoundingClientRect().y, bottom: row.getBoundingClientRect().bottom,
+                                left: rail.getBoundingClientRect().x, right: rail.getBoundingClientRect().right,
                                 badge: rail.querySelectorAll('.sf-badge').length };
                         });
                     });
@@ -65,16 +67,21 @@ try {
                         assert.equal(joint.faces.length, count);
                         assert.equal(joint.faces[0].x, first.x, `${renderers[i]}: first stacked face left edge`);
                         assert.equal(joint.faces[0].w, first.w);
+                        assert.equal(joint.faces[0].y - joint.top, first.y - joints[0].top, 'first face vertical position');
+                        assert.equal(joint.head, joints[0].head, 'headline aligns with single actor');
                         assert.equal(joint.line, first.x + first.w / 2, `${renderers[i]}: rail through first face`);
                         assert.equal(joint.badge, 0);
                         joint.faces.slice(1).forEach((face, j) => {
-                            assert.equal(face.x, joint.faces[j].x + face.w - 12, 'retain 12px overlap');
+                            assert.equal(face.x, first.x, 'faces share the rail centre');
+                            assert.equal(face.y, joint.faces[j].y + face.h - 12, 'retain 12px vertical overlap');
                         });
                         const last = joint.faces.at(-1);
-                        assert.ok(last.x + last.w < joint.head, 'stack clears headline');
+                        assert.ok(joint.faces.every(face => face.x >= joint.left && face.x + face.w <= joint.right), 'stack fits gutter');
+                        assert.ok(last.y + last.h <= joint.bottom, 'stack fits row height');
+                        assert.equal(joint.lineY, last.y + last.h + 4, 'line continues below last face');
                     }
                     assert.ok(joints[0].badge > 0, 'single actor retains activity badge');
-                    await fixture.screenshot({ path: `${output}/k1-${renderers[i]}-${state}-${theme}-${width}.png` });
+                    await fixture.screenshot({ path: `${output}/k2-${renderers[i]}-${state}-${theme}-${width}.png` });
                     if (state === 'collapsed') {
                         await fixture.scrollIntoViewIfNeeded();
                         const box = await fixture.boundingBox();
@@ -84,7 +91,7 @@ try {
                             format: 'png', captureBeyondViewport: true,
                             clip: { x: box.x + scroll.x, y: box.y + scroll.y + 32, width: 240, height: box.height - 32, scale: 3 },
                         });
-                        await writeFile(`${output}/k1-zoom-${renderers[i]}-${theme}-${width}.png`, Buffer.from(capture.data, 'base64'));
+                        await writeFile(`${output}/k2-zoom-${renderers[i]}-${theme}-${width}.png`, Buffer.from(capture.data, 'base64'));
                         await session.detach();
                     }
                 }
