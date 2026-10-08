@@ -31,7 +31,9 @@ dependencies.
 composer require storyfeed/ui
 ```
 
-The service provider registers itself through package discovery.
+The service provider registers itself through package discovery. This release
+requires Storyfeed core `^0.13`. For an Inertia app, install the Vue or React kit
+with `php artisan storyfeed:ui vue` or `php artisan storyfeed:ui react` (below).
 
 The Blade, Vue and React kits use Tailwind CSS v4 and Laravel starter-kit colour
 tokens. No Typography plugin or package stylesheet is needed. Register the package's views in your application's

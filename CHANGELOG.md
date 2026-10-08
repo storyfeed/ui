@@ -2,62 +2,60 @@
 
 ## Unreleased
 
-### Removed
+## v0.4.0 - 2026-10-08
 
-- Remove Summary rendering from Blade, Vue and shared payload types, mirroring
-  core. React continues to ignore unknown extra keys. Groups use their own
-  headline/template and no longer require phrases or period fields.
-
-### Changed
-
-- Test PHP against both tagged core releases and core main in CI; register
-  test and workbench stories through the supported `Story` API.
+Requires `storyfeed/storyfeed` `^0.13 || 0.13.x-dev`.
 
 ### Added
 
-- React 19 kit with shared framework-free TypeScript, Tailwind starter-kit
-  tokens, provider/render-prop seams, native disclosure and SSR-safe clocks.
-  `storyfeed:ui react` copies the kit and shared core with the same preservation,
-  diff and force semantics as Vue. Summary-only presentation is excluded.
-- React SSR, installed-kit imports, cross-timezone hydration, strict TypeScript,
-  and exact-zero Vue/Blade/React geometry checks in CI.
-
-- Blade/Vue parity: starter-kit tokens, actor/activity rails, snapshot-coloured
-  avatars and stacked group faces, dot/branch day and item dividers, sampled
-  media strips, and an allowlisted app Blade Component body registry.
-- Raw payload `items`/`nextCursor` feed input alongside `FeedPage`; independent
+- React 19 kit with a shared, framework-free TypeScript core, Tailwind v4
+  starter-kit tokens, provider/render-prop seams, native disclosure and
+  SSR-safe clocks.
+- `php artisan storyfeed:ui vue|react` copies a kit and its shared core into
+  your app. Both installers preserve differing files, report unchanged files,
+  print unified diffs with `--diff` and replace differing files with `--force`.
+- Tailwind Vue and Blade kits share actor/activity rails, snapshot-coloured
+  avatars, stacked group faces, dot/branch dividers and sampled media strips.
+- Raw payload `items`/`nextCursor` input alongside `FeedPage`, independent
   interactive/collapsed group state, body/time/annotation slots and trusted
-  application rendering hooks for Filament's integration.
-- Shared Vue/Blade workbench fixtures and visual geometry checks at 1512 and
-  500 pixels, light/dark, collapsed/expanded. Filament presentation inventory.
+  application rendering hooks. Blade Component bodies use an allowlisted registry.
+- React SSR, installed-kit imports, cross-timezone hydration, strict TypeScript
+  and exact-zero Vue/Blade/React geometry checks in CI. Shared fixtures cover
+  1512 and 500 pixels, light/dark and collapsed/expanded states.
 
 ### Changed
 
-- Vue imports the shared TypeScript core, body discovery and rich-text sanitizer;
-  compatibility entry points and existing Summary behavior remain available.
-  Both copy commands include shared files within the destination.
-
+- Vue uses the shared TypeScript core, body discovery and rich-text sanitizer.
+  Both installers include self-contained shared files within the destination.
 - Blade body geometry and tokens match Vue, including list markers, facts,
-  cards, wrapping verbatim code, quotations and compact file metadata. The
-  Typography plugin is no longer required; apps without starter-kit tokens can
-  use the theme block in the README.
-- Forms are discovered in activity/object data as well as the object's body
-  slot, preserving historical File, KeyValue and MediaObject payloads. Empty
-  renderers leave no wrapper. Summary readings cap at three phrases like Vue.
-- Prose's sanitized HTML element allowlist matches Vue's supported rich text.
-- Vue divider rail selectors now compile correctly in Tailwind, retaining the
-  intended dot/branch line offsets shared by the Blade kit.
-- Relative today labels use Vue's minute/hour rounding and `just now` below
-  45 seconds; absolute hover titles include weekday and seconds in the display
-  timezone. File bodies no longer repeat an owning entity's name or URL.
-- Activity, group and digest timestamps now sit on a small meta line beneath the
-  headline, followed by translated leftover role details and entity links. Roles
-  already used in the headline are omitted.
-- Context never appears on the meta line: it groups activities (what a feed is
-  often read by) rather than describing them. A headline template that names
-  `:context` still renders it.
-- Timestamps use relative time today, yesterday with time, weekday and date this
-  year, and the full date in older years, retaining the absolute hover title.
+  cards, wrapped verbatim code, quotations and compact file metadata. The
+  Typography plugin is no longer required; the README supplies starter-kit tokens.
+- Activity and group timestamps sit beneath the headline with translated,
+  linked leftover roles. Roles used in the headline are omitted. Context stays
+  out of the meta line and can still appear in headline templates.
+- Timestamp labels use relative time today, yesterday with time, weekday/date
+  this year and the full date in older years. Absolute hover titles include
+  weekday and seconds in the display timezone.
+- PHP CI covers the core release constraint and core main.
+
+### Removed
+
+- Summary rendering from Blade, Vue, React and shared payload types. Groups use
+  their own headline/template and no longer require phrases or period fields.
+  Unknown extra payload keys are ignored.
+
+### Fixed
+
+- Object icons retain entity links and allowed scalar link attributes, and use
+  the app's media renderer. Missing URLs and tombstones leave icons unlinked.
+- Collapsed static group members remain available when printing. Interactive
+  groups retain native disclosure print behavior.
+- Body discovery handles activity/object data and the object's body slot,
+  including historical File, KeyValue and MediaObject payloads. Empty renderers
+  leave no wrapper. Blade's sanitized HTML allowlist matches Vue.
+- Vue divider rail selectors compile correctly in Tailwind. Relative labels
+  follow the shared minute/hour rounding and use `just now` below 45 seconds.
+- File bodies no longer repeat an owning entity's name or URL.
 
 ## v0.3.0 — Pictures only when a body asks (2026-10-01)
 

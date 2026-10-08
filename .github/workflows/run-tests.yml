@@ -3,6 +3,7 @@ name: run-tests
 on:
   push:
     paths:
+      - 'CHANGELOG.md'
       - '**.php'
       - 'resources/**'
       - '.github/workflows/run-tests.yml'
@@ -11,6 +12,7 @@ on:
       - 'composer.lock'
   pull_request:
     paths:
+      - 'CHANGELOG.md'
       - '**.php'
       - 'resources/**'
       - '.github/workflows/run-tests.yml'

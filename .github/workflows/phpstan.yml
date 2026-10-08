@@ -3,6 +3,8 @@ name: PHPStan
 on:
   push:
     paths:
+      - 'README.md'
+      - 'CHANGELOG.md'
       - '**.php'
       - 'phpstan.neon.dist'
       - 'composer.json'

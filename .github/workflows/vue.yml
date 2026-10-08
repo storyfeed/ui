@@ -3,6 +3,9 @@ name: Vue and React kits
 on:
   push:
     paths:
+      - 'composer.json'
+      - 'README.md'
+      - 'CHANGELOG.md'
       - 'resources/js/**'
       - 'tests/Unit/**'
       - 'tests/Feature/InstallUiCommandTest.php'
@@ -14,6 +17,9 @@ on:
       - '.github/workflows/vue.yml'
   pull_request:
     paths:
+      - 'composer.json'
+      - 'README.md'
+      - 'CHANGELOG.md'
       - 'resources/js/**'
       - 'tests/Unit/**'
       - 'tests/Feature/InstallUiCommandTest.php'
