@@ -22,7 +22,7 @@
     $picture = in_array($imageSlot, ['icon', 'preview', 'image'], true) ? $entity?->media()?->get($imageSlot) : null;
     $files = collect($body['files'] ?? [])->filter(fn ($file) => is_array($file) && filled($file['href'] ?? null));
 @endphp
-@if ($subject || $footnote || filled($body['content'] ?? null) || is_array($picture) || $files->isNotEmpty())
+@if ($subject || filled($body['content'] ?? null) || is_array($picture) || $files->isNotEmpty())
 <div {{ $attributes->class('sf-media-object mt-1.5 flex min-w-0 max-w-lg items-start gap-3 rounded-lg border border-border bg-muted p-3') }}>
 @if (is_array($picture) && $imagePlacement === 'beside')
         <div class="sf-media-object__image w-16 flex-[0_0_64px] [&>div]:mt-0! [&>div]:size-16! [&>div]:rounded-md!"><x-storyfeed::media :image="$picture" :renderer="$mediaRenderer" /></div>
@@ -62,4 +62,10 @@
 @endif
     </div>
 </div>
+@elseif ($footnote)
+<p {{ $attributes->class('sf-media-object__footnote mt-0.5 mb-0 text-xs leading-[1.6] text-muted-foreground') }}>
+@if ($footnote['href'])<a class="font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring" href="{{ $footnote['href'] }}">{{ $footnote['label'] }}</a>
+@else{{ $footnote['label'] }}
+@endif
+</p>
 @endif

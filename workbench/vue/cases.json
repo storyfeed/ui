@@ -1366,5 +1366,184 @@
         "headline": "Updated agreement wording"
       }
     ]
+  },
+  {
+    "name": "MediaObject footnotes",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "media-object-linked",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "label": "Discussion",
+          "url": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/MediaObject",
+              "$v": 2,
+              "footnote": {
+                "label": "See full discussion",
+                "href": "/discussion"
+              }
+            }
+          ]
+        },
+        "glyph": "file-up",
+        "headline": "MediaObject linked"
+      },
+      {
+        "kind": "activity",
+        "id": "media-object-resolved",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "label": "Discussion",
+          "url": "/current-discussion",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/MediaObject",
+              "$v": 2,
+              "footnote": {
+                "label": "Open this discussion",
+                "href": null
+              }
+            }
+          ]
+        },
+        "glyph": "file-up",
+        "headline": "MediaObject resolved"
+      },
+      {
+        "kind": "activity",
+        "id": "media-object-text",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "label": "Discussion",
+          "url": "/not-a-link",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/MediaObject",
+              "$v": 2,
+              "footnote": "Small print without a link"
+            }
+          ]
+        },
+        "glyph": "file-up",
+        "headline": "MediaObject text"
+      },
+      {
+        "kind": "activity",
+        "id": "media-object-unresolved",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "label": "Discussion",
+          "url": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/MediaObject",
+              "$v": 2,
+              "footnote": {
+                "label": "No destination",
+                "href": null
+              }
+            }
+          ]
+        },
+        "glyph": "file-up",
+        "headline": "MediaObject unresolved"
+      },
+      {
+        "kind": "activity",
+        "id": "media-object-card",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "label": "Discussion",
+          "url": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/MediaObject",
+              "$v": 2,
+              "content": "The discussion has a short description.",
+              "footnote": {
+                "label": "See full discussion",
+                "href": "/discussion"
+              }
+            }
+          ]
+        },
+        "glyph": "file-up",
+        "headline": "MediaObject card"
+      },
+      {
+        "kind": "activity",
+        "id": "media-object-empty",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "label": "Discussion",
+          "url": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/MediaObject",
+              "$v": 2
+            }
+          ]
+        },
+        "glyph": "file-up",
+        "headline": "MediaObject empty"
+      }
+    ]
   }
 ]

@@ -219,3 +219,28 @@ it('renders groups without retired fields and ignores unknown extra keys', funct
         expect(Blade::render($template, compact('item')))->toBe($html);
     }
 });
+
+it('renders a footnote-only media object as a line', function ($footnote, $entityUrl, $href) {
+    $body = ['$body' => 'Storyfeed/Body/MediaObject', '$v' => 2, 'footnote' => $footnote];
+    $entity = Entity::of(['label' => 'Discussion', 'url' => $entityUrl]);
+    $html = Blade::render('<x-storyfeed::body.media-object :body="$body" :entity="$entity" />', compact('body', 'entity'));
+
+    expect($html)->toContain('sf-media-object__footnote mt-0.5 mb-0 text-xs leading-[1.6] text-muted-foreground', 'See full discussion')
+        ->not->toContain('<div', 'border-border', 'bg-muted', 'p-3');
+    if ($href) {
+        expect($html)->toContain('href="'.$href.'"');
+    } else {
+        expect($html)->not->toContain('<a');
+    }
+})->with([
+    'explicit link' => [['label' => 'See full discussion', 'href' => '/discussion'], '/current', '/discussion'],
+    'resolved link' => [['label' => 'See full discussion', 'href' => null], '/current', '/current'],
+    'unresolved link' => [['label' => 'See full discussion', 'href' => null], null, null],
+    'plain text' => ['See full discussion', '/current', null],
+]);
+
+it('keeps content and footnote together inside the media object card', function () {
+    $body = ['$body' => 'Storyfeed/Body/MediaObject', '$v' => 2, 'content' => 'Discussion summary', 'footnote' => ['label' => 'Read more', 'href' => '/discussion']];
+    $html = Blade::render('<x-storyfeed::body.media-object :body="$body" />', compact('body'));
+    expect($html)->toContain('sf-media-object mt-1.5 flex min-w-0 max-w-lg items-start gap-3 rounded-lg border border-border bg-muted p-3', 'sf-media-object__content', 'Discussion summary', 'sf-media-object__footnote', 'href="/discussion"');
+});

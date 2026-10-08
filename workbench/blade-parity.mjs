@@ -4,6 +4,7 @@ import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { resolve, extname } from 'node:path';
 import assert from 'node:assert/strict';
 import { checkKeyValue } from './key-value-parity.mjs';
+import { checkMediaObject } from './media-object-parity.mjs';
 const output = process.env.STORYFEED_SCREENSHOTS ?? '/private/tmp/claude-501/-Users-jasper-Dev-projects-storyfeed/2b79c0b9-803e-4825-b1bd-040d9078ad01/scratchpad/kit-adopt';
 await mkdir(output, { recursive: true });
 const server = createServer(async (req, res) => {
@@ -43,6 +44,7 @@ try {
             const fixtureHeights = await Promise.all(frames.map(frame => frame.evaluate(() => document.body.scrollHeight)));
             await page.locator('iframe').evaluateAll((nodes, height) => nodes.forEach(node => node.style.height = `${height + 2000}px`), Math.max(...fixtureHeights));
             await checkKeyValue({ frames, renderers, width, theme, output });
+            await checkMediaObject({ frames, renderers, width, theme, output });
             for (const state of ['collapsed', 'expanded']) {
                 if (state === 'expanded') {
                     await frames[0].locator('.sf-toggle').evaluateAll(buttons => buttons.forEach(button => { if (button.getAttribute('aria-expanded') === 'false') button.click(); }));

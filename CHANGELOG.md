@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Footnote-only media objects render as a plain link or text line in Blade, Vue and React.
+
 ## v0.4.3 - 2026-10-08
 
 ### Fixed

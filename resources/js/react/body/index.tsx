@@ -243,6 +243,22 @@ export function MediaObject({
         ? (entityMedia?.[payload.image] ?? null)
         : null;
     const footnote = link(payload.footnote);
+    if (!subject?.label && !payload.content && !picture && !files.length) {
+        return footnote ? (
+            <p className="sf-media-object__footnote mt-0.5 mb-0 text-xs leading-[1.6] text-muted-foreground">
+                {footnote.href ? (
+                    <Link
+                        href={footnote.href}
+                        className="font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring"
+                    >
+                        {footnote.label}
+                    </Link>
+                ) : (
+                    footnote.label
+                )}
+            </p>
+        ) : null;
+    }
     return (
         <div className="sf-media-object mt-1.5 flex min-w-0 max-w-lg items-start gap-3 rounded-lg border border-border bg-muted p-3">
             {picture && placement === 'beside' && (

@@ -557,3 +557,26 @@ test('groups render without retired fields and ignore unknown extra keys', async
         } }), html);
     }
 });
+
+
+test('MediaObject footnotes stand alone, resolve links and keep strings unlinked', async () => {
+    const path = '/resources/js/vue/body/MediaObject.vue';
+    for (const [footnote, entityUrl, href] of [
+        [{ label: 'See full discussion', href: '/discussion' }, '/current', '/discussion'],
+        [{ label: 'See full discussion', href: null }, '/current', '/current'],
+        [{ label: 'See full discussion', href: null }, null, null],
+        ['See full discussion', '/current', null],
+    ]) {
+        const html = await renderRaw(path, { payload: { footnote }, entityUrl });
+        assert.match(html, /<p class="sf-media-object__footnote mt-0.5 mb-0 text-xs leading-\[1.6\] text-muted-foreground">/);
+        assert.match(html, /See full discussion/);
+        assert.doesNotMatch(html, /<div|border-border|bg-muted|p-3/);
+        if (href) assert.ok(html.includes(`href="${href}"`));
+        else assert.doesNotMatch(html, /<a/);
+    }
+    assert.equal((await renderRaw(path, { payload: {} })).replace(/<!--.*?-->/g, ''), '');
+    const html = await renderRaw(path, { payload: { content: 'Discussion summary', footnote: { label: 'Read more', href: '/discussion' } } });
+    assert.match(html, /<div class="sf-media-object mt-1.5 flex min-w-0 max-w-lg items-start gap-3 rounded-lg border border-border bg-muted p-3">/);
+    assert.match(html, /sf-media-object__content[^>]*>Discussion summary/);
+    assert.match(html, /sf-media-object__footnote[^>]*><a href="\/discussion">Read more<\/a><\/p>/);
+});
