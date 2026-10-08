@@ -4,14 +4,6 @@
     $removed ??= isset($renderers['removed']) ? $renderers['removed']($group) : null;
     $objectIcon ??= isset($renderers['objectIcon']) ? $renderers['objectIcon']($group) : null;
     $headline = \Storyfeed\Ui\Support\GroupHeadline::of($group);
-    if ($headline->isFallback() && $group->phrases()->isNotEmpty()) {
-        // Match Vue's three-phrase reading without changing the input payload.
-        $headline = (new \Storyfeed\Support\FeedItem([
-            ...$group->toArray(), 'kind' => 'group', 'axis' => 'summary',
-            'phrases' => $group->phrases()->take(3)->map(fn ($phrase) => $phrase->toArray())->all(),
-            'count' => $group->count(),
-        ]))->headline();
-    }
     $children = $group->children();
     $hidden = max(0, $group->count() - $children->count());
     $tiles = $mediaTiles ?? (isset($renderers['mediaTiles']) ? $renderers['mediaTiles']($group) : null);
@@ -19,27 +11,25 @@
     if ($tiles === null) {
         $tiles = [];
         $seen = [];
-        if (! $group->isDigest() && $group->phrases()->isEmpty()) {
-            foreach (['object', 'actor', 'target', 'context', 'origin', 'result', 'instrument', 'location', 'generator'] as $role) {
-                foreach ($group->entities($role) as $entity) {
-                    foreach ($entity->bodies()->merge(\Storyfeed\Ui\Support\Bodies::in($entity->get('data'))) as $body) {
-                        if (($body['$body'] ?? null) !== 'Storyfeed/Body/Image') { continue; }
-                        $imageSlot = $body['image'] ?? 'preview';
-                        $image = in_array($imageSlot, ['icon', 'preview', 'image'], true) ? $entity->media()?->get($imageSlot) : null;
-                        if (! is_array($image) || empty($image['src'])) { continue; }
-                        if (! isset($seen[$image['src']])) {
-                            $seen[$image['src']] = true;
-                            $image['alt'] = $body['alt'] ?? $body['caption'] ?? '';
-                            $tiles[] = ['image' => $image, 'href' => $entity->url()];
-                        }
-                        break;
+        foreach (['object', 'actor', 'target', 'context', 'origin', 'result', 'instrument', 'location', 'generator'] as $role) {
+            foreach ($group->entities($role) as $entity) {
+                foreach ($entity->bodies()->merge(\Storyfeed\Ui\Support\Bodies::in($entity->get('data'))) as $body) {
+                    if (($body['$body'] ?? null) !== 'Storyfeed/Body/Image') { continue; }
+                    $imageSlot = $body['image'] ?? 'preview';
+                    $image = in_array($imageSlot, ['icon', 'preview', 'image'], true) ? $entity->media()?->get($imageSlot) : null;
+                    if (! is_array($image) || empty($image['src'])) { continue; }
+                    if (! isset($seen[$image['src']])) {
+                        $seen[$image['src']] = true;
+                        $image['alt'] = $body['alt'] ?? $body['caption'] ?? '';
+                        $tiles[] = ['image' => $image, 'href' => $entity->url()];
                     }
-                    if (count($tiles) === 3) { break 2; }
+                    break;
                 }
+                if (count($tiles) === 3) { break 2; }
             }
         }
     }
-    $open = ($group->get('expanded') ?? false) || ($collapsed === null ? (! $interactive || ($headline->isFallback() && $group->phrases()->isEmpty())) : ! $collapsed);
+    $open = ($group->get('expanded') ?? false) || ($collapsed === null ? (! $interactive || $headline->isFallback()) : ! $collapsed);
 @endphp
 <article {{ $attributes->class(['sf-row relative flex items-start gap-(--sf-gap) [--sf-gutter:2rem] [--sf-gap:0.75rem] [--sf-disc:2rem] [--sf-badge:0.875rem] [--sf-badge-face:1.125rem]', '[&:not(:has(>.sf-body>.sf-disclosure[open]))>.sf-rail>[aria-hidden]]:hidden' => $last && $interactive]) }}>
     <x-storyfeed::rail :item="$group" :rail="$rail" :last="$last && ! $interactive && ! $open" :renderers="$renderers" />

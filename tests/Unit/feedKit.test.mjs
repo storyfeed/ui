@@ -78,55 +78,6 @@ test('avatar colours prefer snapshot data, retain the source hash and mute tombs
     assert.doesNotMatch(deleted, /background-color|#FAF6EF|<img/);
 });
 
-test('summary phrases render while truncated member totals stay visible', async () => {
-    const sample = { actors: [entity], objects: [], targets: [], contexts: [] };
-    const html = await render('/resources/js/vue/FeedGroup.vue', {
-        item: {
-            kind: 'group',
-            id: 'group',
-            verb: null,
-            axis: 'actor',
-            published_at: '2026-10-06T12:00:00Z',
-            headline_template: null,
-            glyph: null,
-            actor: entity,
-            object: null,
-            target: null,
-            context: null,
-            sample,
-            distinct: { actors: 1 },
-            count: 5,
-            children: [
-                {
-                    kind: 'activity',
-                    id: 'child',
-                    verb: 'visit',
-                    published_at: '2026-10-06T12:00:00Z',
-                    headline_template: ':actor visited the fair',
-                    glyph: null,
-                    actor: entity,
-                    object: null,
-                    target: null,
-                    context: null,
-                },
-            ],
-            children_truncated: true,
-            phrases: [
-                {
-                    verb: 'visit',
-                    count: 5,
-                    headline_template: 'visited the fair',
-                    glyph: null,
-                    sample,
-                    distinct: {},
-                },
-            ],
-        },
-    });
-    assert.match(html, /visited the fair/);
-    assert.match(html, /Show all 5/);
-});
-
 test('rich prose strips unsafe HTML and verbatim keeps escaped source', async () => {
     const content =
         '<script>alert(1)</script><a href="javascript:alert(1)">link</a><strong>safe</strong>';
@@ -254,29 +205,7 @@ test('rich prose strips unsafe HTML and verbatim keeps escaped source', async ()
         assert.match(html, /Claude/);
         assert.doesNotMatch(html.split('class="sf-meta"')[1], /Claude|Codex/);
     });
-    test('digest consumes only displayed phrase tokens; redundant activity uses its missing grammar', async () => {
-        const node = {
-            ...item,
-            kind: 'group',
-            headline_template: null,
-            count: 2,
-            children: [],
-            sample: { actors: [item.actor] },
-            distinct: { actors: 1 },
-            phrases: [
-                {
-                    verb: 'post',
-                    count: 2,
-                    headline_template: 'posted via :instrument',
-                    sample: { instruments: [item.instrument] },
-                    distinct: { instruments: 1 },
-                },
-            ],
-        };
-        assert.doesNotMatch(
-            (await render(node)).split('class="sf-meta"')[1],
-            /Claude/,
-        );
+    test('redundant activity uses its missing grammar', async () => {
         assert.match(
             await render({
                 ...item,
@@ -472,19 +401,6 @@ const group = {
 };
 const textOf = html => html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
 
-test('summary remainder includes server-truncated activities and locally capped phrases', async () => {
-    const phrases = [20, 5, 4, 2].map((count, index) => ({
-        count, verb: `verb${index}`, headline_template: `phrase${index} :count`, sample: {}, distinct: {},
-    }));
-    for (const shown of [phrases.slice(0, 3), phrases]) {
-        const html = await render('/resources/js/vue/FeedGroup.vue', {
-            item: { ...group, axis: 'summary', headline_template: null, phrases: shown, phrases_truncated: true },
-        });
-        assert.match(textOf(html), /phrase0 20, phrase1 5, phrase2 4 and 7 more/);
-        assert.doesNotMatch(textOf(html), /phrase3/);
-    }
-});
-
 test('group singular slots use pins even when distinct=1 or samples disagree', async () => {
     for (const role of ['actor', 'object', 'target', 'context', 'instrument', 'origin', 'result', 'location', 'generator']) {
         const item = {
@@ -518,10 +434,8 @@ test('group strips sample all roles, objects first, deduplicate by source and ca
     assert.match(html, /href="\/art\/\/c"/);
 });
 
-test('Summary and expanded groups suppress sampled media', async () => {
+test('expanded groups suppress sampled media', async () => {
     const item = { ...group, sample: { actors: [activity.actor], objects: [photoEntity('/suppressed')] } };
-    const summary = await render('/resources/js/vue/FeedGroup.vue', { item: { ...item, axis: 'summary' } });
-    assert.doesNotMatch(summary, /\/suppressed|sf-media-strip/);
     const expanded = await render('/resources/js/vue/FeedGroup.vue', { item: { ...item, headline_template: null } });
     assert.match(expanded, /Show less/);
     assert.doesNotMatch(expanded, /\/suppressed|sf-media-strip/);
@@ -629,4 +543,17 @@ test('feed retains collapsed members for print and static groups never show a to
     }
     const open = await renderRaw('/resources/js/vue/FeedStream.vue', { items: [group], interactive: false });
     assert.doesNotMatch(open, /hidden print:block|sf-toggle/);
+});
+
+test('groups render without retired fields and ignore unknown extra keys', async () => {
+    for (const headline of [{ headline_template: ':count updates' }, { headline_template: null, headline: 'Updates' }, { headline_template: null }]) {
+        const item = { ...group, ...headline };
+        for (const key of ['phrases', 'phrases_truncated', 'period']) assert.equal(Object.hasOwn(item, key), false);
+        const html = await render('/resources/js/vue/FeedGroup.vue', { item });
+        assert.match(textOf(html), /35 more not shown/);
+        assert.equal(await render('/resources/js/vue/FeedGroup.vue', { item: {
+            ...item, phrases: [{ headline_template: 'Retired sentence', count: 36 }],
+            phrases_truncated: true, period: 'day', future_field: { unknown: true },
+        } }), html);
+    }
 });

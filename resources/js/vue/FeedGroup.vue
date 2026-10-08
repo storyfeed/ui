@@ -10,7 +10,7 @@ import FeedMeta from './FeedMeta.vue';
 import FeedMedia from './FeedMedia.vue';
 import { rail as parseRail, railFor } from '../shared/rail';
 import type { Rail, RailName } from '../shared/rail';
-import type { FeedNode, FeedPhrase, GroupNode, FeedSingularRole } from '../shared/types';
+import type { FeedNode, GroupNode, FeedSingularRole } from '../shared/types';
 import { useRelativeTime } from './useRelativeTime';
 
 const props = withDefaults(
@@ -49,12 +49,7 @@ const slots = computed(() =>
 // to summarize, so it opens on its members instead of hiding them behind a
 // count. Reachable by design — the payload contract requires renderers to
 // handle it, and it is not an error state.
-const unnamed = computed(
-    () =>
-        !props.item.headline_template &&
-        !props.item.headline &&
-        !props.item.phrases?.length,
-);
+const unnamed = computed(() => !props.item.headline_template && !props.item.headline);
 
 const expanded = ref(props.item.expanded || (props.collapsed === null ? (!props.interactive || unnamed.value) : !props.collapsed));
 
@@ -64,57 +59,6 @@ const time = useRelativeTime(toRef(() => props.item.published_at));
 
 // Only core's explicit slots pin a group role; distinct=1 is not a pin.
 const singular = (role: FeedSingularRole) => props.item[role] ?? null;
-
-/**
- * A summary row with no headline of its own reads as its actor and its
- * phrases, joined: "checked in at the Fun Fair, got a balloon and went on 3
- * rides". Three phrases at most; the rest are counted, never dropped, and the
- * members are all behind "Show all".
- */
-const PHRASES_SHOWN = 3;
-
-const phrases = computed(() =>
-    props.item.headline_template || props.item.headline
-        ? []
-        : (props.item.phrases ?? []).slice(0, PHRASES_SHOWN),
-);
-
-const phrasesBeyond = computed(() =>
-    Math.max(0, props.item.count - phrases.value.reduce((sum, phrase) => sum + phrase.count, 0)),
-);
-
-/** A phrase's own singulars, where its sample genuinely has one. */
-const phraseEntities = (phrase: FeedPhrase) =>
-    Object.fromEntries(
-        (
-            [
-                'object',
-                'target',
-                'context',
-                'instrument',
-                'origin',
-                'result',
-                'location',
-                'generator',
-            ] as const
-        ).map((role) => {
-            const shown = phrase.sample[`${role}s`] ?? [];
-
-            return [
-                role,
-                shown.length === 1 && phrase.distinct[`${role}s`] === 1
-                    ? shown[0]
-                    : null,
-            ];
-        }),
-    );
-
-const phraseSeparator = (index: number) =>
-    index === phrases.value.length - 1
-        ? ''
-        : index === phrases.value.length - 2 && phrasesBeyond.value === 0
-          ? ' and '
-          : ', ';
 
 const entities = computed(() => ({
     actor: singular('actor'),
@@ -138,7 +82,7 @@ const entities = computed(() => ({
  * you are already looking at is noise.
  */
 const strip = computed(() => {
-    if (props.item.axis === 'summary' || props.item.phrases?.length || expanded.value) {
+    if (expanded.value) {
         return { tiles: [], overflow: 0 };
     }
 
@@ -213,37 +157,7 @@ const hiddenBeyondChildren = computed(
             :class="isLast && !expanded ? '' : 'sf-body--spaced pb-5'"
         >
             <div class="sf-head flex items-baseline gap-3">
-                <span v-if="phrases.length > 0" class="sf-headline leading-[1.6] text-muted-foreground">
-                    <FeedHeadline
-                        :template="entities.actor ? ':actor' : ':actors'"
-                        :entities="entities"
-                        :sample="item.sample"
-                        :distinct="item.distinct"
-                        :verb="null"
-                        aggregate
-                    />{{ ' '
-                    }}<template
-                        v-for="(phrase, index) in phrases"
-                        :key="phrase.verb"
-                        ><FeedHeadline
-                            v-if="phrase.headline_template || phrase.headline"
-                            :template="phrase.headline_template"
-                            :headline="phrase.headline"
-                            :entities="phraseEntities(phrase)"
-                            :sample="phrase.sample"
-                            :distinct="phrase.distinct"
-                            :count="phrase.count"
-                            :verb="phrase.verb"
-                            aggregate
-                        /><span v-else class="sf-label"
-                            >{{ phrase.verb }} ×{{ phrase.count }}</span
-                        >{{ phraseSeparator(index) }}</template
-                    ><template v-if="phrasesBeyond > 0">
-                        and {{ phrasesBeyond }} more</template
-                    >
-                </span>
                 <FeedHeadline
-                    v-else
                     :template="item.headline_template"
                     :headline="item.headline"
                     :entities="entities"
@@ -256,11 +170,7 @@ const hiddenBeyondChildren = computed(
             </div>
             <FeedMeta
                 :node="item"
-                :templates="
-                    phrases.length
-                        ? phrases.map((phrase) => phrase.headline_template)
-                        : [item.headline_template]
-                "
+                :templates="[item.headline_template]"
             >
                 <template v-if="$slots.time">
                     <slot name="time" :node="item" :label="time.label.value" />

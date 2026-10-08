@@ -83,13 +83,6 @@ it('converts calendar rungs and hover titles to the supplied display zone', func
         ->toContain('Yesterday, 9:00 PM', 'Thursday, 24 September 2026, 9:00:00 PM');
 });
 
-it('caps displayed summary phrases and leaves undrawn role tokens on the meta line', function () {
-    $phrases = array_map(fn ($n) => ['count' => 1, 'headline_template' => $n === 4 ? 'used :instrument' : 'phrase '.$n], range(1, 4));
-    $item = FeedItem::of(['kind' => 'group', 'axis' => 'summary', 'count' => 4, 'actor' => ['label' => 'Dana'], 'phrases' => $phrases, 'instrument' => ['label' => 'CLI']]);
-    expect(render_blade('<x-storyfeed::group :group="$item" />', compact('item')))
-        ->toContain('phrase 1, phrase 2, phrase 3 and 1 more', 'via <span>CLI</span>')->not->toContain('used');
-});
-
 it('uses a pinned meta entity ahead of the sample and keeps custom time separators honest', function () {
     $item = FeedItem::of(['kind' => 'group', 'headline' => 'Updates', 'instrument' => ['label' => 'Pinned'], 'sample' => ['instruments' => [['label' => 'Sample']]], 'distinct' => ['instruments' => 1]]);
     $renderer = fn ($node) => '<a href="/event">Recorded</a>';
@@ -123,15 +116,6 @@ it('hands pictures to host integration while retaining the body caption and medi
         ->toContain('Plain words')->not->toContain('media-renderer');
 });
 
-it('keeps server-truncated summary activity totals after capping phrases', function () {
-    $phrases = array_map(fn ($count, $n) => ['count' => $count, 'headline_template' => 'phrase'.$n.' :count'], [20, 5, 4, 2], range(0, 3));
-    foreach ([array_slice($phrases, 0, 3), $phrases] as $shown) {
-        $item = ['kind' => 'group', 'axis' => 'summary', 'count' => 36, 'phrases_truncated' => true, 'actor' => ['label' => 'Dana'], 'phrases' => $shown];
-        expect(render_blade('<x-storyfeed::group :group="$item" />', compact('item')))
-            ->toContain('phrase0 20, phrase1 5, phrase2 4 and 7 more')->not->toContain('phrase3');
-    }
-});
-
 it('uses only pinned group singulars', function () {
     foreach (['actor', 'object', 'target', 'context', 'instrument', 'origin', 'result', 'location', 'generator'] as $role) {
         $item = ['kind' => 'group', 'count' => 2, 'headline_template' => ':'.$role, 'sample' => [$role.'s' => [['label' => 'Exemplar']]], 'distinct' => [$role.'s' => 1]];
@@ -153,8 +137,7 @@ it('samples Image bodies across every group role and deduplicates and caps strip
     $item = [...$base, 'sample' => ['objects' => [$photo('/a'), $photo('/b')], 'targets' => [$photo('/a'), $photo('/c'), $photo('/d')]]];
     $html = render_blade('<x-storyfeed::group :group="$item" />', compact('item'));
     expect(substr_count($html, '<img'))->toBe(3)->and($html)->toContain('src="/a"', 'src="/b"', 'src="/c"')->not->toContain('src="/d"');
-    $item['axis'] = 'summary';
-    expect(render_blade('<x-storyfeed::group :group="$item" />', compact('item')))->not->toContain('sf-media-strip', 'src="/a"');
+
 });
 
 it('supports file MIME labels and host labellers through the feed without changing the body', function () {
@@ -221,4 +204,18 @@ it('retains printable static members and preserves interactive details print rul
     expect($html)->toContain('First confirmation', 'Second confirmation', '…and 1 more not shown', 'sf-children mt-3 hidden print:block')->not->toContain('<details', '<summary');
     expect(Blade::render('<x-storyfeed::feed :items="[$item]" :interactive="false" :collapsed="false" />', compact('item')))->toContain('First confirmation')->not->toContain('hidden print:block');
     expect(Blade::render('<x-storyfeed::feed :items="[$item]" :collapsed="true" />', compact('item')))->toContain('<details', '<summary', 'print:[&::details-content]:block', 'First confirmation')->not->toContain('hidden print:block');
+});
+
+it('renders groups without retired fields and ignores unknown extra keys', function () {
+    foreach ([['headline_template' => ':count updates'], ['headline' => 'Updates'], []] as $headline) {
+        $item = [...$headline, 'kind' => 'group', 'axis' => 'repeat', 'count' => 3, 'children' => [
+            ['kind' => 'activity', 'headline' => 'Child update'],
+        ]];
+        $template = '<x-storyfeed::feed :items="[$item]" :grouped="false" />';
+        $html = Blade::render($template, compact('item'));
+        expect($html)->toContain('Child update', '…and 2 more not shown')
+            ->and($item)->not->toHaveKeys(['phrases', 'phrases_truncated', 'period']);
+        $item += ['phrases' => [['headline_template' => 'Retired sentence', 'count' => 3]], 'phrases_truncated' => true, 'period' => 'day', 'future_field' => ['unknown' => true]];
+        expect(Blade::render($template, compact('item')))->toBe($html);
+    }
 });

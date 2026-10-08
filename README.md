@@ -120,9 +120,9 @@ starter kit. `FeedProvider` supplies the `FEED_LINK`, `FEED_COMPONENTS`, `FEED_N
 `FEED_FILE_LABELLER` and `FEED_MEDIA_OBJECT_PLACEMENT` seams. `body`, `annotations`
 and `time` render props replace Vue slots. Groups use native `<details>`.
 The initial SSR/hydration render uses stable ISO dates; after mount, labels
-use the browser's local calendar and live or pinned clock. Summary-only fields
-are omitted. See the [React kit README](resources/js/react/README.md) for the
-complete provider, pagination, body and SSR contracts.
+use the browser's local calendar and live or pinned clock. See the
+[React kit README](resources/js/react/README.md) for the complete provider,
+pagination, body and SSR contracts.
 
 ## Usage
 
@@ -160,10 +160,9 @@ can be used on its own:
 | Component | Draws |
 |---|---|
 | `<x-storyfeed::feed :page>` | the page, then a link to older activity |
-| `<x-storyfeed::item :item>` | one item: an activity, a group or a summary row |
+| `<x-storyfeed::item :item>` | one item: an activity or a group |
 | `<x-storyfeed::activity :activity>` | an activity row |
 | `<x-storyfeed::group :group>` | a group row, its members behind a disclosure |
-| `<x-storyfeed::digest :digest>` | a summary row: a person's day, or a crowd |
 | `<x-storyfeed::headline :headline>` | a headline, each entity linked |
 | `<x-storyfeed::glyph :glyph :intent>` | the icon disc |
 | `<x-storyfeed::time :at>` | when it happened |
@@ -329,11 +328,11 @@ Feeds, items and groups accept `child-rail="activity-only"` independently of
 shows an actor and activity badge. Without a child override, children inherit
 the parent posture and dense rows suppress its badge.
 
-Groups use explicit pinned singular slots and show a summary's remaining
-activity total after the three displayed phrases, including phrases omitted
-by the server. Sample photograph strips read Image bodies across every role,
-objects first, deduplicate image sources, cap at three and hide on summary
-readings or when children are shown.
+Groups use explicit pinned singular slots and their own headline/template.
+Summary rendering has been removed from all three kits, mirroring core.
+Unknown extra payload keys are ignored. Sample photograph strips read Image
+bodies across every role, objects first, deduplicate image sources, cap at
+three and hide when children are shown.
 The [Filament inventory](workbench/filament-inventory.md) lists the rendering
 boundary and the integration features that stay in the plugin.
 

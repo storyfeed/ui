@@ -24,14 +24,7 @@ export default function HydrationFixture({
                     [
                         item,
                         ...bodies,
-                        ...cases
-                            .filter(
-                                (example) =>
-                                    !example.items.some(
-                                        (item) => item.axis === 'summary',
-                                    ),
-                            )
-                            .flatMap((example) => example.items),
+                        ...cases.flatMap((example) => example.items),
                     ].map((node, index) => ({
                         ...node,
                         id: `hydration-${index}`,

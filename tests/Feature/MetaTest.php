@@ -17,7 +17,6 @@ it('puts activity and group metadata after the headline row', function (string $
 })->with([
     'activity' => ['activity', []],
     'group' => ['group', ['kind' => 'group', 'count' => 2, 'children' => []]],
-    'digest' => ['group', ['kind' => 'digest', 'count' => 2, 'children' => []]],
 ]);
 
 it('does not repeat singular or plural roles used in the headline', function (string $template) {

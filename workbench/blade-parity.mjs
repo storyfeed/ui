@@ -23,9 +23,7 @@ await new Promise(r => server.listen(0, '127.0.0.1', r));
 const browser = await chromium.launch();
 const report = [];
 try {
-    // Retain full legacy Vue/Blade coverage, including Summary. React's supported
-    // contract excludes Summary-only fixtures as directed by the R1 brief.
-    for (const renderers of [['vue', 'blade'], ['vue', 'blade', 'react']]) {
+    for (const renderers of [['vue', 'blade', 'react']]) {
         for (const width of [1512, 500]) for (const theme of ['light', 'dark']) {
             const page = await browser.newPage({ viewport: { width: width * renderers.length, height: 1000 }, timezoneId: 'UTC' });
             const errors = []; page.on('pageerror', e => errors.push(e.message));
@@ -33,12 +31,9 @@ try {
             const frames = page.frames().slice(1);
             await Promise.all(frames.map(async frame => {
                 await frame.locator('.sf-feed').first().waitFor();
-                await frame.evaluate(({ theme, skipSummary }) => {
+                await frame.evaluate(theme => {
                     document.documentElement.classList.toggle('dark', theme === 'dark');
-                    if (skipSummary) for (const section of document.querySelectorAll('.example')) {
-                        if (/summary/i.test(section.querySelector('h2')?.textContent ?? '')) section.remove();
-                    }
-                }, { theme, skipSummary: renderers.length === 3 });
+                }, theme);
                 await frame.evaluate(() => Promise.all([...document.images].map(img => { img.loading = 'eager'; return img.decode().catch(() => {}); })));
             }));
             // Wait for React's post-hydration local clock and day grouping.

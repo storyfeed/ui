@@ -1,9 +1,8 @@
 <?php
 
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Blade;
+use Storyfeed\Facades\Story;
 use Storyfeed\Facades\Storyfeed;
-use Storyfeed\Ui\Tests\Fixtures\Customer;
 use Storyfeed\Ui\Tests\Fixtures\Order;
 use Storyfeed\Ui\Tests\Fixtures\User;
 
@@ -16,12 +15,8 @@ use Storyfeed\Ui\Tests\Fixtures\User;
 beforeEach(function () {
     $this->dana = User::create(['name' => 'Dana', 'email' => 'dana@example.com']);
 
-    Storyfeed::grammar([
-        'order.place' => ':actor placed :object',
-        'order.ship' => ':actor shipped :object',
-    ])
-        ->icons(['order.place' => 'shopping-bag'])
-        ->glyphIntents(['order.place' => 'success']);
+    Story::for(Order::class)->verb('place')->headline(':actor placed :object')->icon('shopping-bag')->intent('success');
+    Story::for(Order::class)->verb('ship')->headline(':actor shipped :object');
 });
 
 it('draws an activity row: glyph, linked headline and time', function () {
@@ -110,38 +105,6 @@ it('opens a group with no headline on its members', function () {
         ->and(render_feed($page))
         ->toContain('<span>2 activities</span>')
         ->toContain('<details open >');
-});
-
-it('draws a digest row with core\'s sentence', function () {
-    $fair = Customer::create(['name' => 'Fun Fair']);
-
-    Storyfeed::activity('check_in')->by($this->dana)->for($fair)->publishedAt(Carbon::parse('2026-09-25 09:00'))->publish();
-    Storyfeed::activity('place', Order::create(['number' => '1']))->by($this->dana)->publishedAt(Carbon::parse('2026-09-25 10:00'))->publish();
-
-    $page = Storyfeed::feed()->summary()->get();
-
-    expect($page->collect()->sole()->isDigest())->toBeTrue()
-        ->and(render_feed($page))
-        ->toContain('<article data-storyfeed-summary="">')
-        ->toContain('<span><a href="/users/1">Dana</a> check_in (1) and ')
-        ->toContain('Show all 2');
-});
-
-it('draws a crowd: several people who did the one same thing', function () {
-    $fair = Customer::create(['name' => 'Fun Fair']);
-    $ana = User::create(['name' => 'Ana', 'email' => 'ana@example.com']);
-
-    Storyfeed::activity('check_in')->by($this->dana)->for($fair)->publishedAt(Carbon::parse('2026-09-25 09:00'))->publish();
-    Storyfeed::activity('check_in')->by($ana)->for($fair)->publishedAt(Carbon::parse('2026-09-25 09:30'))->publish();
-
-    $page = Storyfeed::feed()->summary()->get();
-    $crowd = $page->collect()->sole();
-
-    expect($crowd->isDigest())->toBeTrue()
-        ->and($crowd->actor())->toBeNull()
-        ->and(render_feed($page))
-        ->toContain('<article data-storyfeed-summary="">')
-        ->toContain('<a href="/users/2">Ana</a> and <a href="/users/1">Dana</a>');
 });
 
 it('links to older activity with the next cursor, and not from the last page', function () {

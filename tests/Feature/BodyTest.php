@@ -10,6 +10,7 @@ use Storyfeed\Body\KeyValue;
 use Storyfeed\Body\MediaObject;
 use Storyfeed\Body\Prose;
 use Storyfeed\Contracts\FeedBody;
+use Storyfeed\Facades\Story;
 use Storyfeed\Facades\Storyfeed;
 use Storyfeed\FeedImage;
 use Storyfeed\FeedLink;
@@ -29,7 +30,7 @@ function render_bodies(FeedBody|iterable $body): string
 {
     Order::$body = $body;
 
-    Storyfeed::grammar(['order.place' => ':actor placed :object']);
+    Story::for(Order::class)->verb('place')->headline(':actor placed :object');
     Storyfeed::activity('place', Order::create(['number' => '1042']))
         ->by(User::create(['name' => 'Dana', 'email' => 'dana@example.com']))
         ->publish();

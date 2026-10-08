@@ -60,26 +60,19 @@ export default function App() {
                             dividerStyle: 'branch',
                         })}
                     </section>
-                    {cases
-                        .filter(
-                            (example) =>
-                                !example.items.some(
-                                    (item) => item.axis === 'summary',
-                                ),
-                        )
-                        .map((example) => (
-                            <section key={example.name} className="example">
-                                <h2>{example.name}</h2>
-                                {feed(example.items, {
-                                    rail: example.rail,
-                                    childRail: example.childRail,
-                                    grouped: example.grouped ?? false,
-                                    interactive: example.interactive ?? true,
-                                    collapsed: example.collapsed ?? null,
-                                    objectIcon: example.objectIcon ? (node: FeedNode) => node.object?.media?.icon ?? null : undefined,
-                                })}
-                            </section>
-                        ))}
+                    {cases.map((example) => (
+                        <section key={example.name} className="example">
+                            <h2>{example.name}</h2>
+                            {feed(example.items, {
+                                rail: example.rail,
+                                childRail: example.childRail,
+                                grouped: example.grouped ?? false,
+                                interactive: example.interactive ?? true,
+                                collapsed: example.collapsed ?? null,
+                                objectIcon: example.objectIcon ? (node: FeedNode) => node.object?.media?.icon ?? null : undefined,
+                            })}
+                        </section>
+                    ))}
                     <section className="example">
                         <h2>MediaObject below</h2>
                         <div className="sf-feed text-sm leading-[1.6] text-muted-foreground">

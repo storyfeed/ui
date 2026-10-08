@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Removed
+
+- Remove Summary rendering from Blade, Vue and shared payload types, mirroring
+  core. React continues to ignore unknown extra keys. Groups use their own
+  headline/template and no longer require phrases or period fields.
+
+### Changed
+
+- Test PHP against both tagged core releases and core main in CI; register
+  test and workbench stories through the supported `Story` API.
+
 ### Added
 
 - React 19 kit with shared framework-free TypeScript, Tailwind starter-kit

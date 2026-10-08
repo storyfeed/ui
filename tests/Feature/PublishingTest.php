@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
+use Storyfeed\Facades\Story;
 use Storyfeed\Facades\Storyfeed;
 use Storyfeed\Ui\Tests\Fixtures\Order;
 use Storyfeed\Ui\Tests\Fixtures\User;
@@ -23,7 +24,7 @@ it('publishes the views, and a published view replaces the package\'s', function
 
     $published = resource_path('views/vendor/storyfeed');
 
-    foreach (['feed', 'item', 'activity', 'group', 'digest', 'glyph', 'headline', 'meta', 'time', 'body', 'pager', 'body/key-value', 'body/media-object'] as $component) {
+    foreach (['feed', 'item', 'activity', 'group', 'glyph', 'headline', 'meta', 'time', 'body', 'pager', 'body/key-value', 'body/media-object'] as $component) {
         expect("{$published}/components/{$component}.blade.php")->toBeFile();
     }
 
@@ -38,7 +39,7 @@ it('draws an icon an app adds for its glyph token', function () {
     File::ensureDirectoryExists(resource_path('views/vendor/storyfeed/icons'));
     File::put(resource_path('views/vendor/storyfeed/icons/shopping-bag.blade.php'), '<svg></svg>');
 
-    Storyfeed::grammar(['order.place' => ':actor placed :object'])->icons(['order.place' => 'shopping-bag']);
+    Story::for(Order::class)->verb('place')->headline(':actor placed :object')->icon('shopping-bag');
     Storyfeed::activity('place', Order::create(['number' => '1']))->by(User::create(['name' => 'Dana', 'email' => 'd@example.com']))->publish();
 
     expect(render_feed())->toContain('aria-hidden="true"> <svg></svg>');

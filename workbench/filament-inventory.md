@@ -7,7 +7,7 @@ kit and retains the Filament integration. No Filament files were edited.
 | Filament source / presentation | Generic Blade kit counterpart |
 |---|---|
 | `node`, `avatar`: four rail postures, fallback disc, stacked samples, badges, intent hook, names/initials/colours and tombstones | `rail`, `avatar`, `glyph`; same Vue geometry and data palette; avatar/glyph renderer hooks |
-| `node`: authored/fallback/missing headline, redundant history and removal note | core headline reader, three-phrase summary reading, `removed` prop/callback |
+| `node`: authored/fallback/missing headline, redundant history and removal note | core headline reader, `removed` prop/callback |
 | `node`, `FeedRendering`: leftover roles, tight meta, relative/calendar ladder and full hover | `meta`, `time`, timezone/label/title props; `time` slot/callback for the plugin's formatter and attributes |
 | `node`, `object-icon`: object identity framing the whole content region | `objectIcon` prop/callback and the body slot |
 | `node`, `media`: sampled picture grid and overflow tile, hidden when children show | `media-strip` tiles/overflow/renderer; Image-body samples in `group` |

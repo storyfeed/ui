@@ -16,7 +16,7 @@ The page uses starter-kit tokens and class-driven dark mode; the root README inc
 
 The layout and sample meal SVG are original work. The paperclip icon is from Heroicons (MIT); see the root README and `licenses/heroicons.txt`. No Tailwind Plus markup, templates, or class lists were used.
 
-Stable selectors are `data-sf-intent` and `data-sf-glyph` on icons, `data-storyfeed-body` on a rendered body wrapper, and `data-storyfeed-summary` on a summary row. Shared `sf-*` classes match the Vue kit, including row, headline, rail, avatar, meta, day and body hooks. The inline aspect ratio on media comes from the image dimensions; all static presentation uses Tailwind utilities.
+Stable selectors are `data-sf-intent` and `data-sf-glyph` on icons, `data-storyfeed-body` on a rendered body wrapper. Shared `sf-*` classes match the Vue kit, including row, headline, rail, avatar, meta, day and body hooks. The inline aspect ratio on media comes from the image dimensions; all static presentation uses Tailwind utilities.
 
 `build/workbench/parity.html` renders exactly the Vue workbench's sample,
 body and edge-case payloads. `npm run blade:parity` serves both builds, pins
@@ -36,8 +36,8 @@ callback; icon sets remain the consuming application's choice.
 TypeScript. `npm run test:hydrate` exercises all supported fixtures across server
 and browser timezones, live/pinned clocks, native keyboard disclosure and cleanup.
 
-`npm run kit:parity` (also `npm run blade:parity`) retains full Vue/Blade checks,
-including Summary, then compares all three renderer pairs without Summary-only
-fixtures. It requires exactly 0px for every measured rectangle at 1512px/500px,
+`npm run kit:parity` (also `npm run blade:parity`) compares all three renderer
+pairs with the same ordinary group fixtures. Summary rendering is removed.
+It requires exactly 0px for every measured rectangle at 1512px/500px,
 light/dark, collapsed/expanded. Screenshots, zoomed rail joints and the JSON
 report use the `r1-` prefix; set `STORYFEED_SCREENSHOTS` to override the output.

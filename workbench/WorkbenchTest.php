@@ -9,6 +9,7 @@ use Storyfeed\Body\ItemList;
 use Storyfeed\Body\KeyValue;
 use Storyfeed\Body\MediaObject;
 use Storyfeed\Body\Prose;
+use Storyfeed\Facades\Story;
 use Storyfeed\Facades\Storyfeed;
 use Storyfeed\FeedImage;
 use Storyfeed\FeedLink;
@@ -25,8 +26,8 @@ final class WorkbenchTest extends TestCase
     public function test_render_workbench(): void
     {
         $user = User::create(['name' => 'Dana', 'email' => 'dana@example.test']);
-        Storyfeed::grammar(['order.place' => ':actor placed :object', 'order.ship' => ':actor shipped :object'])
-            ->icons(['order.place' => 'shopping-bag', 'order.ship' => 'truck']);
+        Story::for(Order::class)->verb('place')->headline(':actor placed :object')->icon('shopping-bag');
+        Story::for(Order::class)->verb('ship')->headline(':actor shipped :object')->icon('truck');
 
         $render = fn ($page) => Blade::render('<x-storyfeed::feed :page="$page" />', ['page' => $page]);
         $sections = [];
@@ -35,7 +36,6 @@ final class WorkbenchTest extends TestCase
         Storyfeed::activity('place', Order::create(['number' => '1043']))->by($user)->publish();
         $sections['Group row and members'] = $render(Storyfeed::feed()->live()->get());
         Storyfeed::activity('ship', Order::create(['number' => '1044']))->by($user)->publish();
-        $sections['Summary row'] = $render(Storyfeed::feed()->summary()->get());
 
         $bodies = [
             'KeyValue' => KeyValue::make(['Pickup' => '12:10 pm', 'Paid' => true, 'Reference' => KeyValue::verbatim('ORD-1042'), 'Table' => KeyValue::placeholder(null, 'not seated')], title: 'Order #1042'),

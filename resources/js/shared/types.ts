@@ -118,14 +118,8 @@ export interface GroupNode extends BaseNode {
     expanded?: boolean;
     kind: 'group';
     axis: string;
-    /** Null when the members span more than one verb (a summary row). */
+    /** Null when the members span more than one verb. */
     verb: string | null;
-    /** A summary row's calendar period: `hour`, `day`, `week` or `month`. */
-    period?: string;
-    /** A summary row's members by verb, in the order they first happened. */
-    phrases?: FeedPhrase[];
-    /** True when the server omitted phrases; count still covers all activities. */
-    phrases_truncated?: boolean;
     /**
      * Supplied ONLY where the axis pins that role — one sampled entity, one distinct
      * value. Absent everywhere else on purpose: an unpinned role has no single
@@ -145,20 +139,6 @@ export interface GroupNode extends BaseNode {
     distinct: Partial<Record<FeedRole, number>>;
     /** How many of the distinct entities per role are tombstones. */
     distinct_tombstoned?: Partial<Record<FeedRole, number>>;
-}
-
-/**
- * One verb's share of a summary row. Its template starts at the verb, with
- * no actor: the row names the actor once.
- */
-export interface FeedPhrase {
-    verb: string;
-    count: number;
-    headline_template: string | null;
-    headline?: string | null;
-    glyph: string | null;
-    sample: Partial<Record<FeedRole, FeedEntity[]>>;
-    distinct: Partial<Record<FeedRole, number>>;
 }
 
 export type FeedNode = ActivityNode | GroupNode;

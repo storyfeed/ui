@@ -583,7 +583,7 @@ for (const file of ['sample-payload', 'body-payload', 'cases']) {
     );
     const cases =
         file === 'cases'
-            ? data.filter((c) => !c.items.some((i) => i.axis === 'summary'))
+            ? data
             : [{ name: file, items: Array.isArray(data) ? data : data.items }];
     for (const example of cases)
         test(`SSR fixture: ${example.name}`, () => {
@@ -617,7 +617,6 @@ test('null time render prop omits empty metadata but preserves leftover roles', 
         );
     }
 });
-
 
 test('time render props preserve zero and suppress whitespace/empty fragments', () => {
     assert.match(render('FeedItem', { item: activity, time: () => 0 }), /sf-meta">0/);
@@ -656,4 +655,17 @@ test('feed retains static collapsed members for print and preserves native inter
     assert.match(interactive, /<details/);
     assert.match(interactive, /print:\[&amp;::details-content\]:block/);
     assert.match(interactive.split('sf-children')[1], /Ada Lovelace/);
+});
+
+test('groups render without retired fields and ignore unknown extra keys', () => {
+    for (const headline of [{ headline_template: ':count updates' }, { headline_template: null, headline: 'Updates' }, { headline_template: null }]) {
+        const item = { ...group, ...headline };
+        for (const key of ['phrases', 'phrases_truncated', 'period']) assert.equal(Object.hasOwn(item, key), false);
+        const html = raw('FeedStream', { items: [item], grouped: false });
+        assert.match(html, /sf-head|sf-children/);
+        assert.equal(raw('FeedStream', { items: [{
+            ...item, phrases: [{ headline_template: 'Retired sentence', count: 36 }],
+            phrases_truncated: true, period: 'day', future_field: { unknown: true },
+        }], grouped: false }), html);
+    }
 });

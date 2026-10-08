@@ -40,8 +40,9 @@ jobs:
         # UI currently requires Testbench ^10; Laravel 13 needs a manifest change.
         laravel: [12.*]
         stability: [prefer-lowest, prefer-stable]
+        core: [tagged, main]
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }} - core-${{ matrix.core }}
 
     steps:
       - name: Checkout code
@@ -61,10 +62,13 @@ jobs:
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
-      # Exercise the held core removal branch until the coordinated release.
       - name: Install dependencies
         run: |
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+
+      - name: Install core main
+        if: matrix.core == 'main'
+        run: composer require "storyfeed/storyfeed:dev-main" -W --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: List Installed Dependencies
         run: composer show -D

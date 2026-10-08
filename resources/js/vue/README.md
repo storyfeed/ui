@@ -54,11 +54,10 @@ independent glyph-only members. An omitted child rail inherits the parent.
 Group avatar samples never imply that one actor represents many.
 
 Groups consume core's explicit pinned singular slots; distinct=1 alone does
-not pin a role. Summary readings show at most three phrases and state all
-remaining activities using `count` minus the shown phrase counts, including
-server-truncated phrases. Group photograph strips sample Image bodies in all
-roles, objects first, deduplicate by image source and cap at three. Summary
-readings and expanded groups suppress the strip.
+not pin a role. Groups read their own headline/template; Summary rendering
+has been removed, mirroring core. Unknown extra payload keys are ignored.
+Group photograph strips sample Image bodies in all roles, objects first,
+deduplicate by image source and cap at three. Expanded groups suppress the strip.
 
 `grouped=false` hides day headings. `dividers` maps item IDs to labels to render
 before those items. `divider-style="dot"` is the default;

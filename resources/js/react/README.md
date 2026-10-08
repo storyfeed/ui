@@ -103,7 +103,8 @@ Groups use native `<details>` with keyboard disclosure and no JavaScript state.
 Unnamed groups start open. True member totals and truncation remain visible.
 Collapsed media strips read Image bodies across all roles, objects first,
 deduplicate by image source and cap at three; open groups hide the strip.
-Summary-only fields (`phrases`, `phrases_truncated`, `period`) are not presented.
+Summary rendering has been removed from all kits, mirroring core. Unknown extra
+payload keys are ignored.
 
 `dividers={{ [itemId]: 'History' }}` draws labels before items;
 `dividerStyle="dot"` or `"branch"` selects the joint. Root utility properties
