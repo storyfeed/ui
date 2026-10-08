@@ -6,14 +6,17 @@ import type { FeedNode } from '../shared/types';
 
 withDefaults(
     defineProps<{
+        objectIcon?: (node: FeedNode) => Record<string, any> | null;
         item: FeedNode;
         isLast?: boolean;
         /** Which fact the rail answers first. Null keeps this kit's default. */
         rail?: Rail | RailName | null;
         /** Override the rail for expanded members independently of their group. */
         childRail?: Rail | RailName | null;
+        interactive?: boolean;
+        collapsed?: boolean | null;
     }>(),
-    { isLast: false, rail: null },
+    { isLast: false, rail: null, interactive: true, collapsed: null },
 );
 </script>
 
@@ -28,6 +31,7 @@ withDefaults(
         :item="item"
         :is-last="isLast"
         :rail="rail"
+        :object-icon="objectIcon"
     >
         <template #body="slotProps"
             ><slot name="body" v-bind="slotProps"
@@ -46,9 +50,12 @@ withDefaults(
     <FeedGroup
         v-else-if="item.kind === 'group'"
         :child-rail="childRail"
+        :interactive="interactive"
+        :collapsed="collapsed"
         :item="item"
         :is-last="isLast"
         :rail="rail"
+        :object-icon="objectIcon"
     >
         <template #body="slotProps"
             ><slot name="body" v-bind="slotProps"

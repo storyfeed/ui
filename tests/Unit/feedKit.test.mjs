@@ -592,3 +592,41 @@ test('hosts can choose below placement for automatic MediaObject bodies', async 
     assert.ok(html.indexOf('Full photograph') < html.indexOf('src="/automatic"'));
     assert.doesNotMatch(html, /size-16/);
 });
+
+test('object icons retain entity links and filtered attributes through host link and media seams', async () => {
+    const { FEED_LINK, FEED_MEDIA } = await server.ssrLoadModule('/resources/js/vue/keys.ts');
+    for (const node of [activity, group]) {
+        const item = { ...node, object: { ...entity, url: '/dishes/7', attributes: { target: '_blank', 'data-route': 'dish', href: '/wrong', onClick: 'bad()', 'bad name': 'bad', nested: {} } } };
+        const { default: Component } = await server.ssrLoadModule('/resources/js/vue/FeedStream.vue');
+        const props = { items: [item], grouped: false, objectIcon: node => node.object ? ({ src: '/dal-icon.jpg', width: 64, height: 64 }) : null };
+        const app = createSSRApp({ render: () => h(Component, props) });
+        app.provide(FEED_LINK, { render() { return h('a', { ...this.$attrs, 'data-router': 'host' }, this.$slots.default?.()); } });
+        const html = await renderToString(app);
+        const frame = html.split('sf-object-media')[1].split('sf-annotations')[0];
+        assert.match(frame, /href="\/dishes\/7"/);
+        assert.match(frame, /target="_blank"/);
+        assert.match(frame, /data-route="dish"/);
+        assert.match(frame, /data-router="host"/);
+        assert.doesNotMatch(frame, /\/wrong|onClick|bad name|nested/);
+        let received;
+        const host = createSSRApp({ render: () => h(Component, props) });
+        host.provide(FEED_MEDIA, { props: ['image', 'href', 'linkAttributes'], setup(props) { received = props; return () => h('button', 'Lightbox'); } });
+        assert.match(await renderToString(host), /Lightbox/);
+        assert.equal(received.href, '/dishes/7');
+        assert.deepEqual(received.linkAttributes, { target: '_blank', 'data-route': 'dish' });
+        const unlinked = await renderRaw('/resources/js/vue/FeedItem.vue', { item: { ...activity, object: { ...item.object, url: null } }, objectIcon: props.objectIcon });
+        assert.doesNotMatch(unlinked.split('sf-object-media')[1], /<a|target="_blank"/);
+    }
+});
+
+test('feed retains collapsed members for print and static groups never show a toggle', async () => {
+    for (const interactive of [false, true]) {
+        const html = await renderRaw('/resources/js/vue/FeedStream.vue', { items: [group], grouped: false, interactive, collapsed: true });
+        assert.match(html, /class="(?=[^"]*sf-children)(?=[^"]*hidden print:block)/);
+        assert.match(html.split('sf-children')[1], /Ada Lovelace/);
+        if (interactive) assert.match(html, /aria-expanded="false"/);
+        else assert.doesNotMatch(html, /sf-toggle|<details|<summary/);
+    }
+    const open = await renderRaw('/resources/js/vue/FeedStream.vue', { items: [group], interactive: false });
+    assert.doesNotMatch(open, /hidden print:block|sf-toggle/);
+});

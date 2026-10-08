@@ -49,7 +49,7 @@ try {
                     for (const frame of frames.slice(1)) await frame.locator('details').evaluateAll(nodes => nodes.forEach(node => node.open = true));
                 }
                 const geometry = await Promise.all(frames.map(frame => frame.evaluate(() => {
-                    const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body'];
+                    const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media'];
                     return Object.fromEntries(selectors.map(selector => [selector, [...document.querySelectorAll(selector)].filter(e => !e.closest('details:not([open]) .sf-children') && e.getClientRects().length && e.getBoundingClientRect().height > 0).map(e => {
                         const r = e.getBoundingClientRect();
                         return { x: r.x, y: r.y, w: r.width, h: r.height, text: e.textContent.trim().replace(/\s+/g, ' ') };
@@ -68,6 +68,19 @@ try {
                         }
                     }
                     report.push({ suite: renderers.length === 3 ? 'kits' : 'vue-blade', pair: `${renderers[a]}/${renderers[b]}`, width, theme, state, count, max, differences });
+                }
+                if (renderers.length === 3) for (let i = 0; i < frames.length; i++) {
+                    const icons = frames[i].locator('.example:has(>h2:text-is("Linked object icon frames")) .sf-object-media > a');
+                    assert.equal(await icons.count(), 2, `${renderers[i]}: linked object icon frames`);
+                    assert.equal(await icons.first().getAttribute('href'), '#ada');
+                    assert.equal(await icons.first().getAttribute('data-route'), 'dish');
+                    const history = frames[i].locator('.example:has(>h2:text-is("Static collapsed print history"))');
+                    assert.equal(await history.locator('.sf-children').count(), 1);
+                    assert.equal(await history.locator('.sf-children').isVisible(), false);
+                    assert.equal(await history.locator('.sf-toggle').count(), 0);
+                    for (const [label, name] of [['Linked object icon frames', 'icons'], ['Static collapsed print history', 'static']]) {
+                        await frames[i].locator(`.example:has(>h2:text-is("${label}"))`).screenshot({ path: `${output}/b2-${renderers[i]}-${name}-${state}-${theme}-${width}.png` });
+                    }
                 }
                 const heights = await Promise.all(frames.map(f => f.evaluate(() => document.body.scrollHeight)));
                 await page.locator('iframe').evaluateAll((nodes, height) => nodes.forEach(node => node.style.height = height + 'px'), Math.max(...heights));
@@ -96,6 +109,32 @@ try {
                         }
                     }
                 }
+            }
+            if (renderers.length === 3) {
+                await page.emulateMedia({ media: 'print' });
+                const printed = await Promise.all(frames.map(async (frame, i) => {
+                    const history = frame.locator('.example:has(>h2:text-is("Static collapsed print history"))');
+                    assert.equal(await history.locator('.sf-children').isVisible(), true, `${renderers[i]}: collapsed members print without a toggle`);
+                    await history.screenshot({ path: `${output}/b2-${renderers[i]}-print-${theme}-${width}.png` });
+                    return history.evaluate(section => {
+                        const origin = section.getBoundingClientRect();
+                        return ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-children'].flatMap(selector => [...section.querySelectorAll(selector)].map(element => {
+                            const r = element.getBoundingClientRect();
+                            return { selector, x: r.x - origin.x, y: r.y - origin.y, w: r.width, h: r.height };
+                        }));
+                    });
+                }));
+                for (let a = 0; a < frames.length; a++) for (let b = a + 1; b < frames.length; b++) {
+                    const differences = []; let max = 0;
+                    assert.equal(printed[a].length, printed[b].length);
+                    printed[a].forEach((rect, i) => {
+                        const delta = Math.max(...['x', 'y', 'w', 'h'].map(k => Math.abs(rect[k] - printed[b][i][k])));
+                        max = Math.max(max, delta);
+                        if (delta > 0) differences.push({ i, delta, [renderers[a]]: rect, [renderers[b]]: printed[b][i] });
+                    });
+                    report.push({ suite: 'static-print', pair: `${renderers[a]}/${renderers[b]}`, width, theme, state: 'print', count: printed[a].length, max, differences });
+                }
+                await page.emulateMedia({ media: 'screen' });
             }
             for (let i = 0; i < frames.length; i++) assert.equal(await frames[i].evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `${renderers[i]}: no horizontal overflow`);
             assert.deepEqual(errors, []);

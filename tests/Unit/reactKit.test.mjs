@@ -623,3 +623,37 @@ test('time render props preserve zero and suppress whitespace/empty fragments', 
     assert.match(render('FeedItem', { item: activity, time: () => 0 }), /sf-meta">0/);
     assert.doesNotMatch(render('FeedItem', { item: activity, time: () => '   ' }), /sf-meta/);
 });
+
+test('object icons retain entity URLs and filtered attributes through host link and media seams', () => {
+    for (const node of [activity, group]) {
+        const item = { ...node, object: { ...entity, url: '/dishes/7', attributes: { target: '_blank', 'data-route': 'dish', href: '/wrong', onClick: 'bad()', 'bad name': 'bad', nested: {} } } };
+        const props = { items: [item], grouped: false, objectIcon: node => node.object ? ({ src: '/dal-icon.jpg', width: 64, height: 64 }) : null };
+        const html = raw('FeedStream', props, { FEED_LINK: props => h('a', { ...props, 'data-router': 'host' }) });
+        const frame = html.split('sf-object-media')[1];
+        assert.match(frame, /href="\/dishes\/7"/);
+        assert.match(frame, /target="_blank"/);
+        assert.match(frame, /data-route="dish"/);
+        assert.match(frame, /data-router="host"/);
+        assert.doesNotMatch(frame, /\/wrong|onClick|bad name|nested/);
+        let received;
+        assert.match(raw('FeedStream', props, { FEED_MEDIA: props => { received = props; return h('button', { className: props.className }, 'Lightbox'); } }), /Lightbox/);
+        assert.equal(received.href, '/dishes/7');
+        assert.deepEqual(received.linkAttributes, { target: '_blank', 'data-route': 'dish' });
+        assert.match(received.className, /size-10!/);
+        const unlinked = raw('FeedItem', { item: { ...activity, object: { ...item.object, url: null } }, objectIcon: props.objectIcon });
+        assert.doesNotMatch(unlinked.split('sf-object-media')[1], /<a|target="_blank"/);
+    }
+});
+
+test('feed retains static collapsed members for print and preserves native interactive print rules', () => {
+    const html = raw('FeedStream', { items: [group], interactive: false, collapsed: true });
+    assert.match(html, /class="(?=[^"]*sf-children)(?=[^"]*hidden print:block)/);
+    assert.match(html.split('sf-children')[1], /Ada Lovelace/);
+    assert.doesNotMatch(html, /<details|<summary/);
+    const open = raw('FeedStream', { items: [group], interactive: false });
+    assert.doesNotMatch(open, /hidden print:block|<summary/);
+    const interactive = raw('FeedStream', { items: [group], collapsed: true });
+    assert.match(interactive, /<details/);
+    assert.match(interactive, /print:\[&amp;::details-content\]:block/);
+    assert.match(interactive.split('sf-children')[1], /Ada Lovelace/);
+});

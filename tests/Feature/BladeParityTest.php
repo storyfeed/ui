@@ -74,7 +74,7 @@ it('supports server-only group state and host rendering seams', function () {
     $renderers = ['time' => fn ($node) => '<a href="/activity">Timestamp</a>', 'body' => fn ($node) => '<p>App facts</p>', 'annotations' => fn ($node) => '<aside>Annotation</aside>'];
     $html = render_blade('<x-storyfeed::group :group="$item" :interactive="false" :renderers="$renderers" />', compact('item', 'renderers'));
     expect($html)->toContain('Child', '…and 3 more not shown', 'href="/activity"', 'App facts', 'Annotation')->not->toContain('<summary', '<time');
-    expect(render_blade('<x-storyfeed::group :group="$item" :interactive="false" collapsed />', compact('item')))->not->toContain('Child', '<summary');
+    expect(Blade::render('<x-storyfeed::group :group="$item" :interactive="false" collapsed />', compact('item')))->toContain('Child', 'hidden print:block')->not->toContain('<summary');
 });
 
 it('converts calendar rungs and hover titles to the supplied display zone', function () {
@@ -184,4 +184,41 @@ it('lets dense child rails answer a different question from the actor-badged par
     expect($html)->toContain('sf-badge');
     $children = explode('class="sf-children', $html)[1];
     expect($children)->toContain('sf-icon')->not->toContain('sf-avatar', 'sf-badge');
+});
+
+it('links object icons to their entity and lets the media host take over', function (string $kind) {
+    $icon = ['src' => '/dal-icon.jpg', 'width' => 64, 'height' => 64];
+    $item = ['kind' => $kind, 'headline' => 'Dal published', 'object' => [
+        'type' => 'dish', 'id' => '7', 'label' => 'Dal', 'url' => '/dishes/7',
+        'attributes' => ['target' => '_blank', 'data-route' => 'dish', 'href' => '/wrong', 'onClick' => 'bad()', 'bad name' => 'bad', 'nested' => []],
+    ]];
+    $renderers = ['objectIcon' => fn ($node) => $icon, 'body' => fn ($node) => '<p>App facts</p>'];
+    $template = '<x-storyfeed::feed :items="[$item]" :renderers="$renderers" :grouped="false" />';
+    $html = Blade::render($template, compact('item', 'renderers'));
+    expect($html)->toContain('sf-object-media', 'href="/dishes/7"', 'target="_blank"', 'data-route="dish"', 'src="/dal-icon.jpg"', 'App facts')
+        ->not->toContain('/wrong', 'onClick', 'bad name', 'nested');
+    $received = null;
+    $renderers['media'] = function ($tile, $classes) use (&$received) {
+        $received = $tile;
+
+        return '<button class="'.e($classes).'">Lightbox</button>';
+    };
+    expect(Blade::render($template, compact('item', 'renderers')))->toContain('Lightbox', 'size-10!')->not->toContain('<img');
+    expect($received)->toBe(['image' => $icon, 'href' => '/dishes/7', 'attributes' => ['target' => '_blank', 'data-route' => 'dish']]);
+    $item['object']['url'] = null;
+    expect(Blade::render($template, compact('item', 'renderers')))->toContain('Lightbox');
+    expect($received['href'])->toBeNull()->and($received['attributes'])->toBe([]);
+    unset($renderers['media']);
+    expect(Blade::render($template, compact('item', 'renderers')))->not->toContain('<a', 'target="_blank"');
+})->with(['activity', 'group']);
+
+it('retains printable static members and preserves interactive details print rules', function () {
+    $item = ['kind' => 'group', 'headline' => 'Two confirmations', 'count' => 3, 'children' => [
+        ['kind' => 'activity', 'headline' => 'First confirmation'],
+        ['kind' => 'activity', 'headline' => 'Second confirmation'],
+    ]];
+    $html = Blade::render('<x-storyfeed::feed :items="[$item]" :interactive="false" :collapsed="true" />', compact('item'));
+    expect($html)->toContain('First confirmation', 'Second confirmation', '…and 1 more not shown', 'sf-children mt-3 hidden print:block')->not->toContain('<details', '<summary');
+    expect(Blade::render('<x-storyfeed::feed :items="[$item]" :interactive="false" :collapsed="false" />', compact('item')))->toContain('First confirmation')->not->toContain('hidden print:block');
+    expect(Blade::render('<x-storyfeed::feed :items="[$item]" :collapsed="true" />', compact('item')))->toContain('<details', '<summary', 'print:[&::details-content]:block', 'First confirmation')->not->toContain('hidden print:block');
 });

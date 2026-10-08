@@ -7,6 +7,7 @@ import { useFeedDays } from './useRelativeTime';
 
 const props = withDefaults(
     defineProps<{
+        objectIcon?: (node: FeedNode) => Record<string, any> | null;
         items: FeedNode[];
         /** Null means the end of the feed — never an empty page. */
         nextCursor?: string | null;
@@ -21,6 +22,8 @@ const props = withDefaults(
         rail?: Rail | RailName | null;
         /** Override the rail for expanded members independently of their group. */
         childRail?: Rail | RailName | null;
+        interactive?: boolean;
+        collapsed?: boolean | null;
         /**
          * Labels to draw on the rail before particular items, keyed by item
          * id: `{ [firstTimelineId]: 'Timeline' }`. Drawn like a day heading,
@@ -34,6 +37,8 @@ const props = withDefaults(
         nextCursor: null,
         loadingMore: false,
         grouped: true,
+        interactive: true,
+        collapsed: null,
         rail: null,
         dividers: () => ({}),
         dividerStyle: 'dot',
@@ -118,6 +123,9 @@ const days = useFeedDays(toRef(() => props.items));
                         "
                         :rail="rail"
                         :child-rail="childRail"
+                        :interactive="interactive"
+                        :collapsed="collapsed"
+                        :object-icon="objectIcon"
                     >
                         <template #body="slotProps"
                             ><slot name="body" v-bind="slotProps"

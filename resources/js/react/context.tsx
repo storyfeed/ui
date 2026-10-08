@@ -5,6 +5,8 @@ import type { FileLabeller } from '../shared/fileLabels';
 /** Vue injection seams, supplied together through one React context. */
 export interface FeedOptions {
     FEED_LINK?: ElementType;
+    /** Complete media override with image, href, linkAttributes and className. */
+    FEED_MEDIA?: ElementType;
     FEED_NOW?: number;
     FEED_COMPONENTS?: Readonly<Record<string, ComponentType<any>>>;
     FEED_FILE_LABELLER?: FileLabeller;

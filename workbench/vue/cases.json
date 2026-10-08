@@ -977,5 +977,373 @@
         ]
       }
     ]
+  },
+  {
+    "name": "Linked object icon frames",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "icon-activity",
+        "verb": "posted",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actor posted :object",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "type": "person",
+          "id": "object-0",
+          "label": "Order",
+          "url": "#ada",
+          "media": {
+            "preview": {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+              "width": 160,
+              "height": 100,
+              "alt": "Illustrated preview"
+            },
+            "icon": {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+              "width": 160,
+              "height": 100,
+              "alt": "Illustrated preview"
+            }
+          },
+          "data": null,
+          "tombstone": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/KeyValue",
+              "title": "Order",
+              "items": [
+                {
+                  "key": "Status",
+                  "value": "Ready"
+                },
+                {
+                  "key": "Paid",
+                  "value": true
+                },
+                {
+                  "key": "Notes",
+                  "value": null,
+                  "placeholder": "None"
+                },
+                {
+                  "key": "ID",
+                  "value": "ABC-123-456",
+                  "verbatim": true
+                }
+              ]
+            }
+          ],
+          "attributes": {
+            "target": "_blank",
+            "data-route": "dish"
+          }
+        },
+        "target": null,
+        "context": null,
+        "glyph": "file-up"
+      },
+      {
+        "kind": "group",
+        "id": "icon-group",
+        "axis": "repeat",
+        "count": 3,
+        "verb": "posted",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actors posted :object",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ada",
+              "label": "Ada Lovelace",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "grace",
+              "label": "Grace Hopper",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": []
+        },
+        "distinct": {
+          "actors": 2,
+          "objects": 0
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "child",
+            "verb": "posted",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline_template": ":actor posted :object",
+            "actor": {
+              "type": "person",
+              "id": "ada",
+              "label": "Ada Lovelace",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "object-0",
+              "label": "a status",
+              "url": "#ada",
+              "media": {
+                "preview": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+                  "width": 160,
+                  "height": 100,
+                  "alt": "Illustrated preview"
+                }
+              },
+              "data": null,
+              "tombstone": null,
+              "body": []
+            },
+            "target": null,
+            "context": null,
+            "glyph": "file-up"
+          }
+        ],
+        "object": {
+          "type": "person",
+          "id": "object-0",
+          "label": "Order",
+          "url": "#ada",
+          "media": {
+            "preview": {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+              "width": 160,
+              "height": 100,
+              "alt": "Illustrated preview"
+            },
+            "icon": {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+              "width": 160,
+              "height": 100,
+              "alt": "Illustrated preview"
+            }
+          },
+          "data": null,
+          "tombstone": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/KeyValue",
+              "title": "Order",
+              "items": [
+                {
+                  "key": "Status",
+                  "value": "Ready"
+                },
+                {
+                  "key": "Paid",
+                  "value": true
+                },
+                {
+                  "key": "Notes",
+                  "value": null,
+                  "placeholder": "None"
+                },
+                {
+                  "key": "ID",
+                  "value": "ABC-123-456",
+                  "verbatim": true
+                }
+              ]
+            }
+          ],
+          "attributes": {
+            "target": "_blank",
+            "data-route": "dish"
+          }
+        }
+      }
+    ],
+    "objectIcon": true
+  },
+  {
+    "name": "Static collapsed print history",
+    "items": [
+      {
+        "kind": "group",
+        "id": "group",
+        "axis": "repeat",
+        "count": 3,
+        "verb": "posted",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actors posted :count updates",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ada",
+              "label": "Ada Lovelace",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "grace",
+              "label": "Grace Hopper",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": []
+        },
+        "distinct": {
+          "actors": 2,
+          "objects": 0
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "child",
+            "verb": "posted",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline_template": ":actor posted :object",
+            "actor": {
+              "type": "person",
+              "id": "ada",
+              "label": "Ada Lovelace",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "object-0",
+              "label": "a status",
+              "url": "#ada",
+              "media": {
+                "preview": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+                  "width": 160,
+                  "height": 100,
+                  "alt": "Illustrated preview"
+                }
+              },
+              "data": null,
+              "tombstone": null,
+              "body": []
+            },
+            "target": null,
+            "context": null,
+            "glyph": "file-up"
+          }
+        ]
+      }
+    ],
+    "interactive": false,
+    "collapsed": true
+  },
+  {
+    "name": "Static expanded history",
+    "items": [
+      {
+        "kind": "group",
+        "id": "group",
+        "axis": "repeat",
+        "count": 3,
+        "verb": "posted",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actors posted :count updates",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ada",
+              "label": "Ada Lovelace",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "grace",
+              "label": "Grace Hopper",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": []
+        },
+        "distinct": {
+          "actors": 2,
+          "objects": 0
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "child",
+            "verb": "posted",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline_template": ":actor posted :object",
+            "actor": {
+              "type": "person",
+              "id": "ada",
+              "label": "Ada Lovelace",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "object-0",
+              "label": "a status",
+              "url": "#ada",
+              "media": {
+                "preview": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+                  "width": 160,
+                  "height": 100,
+                  "alt": "Illustrated preview"
+                }
+              },
+              "data": null,
+              "tombstone": null,
+              "body": []
+            },
+            "target": null,
+            "context": null,
+            "glyph": "file-up"
+          }
+        ]
+      }
+    ],
+    "interactive": false,
+    "collapsed": false
   }
 ]

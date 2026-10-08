@@ -13,17 +13,22 @@
  * full file, so tapping one would leave the feed for a raw image.
  */
 import { inject } from 'vue'
-import { FEED_LINK } from './keys'
+import { linkAttributes as filterAttributes } from '../shared/linkAttributes'
+import { FEED_LINK, FEED_MEDIA } from './keys'
 
-defineProps<{ image: Record<string, any>; href?: string | null }>()
+defineProps<{ image: Record<string, any>; href?: string | null; linkAttributes?: Record<string, unknown> }>()
 
 // The same seam an entity link uses, so a docs page can make a tile inert and
 // an app can hand it a router component.
 const linkComponent = inject(FEED_LINK, 'a')
+const mediaComponent = inject(FEED_MEDIA, null)
 </script>
 
 <template>
+    <component v-if="mediaComponent" :is="mediaComponent" :image="image" :href="href" :link-attributes="href ? filterAttributes(linkAttributes) : {}" class="sf-media mt-2 block max-w-[22rem] overflow-hidden rounded-lg bg-muted" />
     <component
+        v-else
+        v-bind="href ? filterAttributes(linkAttributes) : {}"
         :is="href ? linkComponent : 'div'"
         :href="href || undefined"
         class="sf-media mt-2 block max-w-[22rem] overflow-hidden rounded-lg bg-muted"

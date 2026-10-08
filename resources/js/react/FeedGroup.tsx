@@ -6,6 +6,7 @@ import FeedHeadline from './FeedHeadline';
 import FeedMeta from './FeedMeta';
 import FeedMediaStrip from './FeedMediaStrip';
 import Rail from './Rail';
+import FeedMedia from './FeedMedia';
 export default function FeedGroup({
     item,
     isLast = false,
@@ -14,10 +15,19 @@ export default function FeedGroup({
     body,
     time,
     annotations,
+    objectIcon,
+    interactive = true,
+    collapsed = null,
 }: NodeProps & { item: GroupNode }) {
     const timestamp = useNodeTime(item, time);
     const faces = (item.sample.actors ?? []).slice(0, 3);
-    const open = !item.headline_template && !item.headline;
+    const open =
+        item.expanded ||
+        (collapsed === null
+            ? !interactive || (!item.headline_template && !item.headline)
+            : !collapsed);
+    const icon = objectIcon?.(item);
+    const Disclosure = interactive ? 'details' : 'div';
     const hidden = Math.max(0, item.count - item.children.length);
     const seen = new Set<string>();
     const tiles = [
@@ -41,16 +51,25 @@ export default function FeedGroup({
         .slice(0, 3);
     return (
         <div
-            className={`sf-row relative flex items-start gap-(--sf-gap)${isLast ? ' [&:not(:has(>.sf-body>.sf-disclosure[open]))>.sf-rail>[aria-hidden]]:hidden' : ''}`}
+            className={`sf-row relative flex items-start gap-(--sf-gap)${
+                isLast && interactive
+                    ? ' [&:not(:has(>.sf-body>.sf-disclosure[open]))>.sf-rail>[aria-hidden]]:hidden'
+                    : ''
+            }`}
         >
             <Rail
                 faces={faces}
                 glyph={item.glyph}
                 intent={item.glyph_intent}
                 rail={rail}
+                line={!(isLast && !interactive && !open)}
             />
             <div
-                className={`sf-body min-w-0 flex-1 pt-1.5 [&:has(>.sf-disclosure[open])>.sf-media-strip]:hidden ${isLast ? '[&:has(>.sf-disclosure[open])]:pb-5' : 'sf-body--spaced pb-5'}`}
+                className={`sf-body min-w-0 flex-1 pt-1.5 [&:has(>.sf-disclosure[open])>.sf-media-strip]:hidden ${
+                    !isLast || (!interactive && open)
+                        ? 'sf-body--spaced pb-5'
+                        : '[&:has(>.sf-disclosure[open])]:pb-5'
+                }`}
             >
                 <div className="sf-head flex items-baseline gap-3">
                     <FeedHeadline
@@ -67,21 +86,53 @@ export default function FeedGroup({
                 <FeedMeta node={item} templates={[item.headline_template]}>
                     {timestamp}
                 </FeedMeta>
-                <FeedMediaStrip tiles={tiles} />
-                {body?.({ node: item })}
+                <FeedMediaStrip tiles={!interactive && open ? [] : tiles} />
+                <div
+                    className={
+                        icon
+                            ? 'sf-object-media mt-2 flex items-start gap-3'
+                            : 'contents'
+                    }
+                >
+                    {icon && (
+                        <FeedMedia
+                            image={icon}
+                            href={
+                                item.object?.tombstone ? null : item.object?.url
+                            }
+                            linkAttributes={item.object?.attributes}
+                            className="mt-0! size-10! shrink-0 rounded-md!"
+                        />
+                    )}
+                    <div className={icon ? 'min-w-0 flex-1' : 'contents'}>
+                        {body?.({ node: item })}
+                    </div>
+                </div>
                 {annotations?.({ node: item })}
                 {item.children.length > 0 && (
-                    <details
-                        className="group/disclosure sf-disclosure print:[&::details-content]:block print:[&::details-content]:[content-visibility:visible]"
-                        open={open}
+                    <Disclosure
+                        className={
+                            interactive
+                                ? 'group/disclosure sf-disclosure print:[&::details-content]:block print:[&::details-content]:[content-visibility:visible]'
+                                : undefined
+                        }
+                        {...(interactive ? { open } : {})}
                     >
-                        <summary className="sf-toggle mt-1 inline-block cursor-pointer list-none rounded-sm border-0 bg-transparent p-0 text-xs leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden print:hidden">
-                            <span className="group-open/disclosure:hidden">{`Show all ${item.count}`}</span>
-                            <span className="hidden group-open/disclosure:inline">
-                                Show less
-                            </span>
-                        </summary>
-                        <div className="sf-children mt-3">
+                        {interactive && (
+                            <summary className="sf-toggle mt-1 inline-block cursor-pointer list-none rounded-sm border-0 bg-transparent p-0 text-xs leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden print:hidden">
+                                <span className="group-open/disclosure:hidden">{`Show all ${item.count}`}</span>
+                                <span className="hidden group-open/disclosure:inline">
+                                    Show less
+                                </span>
+                            </summary>
+                        )}
+                        <div
+                            className={`sf-children mt-3 ${
+                                !interactive && !open
+                                    ? 'hidden print:block'
+                                    : ''
+                            }`}
+                        >
                             {item.children.map((child, i) => (
                                 <FeedItem
                                     key={child.id}
@@ -92,6 +143,7 @@ export default function FeedGroup({
                                         i === item.children.length - 1 &&
                                         hidden === 0
                                     }
+                                    objectIcon={objectIcon}
                                     body={body}
                                     annotations={annotations}
                                     time={time ? time : ({ label }) => label}
@@ -103,7 +155,7 @@ export default function FeedGroup({
                                 </p>
                             )}
                         </div>
-                    </details>
+                    </Disclosure>
                 )}
             </div>
         </div>

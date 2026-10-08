@@ -79,3 +79,15 @@ Generic bodies include KeyValue, Excerpt, FileAttachment (plus legacy File),
 Prose, ItemList, Image and MediaObject. Rich Markdown/HTML is sanitized;
 verbatim and plain text are escaped and preserve whitespace. Published
 historical `$v` forms continue to render.
+
+Object icon frames are opt-in: pass `objectIcon(node)` to `FeedStream`,
+`FeedNode`, `FeedItem` or `FeedGroup`, returning an image or null. The icon links
+to `node.object.url` through `FEED_LINK` and forwards scalar entity attributes,
+excluding `href`, event handlers and invalid names. A missing URL or tombstone
+renders an unlinked image. Provide `FEED_MEDIA` with a component receiving
+`image`, `href`, `linkAttributes` and the kit classes to render media yourself
+(for example, a lightbox button).
+
+`interactive` defaults to true. Set it false for a static feed; `collapsed`
+selects its initial group state (null opens static groups). Collapsed members
+stay in the HTML with `hidden print:block`, so print needs no JavaScript.

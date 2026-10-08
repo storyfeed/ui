@@ -7,21 +7,25 @@ import FeedIcon from './FeedIcon.vue';
 import FeedItem from './FeedItem.vue';
 import FeedMediaStrip from './FeedMediaStrip.vue';
 import FeedMeta from './FeedMeta.vue';
+import FeedMedia from './FeedMedia.vue';
 import { rail as parseRail, railFor } from '../shared/rail';
 import type { Rail, RailName } from '../shared/rail';
-import type { FeedPhrase, GroupNode, FeedSingularRole } from '../shared/types';
+import type { FeedNode, FeedPhrase, GroupNode, FeedSingularRole } from '../shared/types';
 import { useRelativeTime } from './useRelativeTime';
 
 const props = withDefaults(
     defineProps<{
+        objectIcon?: (node: FeedNode) => Record<string, any> | null;
         item: GroupNode;
         isLast?: boolean;
         /** Which fact the rail answers first. Null keeps this kit's default. */
         rail?: Rail | RailName | null;
         /** Override the rail for expanded members independently of their group. */
         childRail?: Rail | RailName | null;
+        interactive?: boolean;
+        collapsed?: boolean | null;
     }>(),
-    { isLast: false, rail: null },
+    { isLast: false, rail: null, interactive: true, collapsed: null },
 );
 
 /** See `FeedItem` for why an unasked-for rail is `actor-only` here. */
@@ -52,7 +56,9 @@ const unnamed = computed(
         !props.item.phrases?.length,
 );
 
-const expanded = ref(unnamed.value);
+const expanded = ref(props.item.expanded || (props.collapsed === null ? (!props.interactive || unnamed.value) : !props.collapsed));
+
+const icon = computed(() => props.objectIcon?.(props.item));
 
 const time = useRelativeTime(toRef(() => props.item.published_at));
 
@@ -280,27 +286,39 @@ const hiddenBeyondChildren = computed(
                 :overflow="strip.overflow"
             />
 
-            <slot name="body" :node="item" />
+            <div :class="icon ? 'sf-object-media mt-2 flex items-start gap-3' : 'contents'">
+                <FeedMedia
+                    v-if="icon"
+                    :image="icon"
+                    :href="item.object?.tombstone ? null : item.object?.url"
+                    :link-attributes="item.object?.attributes"
+                    class="mt-0! size-10! shrink-0 rounded-md!"
+                />
+                <div :class="icon ? 'min-w-0 flex-1' : 'contents'">
+                    <slot name="body" :node="item" />
+                </div>
+            </div>
 
             <slot name="annotations" :node="item" />
 
             <button
-                v-if="item.children.length > 0"
+                v-if="interactive && item.children.length > 0"
                 type="button"
-                class="sf-toggle mt-1 cursor-pointer border-0 bg-transparent p-0 text-xs leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring"
+                class="sf-toggle mt-1 cursor-pointer border-0 bg-transparent p-0 text-xs leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring print:hidden"
                 :aria-expanded="expanded"
                 @click="expanded = !expanded"
             >
                 {{ expanded ? 'Show less' : `Show all ${item.count}` }}
             </button>
 
-            <div v-if="expanded" class="sf-children mt-3">
+            <div v-if="item.children.length" class="sf-children mt-3" :class="{ 'hidden print:block': !expanded }">
                 <FeedItem
                     v-for="(child, index) in item.children"
                     :key="child.id"
                     :item="child"
                     dense
                     :rail="childRail ?? rail"
+                    :object-icon="objectIcon"
                     :is-last="
                         index === item.children.length - 1 &&
                         hiddenBeyondChildren === 0

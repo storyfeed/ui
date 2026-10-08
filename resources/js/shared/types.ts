@@ -114,6 +114,8 @@ export interface ActivityNode extends BaseNode {
 }
 
 export interface GroupNode extends BaseNode {
+    /** Initial disclosure override, shared with the Blade kit. */
+    expanded?: boolean;
     kind: 'group';
     axis: string;
     /** Null when the members span more than one verb (a summary row). */

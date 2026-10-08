@@ -7,13 +7,15 @@ import FeedHeadline from './FeedHeadline.vue';
 import FeedIcon from './FeedIcon.vue';
 import FeedMediaStrip from './FeedMediaStrip.vue';
 import FeedMeta from './FeedMeta.vue';
+import FeedMedia from './FeedMedia.vue';
 import { rail as parseRail, railFor, withoutSecondary } from '../shared/rail';
 import type { Rail, RailName } from '../shared/rail';
-import type { ActivityNode } from '../shared/types';
+import type { ActivityNode, FeedNode } from '../shared/types';
 import { useRelativeTime } from './useRelativeTime';
 
 const props = withDefaults(
     defineProps<{
+        objectIcon?: (node: FeedNode) => Record<string, any> | null;
         item: ActivityNode;
         /** Compact rendering for group children: tighter spacing, no badge. */
         dense?: boolean;
@@ -27,6 +29,8 @@ const props = withDefaults(
     }>(),
     { dense: false, isLast: false, rail: null },
 );
+
+const icon = computed(() => props.objectIcon?.(props.item));
 
 const time = useRelativeTime(toRef(() => props.item.published_at));
 
@@ -218,32 +222,43 @@ const slots = computed(() =>
                 text, a document thumbnail. Left empty by default because what
                 belongs here is entirely app-specific.
             -->
-            <slot name="body" :node="item" />
-
-            <FeedMediaStrip
-                v-if="strip.tiles.length"
-                :tiles="strip.tiles"
-                :overflow="strip.overflow"
-            />
-
-            <!--
-                Recognised detail forms, drawn from the app's own `data`. One
-                block per detail, in the order the walk found them.
-            -->
-            <div
-                v-for="(found, index) in forms"
-                :key="index"
-                class="sf-body-form mt-2 max-w-[44rem] empty:hidden"
-            >
-                <component
-                    :is="found.component"
-                    :payload="found.payload"
-                    :entity-label="(found as any).entityLabel"
-                    :entity-url="(found as any).entityUrl"
-                    :entity-media="(found as any).entityMedia"
+            <div :class="icon ? 'sf-object-media mt-2 flex items-start gap-3' : 'contents'">
+                <FeedMedia
+                    v-if="icon"
+                    :image="icon"
+                    :href="item.object?.tombstone ? null : item.object?.url"
+                    :link-attributes="item.object?.attributes"
+                    class="mt-0! size-10! shrink-0 rounded-md!"
                 />
-            </div>
+                <div :class="icon ? 'min-w-0 flex-1' : 'contents'">
+                    <slot name="body" :node="item" />
 
+                    <FeedMediaStrip
+                        v-if="strip.tiles.length"
+                        :tiles="strip.tiles"
+                        :overflow="strip.overflow"
+                    />
+
+                    <!--
+                        Recognised detail forms, drawn from the app's own `data`. One
+                        block per detail, in the order the walk found them.
+                    -->
+                    <div
+                        v-for="(found, index) in forms"
+                        :key="index"
+                        class="sf-body-form mt-2 max-w-[44rem] empty:hidden"
+                    >
+                        <component
+                            :is="found.component"
+                            :payload="found.payload"
+                            :entity-label="(found as any).entityLabel"
+                            :entity-url="(found as any).entityUrl"
+                            :entity-media="(found as any).entityMedia"
+                        />
+                    </div>
+
+                </div>
+            </div>
             <!--
                 Annotations slot: for documentation and debugging surfaces that
                 need to explain a node rather than render it — a slot mapping, a

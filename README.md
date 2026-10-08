@@ -290,7 +290,12 @@ are left to the app. Empty and unknown forms produce no wrapper.
 
 Standalone activity/group components accept their default body slot, `time`
 and `annotations` slots, a `removed` text prop, and an `object-icon` image prop
-that frames the content stack. For a whole feed, `renderers` propagates trusted
+that frames the content stack. Object icons keep the object's URL and scalar
+link attributes, excluding `href`, event handlers and invalid names; they also
+pass through the `media` renderer. A missing URL or tombstone leaves the icon
+unlinked. Static groups (`interactive=false`) retain collapsed members with
+`hidden print:block`, while interactive groups keep native details print rules.
+For a whole feed, `renderers` propagates trusted
 application callbacks to every row and group child:
 
 | Key | Callback receives | Returns |
@@ -304,7 +309,7 @@ application callbacks to every row and group child:
 | `fileLabel` | `{name, mediaType}` array | optional file-kind label; null uses the built-in MIME map |
 | `form` | body array, owning `Entity` or null | body HTML; null uses the built-in renderer |
 | `mediaTiles`, `mediaOverflow` | group `FeedItem` | replacement sample tiles or overflow count |
-| `media` | tile array, Tailwind class string | complete picture/tile HTML, including an optional lightbox |
+| `media` | `{image, href, attributes}` tile array, Tailwind class string | complete picture/tile HTML, including an optional lightbox |
 
 Callbacks are trusted application code and their HTML is not sanitized; stored
 payloads never supply callbacks. Body text itself is escaped or sanitized.

@@ -74,6 +74,9 @@ export default function App() {
                                     rail: example.rail,
                                     childRail: example.childRail,
                                     grouped: example.grouped ?? false,
+                                    interactive: example.interactive ?? true,
+                                    collapsed: example.collapsed ?? null,
+                                    objectIcon: example.objectIcon ? (node: FeedNode) => node.object?.media?.icon ?? null : undefined,
                                 })}
                             </section>
                         ))}

@@ -48,7 +48,7 @@
         <x-storyfeed::meta :item="$group" :headline="$headline" :timezone="$timezone" :time-renderer="$renderers['time'] ?? null">{{ $time ?? '' }}</x-storyfeed::meta>
 @if ($removed)<p class="sf-removed mt-1 text-xs text-muted-foreground">{{ $removed }}</p>
 @endif
-@if ($objectIcon)<div class="sf-object-media mt-2 flex items-start gap-3"><x-storyfeed::media :image="$objectIcon" class="mt-0! size-10! shrink-0 rounded-md!" /><div class="min-w-0 flex-1">
+@if ($objectIcon)<div class="sf-object-media mt-2 flex items-start gap-3"><x-storyfeed::media :image="$objectIcon" :href="$group->object()?->isTombstone() ? null : $group->object()?->url()" :link-attributes="$group->object()?->attributes() ?? []" :renderer="$renderers['media'] ?? null" class="mt-0! size-10! shrink-0 rounded-md!" /><div class="min-w-0 flex-1">
 @endif
 @if (isset($renderers['body'])){!! $renderers['body']($group) !!}
 @endif
@@ -66,8 +66,7 @@
                         <span class="group-open/disclosure:hidden">{{ __('Show all :count', ['count' => $group->count()]) }}</span><span class="hidden group-open/disclosure:inline">{{ __('Show less') }}</span>
                     </summary>
             @endif
-            @if ($interactive || $open)
-                <div class="sf-children mt-3">
+                <div @class(['sf-children mt-3', 'hidden print:block' => ! $interactive && ! $open])>
                     @foreach ($children as $child)
                         <x-storyfeed::activity :activity="$child" dense :rail="$childRail ?? $rail" :last="$loop->last && $hidden === 0" :timezone="$timezone" :renderers="$renderers" />
                     @endforeach
@@ -75,7 +74,6 @@
                         <p class="sf-overflow pl-[calc(var(--sf-gutter)+var(--sf-gap))] text-xs leading-[1.6] text-muted-foreground">{{ __('…and :count more not shown', ['count' => $hidden]) }}</p>
                     @endif
                 </div>
-            @endif
             @if ($interactive)
                 </details>
             @endif

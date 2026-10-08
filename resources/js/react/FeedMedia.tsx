@@ -1,17 +1,31 @@
+import { linkAttributes as filterAttributes } from '../shared/linkAttributes';
 import { useFeedOptions } from './context';
 export default function FeedMedia({
     image,
     href,
     className = '',
+    linkAttributes,
 }: {
     image: Record<string, any>;
     href?: string | null;
     className?: string;
+    linkAttributes?: Record<string, unknown>;
 }) {
-    const { FEED_LINK: Link = 'a' } = useFeedOptions();
+    const { FEED_LINK: Link = 'a', FEED_MEDIA: Media } = useFeedOptions();
+    const attributes = href ? filterAttributes(linkAttributes) : {};
+    if (Media)
+        return (
+            <Media
+                image={image}
+                href={href}
+                linkAttributes={attributes}
+                className={`sf-media mt-2 block max-w-[22rem] overflow-hidden rounded-lg bg-muted ${className}`}
+            />
+        );
     const Tag = href ? Link : 'div';
     return (
         <Tag
+            {...attributes}
             href={href || undefined}
             className={`sf-media mt-2 block max-w-[22rem] overflow-hidden rounded-lg bg-muted ${className}`}
             style={

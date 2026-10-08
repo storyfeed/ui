@@ -74,8 +74,8 @@ final class WorkbenchTest extends TestCase
         $bodies = json_decode(file_get_contents(__DIR__.'/vue/body-payload.json'), true, flags: JSON_THROW_ON_ERROR);
         $icons = json_decode(file_get_contents(dirname(__DIR__).'/build/workbench-icons.json'), true, flags: JSON_THROW_ON_ERROR);
         $renderers = ['glyph' => fn ($token, $variant) => $icons[$token] ?? $icons['activity']];
-        $render = fn ($items, $options = []) => Blade::render('<x-storyfeed::feed :items="$items" :grouped="$grouped" :rail="$rail" :child-rail="$childRail" :dividers="$dividers" :divider-style="$dividerStyle" :renderers="$renderers" />', [
-            'renderers' => $renderers, 'items' => $items, 'grouped' => true, 'rail' => null, 'childRail' => null, 'dividers' => [], 'dividerStyle' => 'dot', ...$options,
+        $render = fn ($items, $options = []) => Blade::render('<x-storyfeed::feed :items="$items" :grouped="$grouped" :rail="$rail" :child-rail="$childRail" :dividers="$dividers" :divider-style="$dividerStyle" :renderers="$renderers" :interactive="$interactive" :collapsed="$collapsed" />', [
+            'renderers' => $renderers, 'items' => $items, 'interactive' => true, 'collapsed' => null, 'grouped' => true, 'rail' => null, 'childRail' => null, 'dividers' => [], 'dividerStyle' => 'dot', ...$options,
         ]);
         $main = $render($payload['items']);
         $examples = ['Generic body forms' => $render($bodies, ['grouped' => false])];
@@ -87,7 +87,7 @@ final class WorkbenchTest extends TestCase
         }
         $cases = json_decode(file_get_contents(__DIR__.'/vue/cases.json'), true, flags: JSON_THROW_ON_ERROR);
         foreach ($cases as $case) {
-            $examples[$case['name']] = $render($case['items'], ['grouped' => $case['grouped'] ?? false, 'rail' => $case['rail'] ?? null, 'childRail' => $case['childRail'] ?? null]);
+            $examples[$case['name']] = $render($case['items'], ['grouped' => $case['grouped'] ?? false, 'rail' => $case['rail'] ?? null, 'childRail' => $case['childRail'] ?? null, 'interactive' => $case['interactive'] ?? true, 'collapsed' => $case['collapsed'] ?? null, 'renderers' => [...$renderers, ...(! empty($case['objectIcon']) ? ['objectIcon' => fn ($node) => $node->object()?->media()?->get('icon')] : [])]]);
         }
         $post = collect($bodies)->first(fn ($item) => ($item['object']['body'][0]['$body'] ?? null) === 'Storyfeed/Body/MediaObject')['object'];
         $postEntity = Entity::of($post);

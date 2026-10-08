@@ -4,15 +4,19 @@ import type { Rail as RailConfig, RailName } from '../shared/rail';
 import { formsIn, resolve, imageOf } from './body';
 import FeedHeadline from './FeedHeadline';
 import FeedMeta from './FeedMeta';
+import FeedMedia from './FeedMedia';
 import FeedMediaStrip from './FeedMediaStrip';
 import Rail from './Rail';
 import { useRelativeTime } from './useRelativeTime';
 export interface FeedRenderProps {
+    objectIcon?: (node: FeedNode) => Record<string, any> | null;
     body?: (props: { node: FeedNode }) => ReactNode;
     annotations?: (props: { node: FeedNode }) => ReactNode;
     time?: (props: { node: FeedNode; label: string }) => ReactNode;
 }
 export interface NodeProps extends FeedRenderProps {
+    interactive?: boolean;
+    collapsed?: boolean | null;
     isLast?: boolean;
     rail?: RailConfig | RailName | null;
     childRail?: RailConfig | RailName | null;
@@ -39,6 +43,7 @@ export default function FeedItem({
     time,
     body,
     annotations,
+    objectIcon,
 }: NodeProps & { item: ActivityNode; dense?: boolean }) {
     const timestamp = useNodeTime(item, time);
     const reading =
@@ -53,6 +58,7 @@ export default function FeedItem({
                   headline: item.headline ?? null,
               };
     const object = item.object;
+    const icon = objectIcon?.(item);
     const forms = [
         ...formsIn(item.data),
         ...[...resolve(object?.body), ...formsIn(object?.data)].map(
@@ -82,7 +88,9 @@ export default function FeedItem({
                 line={!isLast}
             />
             <div
-                className={`sf-body min-w-0 flex-1 ${isLast ? '' : 'sf-body--spaced pb-5'} ${dense ? 'sf-body--dense pt-1' : 'pt-1.5'}`}
+                className={`sf-body min-w-0 flex-1 ${
+                    isLast ? '' : 'sf-body--spaced pb-5'
+                } ${dense ? 'sf-body--dense pt-1' : 'pt-1.5'}`}
             >
                 <div className="sf-head flex items-baseline gap-3">
                     <FeedHeadline
@@ -94,18 +102,39 @@ export default function FeedItem({
                 <FeedMeta node={item} templates={[reading.template]}>
                     {timestamp}
                 </FeedMeta>
-                {body?.({ node: item })}
-                <FeedMediaStrip tiles={tiles} />
-                {forms.map(
-                    ({ component: Component, payload, ...entity }, i) => (
-                        <div
-                            key={i}
-                            className="sf-body-form mt-2 max-w-[44rem] empty:hidden"
-                        >
-                            <Component payload={payload} {...entity} />
-                        </div>
-                    ),
-                )}
+                <div
+                    className={
+                        icon
+                            ? 'sf-object-media mt-2 flex items-start gap-3'
+                            : 'contents'
+                    }
+                >
+                    {icon && (
+                        <FeedMedia
+                            image={icon}
+                            href={object?.tombstone ? null : object?.url}
+                            linkAttributes={object?.attributes}
+                            className="mt-0! size-10! shrink-0 rounded-md!"
+                        />
+                    )}
+                    <div className={icon ? 'min-w-0 flex-1' : 'contents'}>
+                        {body?.({ node: item })}
+                        <FeedMediaStrip tiles={tiles} />
+                        {forms.map(
+                            (
+                                { component: Component, payload, ...entity },
+                                i,
+                            ) => (
+                                <div
+                                    key={i}
+                                    className="sf-body-form mt-2 max-w-[44rem] empty:hidden"
+                                >
+                                    <Component payload={payload} {...entity} />
+                                </div>
+                            ),
+                        )}
+                    </div>
+                </div>
                 {annotations?.({ node: item })}
             </div>
         </div>

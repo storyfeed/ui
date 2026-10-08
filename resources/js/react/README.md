@@ -121,3 +121,16 @@ historical File), Prose, ItemList, Image and MediaObject. Activity data and the
 object's body/data supply automatic previews; other roles are not previewed.
 Published historical `$v` forms still render. Rich Markdown/HTML goes through
 the same sanitizer as Vue; plain/verbatim source is escaped.
+
+Object icon frames are opt-in: pass `objectIcon(node)` to `FeedStream`,
+`FeedNodeView`, `FeedItem` or `FeedGroup`, returning an image or null. The icon
+links to `node.object.url` through `FEED_LINK`, with scalar entity attributes
+except `href`, event handlers and invalid names. Missing URLs and tombstones
+produce unlinked images. `FeedProvider` accepts `FEED_MEDIA`, a component
+receiving `image`, `href`, `linkAttributes` and `className`, for a host media
+renderer such as a lightbox.
+
+`interactive` defaults to true and keeps native `<details>` with its print
+rules. Set false for a static feed; `collapsed` sets the initial group state
+(null opens static groups). Static collapsed members stay in the HTML with
+`hidden print:block`, so print needs no JavaScript.

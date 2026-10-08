@@ -1,6 +1,10 @@
 import type { Component, InjectionKey } from 'vue';
 import type { FileLabeller } from '../shared/fileLabels';
 
+
+/** Complete media override, receiving image, href, linkAttributes and the kit classes. */
+export const FEED_MEDIA = Symbol('feedMedia') as InjectionKey<Component>;
+
 /** Host file-kind presentation; null delegates to the built-in MIME labels. */
 export const FEED_FILE_LABELLER = Symbol('feedFileLabeller') as InjectionKey<FileLabeller>;
 
