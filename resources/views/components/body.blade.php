@@ -26,9 +26,9 @@
             ->implode('.')
         : null;
     $fallback = is_string($type) && is_string($body['$fallback'] ?? null) && filled($body['$fallback']) ? $body['$fallback'] : null;
-    // The body's own `$maxHeight`, else the kit default `--sf-prose-max-h`.
+    // The body's own maximum height, if it sets one (see `Bodies::frame()`).
     $frame = is_array($body) ? \Storyfeed\Ui\Support\Bodies::frame($body) : ['style' => null, 'capped' => false];
-    $attributes = $attributes->class(['sf-body-form mt-2 max-w-176 empty:hidden', 'max-h-(--sf-prose-max-h) overflow-y-auto' => $frame['capped']])
+    $attributes = $attributes->class(['sf-body-form mt-2 max-w-176 empty:hidden', 'max-h-(--sf-body-max-h) overflow-y-auto' => $frame['capped']])
         ->merge(array_filter(['style' => $frame['style'], 'tabindex' => $frame['capped'] ? '0' : null], fn ($value) => $value !== null));
 @endphp
 @if ($component !== null && view()->exists("storyfeed::components.{$component}"))

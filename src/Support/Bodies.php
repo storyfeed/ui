@@ -23,30 +23,30 @@ final class Bodies
         return Blade::render('<x-dynamic-component :component="$component" :body="$body" :entity="$entity" :media-renderer="$mediaRenderer" :labeller="$labeller" />', compact('component', 'body', 'entity', 'mediaRenderer', 'labeller'));
     }
 
-    /** Body types that cap their own height by `--sf-prose-max-h`, scrolling inside. */
-    public const SELF_CAPPED = ['Storyfeed/Body/Prose', 'Storyfeed/Body/Table'];
-
     /**
      * How a body's wrapper honours its maximum height (core 0.17's
-     * `$meta.maxHeight`, read before the top-level `$maxHeight` core first
-     * wrote; other `$meta` keys are ignored): `none` or a
-     * plain CSS length, else null for the kit default. The value sets
-     * `--sf-prose-max-h` for the bodies that cap themselves; any other body
-     * with a length is capped and scrolls in its wrapper. Mirrors
-     * `bodyFrame()` in `shared/body.ts`.
+     * `$meta.maxHeight`; other `$meta` keys are ignored). Flowing text is never capped by
+     * the kit; only code and verbatim blocks scroll inside their box, at
+     * `--sf-prose-max-h`. A length caps the whole body in its wrapper instead,
+     * and `none` lifts the blocks' cap too. Mirrors `bodyFrame()` in
+     * `shared/body.ts`.
      *
      * @param  array<array-key, mixed>  $body
      * @return array{style: ?string, capped: bool}
      */
     public static function frame(array $body): array
     {
-        $height = is_array($body['$meta'] ?? null) && array_key_exists('maxHeight', $body['$meta']) ? $body['$meta']['maxHeight'] : ($body['$maxHeight'] ?? null);
+        $height = is_array($body['$meta'] ?? null) ? ($body['$meta']['maxHeight'] ?? null) : null;
         // `none`, or a CSS length as core's `FeedBody::maxHeight()` accepts it.
         $height = is_string($height) && ($height === 'none' || preg_match('/^(0|\d*\.?\d+(px|rem|em|ex|ch|lh|rlh|%|vh|svh|lvh|dvh|vw|svw|lvw|dvw|vmin|vmax|cm|mm|q|in|pt|pc))$/i', $height) === 1) ? $height : null;
 
         return [
-            'style' => $height === null ? null : '--sf-prose-max-h: '.$height,
-            'capped' => $height !== null && $height !== 'none' && ! in_array($body['$body'] ?? null, self::SELF_CAPPED, true),
+            'style' => match (true) {
+                $height === null => null,
+                $height === 'none' => '--sf-prose-max-h: none',
+                default => '--sf-prose-max-h: none; --sf-body-max-h: '.$height,
+            },
+            'capped' => $height !== null && $height !== 'none',
         ];
     }
 

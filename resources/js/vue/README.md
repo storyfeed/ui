@@ -96,8 +96,9 @@ before those items. `divider-style="dot"` is the default;
 `divider-style="branch"` draws a curve off the rail. `isLast` suppresses the
 trailing rail; a next cursor keeps it connected to the pager.
 
-`--sf-font-size` (default `1rem`) scales the whole feed, and a body's own
-`$maxHeight` (or the `--sf-prose-max-h` default, `24rem`) caps long bodies; see the root README.
+`--sf-font-size` (default `1rem`) scales the whole feed. Flowing text is never
+capped; code and verbatim blocks scroll past `--sf-prose-max-h` (default `24rem`),
+and a body's own `$meta.maxHeight` overrides either; see the root README.
 The root's Tailwind arbitrary properties also expose `--sf-gutter`, `--sf-gap`,
 `--sf-disc`, `--sf-badge` and `--sf-badge-face`. Override on the `FeedStream`
 element, for example `style="--sf-gutter: 2.5rem"`. The primary avatar/icon

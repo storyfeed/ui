@@ -290,15 +290,17 @@ Give it in `rem` or `px`. Inside the feed, Tailwind's `--spacing`, `--text-xs`,
 `--text-sm` and `--text-base` derive from it, so your own slot content on those
 utilities scales with the feed too.
 
+Flowing text is never capped: rich and plain Prose, lists, tables and
+key-value facts show in full and flow with the page. Only contained blocks,
+code (`pre`) inside rich Prose and verbatim Prose, scroll inside their box
+when long, at `--sf-prose-max-h` (`24rem` by default, scaled with
+`--sf-font-size`), a CSS variable your app can change.
+
 A body can set its own maximum height with core 0.17's `maxHeight()`
-(`Prose::markdown($notes)->maxHeight('none')`, `Table::make()->maxHeight('16rem')`),
-stored in the body's `$meta` as `maxHeight`. All three kits honour it on every body type: a length
-caps the body, which scrolls inside past it, and `none` draws it at full length
-with no inner scroll. Prose and Table bodies without one are capped at the kit
-default, `--sf-prose-max-h` (`24rem`, scaled with `--sf-font-size`), a CSS
-variable your app can change; other bodies without one are not capped.
-Renderers you register can read `--sf-prose-max-h`, which the kit sets on each
-body's wrapper. Text-shaped bodies inherit the feed's size
+(`Table::make()->maxHeight('16rem')`, `Prose::verbatim($log)->maxHeight('none')`),
+which the kits read from the body's `$meta` as `maxHeight`. A length caps the
+whole body, which then scrolls inside its wrapper; `none` draws it in full,
+its code and verbatim blocks included. Text-shaped bodies inherit the feed's size
 rather than taking a `prose-sm` or `prose-lg` modifier, so their tables, lists
 and headings scale with it as one unit.
 

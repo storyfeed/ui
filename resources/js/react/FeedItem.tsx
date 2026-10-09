@@ -131,14 +131,14 @@ export default function FeedItem({
                                 { component: Component, payload, ...entity },
                                 i,
                             ) => {
-                                // The body's own `$maxHeight`, else the kit default `--sf-prose-max-h`.
+                                // The body's own maximum height, if it sets one (see `bodyFrame()`).
                                 const frame = bodyFrame(payload);
                                 return (
                                     <div
                                         key={i}
                                         className={[
                                             'sf-body-form mt-2 max-w-176 empty:hidden',
-                                            frame.capped && 'max-h-(--sf-prose-max-h) overflow-y-auto',
+                                            frame.capped && 'max-h-(--sf-body-max-h) overflow-y-auto',
                                         ]
                                             .filter(Boolean)
                                             .join(' ')}

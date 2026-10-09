@@ -684,32 +684,36 @@ test('links read core 0.17\'s `link` and core 0.16\'s keys; modal reaches a host
         assert.match(list, /href="\/orders\/1"/);
     }
 });
-test('long bodies are capped by the --sf-prose-max-h knob, not a fixed height', () => {
-    for (const [name, payload] of [['Prose', { content: 'Plain' }], ['Prose', { content: '**Rich**', mediaType: 'text/markdown' }], ['Prose', { content: 'code', verbatim: true }], ['Table', { rows: [['a']] }]]) {
-        const html = raw(name, { payload });
-        assert.match(html, /max-h-\[var\(--sf-prose-max-h,--spacing\(96\)\)\]/);
-        assert.doesNotMatch(html, /max-h-96/);
-    }
+test('flowing text is never capped; only code and verbatim blocks scroll at --sf-prose-max-h', () => {
+    const cap = 'max-h-[var(--sf-prose-max-h,--spacing(96))]';
+    assert.ok(raw('Prose', { payload: { content: 'code', verbatim: true } }).includes(`sf-verbatim m-0 ${cap} overflow-auto`));
+    const rich = raw('Prose', { payload: { content: '**Rich**', mediaType: 'text/markdown' } });
+    assert.ok(rich.includes(`[&amp;_pre]:${cap}`));
+    assert.ok(!rich.includes(`sf-rich-text ${cap}`));
+    assert.ok(!raw('Prose', { payload: { content: 'Plain' } }).includes(cap));
+    const table = raw('Table', { payload: { rows: [['a']] } });
+    assert.ok(!table.includes(cap) && table.includes('overflow-x-auto'));
 });
-test('a body\'s $maxHeight sets its wrapper: unset is the default, a length caps, none lifts it', () => {
+
+test('a body\'s maximum height sets its wrapper: a length caps any body, none lifts the block cap too', () => {
     const draw = (body) => raw('FeedItem', { item: { kind: 'activity', id: 'm', published_at: '2026-10-07T12:00:00Z', headline: 'M', actor: null, object: { label: 'O', body: [body] } } }).match(/<div class="sf-body-form[^"]*"[^>]*>/)[0];
     const list = { $body: 'Storyfeed/Body/ItemList', items: ['One'] };
     const prose = { $body: 'Storyfeed/Body/Prose', content: 'Words' };
-    assert.doesNotMatch(draw(list), /style=|max-h-\(--sf-prose-max-h\)/);
-    const capped = draw({ ...list, $maxHeight: '6rem' });
-    assert.match(capped, /max-h-\(--sf-prose-max-h\) overflow-y-auto/);
-    assert.match(capped, /style="--sf-prose-max-h:6rem"/);
+    assert.doesNotMatch(draw(list), /style=|max-h-\(--sf-body-max-h\)/);
+    const capped = draw({ ...prose, $meta: { maxHeight: '10rem' } });
+    assert.match(capped, /max-h-\(--sf-body-max-h\) overflow-y-auto/);
+    assert.match(capped, /style="--sf-prose-max-h:none;--sf-body-max-h:10rem"/);
     assert.match(capped, /tabindex="0"/i);
-    const own = draw({ ...prose, $maxHeight: '10rem' });
-    assert.match(own, /style="--sf-prose-max-h:10rem"/);
-    assert.doesNotMatch(own, /overflow-y-auto/);
-    assert.match(draw({ ...prose, $maxHeight: 'none' }), /--sf-prose-max-h:none/);
-    for (const invalid of ['10rem;background:red', 'expression(alert(1))', 'NONE', '', 42])
-        assert.doesNotMatch(draw({ ...prose, $maxHeight: invalid }), /style=/);
-    assert.match(draw({ ...list, $meta: { maxHeight: '8rem', other: 'x' }, $maxHeight: '6rem' }), /--sf-prose-max-h:8rem/);
+    const none = draw({ ...prose, $meta: { maxHeight: 'none' } });
+    assert.match(none, /style="--sf-prose-max-h:none"/);
+    assert.doesNotMatch(none, /overflow-y-auto/);
+    assert.match(draw({ ...list, $meta: { maxHeight: '8rem', other: 'x' } }), /--sf-body-max-h:8rem/);
+    assert.doesNotMatch(draw({ ...list, $maxHeight: '6rem' }), /style=/);
     assert.doesNotMatch(draw({ ...prose, $meta: { other: 'x' } }), /style=/);
-    assert.match(draw({ ...prose, $meta: { maxHeight: 'none' } }), /--sf-prose-max-h:none/);
+    for (const invalid of ['10rem;background:red', 'expression(alert(1))', 'NONE', '', 42])
+        assert.doesNotMatch(draw({ ...prose, $meta: { maxHeight: invalid } }), /style=/);
 });
+
 test('ItemList states overflow conjunction and owning URL fallback', () => {
     assert.match(
         text(raw('ItemList', { payload: { items: ['First'], totalItems: 3 } })),

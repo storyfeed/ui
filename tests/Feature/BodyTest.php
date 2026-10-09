@@ -88,7 +88,7 @@ it('keeps plain text and unknown encodings escaped', function () {
             'body' => ['content' => "**Rush** <script>alert(1)</script>\nSecond line", 'mediaType' => $mediaType, 'title' => '<Note>'],
         ]);
 
-        expect($html)->toContain('<figcaption>&lt;Note&gt;</figcaption>', '<p tabindex="0">**Rush** &lt;script&gt;alert(1)&lt;/script&gt; Second line</p>')
+        expect($html)->toContain('<figcaption>&lt;Note&gt;</figcaption>', '<p>**Rush** &lt;script&gt;alert(1)&lt;/script&gt; Second line</p>')
             ->not->toContain('<script>', '<strong>');
     }
 });
@@ -334,33 +334,32 @@ it('reads links in core 0.17\'s shape and core 0.16\'s', function () {
         ->and(Links::body('not a link', $new))->toBeNull();
 });
 
-it('caps long bodies by the --sf-prose-max-h knob, not a fixed height', function () {
-    foreach ([['prose', ['content' => 'Plain']], ['prose', ['content' => '**Rich**', 'mediaType' => 'text/markdown']], ['prose', ['content' => 'code', 'verbatim' => true]], ['table', ['rows' => [['a']]]]] as [$component, $body]) {
-        expect(Blade::render("<x-storyfeed::body.{$component} :body=\"\$body\" />", ['body' => $body]))
-            ->toContain('max-h-[var(--sf-prose-max-h,--spacing(96))]')->not->toContain('max-h-96');
-    }
+it('never caps flowing text; only code and verbatim blocks scroll at --sf-prose-max-h', function () {
+    $render = fn (string $component, array $body) => Blade::render("<x-storyfeed::body.{$component} :body=\"\$body\" />", ['body' => $body]);
+    $cap = 'max-h-[var(--sf-prose-max-h,--spacing(96))]';
+
+    expect($render('prose', ['content' => 'code', 'verbatim' => true]))->toContain('sf-verbatim m-0 '.$cap.' overflow-auto')
+        ->and($render('prose', ['content' => '**Rich**', 'mediaType' => 'text/markdown']))->toContain('[&_pre]:'.$cap)->not->toContain('sf-rich-text '.$cap)
+        ->and($render('prose', ['content' => 'Plain']))->not->toContain($cap)
+        ->and($render('table', ['rows' => [['a']]]))->not->toContain($cap)->toContain('overflow-x-auto');
 });
 
-it('honours a body\'s $maxHeight in its wrapper: unset is the default, a length caps, none lifts it', function () {
+it('honours a body\'s maximum height in its wrapper: a length caps any body, none lifts the block cap too', function () {
     $render = fn (array $body) => Blade::render('<x-storyfeed::body :body="$body" />', ['body' => $body]);
     $list = ['$body' => 'Storyfeed/Body/ItemList', 'items' => ['One']];
     $prose = ['$body' => 'Storyfeed/Body/Prose', 'content' => 'Words'];
 
-    expect($render($list))->not->toContain('style=', 'max-h-(--sf-prose-max-h)')
-        // A length caps a body that does not cap itself, scrolling in its wrapper.
-        ->and($render([...$list, '$maxHeight' => '6rem']))->toContain('style="--sf-prose-max-h: 6rem"', 'max-h-(--sf-prose-max-h) overflow-y-auto', 'tabindex="0"')
-        // Prose and Table cap themselves: the wrapper only sets their height.
-        ->and($render([...$prose, '$maxHeight' => '10rem']))->toContain('style="--sf-prose-max-h: 10rem"')->not->toContain('overflow-y-auto')
-        ->and($render([...$prose, '$maxHeight' => 'none']))->toContain('style="--sf-prose-max-h: none"')
-        ->and($render([...$list, '$maxHeight' => 'none']))->not->toContain('overflow-y-auto');
-
-    // `$meta.maxHeight` wins over the top-level key; other `$meta` keys are ignored; a v0.16 body has neither.
-    expect($render([...$list, '$meta' => ['maxHeight' => '8rem', 'other' => 'x'], '$maxHeight' => '6rem']))->toContain('style="--sf-prose-max-h: 8rem"')->not->toContain('other')
-        ->and($render([...$prose, '$meta' => ['other' => 'x']]))->not->toContain('style=')
-        ->and($render([...$prose, '$meta' => ['maxHeight' => 'none']]))->toContain('style="--sf-prose-max-h: none"');
+    expect($render($list))->not->toContain('style=', 'max-h-(--sf-body-max-h)')
+        ->and($render([...$prose, '$meta' => ['maxHeight' => '10rem']]))->toContain('style="--sf-prose-max-h: none; --sf-body-max-h: 10rem"', 'max-h-(--sf-body-max-h) overflow-y-auto', 'tabindex="0"')
+        ->and($render([...$list, '$meta' => ['maxHeight' => '6rem']]))->toContain('--sf-body-max-h: 6rem', 'overflow-y-auto')
+        ->and($render([...$prose, '$meta' => ['maxHeight' => 'none']]))->toContain('style="--sf-prose-max-h: none"')->not->toContain('overflow-y-auto')
+        // Other `$meta` keys are ignored, and a top-level key is not the bucket.
+        ->and($render([...$list, '$meta' => ['maxHeight' => '8rem', 'other' => 'x']]))->toContain('--sf-body-max-h: 8rem')->not->toContain('other')
+        ->and($render([...$list, '$maxHeight' => '6rem']))->not->toContain('style=')
+        ->and($render([...$prose, '$meta' => ['other' => 'x']]))->not->toContain('style=');
 
     foreach (['10rem;background:red', 'expression(alert(1))', 'NONE', '', 42] as $invalid) {
-        expect($render([...$prose, '$maxHeight' => $invalid]))->not->toContain('style=');
+        expect($render([...$prose, '$meta' => ['maxHeight' => $invalid]]))->not->toContain('style=');
     }
 });
 

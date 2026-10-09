@@ -67,27 +67,22 @@ export function fallbackOf(payload: Record<string, any>): string | null {
     return typeof line === 'string' && line.trim() !== '' ? line : null;
 }
 
-/** Body types that cap their own height by `--sf-prose-max-h`, scrolling inside. */
-export const SELF_CAPPED: readonly string[] = ['Storyfeed/Body/Prose', 'Storyfeed/Body/Table'];
-
 /**
  * How a body's wrapper honours its maximum height (core 0.17's
- * `$meta.maxHeight`, read before the top-level `$maxHeight` core first wrote;
- * other `$meta` keys are ignored): `none` or a plain
- * CSS length, else nothing, for the kit default. The value sets
- * `--sf-prose-max-h` for the bodies that cap themselves; any other body with a
- * length is capped and scrolls in its wrapper. Mirrors `Bodies::frame()`.
+ * `$meta.maxHeight`; other `$meta` keys are ignored). Flowing text is never capped by the kit;
+ * only code and verbatim blocks scroll inside their box, at `--sf-prose-max-h`.
+ * A length caps the whole body in its wrapper instead, and `none` lifts the
+ * blocks' cap too. Mirrors `Bodies::frame()`.
  */
 export function bodyFrame(payload: Record<string, any>): { style: Record<string, string> | undefined; capped: boolean } {
     const meta = payload?.$meta;
-    const height = meta && typeof meta === 'object' && 'maxHeight' in meta ? meta.maxHeight : payload?.$maxHeight;
+    const height = meta && typeof meta === 'object' ? meta.maxHeight : undefined;
     // `none`, or a CSS length as core's `FeedBody::maxHeight()` accepts it.
     const valid = typeof height === 'string' && (height === 'none' || /^(0|\d*\.?\d+(px|rem|em|ex|ch|lh|rlh|%|vh|svh|lvh|dvh|vw|svw|lvw|dvw|vmin|vmax|cm|mm|q|in|pt|pc))$/i.test(height));
+    if (!valid) return { style: undefined, capped: false };
+    if (height === 'none') return { style: { '--sf-prose-max-h': 'none' }, capped: false };
 
-    return {
-        style: valid ? { '--sf-prose-max-h': height } : undefined,
-        capped: valid && height !== 'none' && !SELF_CAPPED.includes(payload.$body),
-    };
+    return { style: { '--sf-prose-max-h': 'none', '--sf-body-max-h': height }, capped: true };
 }
 
 /** Whether an Excerpt is a fragment. From v2 core writes `truncated` only when false. */

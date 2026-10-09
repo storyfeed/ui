@@ -128,13 +128,13 @@ const forms = computed(() => {
     ];
 });
 
-/** The body's own `$maxHeight`, else the kit default `--sf-prose-max-h`. */
+/** The body's own maximum height, if it sets one (see `bodyFrame()`). */
 function frameAttributes(payload: Record<string, any>) {
     const frame = bodyFrame(payload);
 
     return {
         ...(frame.style ? { style: frame.style } : {}),
-        ...(frame.capped ? { class: 'max-h-(--sf-prose-max-h) overflow-y-auto', tabindex: 0 } : {}),
+        ...(frame.capped ? { class: 'max-h-(--sf-body-max-h) overflow-y-auto', tabindex: 0 } : {}),
     };
 }
 

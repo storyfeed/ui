@@ -3284,6 +3284,34 @@
             }
           ]
         }
+      },
+      {
+        "kind": "activity",
+        "id": "long-code",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "Long body",
+        "object": {
+          "label": "Roadmap",
+          "url": "#roadmap",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Prose",
+              "$v": 2,
+              "mediaType": "text/markdown",
+              "content": "Notes before the log.\n\n```\nstep 1: ok\nstep 2: ok\nstep 3: ok\nstep 4: ok\nstep 5: ok\nstep 6: ok\nstep 7: ok\nstep 8: ok\nstep 9: ok\nstep 10: ok\nstep 11: ok\nstep 12: ok\nstep 13: ok\nstep 14: ok\nstep 15: ok\nstep 16: ok\nstep 17: ok\nstep 18: ok\nstep 19: ok\nstep 20: ok\nstep 21: ok\nstep 22: ok\nstep 23: ok\nstep 24: ok\nstep 25: ok\nstep 26: ok\nstep 27: ok\nstep 28: ok\nstep 29: ok\nstep 30: ok\nstep 31: ok\nstep 32: ok\nstep 33: ok\nstep 34: ok\nstep 35: ok\nstep 36: ok\nstep 37: ok\nstep 38: ok\nstep 39: ok\nstep 40: ok\nstep 41: ok\nstep 42: ok\nstep 43: ok\nstep 44: ok\nstep 45: ok\nstep 46: ok\nstep 47: ok\nstep 48: ok\nstep 49: ok\nstep 50: ok\nstep 51: ok\nstep 52: ok\nstep 53: ok\nstep 54: ok\nstep 55: ok\nstep 56: ok\nstep 57: ok\nstep 58: ok\nstep 59: ok\n```"
+            }
+          ]
+        }
       }
     ]
   },
@@ -3372,7 +3400,6 @@
             {
               "$body": "Storyfeed/Body/Table",
               "$v": 1,
-              "$maxHeight": "10rem",
               "headers": [
                 "Row",
                 "Value"
@@ -3534,7 +3561,10 @@
                   "Row 39",
                   "39"
                 ]
-              ]
+              ],
+              "$meta": {
+                "maxHeight": "10rem"
+              }
             }
           ]
         }

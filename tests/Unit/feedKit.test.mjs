@@ -684,20 +684,19 @@ test('links read core 0.17\'s `link` and core 0.16\'s keys; modal reaches a host
     assert.match(await draw({ props: ['href', 'modal'], render() { return h('a', { href: this.href, 'data-modal': String(this.modal) }, this.$slots.default?.()); } }), /data-modal="true"/);
 });
 
-test('long bodies are capped by the --sf-prose-max-h knob, not a fixed height', async () => {
-    for (const [path, payload] of [
-        ['/resources/js/vue/body/Prose.vue', { content: 'Plain' }],
-        ['/resources/js/vue/body/Prose.vue', { content: '**Rich**', mediaType: 'text/markdown' }],
-        ['/resources/js/vue/body/Prose.vue', { content: 'code', verbatim: true }],
-        ['/resources/js/vue/body/Table.vue', { rows: [['a']] }],
-    ]) {
-        const html = await renderRaw(path, { payload });
-        assert.match(html, /max-h-\[var\(--sf-prose-max-h,--spacing\(96\)\)\]/);
-        assert.doesNotMatch(html, /max-h-96/);
-    }
+test('flowing text is never capped; only code and verbatim blocks scroll at --sf-prose-max-h', async () => {
+    const cap = 'max-h-[var(--sf-prose-max-h,--spacing(96))]';
+    const draw = (path, payload) => renderRaw(path, { payload });
+    assert.ok((await draw('/resources/js/vue/body/Prose.vue', { content: 'code', verbatim: true })).includes(`sf-verbatim m-0 ${cap} overflow-auto`));
+    const rich = await draw('/resources/js/vue/body/Prose.vue', { content: '**Rich**', mediaType: 'text/markdown' });
+    assert.ok(rich.includes(`[&amp;_pre]:${cap}`));
+    assert.ok(!rich.includes(`sf-rich-text ${cap}`));
+    assert.ok(!(await draw('/resources/js/vue/body/Prose.vue', { content: 'Plain' })).includes(cap));
+    const table = await draw('/resources/js/vue/body/Table.vue', { rows: [['a']] });
+    assert.ok(!table.includes(cap) && table.includes('overflow-x-auto'));
 });
 
-test('a body\'s $maxHeight sets its wrapper: unset is the default, a length caps, none lifts it', async () => {
+test('a body\'s maximum height sets its wrapper: a length caps any body, none lifts the block cap too', async () => {
     const { default: FeedItem } = await server.ssrLoadModule('/resources/js/vue/FeedItem.vue');
     const draw = async (body) => {
         const html = await renderToString(createSSRApp({ render: () => h(FeedItem, { item: { kind: 'activity', id: 'm', published_at: '2026-10-07T12:00:00Z', headline: 'M', actor: null, object: { label: 'O', body: [body] } } }) }));
@@ -705,20 +704,19 @@ test('a body\'s $maxHeight sets its wrapper: unset is the default, a length caps
     };
     const list = { $body: 'Storyfeed/Body/ItemList', items: ['One'] };
     const prose = { $body: 'Storyfeed/Body/Prose', content: 'Words' };
-    assert.doesNotMatch(await draw(list), /style=|max-h-\(--sf-prose-max-h\)/);
-    const capped = await draw({ ...list, $maxHeight: '6rem' });
-    assert.match(capped, /max-h-\(--sf-prose-max-h\) overflow-y-auto/);
-    assert.match(capped, /style="--sf-prose-max-h:6rem;"/);
+    assert.doesNotMatch(await draw(list), /style=|max-h-\(--sf-body-max-h\)/);
+    const capped = await draw({ ...prose, $meta: { maxHeight: '10rem' } });
+    assert.match(capped, /max-h-\(--sf-body-max-h\) overflow-y-auto/);
+    assert.match(capped, /style="--sf-prose-max-h:none;--sf-body-max-h:10rem;"/);
     assert.match(capped, /tabindex="0"/);
-    const own = await draw({ ...prose, $maxHeight: '10rem' });
-    assert.match(own, /style="--sf-prose-max-h:10rem;"/);
-    assert.doesNotMatch(own, /overflow-y-auto/);
-    assert.match(await draw({ ...prose, $maxHeight: 'none' }), /--sf-prose-max-h:none/);
-    for (const invalid of ['10rem;background:red', 'expression(alert(1))', 'NONE', '', 42])
-        assert.doesNotMatch(await draw({ ...prose, $maxHeight: invalid }), /style=/);
-    assert.match(await draw({ ...list, $meta: { maxHeight: '8rem', other: 'x' }, $maxHeight: '6rem' }), /--sf-prose-max-h:8rem/);
+    const none = await draw({ ...prose, $meta: { maxHeight: 'none' } });
+    assert.match(none, /style="--sf-prose-max-h:none;"/);
+    assert.doesNotMatch(none, /overflow-y-auto/);
+    assert.match(await draw({ ...list, $meta: { maxHeight: '8rem', other: 'x' } }), /--sf-body-max-h:8rem/);
+    assert.doesNotMatch(await draw({ ...list, $maxHeight: '6rem' }), /style=/);
     assert.doesNotMatch(await draw({ ...prose, $meta: { other: 'x' } }), /style=/);
-    assert.match(await draw({ ...prose, $meta: { maxHeight: 'none' } }), /--sf-prose-max-h:none/);
+    for (const invalid of ['10rem;background:red', 'expression(alert(1))', 'NONE', '', 42])
+        assert.doesNotMatch(await draw({ ...prose, $meta: { maxHeight: invalid } }), /style=/);
 });
 
 test('ItemList states the conjunction before overflow', async () => {

@@ -179,23 +179,24 @@ try {
                     // Kits differ only in whitespace between tags, which renders as nothing.
                     assert.deepEqual(texts.map(t => t.replace(/\s+/g, '')), expected.map(t => t.replace(/\s+/g, '')), `${renderers[i]}: ${section}`);
                 }
-                // `--sf-prose-max-h` caps long bodies (24rem by default) and `none` lifts the cap and the inner scroll.
+                // Flowing text is never capped; code and verbatim blocks scroll at `--sf-prose-max-h` (24rem), which `none` lifts.
                 if (state === 'collapsed' && text === 'default') for (let i = 0; i < frames.length; i++) {
-                    const measure = () => frames[i].locator('.example:has(>h2:text-is("Long bodies")) :is(.sf-rich-text, .sf-prose--scroll, .sf-verbatim, .sf-table__prose)').evaluateAll(nodes => nodes.map(node => ({
-                        maxHeight: getComputedStyle(node).maxHeight, scrolls: node.scrollHeight > node.clientHeight + 1,
-                    })));
-                    assert.deepEqual(await measure(), Array(4).fill({ maxHeight: '384px', scrolls: true }), `${renderers[i]}: long bodies capped at 24rem`);
+                    const measure = () => frames[i].locator('.example:has(>h2:text-is("Long bodies")) .sf-body-form').evaluateAll(forms => forms.map(form => {
+                        const block = form.querySelector('.sf-verbatim, .sf-rich-text pre');
+                        const text = form.querySelector('.sf-rich-text, .sf-prose, .sf-table__prose');
+                        const box = node => node && [getComputedStyle(node).maxHeight, node.scrollHeight > node.clientHeight + 1];
+                        return { text: box(text), block: box(block) };
+                    }));
+                    const flowing = { text: ['none', false], block: null };
+                    assert.deepEqual(await measure(), [flowing, flowing, { text: null, block: ['384px', true] }, flowing, { text: ['none', false], block: ['384px', true] }], `${renderers[i]}: only code and verbatim blocks scroll`);
                     await frames[i].evaluate(() => document.body.style.setProperty('--sf-prose-max-h', 'none'));
-                    assert.deepEqual(await measure(), Array(4).fill({ maxHeight: 'none', scrolls: false }), `${renderers[i]}: none lifts the cap and the scroll`);
+                    assert.deepEqual(await measure(), [flowing, flowing, { text: null, block: ['none', false] }, flowing, { text: ['none', false], block: ['none', false] }], `${renderers[i]}: none lifts the block cap`);
                     await frames[i].evaluate(() => document.body.style.removeProperty('--sf-prose-max-h'));
                 }
-                // A body's own `$maxHeight`: unset is the 24rem default, a length caps (in the body or its wrapper), `none` lifts it.
+                // A body's own maximum height: a length caps the whole body in its wrapper; unset, `none` or invalid leave it whole.
                 if (state === 'collapsed' && text === 'default') for (let i = 0; i < frames.length; i++) {
-                    const caps = await frames[i].locator('.example:has(>h2:text-is("Body max height")) .sf-body-form').evaluateAll(forms => forms.map(form => {
-                        const scroller = form.querySelector('.sf-rich-text, .sf-table__prose') ?? form;
-                        return [getComputedStyle(scroller).maxHeight, scroller.scrollHeight > scroller.clientHeight + 1];
-                    }));
-                    assert.deepEqual(caps, [['384px', true], ['none', false], ['160px', true], ['96px', true], ['none', false], ['384px', true]], `${renderers[i]}: body max heights`);
+                    const caps = await frames[i].locator('.example:has(>h2:text-is("Body max height")) .sf-body-form').evaluateAll(forms => forms.map(form => [getComputedStyle(form).maxHeight, form.scrollHeight > form.clientHeight + 1]));
+                    assert.deepEqual(caps, [['none', false], ['none', false], ['160px', true], ['96px', true], ['none', false], ['none', false]], `${renderers[i]}: body max heights`);
                 }
                 // Core 0.17's `link` shape: entity links keep their safe attributes; an href-less body link takes the entity's and adds its own.
                 if (state === 'collapsed' && text === 'default') for (let i = 0; i < frames.length; i++) {
