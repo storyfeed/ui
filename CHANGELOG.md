@@ -4,10 +4,6 @@
 
 ## v0.6.0 - 2026-10-09
 
-### Changed
-
-- Requires `storyfeed/storyfeed` `^0.13 || ^0.14 || ^0.15 || ^0.16 || ^0.17`, so the kits install alongside core v0.17.
-
 ### Added
 
 - A body's maximum height (core 0.17's `FeedBody::maxHeight()`, read from `$meta.maxHeight`; other `$meta` keys are ignored) is honoured on every body type in Blade, Vue and React: a CSS length caps the whole body, which scrolls inside its wrapper, and `none` draws it in full. Only `none` or a CSS length is read.
@@ -26,6 +22,7 @@
 
 ### Changed
 
+- Requires `storyfeed/storyfeed` `^0.13 || ^0.14 || ^0.15 || ^0.16 || ^0.17`, so the kits install alongside core v0.17.
 - Long Prose bodies now show in full; only code and verbatim blocks scroll inside their box. Rich and plain Prose and Table bodies are no longer capped at 24rem; `pre` blocks inside rich Prose and verbatim Prose still are, at `--sf-prose-max-h` (default `24rem`), a CSS variable an app can change.
 - A group's photograph strip reads only its objects, never its actors or other roles, in Blade, Vue and React, so a group no longer pulls an actor's photo into the strip.
 - The kits require the Tailwind Typography plugin. Rich `Prose` (Markdown and HTML) and `ItemList` render inside Typography's `prose` in Blade, Vue and React, replacing the kits' hand-rolled list, table, quotation and heading styles. Install `@tailwindcss/typography` and add `@plugin "@tailwindcss/typography";` beside the kit's `@source` line. The `prose` colours come from the starter-kit tokens, so dark mode follows them, and its size is inherited from the feed, so `--sf-font-size` and the browser's text size scale its tables, lists and headings with the rest of the feed.
