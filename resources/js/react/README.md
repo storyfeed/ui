@@ -71,8 +71,9 @@ All provider names retain the Vue seams' meaning:
 - `FEED_FILE_LABELLER`: receives `{ name, mediaType }` and returns a label or null.
   Null uses the shared MIME map, then the MIME string. Names always remain visible;
   size uses decimal units. No extension guessing.
-- `FEED_MEDIA_OBJECT_PLACEMENT`: `'beside'` (64px image) or `'below'` (picture after
-  prose). The `MediaObject` component's `imagePlacement` prop takes precedence.
+- `FEED_MEDIA_OBJECT_PLACEMENT`: `'beside'` (a compact picture beside the text) or
+  `'below'` (picture after prose). Beside, a picture keeps its shape: an `icon` is a 4rem square; a picture with a declared `width` and `height` is 4rem tall at its own ratio, clamped between 1:1 and 2:1 (cropped only beyond that); one without shows whole at 6rem wide, up to 8rem tall. On a narrow card the picture stacks above the text.
+  The `MediaObject` component's `imagePlacement` prop takes precedence.
 - `FEED_NOW`: pins the clock to a millisecond timestamp after mount. Without it,
   relative labels refresh every second/minute/hour according to age; timers are
   cleaned up on unmount or clock/input changes.

@@ -11,6 +11,7 @@
 
 ### Fixed
 
+- A MediaObject card's picture keeps its shape instead of a 4rem square crop, so Open Graph link images (about 1.91:1) show whole in Blade, Vue and React. A declared `width` and `height` set the ratio, clamped between 1:1 and 2:1, at the card's 4rem height; a picture without them shows whole at 6rem wide, up to 8rem tall; the `icon` slot stays square. The text column keeps at least 12em, so on a narrow card the picture stacks above it.
 - Excerpt reads core's slim v2 payload, where `truncated` is written only when false: an Excerpt without the flag shows its ellipsis in Blade, Vue and React, as core's `Excerpt::upgrade()` reads it. v1 bodies without the flag still read as whole.
 
 ### Changed

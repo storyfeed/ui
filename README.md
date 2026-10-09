@@ -382,7 +382,8 @@ payloads never supply callbacks. Body text itself is escaped or sanitized.
 Filament can use these seams for its icons, timestamp refresh and lightbox
 (the `media` callback reaches Image and MediaObject bodies as well as sample
 tiles; `form` can override an entire body). Standalone MediaObject also accepts
-`image-placement="beside|below"`; beside is the default in both kits.
+`image-placement="beside|below"`; beside is the default in both kits. Beside
+the text, a card picture keeps its shape: an `icon` is a 4rem square; a picture with a declared `width` and `height` is 4rem tall at its own ratio, clamped between 1:1 and 2:1 (cropped only beyond that); one without shows whole at 6rem wide, up to 8rem tall. On a narrow card the picture stacks above the text.
 FileAttachment always shows its supplied name and formats decimal byte sizes
 (21 MB, 76 KB). Built-in MIME labels include PDF, images, Word and CSV
 (`Spreadsheet (CSV)`). The `fileLabel` callback overrides those labels, with

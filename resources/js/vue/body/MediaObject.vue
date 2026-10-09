@@ -2,6 +2,7 @@
 import { computed, inject } from 'vue'
 import { FEED_LINK, FEED_MEDIA_OBJECT_PLACEMENT } from '../keys'
 import FeedMedia from '../FeedMedia.vue'
+import { pictureShape } from '../../shared/picture'
 
 /**
  * `Storyfeed/Body/MediaObject` — the shape of a post: a title line, some
@@ -44,6 +45,15 @@ const picture = computed(() =>
     ['icon', 'preview', 'image'].includes(props.payload.image) ? (props.entityMedia?.[props.payload.image] ?? null) : null,
 )
 
+/** Beside the text, a picture keeps its own shape (see `shared/picture.ts`). */
+const shape = computed(() => pictureShape(props.payload.image, picture.value))
+const frames = {
+    icon: { wrapper: 'sf-media-object__image w-16 flex-none', media: 'mt-0! size-16! rounded-md!' },
+    ratio: { wrapper: 'sf-media-object__image h-16 w-[calc(--spacing(16)*var(--sf-picture-ratio))] flex-none', media: 'mt-0! size-full! max-w-none! aspect-auto! rounded-md!' },
+    free: { wrapper: 'sf-media-object__image w-24 flex-none', media: 'mt-0! w-full! max-w-none! rounded-md! [&_img]:h-auto! [&_img]:max-h-32 [&_img]:object-contain!' },
+} as const
+const frame = computed(() => frames[shape.value.shape])
+
 const footnote = computed(() => {
     const value = props.payload.footnote
 
@@ -57,11 +67,11 @@ const footnote = computed(() => {
         <component :is="linkComponent" v-if="footnote.href" :href="footnote.href" class="font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring">{{ footnote.label }}</component>
         <template v-else>{{ footnote.label }}</template>
     </p>
-    <div v-else-if="subject || payload.content || picture || files.length" class="sf-media-object mt-1.5 flex min-w-0 max-w-128 items-start gap-3 rounded-lg border border-border bg-muted p-3">
-        <div v-if="picture && placement === 'beside'" class="sf-media-object__image w-16 flex-none">
-            <FeedMedia :image="picture" class="mt-0! size-16! rounded-md!" />
+    <div v-else-if="subject || payload.content || picture || files.length" class="sf-media-object mt-1.5 flex min-w-0 max-w-128 flex-wrap items-start gap-3 rounded-lg border border-border bg-muted p-3">
+        <div v-if="picture && placement === 'beside'" :class="frame.wrapper" :style="shape.shape === 'ratio' ? { '--sf-picture-ratio': shape.ratio } : undefined">
+            <FeedMedia :image="picture" :class="frame.media" />
         </div>
-        <div class="sf-media-object__body flex min-w-0 flex-1 flex-col gap-1 [overflow-wrap:anywhere]">
+        <div class="sf-media-object__body flex min-w-0 flex-[1_1_--spacing(48)] flex-col gap-1 [overflow-wrap:anywhere]">
             <p v-if="subject" class="sf-media-object__subject m-0 text-base font-medium text-foreground">
                 <component :is="linkComponent" v-if="subject.href" :href="subject.href">{{ subject.label }}</component>
                 <template v-else>{{ subject.label }}</template>

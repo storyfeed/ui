@@ -161,6 +161,23 @@ it('draws rich prose and lists inside Typography prose at the feed\'s size', fun
     }
 });
 
+it('keeps a card picture\'s shape: clamped declared ratio, whole when undeclared, square icon', function () {
+    $draw = fn (string $slot, array $image) => Blade::render('<x-storyfeed::body.media-object :body="$body" :entity="$entity" />', [
+        'body' => ['$v' => 2, 'subject' => 'Post', 'image' => $slot],
+        'entity' => Entity::of(['label' => 'Post', 'media' => [$slot => ['src' => '/p', ...$image]]]),
+    ]);
+    $frame = fn (string $html): array => preg_match('/<div class="(sf-media-object__image[^"]*)"(?:\s+style="([^"]*)")?/', $html, $m) === 1 ? [$m[1], $m[2] ?? null] : [];
+
+    foreach ([[[1200, 630], '1.9048'], [[800, 800], '1'], [[600, 1200], '1'], [[3000, 1000], '2']] as [[$width, $height], $ratio]) {
+        [$classes, $style] = $frame($draw('preview', ['width' => $width, 'height' => $height]));
+        expect($classes)->toContain('h-16')->and($style)->toBe("--sf-picture-ratio: {$ratio}");
+    }
+
+    $free = $draw('preview', []);
+    expect($frame($free)[0])->toContain('w-24')->and($free)->toContain('[&amp;_img]:object-contain!');
+    expect($frame($draw('icon', ['width' => 1200, 'height' => 630])))->toBe(['sf-media-object__image w-16 flex-none', null]);
+});
+
 it('draws a media object with the entity\'s current picture, once', function () {
     Order::$preview = FeedImage::make('/img/1042.jpg', width: 800, height: 600, alt: 'The order');
 

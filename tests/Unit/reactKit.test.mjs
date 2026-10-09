@@ -652,6 +652,21 @@ test('ItemList states overflow conjunction and owning URL fallback', () => {
         /href="\/owner"/,
     );
 });
+test('a card picture keeps its shape: clamped declared ratio, whole when undeclared, square icon', () => {
+    const draw = (slot, image) => raw('MediaObject', { payload: { subject: 'Post', image: slot }, entityMedia: { [slot]: { src: '/p', ...image } } });
+    const frame = (html) => html.match(/<div class="(sf-media-object__image[^"]*)"(?: style="([^"]*)")?/).slice(1);
+    for (const [image, ratio] of [[{ width: 1200, height: 630 }, '1.9048'], [{ width: 800, height: 800 }, '1'], [{ width: 600, height: 1200 }, '1'], [{ width: 3000, height: 1000 }, '2']]) {
+        const [classes, style] = frame(draw('preview', image));
+        assert.match(classes, /\bh-16\b/);
+        assert.equal(style, `--sf-picture-ratio:${ratio}`);
+    }
+    const free = draw('preview', {});
+    assert.match(frame(free)[0], /\bw-24\b/);
+    assert.match(free, /\[&amp;_img\]:object-contain!/);
+    const icon = frame(draw('icon', { width: 1200, height: 630 }));
+    assert.match(icon[0], /\bw-16\b/);
+    assert.ok(!icon[1]);
+});
 test('MediaObject below follows prose; host placement applies to automatic bodies', () => {
     const props = {
         payload: { subject: 'Post', content: 'Words', image: 'preview' },
@@ -802,7 +817,7 @@ test('MediaObject footnotes stand alone, resolve links and keep strings unlinked
     }
     assert.equal(raw('MediaObject', { payload: {} }), '');
     const html = raw('MediaObject', { payload: { content: 'Discussion summary', footnote: { label: 'Read more', href: '/discussion' } } });
-    assert.match(html, /<div class="sf-media-object mt-1.5 flex min-w-0 max-w-128 items-start gap-3 rounded-lg border border-border bg-muted p-3">/);
+    assert.match(html, /<div class="sf-media-object mt-1.5 flex min-w-0 max-w-128 flex-wrap items-start gap-3 rounded-lg border border-border bg-muted p-3">/);
     assert.match(html, /sf-media-object__content[^>]*>Discussion summary/);
     assert.match(html, /sf-media-object__footnote[^>]*><a href="\/discussion">Read more<\/a><\/p>/);
 });

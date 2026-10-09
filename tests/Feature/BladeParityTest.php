@@ -290,7 +290,7 @@ it('renders a footnote-only media object as a line', function ($footnote, $entit
 it('keeps content and footnote together inside the media object card', function () {
     $body = ['$body' => 'Storyfeed/Body/MediaObject', '$v' => 2, 'content' => 'Discussion summary', 'footnote' => ['label' => 'Read more', 'href' => '/discussion']];
     $html = Blade::render('<x-storyfeed::body.media-object :body="$body" />', compact('body'));
-    expect($html)->toContain('sf-media-object mt-1.5 flex min-w-0 max-w-128 items-start gap-3 rounded-lg border border-border bg-muted p-3', 'sf-media-object__content', 'Discussion summary', 'sf-media-object__footnote', 'href="/discussion"');
+    expect($html)->toContain('sf-media-object mt-1.5 flex min-w-0 max-w-128 flex-wrap items-start gap-3 rounded-lg border border-border bg-muted p-3', 'sf-media-object__content', 'Discussion summary', 'sf-media-object__footnote', 'href="/discussion"');
 });
 
 it('sizes all three kits on the rem scale, with no pixel arbitrary values', function () {

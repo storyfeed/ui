@@ -146,7 +146,7 @@ try {
                     }
                 }
                 const geometry = await Promise.all(frames.map(frame => frame.evaluate(() => {
-                    const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media', '.sf-facts', '.sf-facts__row', '.sf-facts__label', '.sf-facts__value', '.sf-facts__value > span', '.sf-rich-text', '.sf-rich-text *', '.sf-list-block', '.sf-list__prose *', '.sf-avatar-row', '.sf-avatar-row > *', '.sf-avatar-row .sf-avatar', '.sf-table-block', '.sf-table__prose *'];
+                    const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media', '.sf-facts', '.sf-facts__row', '.sf-facts__label', '.sf-facts__value', '.sf-facts__value > span', '.sf-rich-text', '.sf-rich-text *', '.sf-list-block', '.sf-list__prose *', '.sf-avatar-row', '.sf-avatar-row > *', '.sf-avatar-row .sf-avatar', '.sf-table-block', '.sf-table__prose *', '.sf-media-object__image img'];
                     return Object.fromEntries(selectors.map(selector => [selector, [...document.querySelectorAll(selector)].filter(e => !e.closest('details:not([open]) .sf-children') && e.getClientRects().length && e.getBoundingClientRect().height > 0).map(e => {
                         const r = e.getBoundingClientRect();
                         return { x: r.x, y: r.y, w: r.width, h: r.height, text: e.textContent.trim().replace(/\s+/g, ' ') };
@@ -171,6 +171,21 @@ try {
                     const texts = await frames[i].locator(`.example:has(>h2:text-is("${section}")) .sf-body-form`).allTextContents();
                     // Kits differ only in whitespace between tags, which renders as nothing.
                     assert.deepEqual(texts.map(t => t.replace(/\s+/g, '')), expected.map(t => t.replace(/\s+/g, '')), `${renderers[i]}: ${section}`);
+                }
+                // Card pictures keep their shape: 1:1–2:1 at the card's height, whole when undeclared, square icons,
+                // and the text column keeps a readable width (12em, or the whole card once the picture stacks above it).
+                if (state === 'collapsed') for (let i = 0; i < frames.length; i++) {
+                    const cards = await frames[i].locator('.example:has(>h2:text-is("Card pictures")) .sf-media-object').evaluateAll(cards => cards.map(card => {
+                        const box = card.querySelector('.sf-media').getBoundingClientRect();
+                        const body = card.querySelector('.sf-media-object__body');
+                        const content = card.clientWidth - parseFloat(getComputedStyle(card).paddingLeft) - parseFloat(getComputedStyle(card).paddingRight);
+                        return {
+                            ratio: Math.round(box.width / box.height * 10) / 10,
+                            fit: getComputedStyle(card.querySelector('.sf-media img')).objectFit,
+                            readable: body.getBoundingClientRect().width >= Math.min(12 * parseFloat(getComputedStyle(body).fontSize), content) - 0.5,
+                        };
+                    }));
+                    assert.deepEqual(cards, [[1.9, 'cover'], [1, 'cover'], [1, 'cover'], [1.9, 'contain'], [1, 'cover']].map(([ratio, fit]) => ({ ratio, fit, readable: true })), `${renderers[i]} ${width} ${text}: card pictures`);
                 }
                 // A group's featured objects draw as an avatar row; the actor never feeds the row or the strip.
                 if (text === 'default' && state === 'collapsed') for (let i = 0; i < frames.length; i++) {

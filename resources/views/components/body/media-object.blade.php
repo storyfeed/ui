@@ -20,14 +20,27 @@
     $footnote = $link($body['footnote'] ?? null);
     $imageSlot = is_string($body['image'] ?? null) ? $body['image'] : null;
     $picture = in_array($imageSlot, ['icon', 'preview', 'image'], true) ? $entity?->media()?->get($imageSlot) : null;
+    // Beside the text, a picture keeps its own shape: an icon is square, a
+    // declared size keeps its ratio clamped to 1:1–2:1, and an undeclared one
+    // shows whole at a fixed width. Mirrors `shared/picture.ts`.
+    $width = $picture['width'] ?? null;
+    $height = $picture['height'] ?? null;
+    $ratio = $imageSlot !== 'icon' && (is_int($width) || is_float($width)) && (is_int($height) || is_float($height)) && $width > 0 && $height > 0
+        ? round(min(max($width / $height, 1), 2), 4)
+        : null;
+    [$frame, $frameMedia] = match (true) {
+        $imageSlot === 'icon' => ['sf-media-object__image w-16 flex-none', 'mt-0! size-16! rounded-md!'],
+        $ratio !== null => ['sf-media-object__image h-16 w-[calc(--spacing(16)*var(--sf-picture-ratio))] flex-none', 'mt-0! size-full! max-w-none! aspect-auto! rounded-md!'],
+        default => ['sf-media-object__image w-24 flex-none', 'mt-0! w-full! max-w-none! rounded-md! [&_img]:h-auto! [&_img]:max-h-32 [&_img]:object-contain!'],
+    };
     $files = collect($body['files'] ?? [])->filter(fn ($file) => is_array($file) && filled($file['href'] ?? null));
 @endphp
 @if ($subject || filled($body['content'] ?? null) || is_array($picture) || $files->isNotEmpty())
-<div {{ $attributes->class('sf-media-object mt-1.5 flex min-w-0 max-w-128 items-start gap-3 rounded-lg border border-border bg-muted p-3') }}>
+<div {{ $attributes->class('sf-media-object mt-1.5 flex min-w-0 max-w-128 flex-wrap items-start gap-3 rounded-lg border border-border bg-muted p-3') }}>
 @if (is_array($picture) && $imagePlacement === 'beside')
-        <div class="sf-media-object__image w-16 flex-none [&>div]:mt-0! [&>div]:size-16! [&>div]:rounded-md!"><x-storyfeed::media :image="$picture" :renderer="$mediaRenderer" /></div>
+        <div class="{{ $frame }}" @if ($ratio !== null) style="--sf-picture-ratio: {{ $ratio }}" @endif><x-storyfeed::media :image="$picture" :renderer="$mediaRenderer" :class="$frameMedia" /></div>
 @endif
-    <div class="sf-media-object__body flex min-w-0 flex-1 flex-col gap-1 [overflow-wrap:anywhere]">
+    <div class="sf-media-object__body flex min-w-0 flex-[1_1_--spacing(48)] flex-col gap-1 [overflow-wrap:anywhere]">
 @if ($subject)
             <p class="sf-media-object__subject m-0 text-base font-medium text-foreground">
 @if ($subject['href'])<a class="font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring" href="{{ $subject['href'] }}">{{ $subject['label'] }}</a>

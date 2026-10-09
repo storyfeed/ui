@@ -58,7 +58,9 @@ invert and code needs a dark surface in both themes.
   even when the headline names the entity; sizes use decimal units (21 MB,
   76 KB). The payload is unchanged.
 - `MediaObject.vue` accepts `image-placement="beside|below"`. Beside is the
-  compact 64px image; below draws the photograph after the prose at its normal
+  compact picture beside the text, which keeps its shape: an `icon` is a 4rem square;
+  a picture with a declared `width` and `height` is 4rem tall at its own ratio, clamped between 1:1 and 2:1 (cropped only beyond that); one without shows whole at 6rem wide, up to 8rem tall. On a narrow card the picture stacks above the text.
+  Below draws the photograph after the prose at its normal
   media width. Provide `FEED_MEDIA_OBJECT_PLACEMENT` with `'below'` to apply
   that posture to automatic body rendering throughout a feed; a prop wins.
 - `#body`, `#annotations` and `#time` receive the node on both activities and

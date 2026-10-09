@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, CSSProperties } from 'react';
 import {
     fallbackOf,
     formsIn as discover,
@@ -8,6 +8,7 @@ import {
 import { fileLabel } from '../../shared/fileLabels';
 import { isRich, renderProse } from '../../shared/prose';
 import { readTable, type TableCell } from '../../shared/table';
+import { pictureShape } from '../../shared/picture';
 import FeedMedia from '../FeedMedia';
 import { useFeedOptions } from '../context';
 export { imageOf } from '../../shared/body';
@@ -319,6 +320,13 @@ export function MediaObject({
         ? (entityMedia?.[payload.image] ?? null)
         : null;
     const footnote = link(payload.footnote);
+    // Beside the text, a picture keeps its own shape (see `shared/picture.ts`).
+    const shape = pictureShape(payload.image, picture);
+    const frame = {
+        icon: { wrapper: 'sf-media-object__image w-16 flex-none', media: 'mt-0! size-16! rounded-md!' },
+        ratio: { wrapper: 'sf-media-object__image h-16 w-[calc(--spacing(16)*var(--sf-picture-ratio))] flex-none', media: 'mt-0! size-full! max-w-none! aspect-auto! rounded-md!' },
+        free: { wrapper: 'sf-media-object__image w-24 flex-none', media: 'mt-0! w-full! max-w-none! rounded-md! [&_img]:h-auto! [&_img]:max-h-32 [&_img]:object-contain!' },
+    }[shape.shape];
     if (!subject?.label && !payload.content && !picture && !files.length) {
         return footnote ? (
             <p className="sf-media-object__footnote mt-0.5 mb-0 text-sm leading-[1.6] text-muted-foreground">
@@ -336,16 +344,20 @@ export function MediaObject({
         ) : null;
     }
     return (
-        <div className="sf-media-object mt-1.5 flex min-w-0 max-w-128 items-start gap-3 rounded-lg border border-border bg-muted p-3">
+        <div className="sf-media-object mt-1.5 flex min-w-0 max-w-128 flex-wrap items-start gap-3 rounded-lg border border-border bg-muted p-3">
             {picture && placement === 'beside' && (
-                <div className="sf-media-object__image w-16 flex-none">
-                    <FeedMedia
-                        image={picture}
-                        className="mt-0! size-16! rounded-md!"
-                    />
+                <div
+                    className={frame.wrapper}
+                    style={
+                        shape.shape === 'ratio'
+                            ? ({ '--sf-picture-ratio': shape.ratio } as CSSProperties)
+                            : undefined
+                    }
+                >
+                    <FeedMedia image={picture} className={frame.media} />
                 </div>
             )}
-            <div className="sf-media-object__body flex min-w-0 flex-1 flex-col gap-1 [overflow-wrap:anywhere]">
+            <div className="sf-media-object__body flex min-w-0 flex-[1_1_--spacing(48)] flex-col gap-1 [overflow-wrap:anywhere]">
                 {subject?.label && (
                     <p className="sf-media-object__subject m-0 text-base font-medium text-foreground">
                         {subject.href ? (
