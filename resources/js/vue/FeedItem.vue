@@ -9,6 +9,7 @@ import FeedIcon from './FeedIcon.vue';
 import FeedMediaStrip from './FeedMediaStrip.vue';
 import FeedMeta from './FeedMeta.vue';
 import FeedMedia from './FeedMedia.vue';
+import { entityLink } from '../shared/link';
 import { rail as parseRail, railFor, withoutSecondary } from '../shared/rail';
 import type { Rail, RailName } from '../shared/rail';
 import type { ActivityNode, FeedNode } from '../shared/types';
@@ -82,7 +83,7 @@ const strip = computed(() => {
     const tiles = sample
         .map((entity: any) => ({
             image: imageOf(entity),
-            href: entity.url ?? null,
+            href: entityLink(entity)?.href ?? null,
         }))
         .filter((tile: any) => tile.image !== null);
 
@@ -106,11 +107,12 @@ const strip = computed(() => {
 const forms = computed(() => {
     const object = (props.item as any).object;
 
+    const link = entityLink(object);
     const attributed = (found: any) => ({
         ...found,
         entityLabel: object?.label ?? null,
-        // Core 0.17 moves an entity's URL to `link.href`.
-        entityUrl: object?.url ?? object?.link?.href ?? null,
+        entityUrl: link?.href ?? null,
+        entityLink: link,
         entityMedia: object?.media ?? null,
     });
 
@@ -230,8 +232,8 @@ const slots = computed(() =>
                 <FeedMedia
                     v-if="icon"
                     :image="icon"
-                    :href="item.object?.tombstone ? null : item.object?.url"
-                    :link-attributes="item.object?.attributes"
+                    :href="entityLink(item.object)?.href ?? null"
+                    :link-attributes="entityLink(item.object)?.attributes"
                     class="mt-0! size-10! shrink-0 rounded-md!"
                 />
                 <div :class="icon ? 'min-w-0 flex-1' : 'contents'">
@@ -258,6 +260,7 @@ const slots = computed(() =>
                             :entity-label="(found as any).entityLabel"
                             :entity-url="(found as any).entityUrl"
                             :entity-media="(found as any).entityMedia"
+                            :entity-link="(found as any).entityLink"
                         />
                     </div>
 

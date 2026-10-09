@@ -9,6 +9,7 @@ use Storyfeed\Contracts\FeedBody;
 use Storyfeed\FeedContext;
 use Storyfeed\FeedEntity;
 use Storyfeed\FeedImage;
+use Storyfeed\FeedLink;
 use Storyfeed\FeedMedia;
 
 /**
@@ -38,6 +39,11 @@ class Order extends Model implements Feedable
 
     public static function feedMedia(FeedContext $context): ?FeedMedia
     {
-        return FeedMedia::make("/orders/{$context->data('id')}", attributes: ['target' => '_blank'], preview: static::$preview);
+        $href = "/orders/{$context->data('id')}";
+
+        // Core 0.17 puts the attributes on the link (storyfeed/storyfeed#79); 0.16 takes them on the media.
+        return method_exists(FeedLink::class, 'to')
+            ? FeedMedia::make(link: FeedLink::to($href)->attributes(['target' => '_blank']), preview: static::$preview)
+            : FeedMedia::make($href, attributes: ['target' => '_blank'], preview: static::$preview);
     }
 }

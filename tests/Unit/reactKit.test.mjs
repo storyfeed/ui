@@ -669,6 +669,21 @@ test('a call to action draws one button; modal reaches a host link, attributes a
     assert.match(draw({ action: action('/next', { modal: true }) }, { FEED_LINK: HostLink }), /data-modal="true"/);
     assert.match(draw({ action: action('/next') }, { FEED_LINK: HostLink }), /data-modal="false"/);
 });
+test('links read core 0.17\'s `link` and core 0.16\'s keys; modal reaches a host link only', async () => {
+    const links = await server.ssrLoadModule('/resources/js/shared/link.ts');
+    const fresh = { ...entity, url: undefined, modal: undefined, link: { href: '/orders/1', modal: true, attributes: { target: '_blank', onclick: 'x' } } };
+    const legacy = { ...entity, url: '/orders/1', modal: true, attributes: { target: '_blank', onclick: 'x' } };
+    const HostLink = ({ href, modal, children }) => h('a', { href, 'data-modal': String(modal) }, children);
+    for (const shape of [fresh, legacy]) {
+        const plain = raw('EntityLink', { entity: shape });
+        assert.match(plain, /<a target="_blank" href="\/orders\/1"/);
+        assert.doesNotMatch(plain, /modal|onclick/);
+        assert.match(raw('EntityLink', { entity: shape }, { FEED_LINK: HostLink }), /data-modal="true"/);
+        // An href-less body link is the entity's own and adds its attributes.
+        const list = raw('ItemList', { payload: { items: [{ label: 'Own', href: null, modal: false, attributes: { rel: 'x' } }] }, entityLink: links.entityLink(shape) });
+        assert.match(list, /href="\/orders\/1"/);
+    }
+});
 test('ItemList states overflow conjunction and owning URL fallback', () => {
     assert.match(
         text(raw('ItemList', { payload: { items: ['First'], totalItems: 3 } })),

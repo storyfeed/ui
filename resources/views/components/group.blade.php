@@ -21,7 +21,7 @@
                 if (! isset($seen[$image['src']])) {
                     $seen[$image['src']] = true;
                     $image['alt'] = $body['alt'] ?? $body['caption'] ?? '';
-                    $tiles[] = ['image' => $image, 'href' => $entity->url()];
+                    $tiles[] = ['image' => $image, 'href' => \Storyfeed\Ui\Support\Links::entity($entity)['href'] ?? null];
                 }
                 break;
             }
@@ -38,7 +38,7 @@
         <x-storyfeed::meta :item="$group" :headline="$headline" :timezone="$timezone" :time-renderer="$renderers['time'] ?? null">{{ $time ?? '' }}</x-storyfeed::meta>
 @if ($removed)<p class="sf-removed mt-1 text-sm text-muted-foreground">{{ $removed }}</p>
 @endif
-@if ($objectIcon)<div class="sf-object-media mt-2 flex items-start gap-3"><x-storyfeed::media :image="$objectIcon" :href="$group->object()?->isTombstone() ? null : $group->object()?->url()" :link-attributes="$group->object()?->attributes() ?? []" :renderer="$renderers['media'] ?? null" class="mt-0! size-10! shrink-0 rounded-md!" /><div class="min-w-0 flex-1">
+@if ($objectIcon)<div class="sf-object-media mt-2 flex items-start gap-3"><x-storyfeed::media :image="$objectIcon" :href="\Storyfeed\Ui\Support\Links::entity($group->object())['href'] ?? null" :link-attributes="\Storyfeed\Ui\Support\Links::entity($group->object())['attributes'] ?? []" :renderer="$renderers['media'] ?? null" class="mt-0! size-10! shrink-0 rounded-md!" /><div class="min-w-0 flex-1">
 @endif
 @if (isset($renderers['body'])){!! $renderers['body']($group) !!}
 @endif

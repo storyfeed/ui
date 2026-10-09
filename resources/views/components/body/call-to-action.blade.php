@@ -10,11 +10,11 @@
     $subject = $text($body['subject'] ?? null);
     $content = $text($body['content'] ?? null);
     $label = $text($body['action']['label'] ?? null);
-    $link = is_array($body['action']['link'] ?? null) ? $body['action']['link'] : null;
     // A link without an href goes to the body's own entity.
-    $href = $link !== null ? ($text($link['href'] ?? null) ?? $text($entity?->url())) : null;
+    $link = \Storyfeed\Ui\Support\Links::body($body['action']['link'] ?? null, $entity);
+    $href = $link['href'] ?? null;
     $attributes = $attributes->class(($subject || $content) ? 'sf-cta mt-1.5 flex min-w-0 max-w-128 flex-col items-start gap-1 rounded-lg border border-border bg-card p-3 [overflow-wrap:anywhere]' : '');
-    $linkAttributes = \Storyfeed\Ui\Support\LinkAttributes::filter(is_array($link['attributes'] ?? null) ? $link['attributes'] : []);
+    $linkAttributes = $link['attributes'] ?? [];
 @endphp
 @if ($subject || $content)
     <div {{ $attributes }}>

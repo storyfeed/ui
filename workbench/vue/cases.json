@@ -2892,5 +2892,123 @@
         }
       }
     ]
+  },
+  {
+    "name": "Entity links (core 0.17)",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "links-new",
+        "verb": "placed",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actor placed :object",
+        "actor": {
+          "type": "person",
+          "id": "ana",
+          "label": "Ana Silva",
+          "link": {
+            "href": "#ana",
+            "modal": false,
+            "attributes": {
+              "data-route": "person"
+            }
+          },
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "type": "order",
+          "id": "o1",
+          "label": "Order #1042",
+          "link": {
+            "href": "#order-1042",
+            "modal": true,
+            "attributes": {
+              "target": "_blank",
+              "onclick": "alert(1)"
+            }
+          },
+          "media": null,
+          "data": null,
+          "tombstone": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/ItemList",
+              "$v": 3,
+              "title": "Items",
+              "items": [
+                "Margherita",
+                {
+                  "label": "Tiramisu",
+                  "href": "#tiramisu",
+                  "modal": false,
+                  "attributes": {
+                    "rel": "nofollow"
+                  }
+                },
+                {
+                  "label": "This order",
+                  "href": null,
+                  "modal": false,
+                  "attributes": {
+                    "data-extra": "yes"
+                  }
+                }
+              ]
+            },
+            {
+              "$body": "Storyfeed/Body/MediaObject",
+              "$v": 4,
+              "subject": {
+                "label": "Dinner for two",
+                "href": null,
+                "modal": false,
+                "attributes": {}
+              },
+              "footnote": {
+                "label": "Receipt",
+                "href": "#receipt",
+                "modal": false,
+                "attributes": {}
+              }
+            }
+          ]
+        },
+        "glyph": "file-up"
+      },
+      {
+        "kind": "activity",
+        "id": "links-none",
+        "verb": "placed",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actor placed :object",
+        "actor": {
+          "type": "person",
+          "id": "ana",
+          "label": "Ana Silva",
+          "link": {
+            "href": "#ana",
+            "modal": false,
+            "attributes": {
+              "data-route": "person"
+            }
+          },
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "type": "order",
+          "id": "o2",
+          "label": "Order #1043",
+          "link": null,
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up"
+      }
+    ]
   }
 ]

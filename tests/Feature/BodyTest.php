@@ -20,6 +20,7 @@ use Storyfeed\FeedLink;
 use Storyfeed\FeedResource;
 use Storyfeed\Support\Entity;
 use Storyfeed\Support\FeedItem;
+use Storyfeed\Ui\Support\Links;
 use Storyfeed\Ui\Tests\Fixtures\Order;
 use Storyfeed\Ui\Tests\Fixtures\User;
 
@@ -312,6 +313,25 @@ it('draws core\'s CallToAction body through the feed', function () {
 
     expect(render_bodies(CallToAction::make(subject: 'The countdown to 1.0')->action('See the roadmap', '/roadmap')))
         ->toContain('<p>The countdown to 1.0</p>', '<a href="/roadmap">See the roadmap<span aria-hidden="true">→</span></a>');
+});
+
+it('reads links in core 0.17\'s shape and core 0.16\'s', function () {
+    $new = Entity::of(['label' => 'Order', 'link' => ['href' => '/orders/1', 'modal' => true, 'attributes' => ['target' => '_blank', 'onclick' => 'x']]]);
+    $old = Entity::of(['label' => 'Order', 'url' => '/orders/1', 'modal' => true, 'attributes' => ['target' => '_blank', 'onclick' => 'x']]);
+
+    foreach ([$new, $old] as $entity) {
+        expect(Links::entity($entity))->toBe(['href' => '/orders/1', 'modal' => true, 'attributes' => ['target' => '_blank']])
+            ->and(trim(view('storyfeed::entity', ['entity' => $entity])->render()))->toContain('target="_blank"', 'href="/orders/1"')->not->toContain('onclick')
+            // A body link without an href is the entity's own, adding its attributes; one with an href stands alone.
+            ->and(Links::body(['label' => 'Own', 'href' => null, 'modal' => false, 'attributes' => ['rel' => 'x']], $entity))
+            ->toBe(['href' => '/orders/1', 'modal' => true, 'attributes' => ['target' => '_blank', 'rel' => 'x']])
+            ->and(Links::body(['label' => 'There', 'href' => '/there'], $entity))->toBe(['href' => '/there', 'modal' => false, 'attributes' => []]);
+    }
+
+    expect(Links::entity(Entity::of(['label' => 'Gone', 'link' => null])))->toBeNull()
+        ->and(Links::entity(Entity::of(['label' => 'Gone', 'link' => ['href' => '/x'], 'tombstone' => ['formerType' => 'order']])))->toBeNull()
+        ->and(Links::body(['label' => 'Own', 'href' => null], Entity::of(['label' => 'Unlinked'])))->toBeNull()
+        ->and(Links::body('not a link', $new))->toBeNull();
 });
 
 it('renders an unordered item list with plain list semantics', function () {

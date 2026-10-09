@@ -8,8 +8,9 @@
     <div {{ $attributes->class('sf-avatar-row mt-2 flex items-center [&>*+*]:-ml-1') }}>
 @foreach ($entities as $entity)
 @php($avatar = $renderer ? $renderer($entity, 'md') : null)
-@if (filled($entity->url()) && ! $entity->isTombstone())
-        <a href="{{ $entity->url() }}" {{ (new \Illuminate\View\ComponentAttributeBag(\Storyfeed\Ui\Support\LinkAttributes::filter($entity->attributes())))->class('sf-avatar-row__link flex shrink-0 rounded-full focus-visible:outline-2 focus-visible:outline-ring') }}>@if ($avatar){!! $avatar !!}@else<x-storyfeed::avatar :entity="$entity" size="md" />@endif</a>
+@php($link = \Storyfeed\Ui\Support\Links::entity($entity))
+@if ($link !== null)
+        <a href="{{ $link['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag($link['attributes']))->class('sf-avatar-row__link flex shrink-0 rounded-full focus-visible:outline-2 focus-visible:outline-ring') }}>@if ($avatar){!! $avatar !!}@else<x-storyfeed::avatar :entity="$entity" size="md" />@endif</a>
 @elseif ($avatar){!! $avatar !!}
 @else<x-storyfeed::avatar :entity="$entity" size="md" />
 @endif

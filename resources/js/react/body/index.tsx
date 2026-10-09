@@ -10,6 +10,7 @@ import { isRich, renderProse } from '../../shared/prose';
 import { readTable, type TableCell } from '../../shared/table';
 import { pictureShape } from '../../shared/picture';
 import { readCallToAction } from '../../shared/callToAction';
+import { bodyLink, linkProps, ownLink, type ResolvedLink } from '../../shared/link';
 import FeedMedia from '../FeedMedia';
 import { useFeedOptions } from '../context';
 export { imageOf } from '../../shared/body';
@@ -17,6 +18,8 @@ export interface BodyProps {
     payload: Record<string, any>;
     entityLabel?: string | null;
     entityUrl?: string | null;
+    /** The entity's own link, which a body link without an href goes to. */
+    entityLink?: ResolvedLink | null;
     entityMedia?: Record<string, any> | null;
     imagePlacement?: 'beside' | 'below';
 }
@@ -26,18 +29,13 @@ export interface BodyProps {
  * alone. A `modal` link asks the host's `FEED_LINK` (Inertia's `Link`) to open
  * it in a modal; a plain anchor ignores it.
  */
-export function CallToAction({ payload, entityUrl }: BodyProps) {
+export function CallToAction({ payload, entityUrl, entityLink }: BodyProps) {
     const { FEED_LINK: Link = 'a' } = useFeedOptions();
-    const cta = readCallToAction(payload, entityUrl);
+    const cta = readCallToAction(payload, ownLink(entityLink, entityUrl));
     if (!cta) return null;
     const action = (className: string) =>
         cta.action && (
-            <Link
-                {...cta.action.attributes}
-                href={cta.action.href}
-                {...(Link !== 'a' && cta.action.modal ? { modal: true } : {})}
-                className={className}
-            >
+            <Link {...linkProps(cta.action, Link)} className={className}>
                 {cta.action.label}
                 <span aria-hidden="true">→</span>
             </Link>
@@ -141,12 +139,13 @@ export function Image({ payload, entityMedia }: BodyProps) {
         </figure>
     ) : null;
 }
-export function ItemList({ payload, entityUrl }: BodyProps) {
+export function ItemList({ payload, entityUrl, entityLink }: BodyProps) {
     const { FEED_LINK: Link = 'a' } = useFeedOptions();
-    const link = (value: any) =>
-        typeof value === 'string'
-            ? { label: value, href: null }
-            : { label: value.label, href: value.href ?? entityUrl ?? null };
+    // A string leads nowhere; a link goes to its href, or to the entity's own.
+    const link = (value: any) => {
+        const to = typeof value === 'string' ? null : bodyLink(value, ownLink(entityLink, entityUrl));
+        return { label: typeof value === 'string' ? value : value.label, href: to?.href ?? null, props: to ? linkProps(to, Link) : {} };
+    };
     const items = (payload.items ?? []).filter(Boolean).map(link);
     if (!items.length) return null;
     const more = payload.more ? link(payload.more) : null;
@@ -168,7 +167,7 @@ export function ItemList({ payload, entityUrl }: BodyProps) {
                         <li key={i} className="sf-list__item">
                             {item.href ? (
                                 <Link
-                                    href={item.href}
+                                    {...item.props}
                                     className="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
                                 >
                                     {item.label}
@@ -185,7 +184,7 @@ export function ItemList({ payload, entityUrl }: BodyProps) {
                     {!!remaining && <span>and {remaining} more</span>}
                     {more?.href ? (
                         <Link
-                            href={more.href}
+                            {...more.props}
                             className="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
                         >
                             {more.label}
@@ -203,7 +202,7 @@ export function ItemList({ payload, entityUrl }: BodyProps) {
  * rows in a `<tfoot>`. Cells are plain text that keeps its line breaks, a
  * number, a link, or nothing (drawn as a dash).
  */
-export function Table({ payload, entityUrl }: BodyProps) {
+export function Table({ payload, entityUrl, entityLink }: BodyProps) {
     const { FEED_LINK: Link = 'a' } = useFeedOptions();
     const table = readTable(payload);
     if (!table) return null;
@@ -211,10 +210,11 @@ export function Table({ payload, entityUrl }: BodyProps) {
         if (cell === null)
             return <span className="sf-table__empty text-muted-foreground">—</span>;
         if (typeof cell !== 'object') return cell;
-        const href = cell.href ?? entityUrl ?? null;
-        return href ? (
+        // A link cell goes to its href, or to the entity's own.
+        const to = bodyLink(cell, ownLink(entityLink, entityUrl));
+        return to ? (
             <Link
-                href={href}
+                {...linkProps(to, Link)}
                 className="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
             >
                 {cell.label}
@@ -331,6 +331,7 @@ export function KeyValue({ payload }: BodyProps) {
 export function MediaObject({
     payload,
     entityUrl,
+    entityLink,
     entityMedia,
     imagePlacement,
 }: BodyProps) {
@@ -339,12 +340,12 @@ export function MediaObject({
         FEED_MEDIA_OBJECT_PLACEMENT: defaultPlacement = 'beside',
     } = useFeedOptions();
     const placement = imagePlacement ?? defaultPlacement;
-    const link = (value: any) =>
-        typeof value === 'string'
-            ? { label: value, href: null }
-            : value
-              ? { label: value.label, href: value.href ?? entityUrl ?? null }
-              : null;
+    // A string leads nowhere; a link goes to its href, or to the entity's own.
+    const link = (value: any) => {
+        if (!value) return null;
+        const to = typeof value === 'string' ? null : bodyLink(value, ownLink(entityLink, entityUrl));
+        return { label: typeof value === 'string' ? value : value.label, href: to?.href ?? null, props: to ? linkProps(to, Link) : {} };
+    };
     const subject = link(payload.subject);
     const listed =
         'files' in payload
@@ -369,7 +370,7 @@ export function MediaObject({
             <p className="sf-media-object__footnote mt-0.5 mb-0 text-sm leading-[1.6] text-muted-foreground">
                 {footnote.href ? (
                     <Link
-                        href={footnote.href}
+                        {...footnote.props}
                         className="font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring"
                     >
                         {footnote.label}
@@ -398,7 +399,7 @@ export function MediaObject({
                 {subject?.label && (
                     <p className="sf-media-object__subject m-0 text-base font-medium text-foreground">
                         {subject.href ? (
-                            <Link href={subject.href}>{subject.label}</Link>
+                            <Link {...subject.props}>{subject.label}</Link>
                         ) : (
                             subject.label
                         )}
@@ -432,7 +433,7 @@ export function MediaObject({
                 {footnote && (
                     <p className="sf-media-object__footnote mt-0.5 mb-0 text-sm leading-[1.6] text-muted-foreground">
                         {footnote.href ? (
-                            <Link href={footnote.href}>{footnote.label}</Link>
+                            <Link {...footnote.props}>{footnote.label}</Link>
                         ) : (
                             footnote.label
                         )}

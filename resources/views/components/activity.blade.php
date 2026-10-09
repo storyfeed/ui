@@ -16,7 +16,7 @@
         <x-storyfeed::meta :item="$activity" :headline="$headline" :timezone="$timezone" :time-renderer="$renderers['time'] ?? null">{{ $time ?? '' }}</x-storyfeed::meta>
 @if ($removed)<p class="sf-removed mt-1 text-sm text-muted-foreground">{{ $removed }}</p>
 @endif
-@if ($objectIcon)<div class="sf-object-media mt-2 flex items-start gap-3"><x-storyfeed::media :image="$objectIcon" :href="$activity->object()?->isTombstone() ? null : $activity->object()?->url()" :link-attributes="$activity->object()?->attributes() ?? []" :renderer="$renderers['media'] ?? null" class="mt-0! size-10! shrink-0 rounded-md!" /><div class="min-w-0 flex-1">
+@if ($objectIcon)<div class="sf-object-media mt-2 flex items-start gap-3"><x-storyfeed::media :image="$objectIcon" :href="\Storyfeed\Ui\Support\Links::entity($activity->object())['href'] ?? null" :link-attributes="\Storyfeed\Ui\Support\Links::entity($activity->object())['attributes'] ?? []" :renderer="$renderers['media'] ?? null" class="mt-0! size-10! shrink-0 rounded-md!" /><div class="min-w-0 flex-1">
 @endif
 @if (isset($renderers['body'])){!! $renderers['body']($activity) !!}
 @endif

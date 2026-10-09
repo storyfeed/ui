@@ -1,6 +1,6 @@
 import EntityAvatar from './EntityAvatar';
 import { useFeedOptions } from './context';
-import { linkAttributes } from '../shared/linkAttributes';
+import { entityLink, linkProps } from '../shared/link';
 import type { FeedEntity } from '../shared/types';
 /**
  * A group's featured entities, as a row of their avatars. Each avatar links to
@@ -17,20 +17,20 @@ export default function FeedAvatarRow({
     const { FEED_LINK: Link = 'a' } = useFeedOptions();
     return (
         <div className="sf-avatar-row mt-2 flex items-center [&>*+*]:-ml-1">
-            {entities.map((entity, i) =>
-                entity.url && !entity.tombstone ? (
+            {entities.map((entity, i) => {
+                const link = entityLink(entity);
+                return link ? (
                     <Link
                         key={i}
-                        {...linkAttributes(entity.attributes)}
-                        href={entity.url}
+                        {...linkProps(link, Link)}
                         className="sf-avatar-row__link flex shrink-0 rounded-full focus-visible:outline-2 focus-visible:outline-ring"
                     >
                         <EntityAvatar entity={entity} />
                     </Link>
                 ) : (
                     <EntityAvatar key={i} entity={entity} />
-                ),
-            )}
+                );
+            })}
             {!!overflow && (
                 <span
                     role="img"

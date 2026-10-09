@@ -2,6 +2,7 @@
 import { computed, inject } from 'vue'
 import { FEED_LINK } from '../keys'
 import { readCallToAction } from '../../shared/callToAction'
+import { linkProps, ownLink, type ResolvedLink } from '../../shared/link'
 
 /**
  * `Storyfeed/Body/CallToAction` — an optional heading and a sentence or two,
@@ -9,13 +10,11 @@ import { readCallToAction } from '../../shared/callToAction'
  * alone. A `modal` link asks the host's link component (Inertia's `Link`) to
  * open it in a modal; a plain anchor ignores it.
  */
-const props = defineProps<{ payload: Record<string, any>; entityUrl?: string | null }>()
+const props = defineProps<{ payload: Record<string, any>; entityUrl?: string | null; entityLink?: ResolvedLink | null }>()
 
 const linkComponent = inject(FEED_LINK, 'a')
-const cta = computed(() => readCallToAction(props.payload, props.entityUrl))
-const actionProps = computed(() => cta.value?.action
-    ? { ...cta.value.action.attributes, href: cta.value.action.href, ...(linkComponent !== 'a' && cta.value.action.modal ? { modal: true } : {}) }
-    : {})
+const cta = computed(() => readCallToAction(props.payload, ownLink(props.entityLink, props.entityUrl)))
+const actionProps = computed(() => cta.value?.action ? linkProps(cta.value.action, linkComponent) : {})
 </script>
 
 <template>

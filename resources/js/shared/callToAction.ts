@@ -1,4 +1,4 @@
-import { linkAttributes } from './linkAttributes';
+import { bodyLink, type ResolvedLink } from './link';
 
 /**
  * Read a `Storyfeed/Body/CallToAction` as core's `CallToAction::upgrade()`
@@ -9,21 +9,18 @@ import { linkAttributes } from './linkAttributes';
  */
 export function readCallToAction(
     payload: Record<string, any>,
-    entityUrl?: string | null,
+    entity?: ResolvedLink | null,
 ): {
     subject: string | null;
     content: string | null;
-    action: { label: string; href: string; modal: boolean; attributes: Record<string, string | number | boolean> } | null;
+    action: (ResolvedLink & { label: string }) | null;
 } | null {
     const text = (value: unknown) => (typeof value === 'string' && value.trim() !== '' ? value : null);
     const subject = text(payload.subject);
     const content = text(payload.content);
     const label = text(payload.action?.label);
-    const link = payload.action?.link;
-    const href = link && typeof link === 'object' ? (text(link.href) ?? text(entityUrl)) : null;
-    const action = label && href
-        ? { label, href, modal: link.modal === true, attributes: linkAttributes(link.attributes && typeof link.attributes === 'object' ? link.attributes : {}) }
-        : null;
+    const link = bodyLink(payload.action?.link, entity);
+    const action = label && link ? { ...link, label } : null;
 
     return subject || content || action ? { subject, content, action } : null;
 }

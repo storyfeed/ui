@@ -2,7 +2,7 @@
 import { inject } from 'vue'
 import EntityAvatar from './EntityAvatar.vue'
 import { FEED_LINK } from './keys'
-import { linkAttributes } from '../shared/linkAttributes'
+import { entityLink, linkProps } from '../shared/link'
 import type { FeedEntity } from '../shared/types'
 
 /**
@@ -20,9 +20,8 @@ const linkComponent = inject(FEED_LINK, 'a')
         <template v-for="(entity, i) in entities" :key="i">
             <component
                 :is="linkComponent"
-                v-if="entity.url && !entity.tombstone"
-                v-bind="linkAttributes(entity.attributes)"
-                :href="entity.url"
+                v-if="entityLink(entity)"
+                v-bind="linkProps(entityLink(entity)!, linkComponent)"
                 class="sf-avatar-row__link flex shrink-0 rounded-full focus-visible:outline-2 focus-visible:outline-ring"
             ><EntityAvatar :entity="entity" /></component>
             <EntityAvatar v-else :entity="entity" />

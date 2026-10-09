@@ -9,6 +9,7 @@ import FeedItem from './FeedItem.vue';
 import FeedMediaStrip from './FeedMediaStrip.vue';
 import FeedMeta from './FeedMeta.vue';
 import FeedMedia from './FeedMedia.vue';
+import { entityLink } from '../shared/link';
 import { avatarRow, featured } from '../shared/avatarRow';
 import { rail as parseRail, railFor } from '../shared/rail';
 import type { Rail, RailName } from '../shared/rail';
@@ -95,7 +96,7 @@ const strip = computed(() => {
             const image = imageOf(entity);
             if (!image || seen.has(image.src)) return [];
             seen.add(image.src);
-            return [{ image, href: entity.url ?? null }];
+            return [{ image, href: entityLink(entity)?.href ?? null }];
         })
         .slice(0, 3);
 
@@ -211,8 +212,8 @@ const hiddenBeyondChildren = computed(
                 <FeedMedia
                     v-if="icon"
                     :image="icon"
-                    :href="item.object?.tombstone ? null : item.object?.url"
-                    :link-attributes="item.object?.attributes"
+                    :href="entityLink(item.object)?.href ?? null"
+                    :link-attributes="entityLink(item.object)?.attributes"
                     class="mt-0! size-10! shrink-0 rounded-md!"
                 />
                 <div :class="icon ? 'min-w-0 flex-1' : 'contents'">

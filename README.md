@@ -406,6 +406,14 @@ null falling back to the MIME map and then the supplied MIME string. The
 standalone file component accepts `labeller`; `<x-storyfeed::body>` accepts
 `file-labeller`. No extension-based guessing or payload changes occur.
 
+**Links.** Core 0.17 gives an entity one `link`, `{href, modal, attributes}`,
+in place of `url`, `modal` and `attributes`, and gives links inside bodies the
+same shape. All three kits read both shapes, so they work with core 0.13 to
+0.17. A body link without an `href` goes to its entity's own link, and its
+`modal` and `attributes` add to the entity's. Attributes never include `href`
+or event handlers. `modal` reaches a host link component (Inertia's `Link`) in
+Vue and React; Blade draws plain links.
+
 Feeds, items and groups accept `child-rail="activity-only"` independently of
 `rail="actor"`, so expanded members can use glyph discs while their parent
 shows an actor and activity badge. Without a child override, children inherit

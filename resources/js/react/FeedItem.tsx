@@ -8,6 +8,7 @@ import FeedMedia from './FeedMedia';
 import FeedMediaStrip from './FeedMediaStrip';
 import Rail from './Rail';
 import { useFeedOptions } from './context';
+import { entityLink } from '../shared/link';
 import { useRelativeTime } from './useRelativeTime';
 export interface FeedRenderProps {
     objectIcon?: (node: FeedNode) => Record<string, any> | null;
@@ -60,6 +61,7 @@ export default function FeedItem({
                   headline: item.headline ?? null,
               };
     const object = item.object;
+    const link = entityLink(object);
     const icon = objectIcon?.(item);
     const forms = [
         ...formsIn(item.data, 4, bodies),
@@ -67,8 +69,8 @@ export default function FeedItem({
             (found) => ({
                 ...found,
                 entityLabel: object?.label,
-                // Core 0.17 moves an entity's URL to `link.href`.
-                entityUrl: object?.url ?? object?.link?.href,
+                entityUrl: link?.href,
+                entityLink: link,
                 entityMedia: object?.media,
             }),
         ),
@@ -77,7 +79,7 @@ export default function FeedItem({
     const tiles = sample
         .map((entity: any) => ({
             image: imageOf(entity),
-            href: entity.url ?? null,
+            href: entityLink(entity)?.href ?? null,
         }))
         .filter((tile: any) => tile.image !== null);
     return (
@@ -115,8 +117,8 @@ export default function FeedItem({
                     {icon && (
                         <FeedMedia
                             image={icon}
-                            href={object?.tombstone ? null : object?.url}
-                            linkAttributes={object?.attributes}
+                            href={link?.href ?? null}
+                            linkAttributes={link?.attributes}
                             className="mt-0! size-10! shrink-0 rounded-md!"
                         />
                     )}

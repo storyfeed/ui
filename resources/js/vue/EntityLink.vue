@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue';
 import { FEED_LINK } from './keys';
+import { entityLink, linkProps } from '../shared/link';
 import type { FeedEntity } from '../shared/types';
 
 const props = defineProps<{
@@ -20,6 +21,9 @@ const article = (noun: string) => (/^[aeiou]/i.test(noun) ? 'an' : 'a');
  * own choice, as it would be any renderer's.
  */
 const tombstone = computed(() => props.entity?.tombstone ?? null);
+
+// Core 0.17's `link`, or 0.16's `url`, `modal` and `attributes`.
+const link = computed(() => entityLink(props.entity));
 
 // Degraded entities (no snapshot yet) have a null label; render a neutral
 // placeholder derived from the type so the sentence still reads.
@@ -42,10 +46,8 @@ const label = computed(() => {
 <template>
     <component
         :is="linkComponent"
-        v-if="entity?.url && !tombstone"
-        :href="entity.url"
-        :modal="entity.modal || undefined"
-        v-bind="entity.attributes"
+        v-if="link"
+        v-bind="linkProps(link, linkComponent)"
         class="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
     >
         {{ label }}

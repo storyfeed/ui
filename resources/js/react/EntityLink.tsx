@@ -1,5 +1,6 @@
 import type { FeedEntity } from '../shared/types';
 import { useFeedOptions } from './context';
+import { entityLink, linkProps } from '../shared/link';
 export default function EntityLink({
     entity,
     fallback,
@@ -19,15 +20,12 @@ export default function EntityLink({
           : (entity.label ?? 'Something');
     const classes =
         'sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline';
-    if (entity?.url && !tombstone) {
+    // Core 0.17's `link`, or 0.16's `url`, `modal` and `attributes`.
+    const link = entityLink(entity);
+    if (link) {
         // `modal` belongs to a host router component, rather than the native anchor.
         return (
-            <Link
-                href={entity.url}
-                {...(Link !== 'a' && entity.modal ? { modal: true } : {})}
-                {...entity.attributes}
-                className={classes}
-            >
+            <Link {...linkProps(link, Link)} className={classes}>
                 {label}
             </Link>
         );

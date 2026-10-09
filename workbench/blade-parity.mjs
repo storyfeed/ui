@@ -179,6 +179,19 @@ try {
                     // Kits differ only in whitespace between tags, which renders as nothing.
                     assert.deepEqual(texts.map(t => t.replace(/\s+/g, '')), expected.map(t => t.replace(/\s+/g, '')), `${renderers[i]}: ${section}`);
                 }
+                // Core 0.17's `link` shape: entity links keep their safe attributes; an href-less body link takes the entity's and adds its own.
+                if (state === 'collapsed' && text === 'default') for (let i = 0; i < frames.length; i++) {
+                    const links = await frames[i].locator('.example:has(>h2:text-is("Entity links (core 0.17)")) a').evaluateAll(links => links.map(a => [a.textContent.trim(), a.getAttribute('href'), ...['target', 'rel', 'data-route', 'data-extra', 'onclick'].map(name => a.getAttribute(name))]));
+                    assert.deepEqual(links, [
+                        ['Ana Silva', '#ana', null, null, 'person', null, null],
+                        ['Order #1042', '#order-1042', '_blank', null, null, null, null],
+                        ['Tiramisu', '#tiramisu', null, 'nofollow', null, null, null],
+                        ['This order', '#order-1042', '_blank', null, null, 'yes', null],
+                        ['Dinner for two', '#order-1042', '_blank', null, null, null, null],
+                        ['Receipt', '#receipt', null, null, null, null, null],
+                        ['Ana Silva', '#ana', null, null, 'person', null, null],
+                    ], `${renderers[i]}: core 0.17 links`);
+                }
                 // A call to action's button keeps its link and safe attributes; an href-less one goes to its entity.
                 if (state === 'collapsed' && text === 'default') for (let i = 0; i < frames.length; i++) {
                     const actions = await frames[i].locator('.example:has(>h2:text-is("Call to action")) .sf-cta__action').evaluateAll(links => links.map(a => [a.getAttribute('href'), a.getAttribute('target'), a.hasAttribute('onclick')]));

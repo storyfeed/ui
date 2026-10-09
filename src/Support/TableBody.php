@@ -42,7 +42,7 @@ final class TableBody
     {
         return array_map(fn (mixed $cell): mixed => match (true) {
             $cell === null, is_string($cell), is_int($cell), is_float($cell) => $cell,
-            is_array($cell) && is_string($cell['label'] ?? null) => ['label' => $cell['label'], 'href' => is_string($cell['href'] ?? null) ? $cell['href'] : null],
+            is_array($cell) && is_string($cell['label'] ?? null) => [...$cell, 'href' => is_string($cell['href'] ?? null) ? $cell['href'] : null],
             default => null,
         }, array_values($row));
     }

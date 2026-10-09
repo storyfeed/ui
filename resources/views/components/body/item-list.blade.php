@@ -22,8 +22,9 @@
             <{{ $tag }} class="sf-list">
 @foreach ($items as $item)
                     <li class="sf-list__item">
-@if (is_array($item) && filled($item['href'] ?? $entity?->url()))
-                            <a class="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline" href="{{ $item['href'] ?? $entity?->url() }}">{{ $item['label'] }}</a>
+@php($link = \Storyfeed\Ui\Support\Links::body($item, $entity))
+@if ($link !== null)
+                            <a href="{{ $link['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag($link['attributes']))->class('sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline') }}>{{ $item['label'] }}</a>
 @else
                             {{ is_string($item) ? $item : $item['label'] }}
 @endif
@@ -37,8 +38,9 @@
 @if ($remaining > 0)
                     <span>{{ __('and :count more', ['count' => $remaining]) }}</span>
 @endif
-@if (is_array($more) && filled($more['href'] ?? $entity?->url()))
-                    <a class="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline" href="{{ $more['href'] ?? $entity?->url() }}">{{ $more['label'] ?? $more['href'] }}</a>
+@php($moreLink = \Storyfeed\Ui\Support\Links::body($more, $entity))
+@if ($moreLink !== null)
+                    <a href="{{ $moreLink['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag($moreLink['attributes']))->class('sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline') }}>{{ $more['label'] ?? $moreLink['href'] }}</a>
 @elseif ($more !== null)<span>{{ is_array($more) ? ($more['label'] ?? '') : $more }}</span>
 @endif
             </figcaption>

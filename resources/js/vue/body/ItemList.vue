@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue'
 import { FEED_LINK } from '../keys'
+import { bodyLink, linkProps, ownLink, type ResolvedLink } from '../../shared/link'
 
 /**
  * `Storyfeed/Body/ItemList` — several things, each a name and maybe a link.
@@ -17,13 +18,15 @@ import { FEED_LINK } from '../keys'
 const props = defineProps<{
     payload: Record<string, any>
     entityUrl?: string | null
+    entityLink?: ResolvedLink | null
 }>()
 
 const linkComponent = inject(FEED_LINK, 'a')
 
+// A string leads nowhere; a link goes to its href, or to the entity's own.
 const link = (value: any) => typeof value === 'string'
-    ? { label: value, href: null }
-    : { label: value.label, href: value.href ?? props.entityUrl ?? null }
+    ? { label: value, link: null }
+    : { label: value.label, link: bodyLink(value, ownLink(props.entityLink, props.entityUrl)) }
 const items = computed(() => (props.payload.items ?? []).filter(Boolean).map(link))
 const more = computed(() => props.payload.more ? link(props.payload.more) : null)
 const remaining = computed(() => {
@@ -41,8 +44,8 @@ const remaining = computed(() => {
                 <li v-for="(item, index) in items" :key="index" class="sf-list__item">
                     <component
                         :is="linkComponent"
-                        v-if="item.href"
-                        :href="item.href"
+                        v-if="item.link"
+                        v-bind="linkProps(item.link, linkComponent)"
                         class="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
                     >{{ item.label }}</component>
                     <template v-else>{{ item.label }}</template>
@@ -54,8 +57,8 @@ const remaining = computed(() => {
             <span v-if="remaining">and {{ remaining }} more</span>
             <component
                 :is="linkComponent"
-                v-if="more?.href"
-                :href="more.href"
+                v-if="more?.link"
+                v-bind="linkProps(more.link, linkComponent)"
                 class="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
             >{{ more.label }}</component>
             <span v-else-if="more">{{ more.label }}</span>

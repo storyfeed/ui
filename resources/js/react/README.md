@@ -142,7 +142,7 @@ the same sanitizer as Vue; plain/verbatim source is escaped.
 
 Object icon frames are opt-in: pass `objectIcon(node)` to `FeedStream`,
 `FeedNodeView`, `FeedItem` or `FeedGroup`, returning an image or null. The icon
-links to `node.object.url` through `FEED_LINK`, with scalar entity attributes
+links to the object's link (`node.object.link.href`, or `url` before core 0.17) through `FEED_LINK`, with scalar entity attributes
 except `href`, event handlers and invalid names. Missing URLs and tombstones
 produce unlinked images. `FeedProvider` accepts `FEED_MEDIA`, a component
 receiving `image`, `href`, `linkAttributes` and `className`, for a host media

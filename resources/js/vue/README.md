@@ -115,7 +115,7 @@ historical `$v` forms continue to render.
 
 Object icon frames are opt-in: pass `objectIcon(node)` to `FeedStream`,
 `FeedNode`, `FeedItem` or `FeedGroup`, returning an image or null. The icon links
-to `node.object.url` through `FEED_LINK` and forwards scalar entity attributes,
+to the object's link (`node.object.link.href`, or `url` before core 0.17) through `FEED_LINK` and forwards scalar entity attributes,
 excluding `href`, event handlers and invalid names. A missing URL or tombstone
 renders an unlinked image. Provide `FEED_MEDIA` with a component receiving
 `image`, `href`, `linkAttributes` and the kit classes to render media yourself

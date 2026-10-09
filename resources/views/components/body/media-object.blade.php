@@ -10,10 +10,17 @@
 
 @php
     $body = \Storyfeed\Body\MediaObject::upgrade($body, is_int($body['$v'] ?? null) ? $body['$v'] : 1);
-    $link = fn ($value): ?array => match (true) {
-        is_string($value) && $value !== '' => ['label' => $value, 'href' => null],
-        is_array($value) && filled($value['label'] ?? $value['href'] ?? null) => ['label' => $value['label'] ?? $value['href'], 'href' => $value['href'] ?? $entity?->url()],
-        default => null,
+    // A string leads nowhere; a link goes to its href, or to the entity's own.
+    $link = function (mixed $value) use ($entity): ?array {
+        if (is_string($value) && $value !== '') {
+            return ['label' => $value, 'href' => null, 'attributes' => []];
+        }
+        if (! is_array($value) || ! filled($value['label'] ?? $value['href'] ?? null)) {
+            return null;
+        }
+        $to = \Storyfeed\Ui\Support\Links::body($value, $entity);
+
+        return ['label' => $value['label'] ?? $value['href'], 'href' => $to['href'] ?? null, 'attributes' => $to['attributes'] ?? []];
     };
 
     $subject = $link($body['subject'] ?? null);
@@ -43,7 +50,7 @@
     <div class="sf-media-object__body flex min-w-0 flex-[1_1_--spacing(48)] flex-col gap-1 [overflow-wrap:anywhere]">
 @if ($subject)
             <p class="sf-media-object__subject m-0 text-base font-medium text-foreground">
-@if ($subject['href'])<a class="font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring" href="{{ $subject['href'] }}">{{ $subject['label'] }}</a>
+@if ($subject['href'])<a href="{{ $subject['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag($subject['attributes']))->class('font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring') }}>{{ $subject['label'] }}</a>
 @else{{ $subject['label'] }}
 @endif
             </p>
@@ -68,7 +75,7 @@
 
 @if ($footnote)
             <p class="sf-media-object__footnote mt-0.5 mb-0 text-sm leading-[1.6] text-muted-foreground">
-@if ($footnote['href'])<a class="font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring" href="{{ $footnote['href'] }}">{{ $footnote['label'] }}</a>
+@if ($footnote['href'])<a href="{{ $footnote['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag($footnote['attributes']))->class('font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring') }}>{{ $footnote['label'] }}</a>
 @else{{ $footnote['label'] }}
 @endif
             </p>
@@ -77,7 +84,7 @@
 </div>
 @elseif ($footnote)
 <p {{ $attributes->class('sf-media-object__footnote mt-0.5 mb-0 text-sm leading-[1.6] text-muted-foreground') }}>
-@if ($footnote['href'])<a class="font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring" href="{{ $footnote['href'] }}">{{ $footnote['label'] }}</a>
+@if ($footnote['href'])<a href="{{ $footnote['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag($footnote['attributes']))->class('font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring') }}>{{ $footnote['label'] }}</a>
 @else{{ $footnote['label'] }}
 @endif
 </p>

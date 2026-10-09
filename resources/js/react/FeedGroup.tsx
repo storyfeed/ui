@@ -1,6 +1,7 @@
 import type { GroupNode } from '../shared/types';
 import { imageOf } from '../shared/body';
 import { avatarRow, featured } from '../shared/avatarRow';
+import { entityLink } from '../shared/link';
 import FeedAvatarRow from './FeedAvatarRow';
 import FeedItem, { useNodeTime } from './FeedItem';
 import type { NodeProps } from './FeedItem';
@@ -38,7 +39,7 @@ export default function FeedGroup({
             const image = imageOf(entity);
             if (!image || seen.has(image.src)) return [];
             seen.add(image.src);
-            return [{ image, href: entity.url ?? null }];
+            return [{ image, href: entityLink(entity)?.href ?? null }];
         })
         .slice(0, 3);
     const row = tiles.length || (!interactive && open) ? null : avatarRow(item);
@@ -96,10 +97,8 @@ export default function FeedGroup({
                     {icon && (
                         <FeedMedia
                             image={icon}
-                            href={
-                                item.object?.tombstone ? null : item.object?.url
-                            }
-                            linkAttributes={item.object?.attributes}
+                            href={entityLink(item.object)?.href ?? null}
+                            linkAttributes={entityLink(item.object)?.attributes}
                             className="mt-0! size-10! shrink-0 rounded-md!"
                         />
                     )}

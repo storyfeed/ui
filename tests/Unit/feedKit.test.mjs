@@ -659,6 +659,31 @@ test('a call to action draws one button; modal reaches a host link, attributes a
     assert.match(await draw({ action: action('/next') }, HostLink), /data-modal="false"/);
 });
 
+test('links read core 0.17\'s `link` and core 0.16\'s keys; modal reaches a host link only', async () => {
+    const { FEED_LINK } = await server.ssrLoadModule('/resources/js/vue/keys.ts');
+    const { entityLink, bodyLink } = await server.ssrLoadModule('/resources/js/shared/link.ts');
+    const fresh = { ...entity, url: undefined, modal: undefined, link: { href: '/orders/1', modal: true, attributes: { target: '_blank', onclick: 'x' } } };
+    const legacy = { ...entity, url: '/orders/1', modal: true, attributes: { target: '_blank', onclick: 'x' } };
+    for (const shape of [fresh, legacy]) {
+        const own = entityLink(shape);
+        assert.deepEqual(own, { href: '/orders/1', modal: true, attributes: { target: '_blank' } });
+        assert.deepEqual(bodyLink({ label: 'Own', href: null, attributes: { rel: 'x' } }, own), { href: '/orders/1', modal: true, attributes: { target: '_blank', rel: 'x' } });
+        assert.deepEqual(bodyLink({ label: 'There', href: '/there' }, own), { href: '/there', modal: false, attributes: {} });
+    }
+    assert.equal(entityLink({ ...entity, url: undefined, link: null }), null);
+    assert.equal(entityLink({ ...fresh, tombstone: { formerType: 'order' } }), null);
+    const { default: EntityLink } = await server.ssrLoadModule('/resources/js/vue/EntityLink.vue');
+    const draw = async (link) => {
+        const app = createSSRApp({ render: () => h(EntityLink, { entity: fresh }) });
+        if (link) app.provide(FEED_LINK, link);
+        return renderToString(app);
+    };
+    const plain = await draw();
+    assert.match(plain, /<a target="_blank" href="\/orders\/1"/);
+    assert.doesNotMatch(plain, /modal|onclick/);
+    assert.match(await draw({ props: ['href', 'modal'], render() { return h('a', { href: this.href, 'data-modal': String(this.modal) }, this.$slots.default?.()); } }), /data-modal="true"/);
+});
+
 test('ItemList states the conjunction before overflow', async () => {
     const html = await render('/resources/js/vue/body/ItemList.vue', { payload: { items: ['First'], totalItems: 3 } });
     assert.match(textOf(html), /Firstand 2 more/);
