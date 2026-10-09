@@ -6,7 +6,7 @@ Laravel React starter kit and Inertia 2/3's React adapter. Install with:
 ```sh
 php artisan storyfeed:ui react
 npm install react@^19 react-dom@^19 lucide-react micromark micromark-extension-gfm-autolink-literal micromark-extension-gfm-strikethrough micromark-extension-gfm-table micromark-extension-gfm-task-list-item sanitize-html
-npm install -D @types/react @types/react-dom @types/sanitize-html
+npm install -D @types/react @types/react-dom @types/sanitize-html @tailwindcss/typography
 ```
 
 The default destination is `resources/js/components/storyfeed`. `--path` changes
@@ -16,16 +16,18 @@ Commit the copied files. Rerunning adds missing files, skips identical files, an
 keeps and reports differing files, including shared translations. Use `--diff`
 to review changes and `--force` to replace your edits.
 
-If needed, add this to `resources/css/app.css`:
+Register the Typography plugin and, if needed, the kit in `resources/css/app.css`:
 
 ```css
+@plugin "@tailwindcss/typography";
 @source "../js/components/storyfeed";
 ```
 
 Use Laravel starter-kit tokens: `background`, `foreground`, `card`, `muted`,
 `muted-foreground`, `primary`, `primary-foreground`, `border`, and `ring`.
-The kit adds no stylesheet and needs no Typography plugin. Dark mode follows
-your starter-kit tokens. The `sf-*` classes remain semantic hooks.
+The kit adds no stylesheet. Rich `Prose` and `ItemList` render inside
+Typography's `prose`, coloured from the same tokens. Dark mode follows your
+starter-kit tokens. The `sf-*` classes remain semantic hooks.
 
 ## Inertia example
 

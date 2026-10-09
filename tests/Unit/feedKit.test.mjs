@@ -509,6 +509,17 @@ test('host file labeller overrides MIME labels, null falls back, and its text is
     assert.match(await renderLabel(null), /design.fig PDF/);
 });
 
+test('rich prose and ItemList render inside Typography prose at the feed size', async () => {
+    for (const [path, payload] of [
+        ['/resources/js/vue/body/Prose.vue', { content: '- One', mediaType: 'text/markdown' }],
+        ['/resources/js/vue/body/ItemList.vue', { items: ['One'] }],
+    ]) {
+        const html = await renderRaw(path, { payload });
+        assert.match(html, /class="[^"]*\bprose max-w-none text-\[length:inherit\][^"]*"/);
+        assert.doesNotMatch(html, /\bprose-(sm|base|lg|xl|2xl)\b/);
+    }
+});
+
 test('ItemList states the conjunction before overflow', async () => {
     const html = await render('/resources/js/vue/body/ItemList.vue', { payload: { items: ['First'], totalItems: 3 } });
     assert.match(textOf(html), /Firstand 2 more/);

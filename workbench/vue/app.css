@@ -1,4 +1,5 @@
 @import "tailwindcss" source(none);
+@plugin "@tailwindcss/typography";
 @source "../../resources/js/vue";
 @source "./*.vue";
 @custom-variant dark (&:where(.dark, .dark *));

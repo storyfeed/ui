@@ -7,6 +7,14 @@ Install its dependencies:
 
 ```bash
 npm install lucide-vue-next micromark micromark-extension-gfm-autolink-literal micromark-extension-gfm-strikethrough micromark-extension-gfm-table micromark-extension-gfm-task-list-item sanitize-html
+npm install -D @tailwindcss/typography
+```
+
+Rich `Prose` and `ItemList` render inside Typography's `prose`, so register the
+plugin in `resources/css/app.css`:
+
+```css
+@plugin "@tailwindcss/typography";
 ```
 
 The copy command includes the framework-free core in a self-contained `shared/` directory.

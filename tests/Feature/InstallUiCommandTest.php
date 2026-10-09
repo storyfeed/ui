@@ -19,6 +19,7 @@ function kit_source(): string
 test('vue command copies every component and supporting file and explains setup', function () {
     $this->artisan('storyfeed:ui', ['kit' => 'vue', '--path' => $this->kitPath])
         ->expectsOutputToContain('differs: 0')
+        ->expectsOutputToContain('@plugin "@tailwindcss/typography";')
         ->expectsOutputToContain('@source "')
         ->expectsOutputToContain('starter-kit colour tokens')
         ->assertSuccessful();

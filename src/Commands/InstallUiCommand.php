@@ -80,12 +80,13 @@ class InstallUiCommand extends Command
         // Tailwind resolves @source relative to the CSS file, not the app root.
         $cssDirectory = resource_path('css');
         $cssSource = $this->relativePath($cssDirectory, $destination);
-        $this->line('In resources/css/app.css, add once if this path is not already scanned:');
+        $this->line('In resources/css/app.css, register the Typography plugin and add the kit once if this path is not already scanned:');
+        $this->line('@plugin "@tailwindcss/typography";');
         $this->line('@source "'.str_replace(['\\', '"'], ['/', '\\"'], $cssSource).'";');
         $this->line('Components expect the Laravel '.($kit === 'vue' ? 'Vue' : 'React').' starter-kit colour tokens and Tailwind v4.');
         $this->line($kit === 'vue'
-            ? 'Install Vue 3, lucide-vue-next, micromark with its GFM extensions and sanitize-html in your app.'
-            : 'Install React 19, react-dom, lucide-react, micromark with its GFM extensions and sanitize-html in your app.');
+            ? 'Install Vue 3, lucide-vue-next, micromark with its GFM extensions, sanitize-html and @tailwindcss/typography in your app.'
+            : 'Install React 19, react-dom, lucide-react, micromark with its GFM extensions, sanitize-html and @tailwindcss/typography in your app.');
         $this->line('Copied files belong to your app. Edit freely; rerun with --diff to review updates.');
 
         return self::SUCCESS;

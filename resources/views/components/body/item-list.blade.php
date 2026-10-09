@@ -18,17 +18,19 @@
             <figcaption class="sf-list__title mb-1 text-sm text-foreground">{{ $body['title'] }}</figcaption>
 @endif
 
-        <{{ $tag }} @class(['sf-list m-0 pl-4.5 text-base leading-[1.6]', 'list-decimal' => $tag === 'ol', 'list-disc' => $tag === 'ul'])>
+        <div class="sf-list__prose prose max-w-none text-[length:inherit] [overflow-wrap:anywhere] [--tw-prose-body:var(--color-muted-foreground)] [--tw-prose-headings:var(--color-foreground)] [--tw-prose-lead:var(--color-muted-foreground)] [--tw-prose-links:var(--color-primary)] [--tw-prose-bold:var(--color-foreground)] [--tw-prose-counters:var(--color-muted-foreground)] [--tw-prose-bullets:var(--color-muted-foreground)] [--tw-prose-hr:var(--color-border)] [--tw-prose-quotes:var(--color-foreground)] [--tw-prose-quote-borders:var(--color-border)] [--tw-prose-captions:var(--color-muted-foreground)] [--tw-prose-kbd:var(--color-foreground)] [--tw-prose-code:var(--color-foreground)] [--tw-prose-pre-code:var(--color-foreground)] [--tw-prose-pre-bg:var(--color-border)] [--tw-prose-th-borders:var(--color-border)] [--tw-prose-td-borders:var(--color-border)]">
+            <{{ $tag }} class="sf-list">
 @foreach ($items as $item)
-                <li class="sf-list__item m-0">
+                    <li class="sf-list__item">
 @if (is_array($item) && filled($item['href'] ?? $entity?->url()))
-                        <a class="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline" href="{{ $item['href'] ?? $entity?->url() }}">{{ $item['label'] }}</a>
+                            <a class="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline" href="{{ $item['href'] ?? $entity?->url() }}">{{ $item['label'] }}</a>
 @else
-                        {{ is_string($item) ? $item : $item['label'] }}
+                            {{ is_string($item) ? $item : $item['label'] }}
 @endif
-                </li>
+                    </li>
 @endforeach
-        </{{ $tag }}>
+            </{{ $tag }}>
+        </div>
 
 @if ($remaining > 0 || $more !== null)
             <figcaption class="sf-list__more mt-1 flex gap-2 text-sm text-muted-foreground">

@@ -26,16 +26,20 @@ const browser = await chromium.launch();
 const report = [];
 try {
     for (const renderers of [['vue', 'blade', 'react']]) {
-        for (const width of [1512, 500, 1440, 390]) for (const theme of ['light', 'dark']) {
+        // Text sizes: the default, the browser's text at 200%, and the feed's own `--sf-font-size`.
+        for (const width of [1512, 500, 1440, 390]) for (const theme of ['light', 'dark']) for (const text of [1512, 390].includes(width) ? ['default', '200%', '1.25rem'] : ['default']) {
+            const suffix = text === 'default' ? '' : `-text-${text.replace('%', 'pct')}`;
             const page = await browser.newPage({ viewport: { width: width * renderers.length, height: 1000 }, timezoneId: 'UTC' });
             const errors = []; page.on('pageerror', e => errors.push(e.message));
             await page.goto(`http://127.0.0.1:${server.address().port}/?width=${width}&theme=${theme}&renderers=${renderers.join(',')}`);
             const frames = page.frames().slice(1);
             await Promise.all(frames.map(async frame => {
                 await frame.locator('.sf-feed').first().waitFor();
-                await frame.evaluate(theme => {
+                await frame.evaluate(([theme, text]) => {
                     document.documentElement.classList.toggle('dark', theme === 'dark');
-                }, theme);
+                    if (text === '200%') document.documentElement.style.fontSize = '200%';
+                    if (text === '1.25rem') document.body.style.setProperty('--sf-font-size', '1.25rem');
+                }, [theme, text]);
                 await frame.evaluate(() => Promise.all([...document.images].map(img => { img.loading = 'eager'; return img.decode().catch(() => {}); })));
             }));
             // Wait for React's post-hydration local clock and day grouping.
@@ -43,15 +47,27 @@ try {
             // Stacked cards can extend beyond the initial iframe height.
             const fixtureHeights = await Promise.all(frames.map(frame => frame.evaluate(() => document.body.scrollHeight)));
             await page.locator('iframe').evaluateAll((nodes, height) => nodes.forEach(node => node.style.height = `${height + 2000}px`), Math.max(...fixtureHeights));
-            await checkKeyValue({ frames, renderers, width, theme, output });
-            await checkMediaObject({ frames, renderers, width, theme, output });
+            // Text-shaped bodies inherit the feed's size: Typography sizes a table at 0.875em and a list at 1em of it.
+            for (let i = 0; i < frames.length; i++) {
+                const sizes = await frames[i].evaluate(() => {
+                    const size = selector => parseFloat(getComputedStyle(document.querySelector(selector)).fontSize);
+                    return { head: size('.sf-head'), table: size('.sf-rich-text table'), list: size('.sf-list__item') };
+                });
+                assert.equal(sizes.table / sizes.head, 0.875, `${renderers[i]} ${text}: Prose table scales with the headline`);
+                assert.equal(sizes.list / sizes.head, 1, `${renderers[i]} ${text}: ItemList scales with the headline`);
+            }
+            // These fixtures assert pixel geometry at the default text size.
+            if (text === 'default') {
+                await checkKeyValue({ frames, renderers, width, theme, output });
+                await checkMediaObject({ frames, renderers, width, theme, output });
+            }
             for (const state of ['collapsed', 'expanded']) {
                 if (state === 'expanded') {
                     await frames[0].locator('.sf-toggle').evaluateAll(buttons => buttons.forEach(button => { if (button.getAttribute('aria-expanded') === 'false') button.click(); }));
                     for (const frame of frames.slice(1)) await frame.locator('details').evaluateAll(nodes => nodes.forEach(node => node.open = true));
                 }
                 // A stack starts on the same rail as a single face, then grows downward.
-                for (let i = 0; i < frames.length; i++) {
+                if (text === 'default') for (let i = 0; i < frames.length; i++) {
                     const fixture = frames[i].locator('.example:has(>h2:text-is("Stacked actors and truncated members"))');
                     const joints = await fixture.evaluate(section => {
                         const rows = [...section.querySelectorAll('.sf-row')].filter(row => !row.closest('.sf-children') && row.querySelector(':scope > .sf-body > .sf-head'));
@@ -119,7 +135,7 @@ try {
                     }
                 }
                 const geometry = await Promise.all(frames.map(frame => frame.evaluate(() => {
-                    const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media', '.sf-facts', '.sf-facts__row', '.sf-facts__label', '.sf-facts__value', '.sf-facts__value > span', '.sf-rich-text', '.sf-rich-text *'];
+                    const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media', '.sf-facts', '.sf-facts__row', '.sf-facts__label', '.sf-facts__value', '.sf-facts__value > span', '.sf-rich-text', '.sf-rich-text *', '.sf-list-block', '.sf-list__prose *'];
                     return Object.fromEntries(selectors.map(selector => [selector, [...document.querySelectorAll(selector)].filter(e => !e.closest('details:not([open]) .sf-children') && e.getClientRects().length && e.getBoundingClientRect().height > 0).map(e => {
                         const r = e.getBoundingClientRect();
                         return { x: r.x, y: r.y, w: r.width, h: r.height, text: e.textContent.trim().replace(/\s+/g, ' ') };
@@ -137,9 +153,9 @@ try {
                             if (delta > 0) differences.push({ selector, i, delta, [renderers[a]]: rects[i], [renderers[b]]: other[i] });
                         }
                     }
-                    report.push({ suite: renderers.length === 3 ? 'kits' : 'vue-blade', pair: `${renderers[a]}/${renderers[b]}`, width, theme, state, count, max, differences });
+                    report.push({ suite: renderers.length === 3 ? 'kits' : 'vue-blade', pair: `${renderers[a]}/${renderers[b]}`, width, theme, text, state, count, max, differences });
                 }
-                if (renderers.length === 3) for (let i = 0; i < frames.length; i++) {
+                if (renderers.length === 3 && text === 'default') for (let i = 0; i < frames.length; i++) {
                     const icons = frames[i].locator('.example:has(>h2:text-is("Linked object icon frames")) .sf-object-media > a');
                     assert.equal(await icons.count(), 2, `${renderers[i]}: linked object icon frames`);
                     assert.equal(await icons.first().getAttribute('href'), '#ada');
@@ -155,7 +171,7 @@ try {
                 const heights = await Promise.all(frames.map(f => f.evaluate(() => document.body.scrollHeight)));
                 await page.locator('iframe').evaluateAll((nodes, height) => nodes.forEach(node => node.style.height = height + 'px'), Math.max(...heights));
                 for (let i = 0; i < frames.length; i++) {
-                    await page.locator('iframe').nth(i).screenshot({ path: `${output}/r1-${renderers.length === 3 ? 'kits' : 'legacy'}-${renderers[i]}-${state}-${theme}-${width}.png` });
+                    await page.locator('iframe').nth(i).screenshot({ path: `${output}/r1-${renderers.length === 3 ? 'kits' : 'legacy'}-${renderers[i]}-${state}-${theme}-${width}${suffix}.png` });
                     if (renderers.length === 3 && width === 500 && state === 'expanded') {
                         // Screenshot actual joints at 3x device scale without changing layout, after geometry measurement.
                         const selectors = {
@@ -180,7 +196,7 @@ try {
                     }
                 }
             }
-            if (renderers.length === 3) {
+            if (renderers.length === 3 && text === 'default') {
                 await page.emulateMedia({ media: 'print' });
                 const printed = await Promise.all(frames.map(async (frame, i) => {
                     const history = frame.locator('.example:has(>h2:text-is("Static collapsed print history"))');

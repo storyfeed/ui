@@ -35,13 +35,24 @@ The service provider registers itself through package discovery. This release
 requires Storyfeed core `^0.13`. For an Inertia app, install the Vue or React kit
 with `php artisan storyfeed:ui vue` or `php artisan storyfeed:ui react` (below).
 
-The Blade, Vue and React kits use Tailwind CSS v4 and Laravel starter-kit colour
-tokens. No Typography plugin or package stylesheet is needed. Register the package's views in your application's
+The Blade, Vue and React kits use Tailwind CSS v4, the
+[Typography plugin](https://github.com/tailwindlabs/tailwindcss-typography) and
+Laravel starter-kit colour tokens. No package stylesheet is needed. Install the
+plugin, then register it and the package's views in your application's
 `resources/css/app.css` file:
 
+```bash
+npm install -D @tailwindcss/typography
+```
+
 ```css
+@plugin "@tailwindcss/typography";
 @source "../../vendor/storyfeed/ui/resources/views";
 ```
+
+Text-shaped bodies (rich `Prose` and `ItemList`) render inside Typography's
+`prose`, coloured from your tokens and sized by the feed (see
+[Set the feed's size](#set-the-feeds-size)), so they follow dark mode with the rest of the feed.
 
 Compile your application's CSS with `npm run build`. Your layout must load
 the compiled CSS, for example with `@vite('resources/css/app.css')`.
@@ -53,6 +64,7 @@ Copy the Vue 3 kit into your app:
 ```bash
 php artisan storyfeed:ui vue
 npm install lucide-vue-next micromark micromark-extension-gfm-autolink-literal micromark-extension-gfm-strikethrough micromark-extension-gfm-table micromark-extension-gfm-task-list-item sanitize-html
+npm install -D @tailwindcss/typography
 ```
 
 The default destination is `resources/js/components/storyfeed/`; change it with
@@ -60,12 +72,13 @@ The default destination is `resources/js/components/storyfeed/`; change it with
 for Tailwind v4. They expect the [Laravel Vue starter-kit colour tokens](https://github.com/laravel/vue-starter-kit/blob/main/resources/css/app.css),
 including `background`, `foreground`, `muted`, `muted-foreground`, `card`,
 `primary`, `primary-foreground`, `border` and `ring`. Tokens supply dark mode.
-The Vue kit does not need the Typography plugin or a separate stylesheet.
+The Vue kit needs the Typography plugin and no separate stylesheet.
 
-If the copied directory is not already scanned, add this once to
-`resources/css/app.css` (paths are relative to that CSS file):
+Register the plugin and, if the copied directory is not already scanned, the
+kit, once in `resources/css/app.css` (paths are relative to that CSS file):
 
 ```css
+@plugin "@tailwindcss/typography";
 @source "../js/components/storyfeed";
 ```
 
@@ -96,13 +109,14 @@ Copy the React 19 kit, including its shared TypeScript core:
 ```bash
 php artisan storyfeed:ui react
 npm install react@^19 react-dom@^19 lucide-react micromark micromark-extension-gfm-autolink-literal micromark-extension-gfm-strikethrough micromark-extension-gfm-table micromark-extension-gfm-task-list-item sanitize-html
-npm install -D @types/react @types/react-dom @types/sanitize-html
+npm install -D @types/react @types/react-dom @types/sanitize-html @tailwindcss/typography
 ```
 
 The default destination, `--path`, `--diff` and `--force` semantics are the same
 as Vue's. Both commands include a self-contained `shared/` directory. Add
-`@source "../js/components/storyfeed";` in `resources/css/app.css` if needed.
-React uses the same Tailwind v4 starter-kit tokens as Vue and Blade.
+`@plugin "@tailwindcss/typography";` and, if needed,
+`@source "../js/components/storyfeed";` in `resources/css/app.css`.
+React uses the same Tailwind v4 starter-kit tokens and Typography plugin as Vue and Blade.
 
 ```tsx
 import { Link } from '@inertiajs/react';
@@ -248,7 +262,8 @@ these. For another Tailwind v4 app, add this minimal theme to `app.css` after
 Add or remove the `dark` class on your layout to choose the theme. The kit is
 all Tailwind utilities; the avatar's declared colour and a picture's aspect
 ratio are data-driven inline styles. Verbatim prose keeps a dark code surface
-in both themes. Prose, lists and quotations carry their own utility styles.
+in both themes. Rich prose and lists use Typography's `prose` with its colours
+mapped to your tokens, and quotations carry their own utility styles.
 
 #### Set the feed's size
 
@@ -267,7 +282,9 @@ the rail together:
 
 Give it in `rem` or `px`. Inside the feed, Tailwind's `--spacing`, `--text-xs`,
 `--text-sm` and `--text-base` derive from it, so your own slot content on those
-utilities scales with the feed too.
+utilities scales with the feed too. Text-shaped bodies inherit the feed's size
+rather than taking a `prose-sm` or `prose-lg` modifier, so their tables, lists
+and headings scale with it as one unit.
 
 Icon intents are application-defined strings exposed through `data-sf-intent`.
 To assign colours to your intent values, add the corresponding Tailwind

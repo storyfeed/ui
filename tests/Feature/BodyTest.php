@@ -137,10 +137,18 @@ it('draws an item list, numbered when ordered, with what was not sent', function
     $html = render_bodies(ItemList::ordered(['Margherita', FeedLink::make('Tiramisu', '/menu/tiramisu')], title: 'Items', totalItems: 5, more: FeedLink::make('See all', '/orders/1042')));
 
     expect($html)->toContain(
-        '<figure> <figcaption>Items</figcaption> <ol> '
-        .'<li> Margherita </li> <li> <a href="/menu/tiramisu">Tiramisu</a> </li> </ol> '
+        '<figure> <figcaption>Items</figcaption> <div> <ol> '
+        .'<li> Margherita </li> <li> <a href="/menu/tiramisu">Tiramisu</a> </li> </ol> </div> '
         .'<figcaption> <span>and 3 more</span> <a href="/orders/1042">See all</a> </figcaption> </figure>'
     );
+});
+
+it('draws rich prose and lists inside Typography prose at the feed\'s size', function () {
+    foreach (['prose' => ['content' => '- One', 'mediaType' => 'text/markdown'], 'item-list' => ['items' => ['One']]] as $component => $body) {
+        expect(Blade::render("<x-storyfeed::body.{$component} :body=\"\$body\" />", ['body' => $body]))
+            ->toMatch('/class="[^"]*\bprose max-w-none text-\[length:inherit\][^"]*"/')
+            ->not->toMatch('/\bprose-(sm|base|lg|xl|2xl)\b/');
+    }
 });
 
 it('draws a media object with the entity\'s current picture, once', function () {

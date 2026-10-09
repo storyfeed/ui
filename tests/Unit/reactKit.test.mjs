@@ -564,6 +564,16 @@ test('server-rendered task lists keep only their disabled checkboxes', () => {
     assert.ok(html.includes('<li><input type="checkbox" disabled checked /> shipped</li> <li><input type="checkbox" disabled /> next</li>'));
     assert.equal(html.match(/<input/g).length, 2);
 });
+test('rich prose and ItemList render inside Typography prose at the feed size', () => {
+    for (const [name, payload] of [
+        ['Prose', { content: '- One', mediaType: 'text/markdown' }],
+        ['ItemList', { items: ['One'] }],
+    ]) {
+        const html = raw(name, { payload });
+        assert.match(html, /class="[^"]*\bprose max-w-none text-\[length:inherit\][^"]*"/);
+        assert.doesNotMatch(html, /\bprose-(sm|base|lg|xl|2xl)\b/);
+    }
+});
 test('ItemList states overflow conjunction and owning URL fallback', () => {
     assert.match(
         text(raw('ItemList', { payload: { items: ['First'], totalItems: 3 } })),

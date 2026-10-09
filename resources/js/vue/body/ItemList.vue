@@ -36,17 +36,19 @@ const remaining = computed(() => {
     <figure v-if="items.length" class="sf-list-block m-0 min-w-0 max-w-144 rounded-lg bg-card px-4 py-3">
         <figcaption v-if="payload.title" class="sf-list__title mb-1 text-sm text-foreground">{{ payload.title }}</figcaption>
 
-        <component :is="payload.ordered ? 'ol' : 'ul'" :class="payload.ordered ? 'list-decimal' : 'list-disc'" class="sf-list m-0 pl-4.5 text-base leading-[1.6]">
-            <li v-for="(item, index) in items" :key="index" class="sf-list__item m-0">
-                <component
-                    :is="linkComponent"
-                    v-if="item.href"
-                    :href="item.href"
-                    class="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
-                >{{ item.label }}</component>
-                <template v-else>{{ item.label }}</template>
-            </li>
-        </component>
+        <div class="sf-list__prose prose max-w-none text-[length:inherit] [overflow-wrap:anywhere] [--tw-prose-body:var(--color-muted-foreground)] [--tw-prose-headings:var(--color-foreground)] [--tw-prose-lead:var(--color-muted-foreground)] [--tw-prose-links:var(--color-primary)] [--tw-prose-bold:var(--color-foreground)] [--tw-prose-counters:var(--color-muted-foreground)] [--tw-prose-bullets:var(--color-muted-foreground)] [--tw-prose-hr:var(--color-border)] [--tw-prose-quotes:var(--color-foreground)] [--tw-prose-quote-borders:var(--color-border)] [--tw-prose-captions:var(--color-muted-foreground)] [--tw-prose-kbd:var(--color-foreground)] [--tw-prose-code:var(--color-foreground)] [--tw-prose-pre-code:var(--color-foreground)] [--tw-prose-pre-bg:var(--color-border)] [--tw-prose-th-borders:var(--color-border)] [--tw-prose-td-borders:var(--color-border)]">
+            <component :is="payload.ordered ? 'ol' : 'ul'" class="sf-list">
+                <li v-for="(item, index) in items" :key="index" class="sf-list__item">
+                    <component
+                        :is="linkComponent"
+                        v-if="item.href"
+                        :href="item.href"
+                        class="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
+                    >{{ item.label }}</component>
+                    <template v-else>{{ item.label }}</template>
+                </li>
+            </component>
+        </div>
 
         <figcaption v-if="remaining || more" class="sf-list__more mt-1 flex gap-2 text-sm text-muted-foreground">
             <span v-if="remaining">and {{ remaining }} more</span>
