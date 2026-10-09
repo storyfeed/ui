@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v0.6.0 - 2026-10-09
+
+### Changed
+
+- Requires `storyfeed/storyfeed` `^0.13 || ^0.14 || ^0.15 || ^0.16 || ^0.17`, so the kits install alongside core v0.17.
+
 ### Added
 
 - A body's maximum height (core 0.17's `FeedBody::maxHeight()`, read from `$meta.maxHeight`; other `$meta` keys are ignored) is honoured on every body type in Blade, Vue and React: a CSS length caps the whole body, which scrolls inside its wrapper, and `none` draws it in full. Only `none` or a CSS length is read.
