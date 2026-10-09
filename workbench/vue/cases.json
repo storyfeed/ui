@@ -1578,5 +1578,55 @@
         "headline": "Shipment registered"
       }
     ]
+  },
+  {
+    "name": "Body fallback",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "body-fallback",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "label": "Order #1042",
+          "url": "#order-1042",
+          "body": [
+            {
+              "$body": "Acme/Invoice",
+              "$v": 1,
+              "$fallback": "Invoice #1042 · $49.00 due Friday",
+              "total": 4900
+            },
+            {
+              "$body": "Acme/Survey",
+              "$v": 1,
+              "questions": 3
+            },
+            {
+              "$body": "Acme/Shipment",
+              "$v": 1,
+              "$fallback": "Shipped with UPS",
+              "carrier": "UPS",
+              "tracking": "1Z999AA10123456784"
+            },
+            {
+              "$body": "Acme/Note",
+              "$v": 1,
+              "$fallback": "<b>Escaped</b>, never HTML"
+            }
+          ]
+        },
+        "glyph": "file-up",
+        "headline": "Bodies without renderers"
+      }
+    ]
   }
 ]

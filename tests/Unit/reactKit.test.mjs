@@ -348,6 +348,17 @@ test('registered body renderers draw app types, override core types and merge ac
     for (const name of ['toString', '__proto__', 'Acme/Unknown'])
         assert.doesNotMatch(draw({ $body: name }, registered), /sf-body-form/);
 });
+test('a body with no renderer draws its escaped fallback line; a renderer wins', () => {
+    const draw = (body, options = {}) =>
+        render('FeedItem', { item: { kind: 'activity', id: 'f', published_at: '2026-10-07T12:00:00Z', headline: 'F', actor: null, object: { label: 'Order', body: [body] } } }, options);
+    assert.match(draw({ $body: 'Acme/Invoice', $fallback: '<b>Invoice</b> due' }), /<div class="sf-body-form"><p class="sf-body-fallback">&lt;b&gt;Invoice&lt;\/b&gt; due<\/p><\/div>/);
+    for (const fallback of [undefined, '', '   ', 42, { text: 'x' }])
+        assert.doesNotMatch(draw({ $body: 'Acme/Invoice', $fallback: fallback }), /sf-body-form/);
+    const registered = draw({ $body: 'Acme/Invoice', $fallback: 'Fallback' }, { FEED_BODIES: { 'Acme/Invoice': () => h('em', null, 'Drawn') } });
+    assert.match(registered, /<em[^>]*>Drawn<\/em>/);
+    assert.doesNotMatch(registered, /Fallback/);
+    assert.doesNotMatch(draw({ $body: 'Storyfeed/Body/Prose', content: '', $fallback: 'Fallback' }), /Fallback/);
+});
 test('custom link component receives href, modal and attributes', () => {
     let received;
     raw(

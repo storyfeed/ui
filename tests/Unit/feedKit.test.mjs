@@ -386,6 +386,25 @@ test('registered body renderers draw app types and override core types', async (
         assert.doesNotMatch(await draw({ $body: name }, app => app.use(feedBodies({ 'Acme/Shipment': renderer('em') }))), /sf-body-form/);
 });
 
+test('a body with no renderer draws its escaped fallback line; a renderer wins', async () => {
+    const { feedBodies } = await server.ssrLoadModule('/resources/js/vue/body/index.ts');
+    const { default: FeedItem } = await server.ssrLoadModule('/resources/js/vue/FeedItem.vue');
+    const draw = async (body, install) => {
+        const app = createSSRApp({ render: () => h(FeedItem, { item: { kind: 'activity', id: 'f', published_at: '2026-10-07T12:00:00Z', headline: 'F', actor: null, object: { label: 'Order', body: [body] }, data: null } }) });
+        install?.(app);
+
+        return structural(await renderToString(app)).replace(/<!--[\s\S]*?-->/g, '');
+    };
+    assert.match(await draw({ $body: 'Acme/Invoice', $fallback: '<b>Invoice</b> due' }), /<div class="sf-body-form"><p class="sf-body-fallback">&lt;b&gt;Invoice&lt;\/b&gt; due<\/p><\/div>/);
+    for (const fallback of [undefined, '', '   ', 42, { text: 'x' }])
+        assert.doesNotMatch(await draw({ $body: 'Acme/Invoice', $fallback: fallback }), /sf-body-form/);
+    const registered = await draw({ $body: 'Acme/Invoice', $fallback: 'Fallback' }, app => app.use(feedBodies({ 'Acme/Invoice': { props: ['payload'], render: () => h('em', 'Drawn') } })));
+    assert.match(registered, /<em[^>]*>Drawn<\/em>/);
+    assert.doesNotMatch(registered, /Fallback/);
+    // A core type keeps its own renderer, even when it draws nothing.
+    assert.doesNotMatch(await draw({ $body: 'Storyfeed/Body/Prose', content: '', $fallback: 'Fallback' }), /Fallback/);
+});
+
 test('dividers draw a labelled node on the rail before the named item', async () => {
     const node = (id) => ({
         kind: 'activity',

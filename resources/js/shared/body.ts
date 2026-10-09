@@ -55,6 +55,16 @@ export function resolve(body: unknown, draws: DrawsBody = drawsCoreBody): Resolv
     });
 }
 
+/**
+ * The one plain-text line a body carries for renderers that cannot draw its
+ * type (core's reserved `$fallback`), or null when it has none.
+ */
+export function fallbackOf(payload: Record<string, any>): string | null {
+    const line = payload?.$fallback;
+
+    return typeof line === 'string' && line.trim() !== '' ? line : null;
+}
+
 /** Only an Image body opts a sampled entity into the photograph strip. */
 export function imageOf(entity: any): any {
     const bodies = [...resolve(entity?.body), ...formsIn(entity?.data)];

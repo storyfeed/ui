@@ -208,6 +208,28 @@ it('draws nothing for a malformed or app-owned body, and an app can add a compon
         ->and(substr_count($render(), 'data-storyfeed-body'))->toBe(1);
 });
 
+it('draws a body\'s escaped fallback line when its type has no view, and the view when it has one', function () {
+    $render = fn (array $body) => render_blade('<x-storyfeed::body :body="$body" />', ['body' => $body]);
+
+    expect($render(['$body' => 'Acme/Invoice', '$fallback' => '<b>Invoice</b> due']))
+        ->toBe('<div data-storyfeed-body> <p>&lt;b&gt;Invoice&lt;/b&gt; due</p> </div>')
+        ->and($render(['$body' => '../../etc/passwd', '$fallback' => 'Still a line']))->toContain('<p>Still a line</p>');
+
+    foreach ([null, '', '   ', 42, ['text' => 'x']] as $fallback) {
+        expect($render(['$body' => 'Acme/Invoice', '$fallback' => $fallback]))->toBe('');
+    }
+
+    // A core type keeps its own view, even when it draws nothing.
+    expect($render(['$body' => 'Storyfeed/Body/Prose', 'content' => '', '$fallback' => 'Fallback']))->toBe('');
+
+    $views = sys_get_temp_dir().'/storyfeed-ui-'.uniqid();
+    mkdir("{$views}/components/body/acme", recursive: true);
+    file_put_contents("{$views}/components/body/acme/invoice.blade.php", '@props([\'body\', \'entity\' => null])<em>Drawn</em>');
+    app('view')->prependNamespace('storyfeed', $views);
+
+    expect($render(['$body' => 'Acme/Invoice', '$fallback' => 'Fallback']))->toBe('<div data-storyfeed-body> <em>Drawn</em> </div>');
+});
+
 it('renders an unordered item list with plain list semantics', function () {
     expect(render_bodies(ItemList::make(['Margherita', 'Tiramisu'])))
         ->toContain('<ul> <li> Margherita </li> <li> Tiramisu </li> </ul>')

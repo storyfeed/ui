@@ -7,6 +7,8 @@ import { checkKeyValue } from './key-value-parity.mjs';
 import { checkMediaObject } from './media-object-parity.mjs';
 const bodyTexts = {
     'App body type': ['UPS · 1Z999AA10123456784'],
+    // A fallback line, nothing without one, the registered renderer over its fallback, escaped text.
+    'Body fallback': ['Invoice #1042 · $49.00 due Friday', 'UPS · 1Z999AA10123456784', '<b>Escaped</b>, never HTML'],
 };
 const output = process.env.STORYFEED_SCREENSHOTS ?? '/private/tmp/claude-501/-Users-jasper-Dev-projects-storyfeed/2b79c0b9-803e-4825-b1bd-040d9078ad01/scratchpad/kit-adopt';
 await mkdir(output, { recursive: true });

@@ -45,7 +45,8 @@ invert and code needs a dark surface in both themes.
   `app.use()`, or provide `FEED_BODIES` from `keys.ts`, to draw app body types
   by their exact type. Each install merges. A renderer receives `payload`,
   `entityLabel`, `entityUrl` and `entityMedia`; one registered for a core type
-  replaces the kit's. Types with no renderer draw nothing.
+  replaces the kit's. A type with no renderer draws its `$fallback` line as
+  muted plain text, or nothing without one.
 - Provide `FEED_COMPONENTS` with an app-owned map of exact body names to Vue
   components. A `Storyfeed/Body/Component` body's `props` are forwarded. Unknown
   names render nothing. The docs' `Note` and `Orders/Progress` demos are excluded:

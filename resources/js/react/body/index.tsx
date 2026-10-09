@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 import {
+    fallbackOf,
     formsIn as discover,
     resolve as resolveBodies,
 } from '../../shared/body';
@@ -38,6 +39,14 @@ export function Excerpt({ payload }: BodyProps) {
             )}
         </figure>
     ) : null;
+}
+/** A body whose type has no renderer: its `$fallback` line, as plain text. */
+export function Fallback({ payload }: BodyProps) {
+    return (
+        <p className="sf-body-fallback m-0 text-base text-muted-foreground [overflow-wrap:anywhere]">
+            {fallbackOf(payload)}
+        </p>
+    );
 }
 export function FileAttachment({ payload }: BodyProps) {
     const { FEED_FILE_LABELLER: labeller } = useFeedOptions();
@@ -366,24 +375,36 @@ const FORMS: Record<string, ComponentType<BodyProps>> = Object.fromEntries(
     }).map(([name, component]) => [`Storyfeed/Body/${name}`, component]),
 );
 type Bodies = Readonly<Record<string, ComponentType<BodyProps>>>;
-/** An app's renderer for a type wins over the kit's own, as a published Blade view does. */
-const rendererFor = (name: string, bodies: Bodies) =>
+/**
+ * An app's renderer for a type wins over the kit's own, as a published Blade
+ * view does. With neither, a body's `$fallback` line stands in for it.
+ */
+const rendererFor = (
+    name: string,
+    payload: Record<string, any>,
+    bodies: Bodies,
+) =>
     Object.hasOwn(bodies, name)
         ? bodies[name]
         : Object.hasOwn(FORMS, name)
           ? FORMS[name]
-          : undefined;
+          : fallbackOf(payload) !== null
+            ? Fallback
+            : undefined;
 export const formsIn = (data: unknown, depth = 4, bodies: Bodies = {}) =>
-    discover(data, depth, (name) => rendererFor(name, bodies) !== undefined).map(
-        ({ name, payload }) => ({
-            component: rendererFor(name, bodies)!,
-            payload,
-        }),
-    );
+    discover(
+        data,
+        depth,
+        (name, payload) => rendererFor(name, payload, bodies) !== undefined,
+    ).map(({ name, payload }) => ({
+        component: rendererFor(name, payload, bodies)!,
+        payload,
+    }));
 export const resolve = (body: unknown, bodies: Bodies = {}) =>
-    resolveBodies(body, (name) => rendererFor(name, bodies) !== undefined).map(
-        ({ name, payload }) => ({
-            component: rendererFor(name, bodies)!,
-            payload,
-        }),
-    );
+    resolveBodies(
+        body,
+        (name, payload) => rendererFor(name, payload, bodies) !== undefined,
+    ).map(({ name, payload }) => ({
+        component: rendererFor(name, payload, bodies)!,
+        payload,
+    }));

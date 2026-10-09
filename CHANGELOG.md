@@ -5,6 +5,7 @@
 ### Added
 
 - Vue and React draw app body types. Register a renderer by its exact type: `app.use(feedBodies({ 'Acme/Shipment': Shipment }))` or `provide(FEED_BODIES, …)` in Vue, `<FeedProvider FEED_BODIES={{ 'Acme/Shipment': Shipment }}>` in React. Renderers receive the built-in bodies' props, a renderer for a core type replaces the kit's, and a type with no renderer still draws nothing. The README's "Custom body types" covers all three kits.
+- A body whose type has no renderer draws its `$fallback` line, as one muted line of escaped text, in Blade, Vue and React. A registered renderer or view always wins, and a body without a fallback still draws nothing.
 
 ### Changed
 

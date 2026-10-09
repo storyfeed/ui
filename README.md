@@ -401,7 +401,9 @@ boundary and the integration features that stay in the plugin.
 An app or package draws its own body type, such as `Acme/Shipment`, by giving
 each kit a renderer for that exact type. A renderer receives the body's payload
 and the entity that carries it. A renderer registered for one of core's types
-replaces the kit's own. A body whose type has no renderer draws nothing.
+replaces the kit's own. A body whose type has no renderer draws its `$fallback`
+line, the one plain-text line core lets any body carry, as muted, escaped text;
+without one it draws nothing.
 
 **Blade** maps the type segment by segment to a view under the `storyfeed`
 namespace: `Acme/Shipment` draws `components/body/acme/shipment.blade.php`,

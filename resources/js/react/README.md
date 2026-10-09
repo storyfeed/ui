@@ -64,7 +64,8 @@ All provider names retain the Vue seams' meaning:
   forwarded; host components also receive `modal` when true. Defaults to `a`.
 - `FEED_BODIES`: a map of exact body types (`'Acme/Shipment'`) to renderers that
   receive `BodyProps`. Nested providers merge; one registered for a core type
-  replaces the kit's. Types with no renderer draw nothing.
+  replaces the kit's. A type with no renderer draws its `$fallback` line as
+  muted plain text, or nothing without one.
 - `FEED_COMPONENTS`: a map of exact app-owned names to React components.
   `Storyfeed/Body/Component` forwards `payload.props`; unknown names render nothing.
 - `FEED_FILE_LABELLER`: receives `{ name, mediaType }` and returns a label or null.
