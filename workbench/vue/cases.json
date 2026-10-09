@@ -3010,5 +3010,281 @@
         "glyph": "file-up"
       }
     ]
+  },
+  {
+    "name": "Long bodies",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "long-rich",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "Long body",
+        "object": {
+          "label": "Roadmap",
+          "url": "#roadmap",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Prose",
+              "$v": 2,
+              "mediaType": "text/markdown",
+              "content": "## Step 1\n\nMilestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\n\n## Step 2\n\nMilestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\n\n## Step 3\n\nMilestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\n\n## Step 4\n\nMilestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\n\n## Step 5\n\nMilestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\n\n## Step 6\n\nMilestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\n\n## Step 7\n\nMilestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\n\n## Step 8\n\nMilestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\n\n## Step 9\n\nMilestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\n\n## Step 10\n\nMilestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\n\n## Step 11\n\nMilestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\n\n## Step 12\n\nMilestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob."
+            }
+          ]
+        }
+      },
+      {
+        "kind": "activity",
+        "id": "long-plain",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "Long body",
+        "object": {
+          "label": "Roadmap",
+          "url": "#roadmap",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Prose",
+              "$v": 2,
+              "content": "Line 1: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 2: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 3: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 4: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 5: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 6: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 7: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 8: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 9: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 10: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 11: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 12: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 13: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 14: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 15: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 16: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 17: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 18: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 19: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 20: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 21: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 22: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 23: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 24: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 25: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 26: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 27: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 28: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob.\nLine 29: Milestone notes. Every body in the feed is capped at the same height unless the page lifts the cap with the knob."
+            }
+          ]
+        }
+      },
+      {
+        "kind": "activity",
+        "id": "long-verbatim",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "Long body",
+        "object": {
+          "label": "Roadmap",
+          "url": "#roadmap",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Prose",
+              "$v": 2,
+              "verbatim": true,
+              "content": "step 1: ok\nstep 2: ok\nstep 3: ok\nstep 4: ok\nstep 5: ok\nstep 6: ok\nstep 7: ok\nstep 8: ok\nstep 9: ok\nstep 10: ok\nstep 11: ok\nstep 12: ok\nstep 13: ok\nstep 14: ok\nstep 15: ok\nstep 16: ok\nstep 17: ok\nstep 18: ok\nstep 19: ok\nstep 20: ok\nstep 21: ok\nstep 22: ok\nstep 23: ok\nstep 24: ok\nstep 25: ok\nstep 26: ok\nstep 27: ok\nstep 28: ok\nstep 29: ok\nstep 30: ok\nstep 31: ok\nstep 32: ok\nstep 33: ok\nstep 34: ok\nstep 35: ok\nstep 36: ok\nstep 37: ok\nstep 38: ok\nstep 39: ok\nstep 40: ok\nstep 41: ok\nstep 42: ok\nstep 43: ok\nstep 44: ok\nstep 45: ok\nstep 46: ok\nstep 47: ok\nstep 48: ok\nstep 49: ok\nstep 50: ok\nstep 51: ok\nstep 52: ok\nstep 53: ok\nstep 54: ok\nstep 55: ok\nstep 56: ok\nstep 57: ok\nstep 58: ok\nstep 59: ok"
+            }
+          ]
+        }
+      },
+      {
+        "kind": "activity",
+        "id": "long-table",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "Long body",
+        "object": {
+          "label": "Roadmap",
+          "url": "#roadmap",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Table",
+              "$v": 1,
+              "headers": [
+                "Row",
+                "Value"
+              ],
+              "rows": [
+                [
+                  "Row 1",
+                  "1"
+                ],
+                [
+                  "Row 2",
+                  "2"
+                ],
+                [
+                  "Row 3",
+                  "3"
+                ],
+                [
+                  "Row 4",
+                  "4"
+                ],
+                [
+                  "Row 5",
+                  "5"
+                ],
+                [
+                  "Row 6",
+                  "6"
+                ],
+                [
+                  "Row 7",
+                  "7"
+                ],
+                [
+                  "Row 8",
+                  "8"
+                ],
+                [
+                  "Row 9",
+                  "9"
+                ],
+                [
+                  "Row 10",
+                  "10"
+                ],
+                [
+                  "Row 11",
+                  "11"
+                ],
+                [
+                  "Row 12",
+                  "12"
+                ],
+                [
+                  "Row 13",
+                  "13"
+                ],
+                [
+                  "Row 14",
+                  "14"
+                ],
+                [
+                  "Row 15",
+                  "15"
+                ],
+                [
+                  "Row 16",
+                  "16"
+                ],
+                [
+                  "Row 17",
+                  "17"
+                ],
+                [
+                  "Row 18",
+                  "18"
+                ],
+                [
+                  "Row 19",
+                  "19"
+                ],
+                [
+                  "Row 20",
+                  "20"
+                ],
+                [
+                  "Row 21",
+                  "21"
+                ],
+                [
+                  "Row 22",
+                  "22"
+                ],
+                [
+                  "Row 23",
+                  "23"
+                ],
+                [
+                  "Row 24",
+                  "24"
+                ],
+                [
+                  "Row 25",
+                  "25"
+                ],
+                [
+                  "Row 26",
+                  "26"
+                ],
+                [
+                  "Row 27",
+                  "27"
+                ],
+                [
+                  "Row 28",
+                  "28"
+                ],
+                [
+                  "Row 29",
+                  "29"
+                ],
+                [
+                  "Row 30",
+                  "30"
+                ],
+                [
+                  "Row 31",
+                  "31"
+                ],
+                [
+                  "Row 32",
+                  "32"
+                ],
+                [
+                  "Row 33",
+                  "33"
+                ],
+                [
+                  "Row 34",
+                  "34"
+                ],
+                [
+                  "Row 35",
+                  "35"
+                ],
+                [
+                  "Row 36",
+                  "36"
+                ],
+                [
+                  "Row 37",
+                  "37"
+                ],
+                [
+                  "Row 38",
+                  "38"
+                ],
+                [
+                  "Row 39",
+                  "39"
+                ]
+              ]
+            }
+          ]
+        }
+      }
+    ]
   }
 ]

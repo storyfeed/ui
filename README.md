@@ -288,7 +288,17 @@ the rail together:
 
 Give it in `rem` or `px`. Inside the feed, Tailwind's `--spacing`, `--text-xs`,
 `--text-sm` and `--text-base` derive from it, so your own slot content on those
-utilities scales with the feed too. Text-shaped bodies inherit the feed's size
+utilities scales with the feed too.
+
+`--sf-prose-max-h` caps a long Prose or Table body, which scrolls inside its
+card beyond it. It defaults to `24rem` (scaled with `--sf-font-size`); set it
+to `none` to draw every body at full length with no inner scroll, or to any
+length. Like `--sf-font-size`, it works on the feed root or any element around
+it:
+
+```blade
+<x-storyfeed::feed :page="$page" class="[--sf-prose-max-h:none]" />
+``` Text-shaped bodies inherit the feed's size
 rather than taking a `prose-sm` or `prose-lg` modifier, so their tables, lists
 and headings scale with it as one unit.
 

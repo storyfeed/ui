@@ -684,6 +684,13 @@ test('links read core 0.17\'s `link` and core 0.16\'s keys; modal reaches a host
         assert.match(list, /href="\/orders\/1"/);
     }
 });
+test('long bodies are capped by the --sf-prose-max-h knob, not a fixed height', () => {
+    for (const [name, payload] of [['Prose', { content: 'Plain' }], ['Prose', { content: '**Rich**', mediaType: 'text/markdown' }], ['Prose', { content: 'code', verbatim: true }], ['Table', { rows: [['a']] }]]) {
+        const html = raw(name, { payload });
+        assert.match(html, /max-h-\[var\(--sf-prose-max-h,--spacing\(96\)\)\]/);
+        assert.doesNotMatch(html, /max-h-96/);
+    }
+});
 test('ItemList states overflow conjunction and owning URL fallback', () => {
     assert.match(
         text(raw('ItemList', { payload: { items: ['First'], totalItems: 3 } })),

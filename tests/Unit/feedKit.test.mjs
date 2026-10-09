@@ -684,6 +684,19 @@ test('links read core 0.17\'s `link` and core 0.16\'s keys; modal reaches a host
     assert.match(await draw({ props: ['href', 'modal'], render() { return h('a', { href: this.href, 'data-modal': String(this.modal) }, this.$slots.default?.()); } }), /data-modal="true"/);
 });
 
+test('long bodies are capped by the --sf-prose-max-h knob, not a fixed height', async () => {
+    for (const [path, payload] of [
+        ['/resources/js/vue/body/Prose.vue', { content: 'Plain' }],
+        ['/resources/js/vue/body/Prose.vue', { content: '**Rich**', mediaType: 'text/markdown' }],
+        ['/resources/js/vue/body/Prose.vue', { content: 'code', verbatim: true }],
+        ['/resources/js/vue/body/Table.vue', { rows: [['a']] }],
+    ]) {
+        const html = await renderRaw(path, { payload });
+        assert.match(html, /max-h-\[var\(--sf-prose-max-h,--spacing\(96\)\)\]/);
+        assert.doesNotMatch(html, /max-h-96/);
+    }
+});
+
 test('ItemList states the conjunction before overflow', async () => {
     const html = await render('/resources/js/vue/body/ItemList.vue', { payload: { items: ['First'], totalItems: 3 } });
     assert.match(textOf(html), /Firstand 2 more/);

@@ -334,6 +334,13 @@ it('reads links in core 0.17\'s shape and core 0.16\'s', function () {
         ->and(Links::body('not a link', $new))->toBeNull();
 });
 
+it('caps long bodies by the --sf-prose-max-h knob, not a fixed height', function () {
+    foreach ([['prose', ['content' => 'Plain']], ['prose', ['content' => '**Rich**', 'mediaType' => 'text/markdown']], ['prose', ['content' => 'code', 'verbatim' => true]], ['table', ['rows' => [['a']]]]] as [$component, $body]) {
+        expect(Blade::render("<x-storyfeed::body.{$component} :body=\"\$body\" />", ['body' => $body]))
+            ->toContain('max-h-[var(--sf-prose-max-h,--spacing(96))]')->not->toContain('max-h-96');
+    }
+});
+
 it('renders an unordered item list with plain list semantics', function () {
     expect(render_bodies(ItemList::make(['Margherita', 'Tiramisu'])))
         ->toContain('<ul> <li> Margherita </li> <li> Tiramisu </li> </ul>')

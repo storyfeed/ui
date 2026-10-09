@@ -179,6 +179,16 @@ try {
                     // Kits differ only in whitespace between tags, which renders as nothing.
                     assert.deepEqual(texts.map(t => t.replace(/\s+/g, '')), expected.map(t => t.replace(/\s+/g, '')), `${renderers[i]}: ${section}`);
                 }
+                // `--sf-prose-max-h` caps long bodies (24rem by default) and `none` lifts the cap and the inner scroll.
+                if (state === 'collapsed' && text === 'default') for (let i = 0; i < frames.length; i++) {
+                    const measure = () => frames[i].locator('.example:has(>h2:text-is("Long bodies")) :is(.sf-rich-text, .sf-prose--scroll, .sf-verbatim, .sf-table__prose)').evaluateAll(nodes => nodes.map(node => ({
+                        maxHeight: getComputedStyle(node).maxHeight, scrolls: node.scrollHeight > node.clientHeight + 1,
+                    })));
+                    assert.deepEqual(await measure(), Array(4).fill({ maxHeight: '384px', scrolls: true }), `${renderers[i]}: long bodies capped at 24rem`);
+                    await frames[i].evaluate(() => document.body.style.setProperty('--sf-prose-max-h', 'none'));
+                    assert.deepEqual(await measure(), Array(4).fill({ maxHeight: 'none', scrolls: false }), `${renderers[i]}: none lifts the cap and the scroll`);
+                    await frames[i].evaluate(() => document.body.style.removeProperty('--sf-prose-max-h'));
+                }
                 // Core 0.17's `link` shape: entity links keep their safe attributes; an href-less body link takes the entity's and adds its own.
                 if (state === 'collapsed' && text === 'default') for (let i = 0; i < frames.length; i++) {
                     const links = await frames[i].locator('.example:has(>h2:text-is("Entity links (core 0.17)")) a').evaluateAll(links => links.map(a => [a.textContent.trim(), a.getAttribute('href'), ...['target', 'rel', 'data-route', 'data-extra', 'onclick'].map(name => a.getAttribute(name))]));
