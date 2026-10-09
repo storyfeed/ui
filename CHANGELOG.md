@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Requires `storyfeed/storyfeed` `^0.13 || ^0.14 || ^0.15`, so the kits install alongside core v0.15.
+
 ## v0.4.4 - 2026-10-08
 
 ### Fixed
