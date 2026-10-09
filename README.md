@@ -290,15 +290,15 @@ Give it in `rem` or `px`. Inside the feed, Tailwind's `--spacing`, `--text-xs`,
 `--text-sm` and `--text-base` derive from it, so your own slot content on those
 utilities scales with the feed too.
 
-`--sf-prose-max-h` caps a long Prose or Table body, which scrolls inside its
-card beyond it. It defaults to `24rem` (scaled with `--sf-font-size`); set it
-to `none` to draw every body at full length with no inner scroll, or to any
-length. Like `--sf-font-size`, it works on the feed root or any element around
-it:
-
-```blade
-<x-storyfeed::feed :page="$page" class="[--sf-prose-max-h:none]" />
-``` Text-shaped bodies inherit the feed's size
+A body can set its own maximum height with core 0.17's `maxHeight()`
+(`Prose::markdown($notes)->maxHeight('none')`, `Table::make()->maxHeight('16rem')`),
+stored in the body's `$meta` as `maxHeight`. All three kits honour it on every body type: a length
+caps the body, which scrolls inside past it, and `none` draws it at full length
+with no inner scroll. Prose and Table bodies without one are capped at the kit
+default, `--sf-prose-max-h` (`24rem`, scaled with `--sf-font-size`), a CSS
+variable your app can change; other bodies without one are not capped.
+Renderers you register can read `--sf-prose-max-h`, which the kit sets on each
+body's wrapper. Text-shaped bodies inherit the feed's size
 rather than taking a `prose-sm` or `prose-lg` modifier, so their tables, lists
 and headings scale with it as one unit.
 

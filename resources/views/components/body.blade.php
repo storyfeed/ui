@@ -26,6 +26,10 @@
             ->implode('.')
         : null;
     $fallback = is_string($type) && is_string($body['$fallback'] ?? null) && filled($body['$fallback']) ? $body['$fallback'] : null;
+    // The body's own `$maxHeight`, else the kit default `--sf-prose-max-h`.
+    $frame = is_array($body) ? \Storyfeed\Ui\Support\Bodies::frame($body) : ['style' => null, 'capped' => false];
+    $attributes = $attributes->class(['sf-body-form mt-2 max-w-176 empty:hidden', 'max-h-(--sf-prose-max-h) overflow-y-auto' => $frame['capped']])
+        ->merge(array_filter(['style' => $frame['style'], 'tabindex' => $frame['capped'] ? '0' : null], fn ($value) => $value !== null));
 @endphp
 @if ($component !== null && view()->exists("storyfeed::components.{$component}"))
     @php
@@ -33,8 +37,8 @@
         $rendered ??= \Storyfeed\Ui\Support\Bodies::render('storyfeed::'.$component, $body, $entity, $mediaRenderer, $fileLabeller);
     @endphp
 @if (trim(preg_replace('/<!--.*?-->/s', '', $rendered)) !== '')
-        <div data-storyfeed-body {{ $attributes->class('sf-body-form mt-2 max-w-176 empty:hidden') }}> {!! $rendered !!} </div>
+        <div data-storyfeed-body {{ $attributes }}> {!! $rendered !!} </div>
 @endif
 @elseif ($fallback !== null)
-    <div data-storyfeed-body {{ $attributes->class('sf-body-form mt-2 max-w-176 empty:hidden') }}> <p class="sf-body-fallback m-0 text-base text-muted-foreground [overflow-wrap:anywhere]">{{ $fallback }}</p> </div>
+    <div data-storyfeed-body {{ $attributes }}> <p class="sf-body-fallback m-0 text-base text-muted-foreground [overflow-wrap:anywhere]">{{ $fallback }}</p> </div>
 @endif

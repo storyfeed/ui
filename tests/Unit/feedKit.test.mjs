@@ -697,6 +697,30 @@ test('long bodies are capped by the --sf-prose-max-h knob, not a fixed height', 
     }
 });
 
+test('a body\'s $maxHeight sets its wrapper: unset is the default, a length caps, none lifts it', async () => {
+    const { default: FeedItem } = await server.ssrLoadModule('/resources/js/vue/FeedItem.vue');
+    const draw = async (body) => {
+        const html = await renderToString(createSSRApp({ render: () => h(FeedItem, { item: { kind: 'activity', id: 'm', published_at: '2026-10-07T12:00:00Z', headline: 'M', actor: null, object: { label: 'O', body: [body] } } }) }));
+        return html.match(/<div class="sf-body-form[^"]*"[^>]*>/)[0];
+    };
+    const list = { $body: 'Storyfeed/Body/ItemList', items: ['One'] };
+    const prose = { $body: 'Storyfeed/Body/Prose', content: 'Words' };
+    assert.doesNotMatch(await draw(list), /style=|max-h-\(--sf-prose-max-h\)/);
+    const capped = await draw({ ...list, $maxHeight: '6rem' });
+    assert.match(capped, /max-h-\(--sf-prose-max-h\) overflow-y-auto/);
+    assert.match(capped, /style="--sf-prose-max-h:6rem;"/);
+    assert.match(capped, /tabindex="0"/);
+    const own = await draw({ ...prose, $maxHeight: '10rem' });
+    assert.match(own, /style="--sf-prose-max-h:10rem;"/);
+    assert.doesNotMatch(own, /overflow-y-auto/);
+    assert.match(await draw({ ...prose, $maxHeight: 'none' }), /--sf-prose-max-h:none/);
+    for (const invalid of ['10rem;background:red', 'expression(alert(1))', 'NONE', '', 42])
+        assert.doesNotMatch(await draw({ ...prose, $maxHeight: invalid }), /style=/);
+    assert.match(await draw({ ...list, $meta: { maxHeight: '8rem', other: 'x' }, $maxHeight: '6rem' }), /--sf-prose-max-h:8rem/);
+    assert.doesNotMatch(await draw({ ...prose, $meta: { other: 'x' } }), /style=/);
+    assert.match(await draw({ ...prose, $meta: { maxHeight: 'none' } }), /--sf-prose-max-h:none/);
+});
+
 test('ItemList states the conjunction before overflow', async () => {
     const html = await render('/resources/js/vue/body/ItemList.vue', { payload: { items: ['First'], totalItems: 3 } });
     assert.match(textOf(html), /Firstand 2 more/);

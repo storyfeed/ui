@@ -341,6 +341,37 @@ it('caps long bodies by the --sf-prose-max-h knob, not a fixed height', function
     }
 });
 
+it('honours a body\'s $maxHeight in its wrapper: unset is the default, a length caps, none lifts it', function () {
+    $render = fn (array $body) => Blade::render('<x-storyfeed::body :body="$body" />', ['body' => $body]);
+    $list = ['$body' => 'Storyfeed/Body/ItemList', 'items' => ['One']];
+    $prose = ['$body' => 'Storyfeed/Body/Prose', 'content' => 'Words'];
+
+    expect($render($list))->not->toContain('style=', 'max-h-(--sf-prose-max-h)')
+        // A length caps a body that does not cap itself, scrolling in its wrapper.
+        ->and($render([...$list, '$maxHeight' => '6rem']))->toContain('style="--sf-prose-max-h: 6rem"', 'max-h-(--sf-prose-max-h) overflow-y-auto', 'tabindex="0"')
+        // Prose and Table cap themselves: the wrapper only sets their height.
+        ->and($render([...$prose, '$maxHeight' => '10rem']))->toContain('style="--sf-prose-max-h: 10rem"')->not->toContain('overflow-y-auto')
+        ->and($render([...$prose, '$maxHeight' => 'none']))->toContain('style="--sf-prose-max-h: none"')
+        ->and($render([...$list, '$maxHeight' => 'none']))->not->toContain('overflow-y-auto');
+
+    // `$meta.maxHeight` wins over the top-level key; other `$meta` keys are ignored; a v0.16 body has neither.
+    expect($render([...$list, '$meta' => ['maxHeight' => '8rem', 'other' => 'x'], '$maxHeight' => '6rem']))->toContain('style="--sf-prose-max-h: 8rem"')->not->toContain('other')
+        ->and($render([...$prose, '$meta' => ['other' => 'x']]))->not->toContain('style=')
+        ->and($render([...$prose, '$meta' => ['maxHeight' => 'none']]))->toContain('style="--sf-prose-max-h: none"');
+
+    foreach (['10rem;background:red', 'expression(alert(1))', 'NONE', '', 42] as $invalid) {
+        expect($render([...$prose, '$maxHeight' => $invalid]))->not->toContain('style=');
+    }
+});
+
+it('honours core\'s FeedBody::maxHeight() through the feed', function () {
+    if (! method_exists(Prose::class, 'maxHeight')) {
+        $this->markTestSkipped('This core has no FeedBody::maxHeight().');
+    }
+
+    expect(render_bodies(Prose::make('Show it all')->maxHeight('none')))->toContain('style="--sf-prose-max-h: none"');
+});
+
 it('renders an unordered item list with plain list semantics', function () {
     expect(render_bodies(ItemList::make(['Margherita', 'Tiramisu'])))
         ->toContain('<ul> <li> Margherita </li> <li> Tiramisu </li> </ul>')

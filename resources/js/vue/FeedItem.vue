@@ -3,6 +3,7 @@ import { computed, inject, toRef } from 'vue';
 import { imageOf } from './body';
 import { formsIn, resolve } from './body';
 import { FEED_BODIES } from './keys';
+import { bodyFrame } from '../shared/body';
 import EntityAvatar from './EntityAvatar.vue';
 import FeedHeadline from './FeedHeadline.vue';
 import FeedIcon from './FeedIcon.vue';
@@ -126,6 +127,16 @@ const forms = computed(() => {
         ...formsIn(object?.data, 4, bodies).map(attributed),
     ];
 });
+
+/** The body's own `$maxHeight`, else the kit default `--sf-prose-max-h`. */
+function frameAttributes(payload: Record<string, any>) {
+    const frame = bodyFrame(payload);
+
+    return {
+        ...(frame.style ? { style: frame.style } : {}),
+        ...(frame.capped ? { class: 'max-h-(--sf-prose-max-h) overflow-y-auto', tabindex: 0 } : {}),
+    };
+}
 
 const slots = computed(() =>
     railFor(resolved.value, {
@@ -253,6 +264,7 @@ const slots = computed(() =>
                         v-for="(found, index) in forms"
                         :key="index"
                         class="sf-body-form mt-2 max-w-176 empty:hidden"
+                        v-bind="frameAttributes(found.payload)"
                     >
                         <component
                             :is="found.component"

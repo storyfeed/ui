@@ -189,6 +189,14 @@ try {
                     assert.deepEqual(await measure(), Array(4).fill({ maxHeight: 'none', scrolls: false }), `${renderers[i]}: none lifts the cap and the scroll`);
                     await frames[i].evaluate(() => document.body.style.removeProperty('--sf-prose-max-h'));
                 }
+                // A body's own `$maxHeight`: unset is the 24rem default, a length caps (in the body or its wrapper), `none` lifts it.
+                if (state === 'collapsed' && text === 'default') for (let i = 0; i < frames.length; i++) {
+                    const caps = await frames[i].locator('.example:has(>h2:text-is("Body max height")) .sf-body-form').evaluateAll(forms => forms.map(form => {
+                        const scroller = form.querySelector('.sf-rich-text, .sf-table__prose') ?? form;
+                        return [getComputedStyle(scroller).maxHeight, scroller.scrollHeight > scroller.clientHeight + 1];
+                    }));
+                    assert.deepEqual(caps, [['384px', true], ['none', false], ['160px', true], ['96px', true], ['none', false], ['384px', true]], `${renderers[i]}: body max heights`);
+                }
                 // Core 0.17's `link` shape: entity links keep their safe attributes; an href-less body link takes the entity's and adds its own.
                 if (state === 'collapsed' && text === 'default') for (let i = 0; i < frames.length; i++) {
                     const links = await frames[i].locator('.example:has(>h2:text-is("Entity links (core 0.17)")) a').evaluateAll(links => links.map(a => [a.textContent.trim(), a.getAttribute('href'), ...['target', 'rel', 'data-route', 'data-extra', 'onclick'].map(name => a.getAttribute(name))]));

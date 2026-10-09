@@ -67,6 +67,29 @@ export function fallbackOf(payload: Record<string, any>): string | null {
     return typeof line === 'string' && line.trim() !== '' ? line : null;
 }
 
+/** Body types that cap their own height by `--sf-prose-max-h`, scrolling inside. */
+export const SELF_CAPPED: readonly string[] = ['Storyfeed/Body/Prose', 'Storyfeed/Body/Table'];
+
+/**
+ * How a body's wrapper honours its maximum height (core 0.17's
+ * `$meta.maxHeight`, read before the top-level `$maxHeight` core first wrote;
+ * other `$meta` keys are ignored): `none` or a plain
+ * CSS length, else nothing, for the kit default. The value sets
+ * `--sf-prose-max-h` for the bodies that cap themselves; any other body with a
+ * length is capped and scrolls in its wrapper. Mirrors `Bodies::frame()`.
+ */
+export function bodyFrame(payload: Record<string, any>): { style: Record<string, string> | undefined; capped: boolean } {
+    const meta = payload?.$meta;
+    const height = meta && typeof meta === 'object' && 'maxHeight' in meta ? meta.maxHeight : payload?.$maxHeight;
+    // `none`, or a CSS length as core's `FeedBody::maxHeight()` accepts it.
+    const valid = typeof height === 'string' && (height === 'none' || /^(0|\d*\.?\d+(px|rem|em|ex|ch|lh|rlh|%|vh|svh|lvh|dvh|vw|svw|lvw|dvw|vmin|vmax|cm|mm|q|in|pt|pc))$/i.test(height));
+
+    return {
+        style: valid ? { '--sf-prose-max-h': height } : undefined,
+        capped: valid && height !== 'none' && !SELF_CAPPED.includes(payload.$body),
+    };
+}
+
 /** Whether an Excerpt is a fragment. From v2 core writes `truncated` only when false. */
 export function isTruncated(payload: Record<string, any>): boolean {
     return 'truncated' in payload ? Boolean(payload.truncated) : (typeof payload.$v === 'number' ? payload.$v : 1) >= 2;

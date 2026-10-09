@@ -691,6 +691,25 @@ test('long bodies are capped by the --sf-prose-max-h knob, not a fixed height', 
         assert.doesNotMatch(html, /max-h-96/);
     }
 });
+test('a body\'s $maxHeight sets its wrapper: unset is the default, a length caps, none lifts it', () => {
+    const draw = (body) => raw('FeedItem', { item: { kind: 'activity', id: 'm', published_at: '2026-10-07T12:00:00Z', headline: 'M', actor: null, object: { label: 'O', body: [body] } } }).match(/<div class="sf-body-form[^"]*"[^>]*>/)[0];
+    const list = { $body: 'Storyfeed/Body/ItemList', items: ['One'] };
+    const prose = { $body: 'Storyfeed/Body/Prose', content: 'Words' };
+    assert.doesNotMatch(draw(list), /style=|max-h-\(--sf-prose-max-h\)/);
+    const capped = draw({ ...list, $maxHeight: '6rem' });
+    assert.match(capped, /max-h-\(--sf-prose-max-h\) overflow-y-auto/);
+    assert.match(capped, /style="--sf-prose-max-h:6rem"/);
+    assert.match(capped, /tabindex="0"/i);
+    const own = draw({ ...prose, $maxHeight: '10rem' });
+    assert.match(own, /style="--sf-prose-max-h:10rem"/);
+    assert.doesNotMatch(own, /overflow-y-auto/);
+    assert.match(draw({ ...prose, $maxHeight: 'none' }), /--sf-prose-max-h:none/);
+    for (const invalid of ['10rem;background:red', 'expression(alert(1))', 'NONE', '', 42])
+        assert.doesNotMatch(draw({ ...prose, $maxHeight: invalid }), /style=/);
+    assert.match(draw({ ...list, $meta: { maxHeight: '8rem', other: 'x' }, $maxHeight: '6rem' }), /--sf-prose-max-h:8rem/);
+    assert.doesNotMatch(draw({ ...prose, $meta: { other: 'x' } }), /style=/);
+    assert.match(draw({ ...prose, $meta: { maxHeight: 'none' } }), /--sf-prose-max-h:none/);
+});
 test('ItemList states overflow conjunction and owning URL fallback', () => {
     assert.match(
         text(raw('ItemList', { payload: { items: ['First'], totalItems: 3 } })),

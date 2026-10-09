@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import type { ActivityNode, FeedNode } from '../shared/types';
 import type { Rail as RailConfig, RailName } from '../shared/rail';
 import { formsIn, resolve, imageOf } from './body';
@@ -9,6 +9,7 @@ import FeedMediaStrip from './FeedMediaStrip';
 import Rail from './Rail';
 import { useFeedOptions } from './context';
 import { entityLink } from '../shared/link';
+import { bodyFrame } from '../shared/body';
 import { useRelativeTime } from './useRelativeTime';
 export interface FeedRenderProps {
     objectIcon?: (node: FeedNode) => Record<string, any> | null;
@@ -129,14 +130,25 @@ export default function FeedItem({
                             (
                                 { component: Component, payload, ...entity },
                                 i,
-                            ) => (
-                                <div
-                                    key={i}
-                                    className="sf-body-form mt-2 max-w-176 empty:hidden"
-                                >
-                                    <Component payload={payload} {...entity} />
-                                </div>
-                            ),
+                            ) => {
+                                // The body's own `$maxHeight`, else the kit default `--sf-prose-max-h`.
+                                const frame = bodyFrame(payload);
+                                return (
+                                    <div
+                                        key={i}
+                                        className={[
+                                            'sf-body-form mt-2 max-w-176 empty:hidden',
+                                            frame.capped && 'max-h-(--sf-prose-max-h) overflow-y-auto',
+                                        ]
+                                            .filter(Boolean)
+                                            .join(' ')}
+                                        style={frame.style as CSSProperties | undefined}
+                                        tabIndex={frame.capped ? 0 : undefined}
+                                    >
+                                        <Component payload={payload} {...entity} />
+                                    </div>
+                                );
+                            },
                         )}
                     </div>
                 </div>

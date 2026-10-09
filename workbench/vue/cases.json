@@ -3286,5 +3286,399 @@
         }
       }
     ]
+  },
+  {
+    "name": "Body max height",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "prose-default",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "prose-default",
+        "object": {
+          "label": "Roadmap",
+          "url": "#roadmap",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Prose",
+              "$v": 2,
+              "mediaType": "text/markdown",
+              "content": "## Step 1\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 2\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 3\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 4\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 5\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 6\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 7\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 8\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 9\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 10\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 11\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 12\n\nMilestone notes. A body can set its own maximum height, and the kit honours it."
+            }
+          ]
+        }
+      },
+      {
+        "kind": "activity",
+        "id": "prose-none",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "prose-none",
+        "object": {
+          "label": "Roadmap",
+          "url": "#roadmap",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Prose",
+              "$v": 2,
+              "mediaType": "text/markdown",
+              "content": "## Step 1\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 2\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 3\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 4\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 5\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 6\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 7\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 8\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 9\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 10\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 11\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 12\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.",
+              "$meta": {
+                "maxHeight": "none",
+                "unknownKey": "ignored"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kind": "activity",
+        "id": "table-10rem",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "table-10rem",
+        "object": {
+          "label": "Roadmap",
+          "url": "#roadmap",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Table",
+              "$v": 1,
+              "$maxHeight": "10rem",
+              "headers": [
+                "Row",
+                "Value"
+              ],
+              "rows": [
+                [
+                  "Row 1",
+                  "1"
+                ],
+                [
+                  "Row 2",
+                  "2"
+                ],
+                [
+                  "Row 3",
+                  "3"
+                ],
+                [
+                  "Row 4",
+                  "4"
+                ],
+                [
+                  "Row 5",
+                  "5"
+                ],
+                [
+                  "Row 6",
+                  "6"
+                ],
+                [
+                  "Row 7",
+                  "7"
+                ],
+                [
+                  "Row 8",
+                  "8"
+                ],
+                [
+                  "Row 9",
+                  "9"
+                ],
+                [
+                  "Row 10",
+                  "10"
+                ],
+                [
+                  "Row 11",
+                  "11"
+                ],
+                [
+                  "Row 12",
+                  "12"
+                ],
+                [
+                  "Row 13",
+                  "13"
+                ],
+                [
+                  "Row 14",
+                  "14"
+                ],
+                [
+                  "Row 15",
+                  "15"
+                ],
+                [
+                  "Row 16",
+                  "16"
+                ],
+                [
+                  "Row 17",
+                  "17"
+                ],
+                [
+                  "Row 18",
+                  "18"
+                ],
+                [
+                  "Row 19",
+                  "19"
+                ],
+                [
+                  "Row 20",
+                  "20"
+                ],
+                [
+                  "Row 21",
+                  "21"
+                ],
+                [
+                  "Row 22",
+                  "22"
+                ],
+                [
+                  "Row 23",
+                  "23"
+                ],
+                [
+                  "Row 24",
+                  "24"
+                ],
+                [
+                  "Row 25",
+                  "25"
+                ],
+                [
+                  "Row 26",
+                  "26"
+                ],
+                [
+                  "Row 27",
+                  "27"
+                ],
+                [
+                  "Row 28",
+                  "28"
+                ],
+                [
+                  "Row 29",
+                  "29"
+                ],
+                [
+                  "Row 30",
+                  "30"
+                ],
+                [
+                  "Row 31",
+                  "31"
+                ],
+                [
+                  "Row 32",
+                  "32"
+                ],
+                [
+                  "Row 33",
+                  "33"
+                ],
+                [
+                  "Row 34",
+                  "34"
+                ],
+                [
+                  "Row 35",
+                  "35"
+                ],
+                [
+                  "Row 36",
+                  "36"
+                ],
+                [
+                  "Row 37",
+                  "37"
+                ],
+                [
+                  "Row 38",
+                  "38"
+                ],
+                [
+                  "Row 39",
+                  "39"
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "kind": "activity",
+        "id": "list-6rem",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "list-6rem",
+        "object": {
+          "label": "Roadmap",
+          "url": "#roadmap",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/ItemList",
+              "$v": 3,
+              "items": [
+                "Task 1",
+                "Task 2",
+                "Task 3",
+                "Task 4",
+                "Task 5",
+                "Task 6",
+                "Task 7",
+                "Task 8",
+                "Task 9",
+                "Task 10",
+                "Task 11",
+                "Task 12",
+                "Task 13",
+                "Task 14",
+                "Task 15",
+                "Task 16",
+                "Task 17",
+                "Task 18",
+                "Task 19",
+                "Task 20",
+                "Task 21",
+                "Task 22",
+                "Task 23",
+                "Task 24"
+              ],
+              "$meta": {
+                "maxHeight": "6rem",
+                "unknownKey": "ignored"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kind": "activity",
+        "id": "list-unset",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "list-unset",
+        "object": {
+          "label": "Roadmap",
+          "url": "#roadmap",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/ItemList",
+              "$v": 3,
+              "items": [
+                "Task 1",
+                "Task 2",
+                "Task 3",
+                "Task 4",
+                "Task 5",
+                "Task 6",
+                "Task 7",
+                "Task 8",
+                "Task 9",
+                "Task 10",
+                "Task 11",
+                "Task 12",
+                "Task 13",
+                "Task 14",
+                "Task 15",
+                "Task 16",
+                "Task 17",
+                "Task 18",
+                "Task 19",
+                "Task 20",
+                "Task 21",
+                "Task 22",
+                "Task 23",
+                "Task 24"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "kind": "activity",
+        "id": "prose-invalid",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "prose-invalid",
+        "object": {
+          "label": "Roadmap",
+          "url": "#roadmap",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Prose",
+              "$v": 2,
+              "mediaType": "text/markdown",
+              "content": "## Step 1\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 2\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 3\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 4\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 5\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 6\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 7\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 8\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 9\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 10\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 11\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.\n\n## Step 12\n\nMilestone notes. A body can set its own maximum height, and the kit honours it.",
+              "$meta": {
+                "maxHeight": "10rem;background:red",
+                "unknownKey": "ignored"
+              }
+            }
+          ]
+        }
+      }
+    ]
   }
 ]
