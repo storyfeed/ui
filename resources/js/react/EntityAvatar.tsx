@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { darkText, declaredColor } from '../shared/avatar';
 import type { FeedEntity } from '../shared/types';
 const colors = [
     '#0ea5e9',
@@ -20,7 +21,11 @@ export default function EntityAvatar({
     const icon = entity?.tombstone ? undefined : entity?.media?.icon?.src;
     const [failed, setFailed] = useState<string>();
     useEffect(() => setFailed(undefined), [icon]);
-    const provided = entity?.data?.initials;
+    const declaredInitials = entity?.media?.initials;
+    const provided =
+        typeof declaredInitials === 'string' && declaredInitials.length > 0
+            ? declaredInitials
+            : entity?.data?.initials;
     const initials =
         typeof provided === 'string' && provided.length > 0
             ? size === 'badge'
@@ -35,9 +40,11 @@ export default function EntityAvatar({
     let hash = 0;
     for (const char of `${entity?.type ?? ''}:${entity?.id ?? ''}`)
         hash = (hash * 31 + char.charCodeAt(0)) | 0;
+    const declared = entity?.tombstone ? null : declaredColor(entity?.media);
     const color = entity?.tombstone
         ? null
-        : entity?.data?.avatar_color || colors[Math.abs(hash) % colors.length];
+        : declared || entity?.data?.avatar_color || colors[Math.abs(hash) % colors.length];
+    const text = declared && darkText(declared) ? 'text-black' : 'text-white';
     const sizes = {
         md: 'sf-avatar--md size-[var(--sf-disc,--spacing(8))] text-xs',
         sm: 'sf-avatar--sm size-6 text-[length:--spacing(2.5)]',
@@ -48,7 +55,7 @@ export default function EntityAvatar({
             role="img"
             aria-label={entity?.label ?? 'Someone'}
             title={entity?.label ?? 'Someone'}
-            className={`sf-avatar flex shrink-0 items-center justify-center rounded-full font-semibold select-none ring-2 ring-background ${sizes[size]} ${entity?.tombstone ? 'bg-muted text-white' : color ? 'text-white' : 'bg-primary text-primary-foreground'}`}
+            className={`sf-avatar flex shrink-0 items-center justify-center rounded-full font-semibold select-none ring-2 ring-background ${sizes[size]} ${entity?.tombstone ? 'bg-muted text-white' : color ? text : 'bg-primary text-primary-foreground'}`}
             style={color ? { backgroundColor: color } : undefined}
         >
             {icon && failed !== icon ? (

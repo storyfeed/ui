@@ -43,6 +43,25 @@ it('uses snapshot colours and the Vue signed hash palette, with muted tombstones
         ->and(render_blade('<x-storyfeed::avatar :entity="$entity" />', ['entity' => $removed]))->not->toContain('#123456', '/old.jpg');
 });
 
+it('prefers declared media initials and colour, with contrasting text', function () {
+    $declared = Entity::of(['label' => 'Acme Co', 'media' => ['icon' => null, 'initials' => 'AC', 'color' => '#e6f2f3'], 'data' => ['initials' => 'OLD', 'avatar_color' => '#123456']]);
+    $html = Blade::render('<x-storyfeed::avatar :entity="$entity" />', ['entity' => $declared]);
+    expect(Avatar::initials($declared))->toBe('AC')->and(Avatar::initials($declared, true))->toBe('A')
+        ->and(Avatar::color($declared))->toBe('#e6f2f3')->and(Avatar::darkText($declared))->toBeTrue()
+        ->and($html)->toContain('background-color: #e6f2f3', 'text-black', 'AC')->not->toContain('text-white', 'OLD');
+
+    $deep = Entity::of(['label' => 'Acme Co', 'media' => ['initials' => 'AC', 'color' => '#1e3a40']]);
+    expect(Avatar::darkText($deep))->toBeFalse()
+        ->and(Blade::render('<x-storyfeed::avatar :entity="$entity" />', ['entity' => $deep]))->toContain('text-white')->not->toContain('text-black');
+
+    // Malformed or absent declarations fall back to the older data, then the hash.
+    $legacy = Entity::of(['label' => 'Dana', 'media' => ['initials' => '', 'color' => 'teal'], 'data' => ['initials' => 'DX', 'avatar_color' => '#FAF6EF']]);
+    expect(Avatar::initials($legacy))->toBe('DX')->and(Avatar::color($legacy))->toBe('#FAF6EF')->and(Avatar::darkText($legacy))->toBeFalse();
+
+    $removed = Entity::of(['label' => 'Acme Co', 'tombstone' => ['formerType' => 'project'], 'media' => ['initials' => 'AC', 'color' => '#e6f2f3']]);
+    expect(Avatar::color($removed))->toBeNull()->and(Avatar::darkText($removed))->toBeFalse();
+});
+
 it('renders only allowlisted Component bodies and passes typed props without turning names into paths', function () {
     $views = sys_get_temp_dir().'/storyfeed-components-'.uniqid();
     mkdir($views.'/components', recursive: true);

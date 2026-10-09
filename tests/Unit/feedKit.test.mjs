@@ -78,6 +78,29 @@ test('avatar colours prefer snapshot data, retain the source hash and mute tombs
     assert.doesNotMatch(deleted, /background-color|#FAF6EF|<img/);
 });
 
+test('avatars prefer declared media initials and colour, with contrasting text', async () => {
+    const path = '/resources/js/vue/EntityAvatar.vue';
+    const legacy = { initials: 'OLD', avatar_color: '#123456' };
+    const faint = await renderRaw(path, {
+        entity: { ...entity, media: { icon: null, initials: 'AC', color: '#e6f2f3' }, data: legacy },
+    });
+    assert.match(faint, /background-color:#e6f2f3/);
+    assert.match(faint, /class="[^"]*\btext-black\b/);
+    assert.match(faint, />AC</);
+    assert.doesNotMatch(faint, /OLD|text-white/);
+
+    const deep = await renderRaw(path, { entity: { ...entity, media: { icon: null, initials: 'AC', color: '#1e3a40' } } });
+    assert.match(deep, /class="[^"]*\btext-white\b/);
+
+    const badge = await renderRaw(path, { entity: { ...entity, media: { icon: null, initials: 'AC', color: null } }, size: 'badge' });
+    assert.match(badge.replace(/<!--.*?-->/g, ''), />A<\/span>/);
+
+    const fallback = await renderRaw(path, { entity: { ...entity, media: { icon: null, initials: '', color: 'teal' }, data: legacy } });
+    assert.match(fallback, /background-color:#123456/);
+    assert.match(fallback, />OLD</);
+    assert.match(fallback, /class="[^"]*\btext-white\b/);
+});
+
 test('rich prose strips unsafe HTML and verbatim keeps escaped source', async () => {
     const content =
         '<script>alert(1)</script><a href="javascript:alert(1)">link</a><strong>safe</strong>';

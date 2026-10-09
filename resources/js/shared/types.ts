@@ -29,7 +29,10 @@ export interface FeedEntity {
     /** What a deleted entity left behind; null for a live one. */
     tombstone?: FeedTombstone | null;
     attributes?: Record<string, string>;
-    /** App-specific extras. This kit reads `initials` and `avatar_color`. */
+    /**
+     * App-specific extras. This kit still reads `initials` and `avatar_color`
+     * when `media` declares neither; that fallback goes in the next release.
+     */
     data?: Record<string, unknown> & {
         initials?: string;
         avatar_color?: string;
@@ -54,6 +57,10 @@ export interface FeedMedia {
     image: FeedImage | null;
     preview: FeedImage | null;
     url: FeedImage | null;
+    /** The avatar's text when there is no icon. Absent in older payloads. */
+    initials?: string | null;
+    /** The avatar disc's colour, lowercase `#rrggbb`. Absent in older payloads. */
+    color?: string | null;
     /** Absent in older cached payloads. */
     files?: FeedResource[];
 }

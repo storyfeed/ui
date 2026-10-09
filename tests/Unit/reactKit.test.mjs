@@ -91,6 +91,26 @@ const photo = (src) => ({
     media: { preview: { src, width: 200, height: 100 } },
 });
 
+test('avatars prefer declared media initials and colour, with contrasting text', () => {
+    const legacy = { initials: 'OLD', avatar_color: '#123456' };
+    const faint = raw('EntityAvatar', {
+        entity: { ...entity, media: { icon: null, initials: 'AC', color: '#e6f2f3' }, data: legacy },
+    });
+    assert.match(faint, /background-color:#e6f2f3/);
+    assert.match(faint, /class="[^"]*\btext-black\b/);
+    assert.match(faint, />AC</);
+    assert.doesNotMatch(faint, /OLD|text-white/);
+    assert.match(
+        raw('EntityAvatar', { entity: { ...entity, media: { icon: null, initials: 'AC', color: '#1e3a40' } } }),
+        /class="[^"]*\btext-white\b/,
+    );
+    const fallback = raw('EntityAvatar', {
+        entity: { ...entity, media: { icon: null, initials: '', color: 'teal' }, data: legacy },
+    });
+    assert.match(fallback, /background-color:#123456/);
+    assert.match(fallback, />OLD</);
+});
+
 test('avatars show icons, deterministic colours and one-letter badges; tombstones are muted', () => {
     assert.match(raw('EntityAvatar', { entity }), /src="\/ada.svg"/);
     assert.match(

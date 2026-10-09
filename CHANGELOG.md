@@ -12,6 +12,7 @@
 ### Added
 
 - `--sf-font-size` sets the feed's size: `class="[--sf-font-size:0.875rem]"` on the feed root draws a compact feed.
+- Avatars read core's `media.initials` and `media.color` (`FeedMedia::make()->initials('AC')->color('#438d98')`): the icon, else the declared initials on a disc of the declared colour, else the derived default. A declared colour gets black or white initials, whichever contrasts more. `data.initials` and `data.avatar_color` still apply when `media` declares neither; that fallback is removed in the next release.
 
 ## v0.4.5 - 2026-10-09
 

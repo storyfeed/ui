@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import { darkText, declaredColor } from '../shared/avatar';
 import type { FeedEntity } from '../shared/types';
 
 const props = withDefaults(
@@ -38,8 +39,11 @@ watch(icon, () => {
     imageFailed.value = false;
 });
 
+// The entity's declared initials, then the older snapshot convention, then
+// initials derived from the label.
 const initials = computed(() => {
-    const provided = props.entity?.data?.initials;
+    const declared = props.entity?.media?.initials;
+    const provided = typeof declared === 'string' && declared.length > 0 ? declared : props.entity?.data?.initials;
 
     if (typeof provided === 'string' && provided.length > 0) {
         return props.size === 'badge' ? provided.slice(0, 1) : provided;
@@ -57,13 +61,20 @@ const initials = computed(() => {
     );
 });
 
-// Prefer a color the entity carries in its snapshot; otherwise derive one
+// The declared disc colour, else one the entity carries in its snapshot
+// data; otherwise derive one
 // deterministically so the same entity is always the same color — and so the
 // server and the client agree, which a random pick would not.
 const color = computed(() => {
     // Tombstones use the muted theme token; never apply their former colour.
     if (props.entity?.tombstone) {
         return null;
+    }
+
+    const declared = declaredColor(props.entity?.media);
+
+    if (declared) {
+        return declared;
     }
 
     const provided = props.entity?.data?.avatar_color;
@@ -81,6 +92,14 @@ const color = computed(() => {
 
     return FALLBACK_COLORS[Math.abs(hash) % FALLBACK_COLORS.length] ?? null;
 });
+
+// A declared colour gets the text with the better contrast; the fallback
+// palette and the older snapshot colour keep white.
+const text = computed(() => {
+    const declared = props.entity?.tombstone ? null : declaredColor(props.entity?.media);
+
+    return declared && darkText(declared) ? 'text-black' : 'text-white';
+});
 </script>
 
 <template>
@@ -89,7 +108,7 @@ const color = computed(() => {
         :aria-label="entity?.label ?? 'Someone'"
         :title="entity?.label ?? 'Someone'"
         class="sf-avatar flex shrink-0 items-center justify-center rounded-full font-semibold select-none ring-2 ring-background"
-        :class="[{ 'sf-avatar--md size-[var(--sf-disc,--spacing(8))] text-xs': size === 'md', 'sf-avatar--sm size-6 text-[length:--spacing(2.5)]': size === 'sm', 'sf-avatar--badge [--sf-badge:var(--sf-badge-face)] absolute top-[calc(var(--sf-disc)-var(--sf-badge)+--spacing(0.5))] left-[calc(50%+var(--sf-disc)/2-var(--sf-badge))] size-(--sf-badge) text-[length:--spacing(2.25)]': size === 'badge' }, entity?.tombstone ? 'bg-muted text-white' : color ? 'text-white' : 'bg-primary text-primary-foreground']"
+        :class="[{ 'sf-avatar--md size-[var(--sf-disc,--spacing(8))] text-xs': size === 'md', 'sf-avatar--sm size-6 text-[length:--spacing(2.5)]': size === 'sm', 'sf-avatar--badge [--sf-badge:var(--sf-badge-face)] absolute top-[calc(var(--sf-disc)-var(--sf-badge)+--spacing(0.5))] left-[calc(50%+var(--sf-disc)/2-var(--sf-badge))] size-(--sf-badge) text-[length:--spacing(2.25)]': size === 'badge' }, entity?.tombstone ? 'bg-muted text-white' : color ? text : 'bg-primary text-primary-foreground']"
         :style="color ? { backgroundColor: color } : undefined"
     >
         <img

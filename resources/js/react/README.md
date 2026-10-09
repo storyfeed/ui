@@ -110,8 +110,10 @@ payload keys are ignored.
 `dividerStyle="dot"` or `"branch"` selects the joint. Root utility properties
 `--sf-font-size`, `--sf-gutter`, `--sf-gap`, `--sf-disc`, `--sf-badge` and `--sf-badge-face` match Vue.
 Glyph intent stays an app-owned `data-sf-intent`; edit `FeedIcon.tsx` to change
-icon mapping. Avatar snapshot colours win over the stable identity hash;
-tombstones remain muted and unlinked.
+icon mapping. Avatars read `media.initials` and `media.color` first, then the
+older snapshot `data.initials`/`data.avatar_color`, then the stable identity
+hash; a declared colour gets black or white text, whichever contrasts more.
+Tombstones remain muted and unlinked.
 
 Metadata follows the headline: date, then unused instrument/origin/result/
 location/generator roles in that order. Context appears only in the headline.

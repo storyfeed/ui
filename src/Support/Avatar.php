@@ -11,6 +11,10 @@ final class Avatar
         if ($entity->isTombstone()) {
             return null;
         }
+        $declared = self::declaredColor($entity);
+        if ($declared !== null) {
+            return $declared;
+        }
         $provided = $entity->data()->get('avatar_color');
         if (is_string($provided) && $provided !== '') {
             return $provided;
@@ -34,12 +38,43 @@ final class Avatar
 
     public static function initials(Entity $entity, bool $badge = false): string
     {
-        $provided = $entity->data()->get('initials');
+        $declared = $entity->media()?->get('initials');
+        $provided = is_string($declared) && $declared !== '' ? $declared : $entity->data()->get('initials');
         if (is_string($provided) && $provided !== '') {
             return $badge ? mb_substr($provided, 0, 1) : $provided;
         }
         $words = preg_split('/\s+/u', trim($entity->label() ?? '?')) ?: [];
 
         return implode('', array_map(fn (string $word): string => mb_strtoupper(mb_substr($word, 0, 1)), array_slice($words, 0, $badge ? 1 : 2))) ?: '?';
+    }
+
+    /**
+     * Whether the disc takes black text: a declared colour gets black or
+     * white, whichever has the higher WCAG contrast ratio (black once relative
+     * luminance passes 0.179); the fallback palette and the older snapshot
+     * colour keep white. Mirrors `darkText()` in the JavaScript kits.
+     */
+    public static function darkText(Entity $entity): bool
+    {
+        $declared = $entity->isTombstone() ? null : self::declaredColor($entity);
+        if ($declared === null) {
+            return false;
+        }
+        $channel = function (int $offset) use ($declared): float {
+            $value = hexdec(substr($declared, $offset, 2)) / 255;
+
+            return $value <= 0.04045 ? $value / 12.92 : (($value + 0.055) / 1.055) ** 2.4;
+        };
+        $luminance = 0.2126 * $channel(1) + 0.7152 * $channel(3) + 0.0722 * $channel(5);
+
+        return $luminance > 0.179;
+    }
+
+    /** The declared disc colour when it is the `#rrggbb` core emits, else null. */
+    private static function declaredColor(Entity $entity): ?string
+    {
+        $color = $entity->media()?->get('color');
+
+        return is_string($color) && preg_match('/^#[0-9a-f]{6}$/i', $color) === 1 ? $color : null;
     }
 }

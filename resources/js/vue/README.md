@@ -14,9 +14,12 @@ The copy command includes the framework-free core in a self-contained `shared/` 
 Use the Laravel Vue starter-kit tokens: `background`, `foreground`, `card`,
 `muted`, `muted-foreground`, `primary`, `primary-foreground`, `border` and `ring`.
 Define these tokens in a non-starter-kit app. Theme colours come from tokens.
-Avatar colours are content: `entity.data.avatar_color` wins when supplied;
-otherwise the source palette and stable `type:id` hash distinguish identities.
-Live avatars retain white text. Tombstones use `bg-muted` and never apply their
+Avatars are content: an entity's `media.icon` wins, then its declared
+`media.initials` on a disc of `media.color`; the older `entity.data.initials`
+and `entity.data.avatar_color` still apply when `media` declares neither, until
+the next release. Otherwise the source palette and stable `type:id` hash
+distinguish identities. A declared colour gets black or white text, whichever
+contrasts more; other live avatars keep white text. Tombstones use `bg-muted` and never apply their
 former colour or icon. Primary tokens are a fallback if no colour is derived.
 Glyph intent is preserved as `data-sf-intent`, with no built-in intent vocabulary
 or colour map. Edit `FeedIcon.vue` to map your app's intents to token utilities.

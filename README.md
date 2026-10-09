@@ -246,7 +246,7 @@ these. For another Tailwind v4 app, add this minimal theme to `app.css` after
 ```
 
 Add or remove the `dark` class on your layout to choose the theme. The kit is
-all Tailwind utilities; the avatar's snapshot colour and a picture's aspect
+all Tailwind utilities; the avatar's declared colour and a picture's aspect
 ratio are data-driven inline styles. Verbatim prose keeps a dark code surface
 in both themes. Prose, lists and quotations carry their own utility styles.
 
@@ -283,9 +283,11 @@ utilities to the published `components/glyph.blade.php` view.
 `rail` accepts `actor` (face + glyph badge), `activity` (glyph + face badge),
 `actor-only` and `activity-only`. The default matches Vue: `actor-only`, and
 `activity-only` for group children. A missing primary falls back to the other
-subject, then a blank disc; several actors suppress the badge. Avatars use
-`data.avatar_color`, then Vue's deterministic type/id palette;
-`data.initials` overrides initials. Tombstones suppress former pictures and
+subject, then a blank disc; several actors suppress the badge. Avatars draw
+`media.icon`, else `media.initials` on a `media.color` disc (black or white
+text, whichever contrasts more). The older `data.initials` and
+`data.avatar_color` apply when `media` declares neither, then Vue's
+deterministic type/id palette. Tombstones suppress former pictures and
 colours. The default image fallback uses an inline error handler; apps with
 strict script CSP can supply an avatar renderer with their own fallback.
 

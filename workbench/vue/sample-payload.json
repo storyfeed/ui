@@ -20,12 +20,19 @@
         "data": {
           "id": 8,
           "name": "Aiko Tanaka",
-          "role": "developer",
-          "initials": "AT",
-          "avatar_color": "#14b8a6"
+          "role": "developer"
         },
         "body": null,
-        "tombstone": null
+        "tombstone": null,
+        "media": {
+          "icon": null,
+          "image": null,
+          "preview": null,
+          "url": null,
+          "initials": "AT",
+          "color": "#14b8a6",
+          "files": []
+        }
       },
       "object": null,
       "target": null,
@@ -58,12 +65,19 @@
             "data": {
               "id": 8,
               "name": "Aiko Tanaka",
-              "role": "developer",
-              "initials": "AT",
-              "avatar_color": "#14b8a6"
+              "role": "developer"
             },
             "body": null,
-            "tombstone": null
+            "tombstone": null,
+            "media": {
+              "icon": null,
+              "image": null,
+              "preview": null,
+              "url": null,
+              "initials": "AT",
+              "color": "#14b8a6",
+              "files": []
+            }
           }
         ],
         "objects": [
@@ -181,12 +195,19 @@
             "data": {
               "id": 8,
               "name": "Aiko Tanaka",
-              "role": "developer",
-              "initials": "AT",
-              "avatar_color": "#14b8a6"
+              "role": "developer"
             },
             "body": null,
-            "tombstone": null
+            "tombstone": null,
+            "media": {
+              "icon": null,
+              "image": null,
+              "preview": null,
+              "url": null,
+              "initials": "AT",
+              "color": "#14b8a6",
+              "files": []
+            }
           },
           "object": {
             "type": "document",
@@ -261,12 +282,19 @@
             "data": {
               "id": 8,
               "name": "Aiko Tanaka",
-              "role": "developer",
-              "initials": "AT",
-              "avatar_color": "#14b8a6"
+              "role": "developer"
             },
             "body": null,
-            "tombstone": null
+            "tombstone": null,
+            "media": {
+              "icon": null,
+              "image": null,
+              "preview": null,
+              "url": null,
+              "initials": "AT",
+              "color": "#14b8a6",
+              "files": []
+            }
           },
           "object": {
             "type": "document",
@@ -341,12 +369,19 @@
             "data": {
               "id": 8,
               "name": "Aiko Tanaka",
-              "role": "developer",
-              "initials": "AT",
-              "avatar_color": "#14b8a6"
+              "role": "developer"
             },
             "body": null,
-            "tombstone": null
+            "tombstone": null,
+            "media": {
+              "icon": null,
+              "image": null,
+              "preview": null,
+              "url": null,
+              "initials": "AT",
+              "color": "#14b8a6",
+              "files": []
+            }
           },
           "object": {
             "type": "document",
@@ -421,12 +456,19 @@
             "data": {
               "id": 8,
               "name": "Aiko Tanaka",
-              "role": "developer",
-              "initials": "AT",
-              "avatar_color": "#14b8a6"
+              "role": "developer"
             },
             "body": null,
-            "tombstone": null
+            "tombstone": null,
+            "media": {
+              "icon": null,
+              "image": null,
+              "preview": null,
+              "url": null,
+              "initials": "AT",
+              "color": "#14b8a6",
+              "files": []
+            }
           },
           "object": {
             "type": "document",
@@ -501,12 +543,19 @@
             "data": {
               "id": 8,
               "name": "Aiko Tanaka",
-              "role": "developer",
-              "initials": "AT",
-              "avatar_color": "#14b8a6"
+              "role": "developer"
             },
             "body": null,
-            "tombstone": null
+            "tombstone": null,
+            "media": {
+              "icon": null,
+              "image": null,
+              "preview": null,
+              "url": null,
+              "initials": "AT",
+              "color": "#14b8a6",
+              "files": []
+            }
           },
           "object": {
             "type": "document",
@@ -581,12 +630,19 @@
             "data": {
               "id": 8,
               "name": "Aiko Tanaka",
-              "role": "developer",
-              "initials": "AT",
-              "avatar_color": "#14b8a6"
+              "role": "developer"
             },
             "body": null,
-            "tombstone": null
+            "tombstone": null,
+            "media": {
+              "icon": null,
+              "image": null,
+              "preview": null,
+              "url": null,
+              "initials": "AT",
+              "color": "#14b8a6",
+              "files": []
+            }
           },
           "object": {
             "type": "document",
@@ -661,12 +717,19 @@
             "data": {
               "id": 8,
               "name": "Aiko Tanaka",
-              "role": "developer",
-              "initials": "AT",
-              "avatar_color": "#14b8a6"
+              "role": "developer"
             },
             "body": null,
-            "tombstone": null
+            "tombstone": null,
+            "media": {
+              "icon": null,
+              "image": null,
+              "preview": null,
+              "url": null,
+              "initials": "AT",
+              "color": "#14b8a6",
+              "files": []
+            }
           },
           "object": {
             "type": "document",
