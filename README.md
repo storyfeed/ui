@@ -311,8 +311,17 @@ strict script CSP can supply an avatar renderer with their own fallback.
 Day dividers are on by default; `:grouped="false"` hides them. Per-item
 `dividers` are keyed by public item id and work in either mode.
 `divider-style="dot|branch"` applies to both. `timezone` controls the display
-zone for days, the timestamp ladder and its absolute hover title. Timestamps
-are rendered on the server; the host owns any live refresh.
+zone for days, the timestamp ladder, its absolute hover title and time ranges.
+Timestamps are rendered on the server; the host owns any live refresh.
+
+An activity recorded with a time range (`->startsAt()` / `->endsAt()`, core
+0.17) shows it on the meta line after the time, in all three kits:
+"30 Sep – 9 Oct 2026", collapsed to "1 – 9 Oct 2026" within a month and
+"9 Oct 2026" within a day, and "from 9 Oct 2026" or "until 31 Oct 2026" when
+one end is open. An activity without a range is unchanged; groups carry none.
+The words are the `storyfeed-ui::meta.from` and `meta.until` lines in Blade and
+`messages.rangeFrom` / `rangeUntil` in the JavaScript kits. React reads the
+range in UTC until the page hydrates, then in the browser's zone.
 
 `interactive` and `collapsed` control groups independently. Native `details`
 works without JavaScript and supports keyboard disclosure. An unspecified

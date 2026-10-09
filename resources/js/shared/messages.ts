@@ -6,4 +6,6 @@ export const messages = {
     location: 'at',
     generator: 'from',
     yesterday: 'Yesterday',
+    rangeFrom: 'from',
+    rangeUntil: 'until',
 };

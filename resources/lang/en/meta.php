@@ -7,4 +7,6 @@ return [
     'location' => 'at',
     'generator' => 'from',
     'yesterday' => 'Yesterday, :time',
+    'from' => 'from :date',
+    'until' => 'until :date',
 ];

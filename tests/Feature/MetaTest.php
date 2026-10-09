@@ -80,3 +80,29 @@ it('formats the calendar ladder while keeping the machine date and absolute hove
     'older' => ['2025-10-06T15:42:00+00:00', '6 Oct 2025, 3:42 PM'],
     'local yesterday' => ['2026-09-24T23:42:00-04:00', 'Yesterday, 11:42 PM'],
 ]);
+
+it('draws the time range an activity describes after its time, collapsing a shared month or day', function (?string $startsAt, ?string $endsAt, ?string $expected) {
+    $item = ['kind' => 'activity', 'headline' => 'Milestone', 'published_at' => '2026-10-09T12:00:00+00:00', 'starts_at' => $startsAt, 'ends_at' => $endsAt, 'instrument' => ['label' => 'Claude']];
+    $html = render_blade('<x-storyfeed::meta :item="$item" />', compact('item'));
+
+    $expected === null
+        ? expect($html)->not->toContain('· <span>')->toContain('</time> · via')
+        : expect($html)->toContain('</time> · <span>'.e($expected).'</span> · via');
+})->with([
+    'months' => ['2026-09-30T12:00:00+00:00', '2026-10-09T12:00:00+00:00', '30 Sep – 9 Oct 2026'],
+    'one month' => ['2026-10-01T12:00:00+00:00', '2026-10-09T12:00:00+00:00', '1 – 9 Oct 2026'],
+    'one day' => ['2026-10-09T09:00:00+00:00', '2026-10-09T17:00:00+00:00', '9 Oct 2026'],
+    'years' => ['2025-12-30T12:00:00+00:00', '2026-01-02T12:00:00+00:00', '30 Dec 2025 – 2 Jan 2026'],
+    'open end' => ['2026-10-09T12:00:00+00:00', null, 'from 9 Oct 2026'],
+    'open start' => [null, '2026-10-31T12:00:00+00:00', 'until 31 Oct 2026'],
+    'none' => [null, null, null],
+    'unreadable' => ['not a date', '', null],
+]);
+
+it('reads a range in the feed\'s timezone and never draws one on a group', function () {
+    $item = ['kind' => 'activity', 'headline' => 'Late', 'published_at' => '2026-10-09T12:00:00+00:00', 'starts_at' => '2026-10-09T23:30:00+00:00', 'ends_at' => '2026-10-10T23:30:00+00:00'];
+    expect(render_blade('<x-storyfeed::meta :item="$item" timezone="Pacific/Auckland" />', compact('item')))->toContain('<span>10 – 11 Oct 2026</span>');
+
+    $group = [...$item, 'kind' => 'group', 'count' => 2, 'children' => []];
+    expect(render_blade('<x-storyfeed::meta :item="$group" />', ['group' => $group]))->not->toContain('Oct 2026</span>');
+});

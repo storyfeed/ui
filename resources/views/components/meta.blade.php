@@ -7,6 +7,34 @@
     $headline ??= $item->headline();
     $used = $headline->segments()->pluck('role')->filter()->all();
     $details = [];
+    // The time range the activity describes, day-first like the timestamps:
+    // a shared month or day collapses, an open end reads "from" or "until".
+    // Groups carry no range. Mirrors `shared/range.ts`.
+    $date = function (mixed $iso) use ($timezone): ?\Carbon\CarbonImmutable {
+        if (! is_string($iso) || $iso === '') {
+            return null;
+        }
+        try {
+            $at = \Carbon\CarbonImmutable::parse($iso);
+        } catch (\Throwable) {
+            return null;
+        }
+
+        return $timezone ? $at->timezone($timezone) : $at;
+    };
+    [$start, $end] = $item->isActivity() ? [$date($item->get('starts_at')), $date($item->get('ends_at'))] : [null, null];
+    $range = match (true) {
+        $start === null && $end === null => null,
+        $end === null => __('storyfeed-ui::meta.from', ['date' => $start->isoFormat('D MMM YYYY')]),
+        $start === null => __('storyfeed-ui::meta.until', ['date' => $end->isoFormat('D MMM YYYY')]),
+        $start->year !== $end->year => $start->isoFormat('D MMM YYYY').' – '.$end->isoFormat('D MMM YYYY'),
+        $start->month !== $end->month => $start->isoFormat('D MMM').' – '.$end->isoFormat('D MMM YYYY'),
+        $start->day !== $end->day => $start->day.' – '.$end->isoFormat('D MMM YYYY'),
+        default => $end->isoFormat('D MMM YYYY'),
+    };
+    if ($range !== null) {
+        $details[] = '<span class="sf-meta__range">'.e($range).'</span>';
+    }
     foreach (['instrument', 'origin', 'result', 'location', 'generator'] as $role) {
         if (in_array($role, $used, true)) {
             continue;

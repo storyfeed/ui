@@ -359,6 +359,23 @@ test('a body with no renderer draws its escaped fallback line; a renderer wins',
     assert.doesNotMatch(registered, /Fallback/);
     assert.doesNotMatch(draw({ $body: 'Storyfeed/Body/Prose', content: '', $fallback: 'Fallback' }), /Fallback/);
 });
+test('time ranges format day-first, collapse a shared month or day, and read open ends', async () => {
+    const { formatRange } = await server.ssrLoadModule('/resources/js/shared/range.ts');
+    const node = (starts_at, ends_at) => ({ kind: 'activity', starts_at, ends_at });
+    for (const [start, end, expected] of [
+        ['2026-09-30T12:00:00Z', '2026-10-09T12:00:00Z', '30 Sep – 9 Oct 2026'],
+        ['2026-10-01T12:00:00Z', '2026-10-09T12:00:00Z', '1 – 9 Oct 2026'],
+        ['2026-10-09T09:00:00Z', '2026-10-09T17:00:00Z', '9 Oct 2026'],
+        ['2025-12-30T12:00:00Z', '2026-01-02T12:00:00Z', '30 Dec 2025 – 2 Jan 2026'],
+        ['2026-10-09T12:00:00Z', null, 'from 9 Oct 2026'],
+        [null, '2026-10-31T12:00:00Z', 'until 31 Oct 2026'],
+        [null, null, null],
+        ['not a date', '', null],
+    ]) assert.equal(formatRange(node(start, end), true, 'en-US'), expected);
+    assert.equal(formatRange({ kind: 'group', starts_at: '2026-10-09T12:00:00Z' }, true), null);
+    const html = render('FeedItem', { item: { ...activity, starts_at: '2026-09-30T12:00:00Z', ends_at: '2026-10-09T12:00:00Z' } });
+    assert.match(html, /<\/time> · <span class="sf-meta__range">30 Sep – 9 Oct 2026<\/span>/);
+});
 test('custom link component receives href, modal and attributes', () => {
     let received;
     raw(

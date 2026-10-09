@@ -172,6 +172,11 @@ try {
                     // Kits differ only in whitespace between tags, which renders as nothing.
                     assert.deepEqual(texts.map(t => t.replace(/\s+/g, '')), expected.map(t => t.replace(/\s+/g, '')), `${renderers[i]}: ${section}`);
                 }
+                // Time ranges on the meta line: collapsed by shared month or day, open ends, nothing without one.
+                if (state === 'collapsed' && text === 'default') for (let i = 0; i < frames.length; i++) {
+                    const ranges = await frames[i].locator('.example:has(>h2:text-is("Time ranges")) .sf-meta').evaluateAll(metas => metas.map(meta => meta.querySelector('.sf-meta__range')?.textContent ?? null));
+                    assert.deepEqual(ranges, ['30 Sep – 9 Oct 2026', '1 – 9 Oct 2026', '9 Oct 2026', '30 Dec 2025 – 2 Jan 2026', 'from 9 Oct 2026', 'until 31 Oct 2026', null], `${renderers[i]}: time ranges`);
+                }
                 // Card pictures keep their shape: 1:1–2:1 at the card's height, whole when undeclared, square icons,
                 // and the text column keeps a readable width (12em, or the whole card once the picture stacks above it).
                 if (state === 'collapsed') for (let i = 0; i < frames.length; i++) {

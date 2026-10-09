@@ -2538,5 +2538,134 @@
         }
       }
     ]
+  },
+  {
+    "name": "Time ranges",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "range-months",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "Milestone 0.16",
+        "starts_at": "2026-09-30T12:00:00+00:00",
+        "ends_at": "2026-10-09T12:00:00+00:00"
+      },
+      {
+        "kind": "activity",
+        "id": "range-month",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "Milestone 0.15",
+        "starts_at": "2026-10-01T12:00:00+00:00",
+        "ends_at": "2026-10-09T12:00:00+00:00"
+      },
+      {
+        "kind": "activity",
+        "id": "range-day",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "Release day",
+        "starts_at": "2026-10-09T09:00:00+00:00",
+        "ends_at": "2026-10-09T17:00:00+00:00"
+      },
+      {
+        "kind": "activity",
+        "id": "range-years",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "Milestone 0.9",
+        "starts_at": "2025-12-30T12:00:00+00:00",
+        "ends_at": "2026-01-02T12:00:00+00:00"
+      },
+      {
+        "kind": "activity",
+        "id": "range-from",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "Milestone 0.17",
+        "starts_at": "2026-10-09T12:00:00+00:00",
+        "ends_at": null
+      },
+      {
+        "kind": "activity",
+        "id": "range-until",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "Beta window",
+        "starts_at": null,
+        "ends_at": "2026-10-31T12:00:00+00:00"
+      },
+      {
+        "kind": "activity",
+        "id": "range-none",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "A single date"
+      }
+    ]
   }
 ]

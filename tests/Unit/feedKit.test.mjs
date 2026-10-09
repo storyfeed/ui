@@ -632,6 +632,13 @@ test('Table draws inside prose with a tfoot, escaped cells that keep line breaks
     assert.equal((await render(path, { payload: { headers: ['A'] } })).replace(/<!--[\s\S]*?-->/g, ''), '');
 });
 
+test('activity rows draw their time range after the time; groups never do', async () => {
+    const html = await render('/resources/js/vue/FeedItem.vue', { item: { ...activity, starts_at: '2026-10-01T12:00:00Z', ends_at: '2026-10-09T12:00:00Z' } });
+    assert.match(html.replace(/<!--[\s\S]*?-->/g, ''), /<\/time> · <span class="sf-meta__range">1 – 9 Oct 2026<\/span>/);
+    assert.doesNotMatch(await render('/resources/js/vue/FeedItem.vue', { item: activity }), /sf-meta__range/);
+    assert.doesNotMatch(await render('/resources/js/vue/FeedGroup.vue', { item: { ...group, starts_at: '2026-10-01T12:00:00Z' } }), /sf-meta__range/);
+});
+
 test('ItemList states the conjunction before overflow', async () => {
     const html = await render('/resources/js/vue/body/ItemList.vue', { payload: { items: ['First'], totalItems: 3 } });
     assert.match(textOf(html), /Firstand 2 more/);

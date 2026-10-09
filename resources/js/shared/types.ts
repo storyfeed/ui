@@ -106,6 +106,13 @@ export interface ActivityNode extends BaseNode {
     kind: 'activity';
     verb: string;
     /**
+     * The time range the activity describes (core 0.17, AS2 `startTime` /
+     * `endTime`), beside `published_at` and never instead of it. Either end
+     * may be null on its own: a range open at that end.
+     */
+    starts_at?: string | null;
+    ends_at?: string | null;
+    /**
      * The verb's own reading once `redundant` is true (additive): the app's
      * `->missingHeadline()`, as a template or pre-rendered. Null otherwise,
      * and null when the verb declares none. `headline_template` never swaps.

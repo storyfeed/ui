@@ -4,6 +4,7 @@ import type { VNode } from 'vue';
 
 import EntityLink from './EntityLink.vue';
 import { leftoverRoles } from '../shared/meta';
+import { formatRange } from '../shared/range';
 import type { FeedNode } from '../shared/types';
 const props = defineProps<{
     node: FeedNode;
@@ -30,14 +31,17 @@ function hasContent(nodes: VNode[]): boolean {
     });
 }
 const roles = computed(() => leftoverRoles(props.node, props.templates));
+/** The time range the activity describes, after the time. */
+const range = computed(() => formatRange(props.node));
 </script>
 
 <template>
     <div
-        v-if="roles.length || hasContent(slots.default?.() ?? [])"
+        v-if="range || roles.length || hasContent(slots.default?.() ?? [])"
         class="sf-meta mt-0.5 text-sm leading-[1.5] text-muted-foreground [overflow-wrap:anywhere] [&_.sf-entity]:text-inherit [&_.sf-entity]:font-normal"
     >
         <slot v-if="hasContent(slots.default?.() ?? [])" />
+        <template v-if="range">{{ hasContent(slots.default?.() ?? []) ? ' · ' : '' }}<span class="sf-meta__range">{{ range }}</span></template>
         <template v-for="part in roles" :key="part.role">
             {{ ' · '
             }}<span class="sf-meta__role"
