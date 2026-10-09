@@ -18,13 +18,13 @@ export interface FeedStreamProps extends NodeProps {
 function Divider({ label, style }: { label: string; style: 'dot' | 'branch' }) {
     return (
         <div
-            className={`sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail>div:last-child]:mt-[0.3125rem] ${style === 'branch' ? 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-[22px]' : 'sf-divider--dot'}`}
+            className={`sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail>div:last-child]:mt-1.25 ${style === 'branch' ? 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-5.5' : 'sf-divider--dot'}`}
         >
             <div className="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
                 {style === 'branch' ? (
                     <svg
                         aria-hidden="true"
-                        className="sf-rail__branch absolute top-[3px] left-[calc(50%-0.75px)] overflow-visible fill-none stroke-muted-foreground stroke-[1.5] [stroke-linecap:round]"
+                        className="sf-rail__branch absolute top-0.75 left-[calc(50%-var(--spacing)*0.1875)] h-5.5 w-4 overflow-visible fill-none stroke-muted-foreground stroke-[1.5] [stroke-linecap:round]"
                         width="16"
                         height="22"
                         viewBox="0 0 16 22"
@@ -34,7 +34,7 @@ function Divider({ label, style }: { label: string; style: 'dot' | 'branch' }) {
                 ) : (
                     <div
                         aria-hidden="true"
-                        className="sf-rail__node mt-[0.3125rem] size-[0.5625rem] shrink-0 rounded-full bg-muted-foreground ring-[3px] ring-background"
+                        className="sf-rail__node mt-1.25 size-2.25 shrink-0 rounded-full bg-muted-foreground ring-3 ring-background"
                     />
                 )}
                 <div
@@ -66,7 +66,7 @@ export default function FeedStream({
     const days = useFeedDays(items);
     return (
         <div
-            className={`sf-feed [--sf-gutter:2rem] [--sf-gap:0.75rem] [--sf-disc:2rem] [--sf-badge:0.875rem] [--sf-badge-face:1.125rem] text-sm leading-[1.6] text-muted-foreground ${className}`}
+            className={`sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter:--spacing(8)] [--sf-gap:--spacing(3)] [--sf-disc:--spacing(8)] [--sf-badge:--spacing(3.5)] [--sf-badge-face:--spacing(4.5)] text-base leading-[1.6] text-muted-foreground ${className}`}
             style={style}
         >
             {!items.length ? (
@@ -116,7 +116,7 @@ export default function FeedStream({
                             </div>
                             <button
                                 type="button"
-                                className="sf-more cursor-pointer rounded-md border border-border bg-transparent px-3 py-1.5 text-xs font-medium text-muted-foreground enabled:hover:bg-muted enabled:hover:text-foreground disabled:cursor-default disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-ring"
+                                className="sf-more cursor-pointer rounded-md border border-border bg-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground enabled:hover:bg-muted enabled:hover:text-foreground disabled:cursor-default disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-ring"
                                 disabled={loadingMore}
                                 onClick={onLoadMore}
                             >

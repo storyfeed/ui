@@ -35,7 +35,7 @@ const roles = computed(() => leftoverRoles(props.node, props.templates));
 <template>
     <div
         v-if="roles.length || hasContent(slots.default?.() ?? [])"
-        class="sf-meta mt-0.5 text-xs leading-[1.5] text-muted-foreground [overflow-wrap:anywhere] [&_.sf-entity]:text-inherit [&_.sf-entity]:font-normal"
+        class="sf-meta mt-0.5 text-sm leading-[1.5] text-muted-foreground [overflow-wrap:anywhere] [&_.sf-entity]:text-inherit [&_.sf-entity]:font-normal"
     >
         <slot v-if="hasContent(slots.default?.() ?? [])" />
         <template v-for="part in roles" :key="part.role">

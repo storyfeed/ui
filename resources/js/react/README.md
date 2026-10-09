@@ -108,7 +108,7 @@ payload keys are ignored.
 
 `dividers={{ [itemId]: 'History' }}` draws labels before items;
 `dividerStyle="dot"` or `"branch"` selects the joint. Root utility properties
-`--sf-gutter`, `--sf-gap`, `--sf-disc`, `--sf-badge` and `--sf-badge-face` match Vue.
+`--sf-font-size`, `--sf-gutter`, `--sf-gap`, `--sf-disc`, `--sf-badge` and `--sf-badge-face` match Vue.
 Glyph intent stays an app-owned `data-sf-intent`; edit `FeedIcon.tsx` to change
 icon mapping. Avatar snapshot colours win over the stable identity hash;
 tombstones remain muted and unlinked.

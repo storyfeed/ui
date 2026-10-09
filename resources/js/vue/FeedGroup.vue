@@ -131,7 +131,7 @@ const hiddenBeyondChildren = computed(
                 />
                 <span
                     v-else
-                    class="sf-icon flex size-[var(--sf-disc,2rem)] shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted-foreground [&_svg]:size-3.5 sf-icon--blank border-dashed"
+                    class="sf-icon flex size-[var(--sf-disc,--spacing(8))] shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted-foreground [&_svg]:size-3.5 sf-icon--blank border-dashed"
                     aria-hidden="true"
                 />
 
@@ -180,7 +180,7 @@ const hiddenBeyondChildren = computed(
                     v-else
                     :datetime="item.published_at"
                     :title="time.full.value"
-                    class="sf-time text-xs text-muted-foreground"
+                    class="sf-time text-sm text-muted-foreground"
                 >
                     {{ time.label.value }}
                 </time>
@@ -215,7 +215,7 @@ const hiddenBeyondChildren = computed(
             <button
                 v-if="interactive && item.children.length > 0"
                 type="button"
-                class="sf-toggle mt-1 cursor-pointer border-0 bg-transparent p-0 text-xs leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring print:hidden"
+                class="sf-toggle mt-1 inline-flex min-h-6 items-center cursor-pointer border-0 bg-transparent p-0 text-sm leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring print:hidden"
                 :aria-expanded="expanded"
                 @click="expanded = !expanded"
             >
@@ -247,7 +247,7 @@ const hiddenBeyondChildren = computed(
                         <slot name="annotations" v-bind="slotProps" />
                     </template>
                 </FeedItem>
-                <p v-if="hiddenBeyondChildren > 0" class="sf-overflow pl-[calc(var(--sf-gutter)+var(--sf-gap))] text-xs leading-[1.6] text-muted-foreground">
+                <p v-if="hiddenBeyondChildren > 0" class="sf-overflow pl-[calc(var(--sf-gutter)+var(--sf-gap))] text-sm leading-[1.6] text-muted-foreground">
                     …and {{ hiddenBeyondChildren }} more not shown
                 </p>
             </div>

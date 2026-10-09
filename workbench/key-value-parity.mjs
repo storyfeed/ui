@@ -57,7 +57,7 @@ export async function checkKeyValue({ frames, renderers, width, theme, output })
             checkLayout(await measure(originals[i]), `${renderers[i]} ${kind} viewport ${width}`);
         }
         // Resize the card independently of the viewport. The test alone lifts
-        // max-w-lg so the requested 520/720px card widths are exercised exactly.
+        // max-w-128 so the requested 520/720px card widths are exercised exactly.
         if (![1512, 390].includes(width)) continue;
         // Put the rendered card at the frame origin to avoid clipping distant
         // fixtures when Playwright captures inside a long, scrolled iframe.

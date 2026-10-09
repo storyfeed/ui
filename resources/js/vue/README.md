@@ -64,7 +64,8 @@ before those items. `divider-style="dot"` is the default;
 `divider-style="branch"` draws a curve off the rail. `isLast` suppresses the
 trailing rail; a next cursor keeps it connected to the pager.
 
-The root's Tailwind arbitrary properties expose `--sf-gutter`, `--sf-gap`,
+`--sf-font-size` (default `1rem`) scales the whole feed; see the root README.
+The root's Tailwind arbitrary properties also expose `--sf-gutter`, `--sf-gap`,
 `--sf-disc`, `--sf-badge` and `--sf-badge-face`. Override on the `FeedStream`
 element, for example `style="--sf-gutter: 2.5rem"`. The primary avatar/icon
 size follows `--sf-disc`; stacked faces share that size and overlap downward

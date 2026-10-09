@@ -33,10 +33,10 @@ const remaining = computed(() => {
 </script>
 
 <template>
-    <figure v-if="items.length" class="sf-list-block m-0 min-w-0 max-w-xl rounded-lg bg-card px-4 py-3">
-        <figcaption v-if="payload.title" class="sf-list__title mb-1 text-[13px] text-foreground">{{ payload.title }}</figcaption>
+    <figure v-if="items.length" class="sf-list-block m-0 min-w-0 max-w-144 rounded-lg bg-card px-4 py-3">
+        <figcaption v-if="payload.title" class="sf-list__title mb-1 text-sm text-foreground">{{ payload.title }}</figcaption>
 
-        <component :is="payload.ordered ? 'ol' : 'ul'" :class="payload.ordered ? 'list-decimal' : 'list-disc'" class="sf-list m-0 pl-[1.15rem] text-[13.5px] leading-[1.6]">
+        <component :is="payload.ordered ? 'ol' : 'ul'" :class="payload.ordered ? 'list-decimal' : 'list-disc'" class="sf-list m-0 pl-4.5 text-base leading-[1.6]">
             <li v-for="(item, index) in items" :key="index" class="sf-list__item m-0">
                 <component
                     :is="linkComponent"
@@ -48,7 +48,7 @@ const remaining = computed(() => {
             </li>
         </component>
 
-        <figcaption v-if="remaining || more" class="sf-list__more mt-1 flex gap-2 text-[12.5px] text-muted-foreground">
+        <figcaption v-if="remaining || more" class="sf-list__more mt-1 flex gap-2 text-sm text-muted-foreground">
             <span v-if="remaining">and {{ remaining }} more</span>
             <component
                 :is="linkComponent"

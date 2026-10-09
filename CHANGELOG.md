@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Feeds render larger by default: body text is `1rem` (was 13.5px), metadata and captions `0.875rem`. Text, spacing, avatars, badges and the rail are sized on Tailwind's rem scale in Blade, Vue and React, so a feed follows the reader's browser text size and scales as one unit.
+- The group toggle is at least 24px tall (WCAG 2.2 target size).
+
+### Added
+
+- `--sf-font-size` sets the feed's size: `class="[--sf-font-size:0.875rem]"` on the feed root draws a compact feed.
+
 ## v0.4.5 - 2026-10-09
 
 ### Changed

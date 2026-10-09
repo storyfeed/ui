@@ -22,7 +22,7 @@ export default function FeedMeta({
     const roles = leftoverRoles(node, templates);
     if (!roles.length && !hasContent(children)) return null;
     return (
-        <div className="sf-meta mt-0.5 text-xs leading-[1.5] text-muted-foreground [overflow-wrap:anywhere] [&_.sf-entity]:text-inherit [&_.sf-entity]:font-normal">
+        <div className="sf-meta mt-0.5 text-sm leading-[1.5] text-muted-foreground [overflow-wrap:anywhere] [&_.sf-entity]:text-inherit [&_.sf-entity]:font-normal">
             {children}
             {roles.map((part) => (
                 <Fragment key={part.role}>

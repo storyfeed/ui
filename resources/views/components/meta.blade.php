@@ -24,7 +24,7 @@
     }
 @endphp
 @if ($hasTime || $details)
-    <div {{ $attributes->class('sf-meta mt-0.5 text-xs leading-[1.5] text-muted-foreground [overflow-wrap:anywhere] [&_.sf-entity]:text-inherit [&_.sf-entity]:font-normal') }}>
+    <div {{ $attributes->class('sf-meta mt-0.5 text-sm leading-[1.5] text-muted-foreground [overflow-wrap:anywhere] [&_.sf-entity]:text-inherit [&_.sf-entity]:font-normal') }}>
         @if (trim($timeHtml) !== ''){!! $timeHtml !!}
         @elseif ($hasTime)<x-storyfeed::time :at="$item->publishedAt()" :timezone="$timezone" />
         @endif

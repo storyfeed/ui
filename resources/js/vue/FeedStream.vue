@@ -51,7 +51,7 @@ const days = useFeedDays(toRef(() => props.items));
 </script>
 
 <template>
-    <div class="sf-feed [--sf-gutter:2rem] [--sf-gap:0.75rem] [--sf-disc:2rem] [--sf-badge:0.875rem] [--sf-badge-face:1.125rem] text-sm leading-[1.6] text-muted-foreground">
+    <div class="sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter:--spacing(8)] [--sf-gap:--spacing(3)] [--sf-disc:--spacing(8)] [--sf-badge:--spacing(3.5)] [--sf-badge-face:--spacing(4.5)] text-base leading-[1.6] text-muted-foreground">
         <div v-if="items.length === 0" class="sf-empty rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">
             <slot name="empty">No activity yet.</slot>
         </div>
@@ -61,22 +61,22 @@ const days = useFeedDays(toRef(() => props.items));
                 <div
                     v-if="grouped"
                     :class="[
-                        'sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail>div:last-child]:mt-[0.3125rem]',
-                        dividerStyle === 'branch' ? 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-[22px]' : 'sf-divider--dot',
+                        'sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail>div:last-child]:mt-1.25',
+                        dividerStyle === 'branch' ? 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-5.5' : 'sf-divider--dot',
                     ]"
                 >
                     <div class="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
                         <svg
                             v-if="dividerStyle === 'branch'"
                             aria-hidden="true"
-                            class="sf-rail__branch absolute top-[3px] left-[calc(50%-0.75px)] overflow-visible fill-none stroke-muted-foreground stroke-[1.5] [stroke-linecap:round]"
+                            class="sf-rail__branch absolute top-0.75 left-[calc(50%-var(--spacing)*0.1875)] h-5.5 w-4 overflow-visible fill-none stroke-muted-foreground stroke-[1.5] [stroke-linecap:round]"
                             width="16"
                             height="22"
                             viewBox="0 0 16 22"
                         >
                             <path d="M0.75 22 V14 Q0.75 6 8.75 6 H15" />
                         </svg>
-                        <div v-else aria-hidden="true" class="sf-rail__node mt-[0.3125rem] size-[0.5625rem] shrink-0 rounded-full bg-muted-foreground ring-[3px] ring-background" />
+                        <div v-else aria-hidden="true" class="sf-rail__node mt-1.25 size-2.25 shrink-0 rounded-full bg-muted-foreground ring-3 ring-background" />
                         <div aria-hidden="true" class="sf-rail__line mt-1 w-px flex-1 bg-border" />
                     </div>
                     <h2 class="sf-day m-0 border-0 pt-0 pb-5 text-xs leading-[1.6] font-semibold tracking-[0.05em] text-muted-foreground uppercase">{{ day.label }}</h2>
@@ -90,15 +90,15 @@ const days = useFeedDays(toRef(() => props.items));
                     <div
                         v-if="dividers[item.id]"
                         :class="[
-                            'sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail>div:last-child]:mt-[0.3125rem]',
-                            dividerStyle === 'branch' ? 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-[22px]' : 'sf-divider--dot',
+                            'sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail>div:last-child]:mt-1.25',
+                            dividerStyle === 'branch' ? 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-5.5' : 'sf-divider--dot',
                         ]"
                     >
                         <div class="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
                             <svg
                                 v-if="dividerStyle === 'branch'"
                                 aria-hidden="true"
-                                class="sf-rail__branch absolute top-[3px] left-[calc(50%-0.75px)] overflow-visible fill-none stroke-muted-foreground stroke-[1.5] [stroke-linecap:round]"
+                                class="sf-rail__branch absolute top-0.75 left-[calc(50%-var(--spacing)*0.1875)] h-5.5 w-4 overflow-visible fill-none stroke-muted-foreground stroke-[1.5] [stroke-linecap:round]"
                                 width="16"
                                 height="22"
                                 viewBox="0 0 16 22"
@@ -108,7 +108,7 @@ const days = useFeedDays(toRef(() => props.items));
                             <div
                                 v-else
                                 aria-hidden="true"
-                                class="sf-rail__node mt-[0.3125rem] size-[0.5625rem] shrink-0 rounded-full bg-muted-foreground ring-[3px] ring-background"
+                                class="sf-rail__node mt-1.25 size-2.25 shrink-0 rounded-full bg-muted-foreground ring-3 ring-background"
                             />
                             <div aria-hidden="true" class="sf-rail__line mt-1 w-px flex-1 bg-border" />
                         </div>
@@ -146,7 +146,7 @@ const days = useFeedDays(toRef(() => props.items));
                 </div>
                 <button
                     type="button"
-                    class="sf-more cursor-pointer rounded-md border border-border bg-transparent px-3 py-1.5 text-xs font-medium text-muted-foreground enabled:hover:bg-muted enabled:hover:text-foreground disabled:cursor-default disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-ring"
+                    class="sf-more cursor-pointer rounded-md border border-border bg-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground enabled:hover:bg-muted enabled:hover:text-foreground disabled:cursor-default disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-ring"
                     :disabled="loadingMore"
                     @click="emit('loadMore')"
                 >

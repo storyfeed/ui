@@ -17,5 +17,5 @@
             default => $at->isoFormat('D MMM YYYY, LT'),
         };
     @endphp
-    <time datetime="{{ $at->toAtomString() }}" title="{{ $title ?? $at->isoFormat('dddd, D MMMM YYYY, LTS') }}" {{ $attributes->class('sf-time text-xs text-muted-foreground') }}>{{ $label }}</time>
+    <time datetime="{{ $at->toAtomString() }}" title="{{ $title ?? $at->isoFormat('dddd, D MMMM YYYY, LTS') }}" {{ $attributes->class('sf-time text-sm text-muted-foreground') }}>{{ $label }}</time>
 @endif

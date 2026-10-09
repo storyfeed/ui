@@ -16,8 +16,8 @@
 @endphp
 <span {{ $attributes->class([
     'sf-icon-slot',
-    'sf-icon flex size-[var(--sf-disc,2rem)] shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted-foreground [&_svg]:size-3.5' => $variant !== 'badge',
-    'sf-badge absolute top-[calc(var(--sf-disc)-var(--sf-badge)+0.125rem)] left-[calc(50%+var(--sf-disc)/2-var(--sf-badge))] flex size-(--sf-badge) items-center justify-center rounded-full bg-background text-muted-foreground ring-[1.5px] ring-background [&_svg]:size-[0.625rem]' => $variant === 'badge',
+    'sf-icon flex size-[var(--sf-disc,--spacing(8))] shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted-foreground [&_svg]:size-3.5' => $variant !== 'badge',
+    'sf-badge absolute top-[calc(var(--sf-disc)-var(--sf-badge)+--spacing(0.5))] left-[calc(50%+var(--sf-disc)/2-var(--sf-badge))] flex size-(--sf-badge) items-center justify-center rounded-full bg-background text-muted-foreground ring-[length:--spacing(0.375)] ring-background [&_svg]:size-2.5' => $variant === 'badge',
     'sf-icon--blank border-dashed' => $glyph === null,
 ])->merge(['data-sf-intent' => $variant === 'disc' ? $intent : null, 'data-sf-glyph' => $glyph]) }} aria-hidden="true">
 @if ($glyph !== null)

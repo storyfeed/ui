@@ -13,12 +13,12 @@
     $tag = ($body['ordered'] ?? false) ? 'ol' : 'ul';
 @endphp
 @if ($items->isNotEmpty())
-    <figure {{ $attributes->class('sf-list-block m-0 min-w-0 max-w-xl rounded-lg bg-card px-4 py-3') }}>
+    <figure {{ $attributes->class('sf-list-block m-0 min-w-0 max-w-144 rounded-lg bg-card px-4 py-3') }}>
 @if (filled($body['title'] ?? null))
-            <figcaption class="sf-list__title mb-1 text-[13px] text-foreground">{{ $body['title'] }}</figcaption>
+            <figcaption class="sf-list__title mb-1 text-sm text-foreground">{{ $body['title'] }}</figcaption>
 @endif
 
-        <{{ $tag }} @class(['sf-list m-0 pl-[1.15rem] text-[13.5px] leading-[1.6]', 'list-decimal' => $tag === 'ol', 'list-disc' => $tag === 'ul'])>
+        <{{ $tag }} @class(['sf-list m-0 pl-4.5 text-base leading-[1.6]', 'list-decimal' => $tag === 'ol', 'list-disc' => $tag === 'ul'])>
 @foreach ($items as $item)
                 <li class="sf-list__item m-0">
 @if (is_array($item) && filled($item['href'] ?? $entity?->url()))
@@ -31,7 +31,7 @@
         </{{ $tag }}>
 
 @if ($remaining > 0 || $more !== null)
-            <figcaption class="sf-list__more mt-1 flex gap-2 text-[12.5px] text-muted-foreground">
+            <figcaption class="sf-list__more mt-1 flex gap-2 text-sm text-muted-foreground">
 @if ($remaining > 0)
                     <span>{{ __('and :count more', ['count' => $remaining]) }}</span>
 @endif

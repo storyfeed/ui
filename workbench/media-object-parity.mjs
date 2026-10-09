@@ -33,7 +33,7 @@ export async function checkMediaObject({ frames, renderers, width, theme, output
             assert.equal(measured.border, '0px');
             assert.equal(measured.padding, '0px');
             assert.equal(measured.background, 'rgba(0, 0, 0, 0)');
-            assert.equal(measured.fontSize, '12px');
+            assert.equal(measured.fontSize, '14px');
             geometry[i] ??= [];
             geometry[i].push(measured);
         }

@@ -29,7 +29,7 @@ export function useNodeTime(node: FeedNode, time?: FeedRenderProps['time']) {
         <time
             dateTime={node.published_at}
             title={clock.full}
-            className="sf-time text-xs text-muted-foreground"
+            className="sf-time text-sm text-muted-foreground"
         >
             {clock.label}
         </time>
@@ -127,7 +127,7 @@ export default function FeedItem({
                             ) => (
                                 <div
                                     key={i}
-                                    className="sf-body-form mt-2 max-w-[44rem] empty:hidden"
+                                    className="sf-body-form mt-2 max-w-176 empty:hidden"
                                 >
                                     <Component payload={payload} {...entity} />
                                 </div>

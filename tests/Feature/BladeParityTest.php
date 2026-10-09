@@ -225,7 +225,7 @@ it('renders a footnote-only media object as a line', function ($footnote, $entit
     $entity = Entity::of(['label' => 'Discussion', 'url' => $entityUrl]);
     $html = Blade::render('<x-storyfeed::body.media-object :body="$body" :entity="$entity" />', compact('body', 'entity'));
 
-    expect($html)->toContain('sf-media-object__footnote mt-0.5 mb-0 text-xs leading-[1.6] text-muted-foreground', 'See full discussion')
+    expect($html)->toContain('sf-media-object__footnote mt-0.5 mb-0 text-sm leading-[1.6] text-muted-foreground', 'See full discussion')
         ->not->toContain('<div', 'border-border', 'bg-muted', 'p-3');
     if ($href) {
         expect($html)->toContain('href="'.$href.'"');
@@ -242,5 +242,16 @@ it('renders a footnote-only media object as a line', function ($footnote, $entit
 it('keeps content and footnote together inside the media object card', function () {
     $body = ['$body' => 'Storyfeed/Body/MediaObject', '$v' => 2, 'content' => 'Discussion summary', 'footnote' => ['label' => 'Read more', 'href' => '/discussion']];
     $html = Blade::render('<x-storyfeed::body.media-object :body="$body" />', compact('body'));
-    expect($html)->toContain('sf-media-object mt-1.5 flex min-w-0 max-w-lg items-start gap-3 rounded-lg border border-border bg-muted p-3', 'sf-media-object__content', 'Discussion summary', 'sf-media-object__footnote', 'href="/discussion"');
+    expect($html)->toContain('sf-media-object mt-1.5 flex min-w-0 max-w-128 items-start gap-3 rounded-lg border border-border bg-muted p-3', 'sf-media-object__content', 'Discussion summary', 'sf-media-object__footnote', 'href="/discussion"');
+});
+
+it('sizes all three kits on the rem scale, with no pixel arbitrary values', function () {
+    $files = collect(['resources/views', 'resources/js'])
+        ->flatMap(fn (string $directory) => iterator_to_array(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname(__DIR__, 2).'/'.$directory, FilesystemIterator::SKIP_DOTS))))
+        ->filter(fn (SplFileInfo $file) => preg_match('/\.(php|vue|tsx?)$/', $file->getFilename()) === 1);
+
+    expect($files)->not->toBeEmpty()
+        ->and($files->filter(fn (SplFileInfo $file) => preg_match('/[a-z:-]+-\[[0-9.]+px\]/', (string) file_get_contents($file->getPathname())) === 1)->keys()->all())->toBe([]);
+
+    expect(file_get_contents(dirname(__DIR__, 2).'/resources/views/components/feed.blade.php'))->toContain('[--spacing:calc(var(--sf-font-size,1rem)/4)]', '[--text-base:var(--sf-font-size,1rem)]', 'text-base leading-[1.6]');
 });

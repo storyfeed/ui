@@ -39,9 +39,9 @@ export default function EntityAvatar({
         ? null
         : entity?.data?.avatar_color || colors[Math.abs(hash) % colors.length];
     const sizes = {
-        md: 'sf-avatar--md size-[var(--sf-disc,2rem)] text-xs',
-        sm: 'sf-avatar--sm size-6 text-[0.625rem]',
-        badge: 'sf-avatar--badge [--sf-badge:var(--sf-badge-face)] absolute top-[calc(var(--sf-disc)-var(--sf-badge)+0.125rem)] left-[calc(50%+var(--sf-disc)/2-var(--sf-badge))] size-(--sf-badge) text-[0.5625rem]',
+        md: 'sf-avatar--md size-[var(--sf-disc,--spacing(8))] text-xs',
+        sm: 'sf-avatar--sm size-6 text-[length:--spacing(2.5)]',
+        badge: 'sf-avatar--badge [--sf-badge:var(--sf-badge-face)] absolute top-[calc(var(--sf-disc)-var(--sf-badge)+--spacing(0.5))] left-[calc(50%+var(--sf-disc)/2-var(--sf-badge))] size-(--sf-badge) text-[length:--spacing(2.25)]',
     };
     return (
         <span

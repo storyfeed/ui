@@ -150,7 +150,7 @@ const slots = computed(() =>
                 />
                 <span
                     v-else
-                    class="sf-icon flex size-[var(--sf-disc,2rem)] shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted-foreground [&_svg]:size-3.5 sf-icon--blank border-dashed"
+                    class="sf-icon flex size-[var(--sf-disc,--spacing(8))] shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted-foreground [&_svg]:size-3.5 sf-icon--blank border-dashed"
                     aria-hidden="true"
                 />
 
@@ -206,7 +206,7 @@ const slots = computed(() =>
                     v-else
                     :datetime="item.published_at"
                     :title="time.full.value"
-                    class="sf-time text-xs text-muted-foreground"
+                    class="sf-time text-sm text-muted-foreground"
                 >
                     <!--
                         Slot so an app can make the timestamp a permalink to
@@ -246,7 +246,7 @@ const slots = computed(() =>
                     <div
                         v-for="(found, index) in forms"
                         :key="index"
-                        class="sf-body-form mt-2 max-w-[44rem] empty:hidden"
+                        class="sf-body-form mt-2 max-w-176 empty:hidden"
                     >
                         <component
                             :is="found.component"

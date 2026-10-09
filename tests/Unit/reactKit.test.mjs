@@ -680,7 +680,7 @@ test('MediaObject footnotes stand alone, resolve links and keep strings unlinked
         ['See full discussion', '/current', null],
     ]) {
         const html = raw('MediaObject', { payload: { footnote }, entityUrl });
-        assert.match(html, /<p class="sf-media-object__footnote mt-0.5 mb-0 text-xs leading-\[1.6\] text-muted-foreground">/);
+        assert.match(html, /<p class="sf-media-object__footnote mt-0.5 mb-0 text-sm leading-\[1.6\] text-muted-foreground">/);
         assert.match(html, /See full discussion/);
         assert.doesNotMatch(html, /<div|border-border|bg-muted|p-3/);
         if (href) assert.ok(html.includes(`href="${href}"`));
@@ -688,7 +688,7 @@ test('MediaObject footnotes stand alone, resolve links and keep strings unlinked
     }
     assert.equal(raw('MediaObject', { payload: {} }), '');
     const html = raw('MediaObject', { payload: { content: 'Discussion summary', footnote: { label: 'Read more', href: '/discussion' } } });
-    assert.match(html, /<div class="sf-media-object mt-1.5 flex min-w-0 max-w-lg items-start gap-3 rounded-lg border border-border bg-muted p-3">/);
+    assert.match(html, /<div class="sf-media-object mt-1.5 flex min-w-0 max-w-128 items-start gap-3 rounded-lg border border-border bg-muted p-3">/);
     assert.match(html, /sf-media-object__content[^>]*>Discussion summary/);
     assert.match(html, /sf-media-object__footnote[^>]*><a href="\/discussion">Read more<\/a><\/p>/);
 });

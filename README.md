@@ -230,6 +230,25 @@ all Tailwind utilities; the avatar's snapshot colour and a picture's aspect
 ratio are data-driven inline styles. Verbatim prose keeps a dark code surface
 in both themes. Prose, lists and quotations carry their own utility styles.
 
+#### Set the feed's size
+
+The feed is sized in `rem` on Tailwind's scale, so it follows the reader's
+browser text size. Body text starts at `1rem`. Set `--sf-font-size` on the feed
+root, or on any element around it, to scale text, spacing, avatars, badges and
+the rail together:
+
+```blade
+<x-storyfeed::feed :page="$page" class="[--sf-font-size:0.875rem]" />
+```
+
+```vue
+<FeedStream :items="items" class="[--sf-font-size:1.125rem]" />
+```
+
+Give it in `rem` or `px`. Inside the feed, Tailwind's `--spacing`, `--text-xs`,
+`--text-sm` and `--text-base` derive from it, so your own slot content on those
+utilities scales with the feed too.
+
 Icon intents are application-defined strings exposed through `data-sf-intent`.
 To assign colours to your intent values, add the corresponding Tailwind
 utilities to the published `components/glyph.blade.php` view.

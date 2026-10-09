@@ -89,7 +89,7 @@ const color = computed(() => {
         :aria-label="entity?.label ?? 'Someone'"
         :title="entity?.label ?? 'Someone'"
         class="sf-avatar flex shrink-0 items-center justify-center rounded-full font-semibold select-none ring-2 ring-background"
-        :class="[{ 'sf-avatar--md size-[var(--sf-disc,2rem)] text-xs': size === 'md', 'sf-avatar--sm size-6 text-[0.625rem]': size === 'sm', 'sf-avatar--badge [--sf-badge:var(--sf-badge-face)] absolute top-[calc(var(--sf-disc)-var(--sf-badge)+0.125rem)] left-[calc(50%+var(--sf-disc)/2-var(--sf-badge))] size-(--sf-badge) text-[0.5625rem]': size === 'badge' }, entity?.tombstone ? 'bg-muted text-white' : color ? 'text-white' : 'bg-primary text-primary-foreground']"
+        :class="[{ 'sf-avatar--md size-[var(--sf-disc,--spacing(8))] text-xs': size === 'md', 'sf-avatar--sm size-6 text-[length:--spacing(2.5)]': size === 'sm', 'sf-avatar--badge [--sf-badge:var(--sf-badge-face)] absolute top-[calc(var(--sf-disc)-var(--sf-badge)+--spacing(0.5))] left-[calc(50%+var(--sf-disc)/2-var(--sf-badge))] size-(--sf-badge) text-[length:--spacing(2.25)]': size === 'badge' }, entity?.tombstone ? 'bg-muted text-white' : color ? 'text-white' : 'bg-primary text-primary-foreground']"
         :style="color ? { backgroundColor: color } : undefined"
     >
         <img

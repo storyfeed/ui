@@ -31,6 +31,6 @@
         $rendered ??= \Storyfeed\Ui\Support\Bodies::render('storyfeed::'.$component, $body, $entity, $mediaRenderer, $fileLabeller);
     @endphp
 @if (trim(preg_replace('/<!--.*?-->/s', '', $rendered)) !== '')
-        <div data-storyfeed-body {{ $attributes->class('sf-body-form mt-2 max-w-[44rem] empty:hidden') }}> {!! $rendered !!} </div>
+        <div data-storyfeed-body {{ $attributes->class('sf-body-form mt-2 max-w-176 empty:hidden') }}> {!! $rendered !!} </div>
 @endif
 @endif

@@ -38,7 +38,7 @@ export default function Rail({
             <FeedIcon icon={glyph} intent={intent} />
         ) : (
             <span
-                className="sf-icon flex size-[var(--sf-disc,2rem)] shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted-foreground [&_svg]:size-3.5 sf-icon--blank border-dashed"
+                className="sf-icon flex size-[var(--sf-disc,--spacing(8))] shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted-foreground [&_svg]:size-3.5 sf-icon--blank border-dashed"
                 aria-hidden="true"
             />
         );

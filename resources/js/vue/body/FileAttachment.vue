@@ -28,5 +28,5 @@ const description = computed(() => [kind.value, human(props.payload.size)].filte
 </script>
 
 <template>
-    <p v-if="payload.name || description" class="sf-file m-0 text-[13.5px] text-muted-foreground">{{ [payload.name, description].filter(Boolean).join(' ') }}</p>
+    <p v-if="payload.name || description" class="sf-file m-0 text-base text-muted-foreground">{{ [payload.name, description].filter(Boolean).join(' ') }}</p>
 </template>

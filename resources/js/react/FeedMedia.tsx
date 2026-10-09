@@ -19,7 +19,7 @@ export default function FeedMedia({
                 image={image}
                 href={href}
                 linkAttributes={attributes}
-                className={`sf-media mt-2 block max-w-[22rem] overflow-hidden rounded-lg bg-muted ${className}`}
+                className={`sf-media mt-2 block max-w-88 overflow-hidden rounded-lg bg-muted ${className}`}
             />
         );
     const Tag = href ? Link : 'div';
@@ -27,7 +27,7 @@ export default function FeedMedia({
         <Tag
             {...attributes}
             href={href || undefined}
-            className={`sf-media mt-2 block max-w-[22rem] overflow-hidden rounded-lg bg-muted ${className}`}
+            className={`sf-media mt-2 block max-w-88 overflow-hidden rounded-lg bg-muted ${className}`}
             style={
                 image.width && image.height
                     ? { aspectRatio: `${image.width} / ${image.height}` }

@@ -20,8 +20,8 @@ const count = computed(() => props.tiles.length + (props.overflow ? 1 : 0))
 </script>
 
 <template>
-    <div v-if="tiles.length" class="sf-media-strip mt-2 flex max-w-[22rem] flex-wrap gap-1" :class="`sf-media-strip--tiles-${count}`">
-        <FeedMedia v-for="(tile, i) in tiles" :key="i" :image="tile.image" :href="tile.href" class="mt-0! min-w-0 max-w-none!" :class="[1, 2, 4].includes(count) ? 'flex-[1_1_calc(50%-2px)]' : [3, 5, 6].includes(count) ? 'flex-[1_1_calc(33.333%-3px)]' : 'flex-1'" />
-        <div v-if="overflow" class="sf-media-strip__more flex min-h-14 flex-[1_1_calc(33.333%-3px)] items-center justify-center rounded-lg bg-muted text-[13px] text-muted-foreground">+{{ overflow }} more</div>
+    <div v-if="tiles.length" class="sf-media-strip mt-2 flex max-w-88 flex-wrap gap-1" :class="`sf-media-strip--tiles-${count}`">
+        <FeedMedia v-for="(tile, i) in tiles" :key="i" :image="tile.image" :href="tile.href" class="mt-0! min-w-0 max-w-none!" :class="[1, 2, 4].includes(count) ? 'flex-[1_1_calc(50%-var(--spacing)/2)]' : [3, 5, 6].includes(count) ? 'flex-[1_1_calc(33.333%-var(--spacing)*0.75)]' : 'flex-1'" />
+        <div v-if="overflow" class="sf-media-strip__more flex min-h-14 flex-[1_1_calc(33.333%-var(--spacing)*0.75)] items-center justify-center rounded-lg bg-muted text-sm text-muted-foreground">+{{ overflow }} more</div>
     </div>
 </template>

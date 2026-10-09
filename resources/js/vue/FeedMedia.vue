@@ -25,13 +25,13 @@ const mediaComponent = inject(FEED_MEDIA, null)
 </script>
 
 <template>
-    <component v-if="mediaComponent" :is="mediaComponent" :image="image" :href="href" :link-attributes="href ? filterAttributes(linkAttributes) : {}" class="sf-media mt-2 block max-w-[22rem] overflow-hidden rounded-lg bg-muted" />
+    <component v-if="mediaComponent" :is="mediaComponent" :image="image" :href="href" :link-attributes="href ? filterAttributes(linkAttributes) : {}" class="sf-media mt-2 block max-w-88 overflow-hidden rounded-lg bg-muted" />
     <component
         v-else
         v-bind="href ? filterAttributes(linkAttributes) : {}"
         :is="href ? linkComponent : 'div'"
         :href="href || undefined"
-        class="sf-media mt-2 block max-w-[22rem] overflow-hidden rounded-lg bg-muted"
+        class="sf-media mt-2 block max-w-88 overflow-hidden rounded-lg bg-muted"
         :style="image.width && image.height ? { aspectRatio: `${image.width} / ${image.height}` } : undefined"
     >
         <!-- Load documentation previews before scrolling or printing the page. -->

@@ -10,12 +10,12 @@
 @endphp
 @if (! empty($image['src']))
     @if ($renderer)
-        {!! $renderer(['image' => $image, 'href' => $href, 'attributes' => $linkAttributes], 'sf-media mt-2 block max-w-[22rem] overflow-hidden rounded-lg bg-muted '.$attributes->get('class', '')) !!}
+        {!! $renderer(['image' => $image, 'href' => $href, 'attributes' => $linkAttributes], 'sf-media mt-2 block max-w-88 overflow-hidden rounded-lg bg-muted '.$attributes->get('class', '')) !!}
     @else
 @if ($href)
-        <a href="{{ $href }}" {{ $attributes->merge($linkAttributes)->merge(['class' => 'sf-media mt-2 block max-w-[22rem] overflow-hidden rounded-lg bg-muted [&>img]:block [&>img]:size-full [&>img]:object-cover', 'style' => $ratio]) }}><img src="{{ $image['src'] }}" alt="{{ $image['alt'] ?? '' }}" width="{{ $image['width'] ?? '' }}" height="{{ $image['height'] ?? '' }}" loading="lazy"></a>
+        <a href="{{ $href }}" {{ $attributes->merge($linkAttributes)->merge(['class' => 'sf-media mt-2 block max-w-88 overflow-hidden rounded-lg bg-muted [&>img]:block [&>img]:size-full [&>img]:object-cover', 'style' => $ratio]) }}><img src="{{ $image['src'] }}" alt="{{ $image['alt'] ?? '' }}" width="{{ $image['width'] ?? '' }}" height="{{ $image['height'] ?? '' }}" loading="lazy"></a>
 @else
-        <div {{ $attributes->merge(['class' => 'sf-media mt-2 block max-w-[22rem] overflow-hidden rounded-lg bg-muted [&>img]:block [&>img]:size-full [&>img]:object-cover', 'style' => $ratio]) }}><img src="{{ $image['src'] }}" alt="{{ $image['alt'] ?? '' }}" width="{{ $image['width'] ?? '' }}" height="{{ $image['height'] ?? '' }}" loading="lazy"></div>
+        <div {{ $attributes->merge(['class' => 'sf-media mt-2 block max-w-88 overflow-hidden rounded-lg bg-muted [&>img]:block [&>img]:size-full [&>img]:object-cover', 'style' => $ratio]) }}><img src="{{ $image['src'] }}" alt="{{ $image['alt'] ?? '' }}" width="{{ $image['width'] ?? '' }}" height="{{ $image['height'] ?? '' }}" loading="lazy"></div>
 @endif
 @endif
 

@@ -9,12 +9,12 @@
     $bodies = $object?->bodies() ?? collect();
     $bodies = $bodies->merge(\Storyfeed\Ui\Support\Bodies::in($object?->get('data')));
 @endphp
-<article {{ $attributes->class('sf-row relative flex items-start gap-(--sf-gap) [--sf-gutter:2rem] [--sf-gap:0.75rem] [--sf-disc:2rem] [--sf-badge:0.875rem] [--sf-badge-face:1.125rem]') }}>
+<article {{ $attributes->class('sf-row relative flex items-start gap-(--sf-gap) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter:--spacing(8)] [--sf-gap:--spacing(3)] [--sf-disc:--spacing(8)] [--sf-badge:--spacing(3.5)] [--sf-badge-face:--spacing(4.5)]') }}>
     <x-storyfeed::rail :item="$activity" :rail="$rail" :dense="$dense" :last="$last" :renderers="$renderers" />
     <div @class(['sf-body min-w-0 flex-1', 'sf-body--spaced pb-5' => ! $last, 'sf-body--dense pt-1' => $dense, 'pt-1.5' => ! $dense])>
         <div class="sf-head flex items-baseline gap-3"><x-storyfeed::headline :headline="$headline" /></div>
         <x-storyfeed::meta :item="$activity" :headline="$headline" :timezone="$timezone" :time-renderer="$renderers['time'] ?? null">{{ $time ?? '' }}</x-storyfeed::meta>
-@if ($removed)<p class="sf-removed mt-1 text-xs text-muted-foreground">{{ $removed }}</p>
+@if ($removed)<p class="sf-removed mt-1 text-sm text-muted-foreground">{{ $removed }}</p>
 @endif
 @if ($objectIcon)<div class="sf-object-media mt-2 flex items-start gap-3"><x-storyfeed::media :image="$objectIcon" :href="$activity->object()?->isTombstone() ? null : $activity->object()?->url()" :link-attributes="$activity->object()?->attributes() ?? []" :renderer="$renderers['media'] ?? null" class="mt-0! size-10! shrink-0 rounded-md!" /><div class="min-w-0 flex-1">
 @endif

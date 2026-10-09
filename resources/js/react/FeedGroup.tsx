@@ -119,7 +119,7 @@ export default function FeedGroup({
                         {...(interactive ? { open } : {})}
                     >
                         {interactive && (
-                            <summary className="sf-toggle mt-1 inline-block cursor-pointer list-none rounded-sm border-0 bg-transparent p-0 text-xs leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden print:hidden">
+                            <summary className="sf-toggle mt-1 inline-flex min-h-6 items-center cursor-pointer list-none rounded-sm border-0 bg-transparent p-0 text-sm leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden print:hidden">
                                 <span className="group-open/disclosure:hidden">{`Show all ${item.count}`}</span>
                                 <span className="hidden group-open/disclosure:inline">
                                     Show less
@@ -150,7 +150,7 @@ export default function FeedGroup({
                                 />
                             ))}
                             {hidden > 0 && (
-                                <p className="sf-overflow pl-[calc(var(--sf-gutter)+var(--sf-gap))] text-xs leading-[1.6] text-muted-foreground">
+                                <p className="sf-overflow pl-[calc(var(--sf-gutter)+var(--sf-gap))] text-sm leading-[1.6] text-muted-foreground">
                                     …and {hidden} more not shown
                                 </p>
                             )}
