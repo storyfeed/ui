@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Vue and React draw app body types. Register a renderer by its exact type: `app.use(feedBodies({ 'Acme/Shipment': Shipment }))` or `provide(FEED_BODIES, …)` in Vue, `<FeedProvider FEED_BODIES={{ 'Acme/Shipment': Shipment }}>` in React. Renderers receive the built-in bodies' props, a renderer for a core type replaces the kit's, and a type with no renderer still draws nothing. The README's "Custom body types" covers all three kits.
+
 ### Changed
 
 - The kits require the Tailwind Typography plugin. Rich `Prose` (Markdown and HTML) and `ItemList` render inside Typography's `prose` in Blade, Vue and React, replacing the kits' hand-rolled list, table, quotation and heading styles. Install `@tailwindcss/typography` and add `@plugin "@tailwindcss/typography";` beside the kit's `@source` line. The `prose` colours come from the starter-kit tokens, so dark mode follows them, and its size is inherited from the feed, so `--sf-font-size` and the browser's text size scale its tables, lists and headings with the rest of the feed.

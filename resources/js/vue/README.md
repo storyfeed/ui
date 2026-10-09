@@ -41,6 +41,11 @@ invert and code needs a dark surface in both themes.
 - Provide `FEED_NOW` with a millisecond timestamp for deterministic SSR/static
   rendering. Otherwise the calendar ladder updates after mount. Dates keep
   machine-readable datetimes, absolute hover titles and the `#time` slot.
+- Install `feedBodies({ 'Acme/Shipment': Shipment })` from `body/index.ts` with
+  `app.use()`, or provide `FEED_BODIES` from `keys.ts`, to draw app body types
+  by their exact type. Each install merges. A renderer receives `payload`,
+  `entityLabel`, `entityUrl` and `entityMedia`; one registered for a core type
+  replaces the kit's. Types with no renderer draw nothing.
 - Provide `FEED_COMPONENTS` with an app-owned map of exact body names to Vue
   components. A `Storyfeed/Body/Component` body's `props` are forwarded. Unknown
   names render nothing. The docs' `Note` and `Orders/Progress` demos are excluded:

@@ -5,6 +5,9 @@ import { resolve, extname } from 'node:path';
 import assert from 'node:assert/strict';
 import { checkKeyValue } from './key-value-parity.mjs';
 import { checkMediaObject } from './media-object-parity.mjs';
+const bodyTexts = {
+    'App body type': ['UPS · 1Z999AA10123456784'],
+};
 const output = process.env.STORYFEED_SCREENSHOTS ?? '/private/tmp/claude-501/-Users-jasper-Dev-projects-storyfeed/2b79c0b9-803e-4825-b1bd-040d9078ad01/scratchpad/kit-adopt';
 await mkdir(output, { recursive: true });
 const server = createServer(async (req, res) => {
@@ -154,6 +157,11 @@ try {
                         }
                     }
                     report.push({ suite: renderers.length === 3 ? 'kits' : 'vue-blade', pair: `${renderers[a]}/${renderers[b]}`, width, theme, text, state, count, max, differences });
+                }
+                // Fixtures whose bodies every kit must draw with the same text.
+                if (text === 'default') for (const [section, expected] of Object.entries(bodyTexts)) for (let i = 0; i < frames.length; i++) {
+                    const texts = await frames[i].locator(`.example:has(>h2:text-is("${section}")) .sf-body-form`).allTextContents();
+                    assert.deepEqual(texts.map(t => t.trim().replace(/\s+/g, ' ')), expected, `${renderers[i]}: ${section}`);
                 }
                 if (renderers.length === 3 && text === 'default') for (let i = 0; i < frames.length; i++) {
                     const icons = frames[i].locator('.example:has(>h2:text-is("Linked object icon frames")) .sf-object-media > a');

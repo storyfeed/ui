@@ -15,7 +15,8 @@ import MediaObject from './MediaObject.vue'
  * own `data`, looks the name up here, and draws nothing when it does not
  * recognise it — the same rule the read path applies to an unknown verb. The
  * names are core's vocabulary (`Storyfeed\Body`), matched EXACTLY, so the
- * casing is part of the name.
+ * casing is part of the name. An app adds its own types, or replaces these,
+ * through `FEED_BODIES`.
  */
 const FORMS: Record<string, Component> = {
   'Storyfeed/Body/Component': ComponentBody,
@@ -30,10 +31,33 @@ const FORMS: Record<string, Component> = {
     'Storyfeed/Body/MediaObject': MediaObject,
 }
 
+import { inject, type App, type Plugin } from 'vue';
 import { formsIn as discover, resolve as resolveBodies } from '../../shared/body';
+import { FEED_BODIES } from '../keys';
 export { imageOf } from '../../shared/body';
 export type ResolvedDetail = { component: Component; payload: Record<string, any> };
-export const formsIn = (data: unknown, depth = 4): ResolvedDetail[] =>
-    discover(data, depth).map(({ name, payload }) => ({ component: FORMS[name], payload }));
-export const resolve = (body: unknown): ResolvedDetail[] =>
-    resolveBodies(body).map(({ name, payload }) => ({ component: FORMS[name], payload }));
+type Bodies = Readonly<Record<string, Component>>;
+
+/** An app's renderer for a type wins over the kit's own, as a published Blade view does. */
+const rendererFor = (name: string, bodies: Bodies): Component | undefined =>
+    Object.hasOwn(bodies, name) ? bodies[name] : Object.hasOwn(FORMS, name) ? FORMS[name] : undefined;
+
+export const formsIn = (data: unknown, depth = 4, bodies: Bodies = {}): ResolvedDetail[] =>
+    discover(data, depth, (name) => rendererFor(name, bodies) !== undefined)
+        .map(({ name, payload }) => ({ component: rendererFor(name, bodies)!, payload }));
+export const resolve = (body: unknown, bodies: Bodies = {}): ResolvedDetail[] =>
+    resolveBodies(body, (name) => rendererFor(name, bodies) !== undefined)
+        .map(({ name, payload }) => ({ component: rendererFor(name, bodies)!, payload }));
+
+/**
+ * Register renderers for app body types: `app.use(feedBodies({ 'Acme/Shipment': Shipment }))`.
+ * Each install merges into what is already registered, so packages can add their own.
+ */
+export function feedBodies(bodies: Bodies): Plugin {
+    return {
+        install(app: App) {
+            const registered = app.runWithContext(() => inject(FEED_BODIES, {}));
+            app.provide(FEED_BODIES, { ...registered, ...bodies });
+        },
+    };
+}

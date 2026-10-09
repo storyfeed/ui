@@ -7,6 +7,7 @@ import FeedMeta from './FeedMeta';
 import FeedMedia from './FeedMedia';
 import FeedMediaStrip from './FeedMediaStrip';
 import Rail from './Rail';
+import { useFeedOptions } from './context';
 import { useRelativeTime } from './useRelativeTime';
 export interface FeedRenderProps {
     objectIcon?: (node: FeedNode) => Record<string, any> | null;
@@ -46,6 +47,7 @@ export default function FeedItem({
     objectIcon,
 }: NodeProps & { item: ActivityNode; dense?: boolean }) {
     const timestamp = useNodeTime(item, time);
+    const { FEED_BODIES: bodies = {} } = useFeedOptions();
     const reading =
         item.redundant &&
         (item.missing_headline_template || item.missing_headline)
@@ -60,8 +62,8 @@ export default function FeedItem({
     const object = item.object;
     const icon = objectIcon?.(item);
     const forms = [
-        ...formsIn(item.data),
-        ...[...resolve(object?.body), ...formsIn(object?.data)].map(
+        ...formsIn(item.data, 4, bodies),
+        ...[...resolve(object?.body, bodies), ...formsIn(object?.data, 4, bodies)].map(
             (found) => ({
                 ...found,
                 entityLabel: object?.label,

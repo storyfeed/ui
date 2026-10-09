@@ -347,6 +347,45 @@ test('Component registry forwards props and ignores unknown names', async () => 
     assert.equal(await renderBody('App/Message', false), '');
 });
 
+test('registered body renderers draw app types and override core types', async () => {
+    const { FEED_BODIES } = await server.ssrLoadModule('/resources/js/vue/keys.ts');
+    const { feedBodies } = await server.ssrLoadModule('/resources/js/vue/body/index.ts');
+    const { default: FeedItem } = await server.ssrLoadModule('/resources/js/vue/FeedItem.vue');
+    const renderer = (tag) => ({
+        props: ['payload', 'entityLabel', 'entityUrl', 'entityMedia'],
+        render() {
+            return h(tag, { class: 'sf-app-body' }, `${this.payload.carrier ?? this.payload.content} ${this.entityUrl}`);
+        },
+    });
+    const item = (body) => ({
+        kind: 'activity', id: 'shipment', verb: 'ship', published_at: '2026-10-07T12:00:00Z', headline: 'Shipped',
+        actor: null, object: { label: 'Order', url: '/orders/1', body: [body] },
+    });
+    const draw = async (body, install) => {
+        const app = createSSRApp({ render: () => h(FeedItem, { item: item(body) }) });
+        install?.(app);
+
+        return renderToString(app);
+    };
+    const shipment = { $body: 'Acme/Shipment', $v: 1, carrier: 'UPS' };
+
+    assert.doesNotMatch(await draw(shipment), /sf-app-body|sf-body-form/);
+    assert.match(await draw(shipment, app => app.use(feedBodies({ 'Acme/Shipment': renderer('em') }))), /<em class="sf-app-body">UPS \/orders\/1<\/em>/);
+    assert.match(await draw(shipment, app => app.provide(FEED_BODIES, { 'Acme/Shipment': renderer('em') })), /<em class="sf-app-body">UPS/);
+    // Each plugin install merges into what is registered.
+    const both = app => app.use(feedBodies({ 'Acme/Shipment': renderer('em') })).use(feedBodies({ 'Acme/Invoice': renderer('b') }));
+    assert.match(await draw(shipment, both), /<em class="sf-app-body">UPS/);
+    assert.match(await draw({ $body: 'Acme/Invoice', carrier: 'DHL' }, both), /<b class="sf-app-body">DHL/);
+    // A registered core type replaces the kit's renderer.
+    const prose = { $body: 'Storyfeed/Body/Prose', content: 'Words' };
+    assert.match(await draw(prose), /sf-prose/);
+    const replaced = await draw(prose, app => app.use(feedBodies({ 'Storyfeed/Body/Prose': renderer('i') })));
+    assert.match(replaced, /<i class="sf-app-body">Words/);
+    assert.doesNotMatch(replaced, /sf-prose/);
+    for (const name of ['toString', '__proto__', 'Acme/Unknown'])
+        assert.doesNotMatch(await draw({ $body: name }, app => app.use(feedBodies({ 'Acme/Shipment': renderer('em') }))), /sf-body-form/);
+});
+
 test('dividers draw a labelled node on the rail before the named item', async () => {
     const node = (id) => ({
         kind: 'activity',

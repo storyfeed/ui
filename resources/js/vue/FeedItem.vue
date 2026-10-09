@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, toRef } from 'vue';
+import { computed, inject, toRef } from 'vue';
 import { imageOf } from './body';
 import { formsIn, resolve } from './body';
+import { FEED_BODIES } from './keys';
 import EntityAvatar from './EntityAvatar.vue';
 import FeedHeadline from './FeedHeadline.vue';
 import FeedIcon from './FeedIcon.vue';
@@ -31,6 +32,8 @@ const props = withDefaults(
 );
 
 const icon = computed(() => props.objectIcon?.(props.item));
+
+const bodies = inject(FEED_BODIES, {});
 
 const time = useRelativeTime(toRef(() => props.item.published_at));
 
@@ -113,11 +116,11 @@ const forms = computed(() => {
     return [
         // The activity's own map, still walked: an app may put a form at a key
         // of its own and this kit will find it.
-        ...formsIn(props.item.data),
+        ...formsIn(props.item.data, 4, bodies),
         // The object's `body` — the slot — read directly, because that is the
         // whole point of it being a slot and not a key somebody chose.
-        ...resolve(object?.body).map(attributed),
-        ...formsIn(object?.data).map(attributed),
+        ...resolve(object?.body, bodies).map(attributed),
+        ...formsIn(object?.data, 4, bodies).map(attributed),
     ];
 });
 

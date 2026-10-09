@@ -321,6 +321,33 @@ test('Component registry forwards props, escapes text, rejects unknown and proto
     for (const name of ['Unknown', 'toString', '__proto__'])
         assert.equal(raw('ComponentBody', { payload: { name } }, options), '');
 });
+test('registered body renderers draw app types, override core types and merge across providers', () => {
+    const renderer = (Tag) => ({ payload, entityUrl }) =>
+        h(Tag, { className: 'sf-app-body' }, `${payload.carrier ?? payload.content} ${entityUrl}`);
+    const item = (body) => ({
+        kind: 'activity', id: 'shipment', verb: 'ship', published_at: '2026-10-07T12:00:00Z', headline: 'Shipped',
+        actor: null, object: { label: 'Order', url: '/orders/1', body: [body] },
+    });
+    const shipment = { $body: 'Acme/Shipment', $v: 1, carrier: 'UPS' };
+    const draw = (body, options = {}) => raw('FeedItem', { item: item(body) }, options);
+    const registered = { FEED_BODIES: { 'Acme/Shipment': renderer('em') } };
+
+    assert.doesNotMatch(draw(shipment), /sf-app-body|sf-body-form/);
+    assert.match(draw(shipment, registered), /<em class="sf-app-body">UPS \/orders\/1<\/em>/);
+    const nested = renderToString(
+        h(kit.FeedProvider, registered, h(kit.FeedProvider, { FEED_BODIES: { 'Acme/Invoice': renderer('b') } },
+            h(kit.FeedItem, { item: item(shipment) }), h(kit.FeedItem, { item: item({ $body: 'Acme/Invoice', carrier: 'DHL' }) }))),
+    );
+    assert.match(nested, /<em class="sf-app-body">UPS/);
+    assert.match(nested, /<b class="sf-app-body">DHL/);
+    const prose = { $body: 'Storyfeed/Body/Prose', content: 'Words' };
+    assert.match(draw(prose), /sf-prose/);
+    const replaced = draw(prose, { FEED_BODIES: { 'Storyfeed/Body/Prose': renderer('i') } });
+    assert.match(replaced, /<i class="sf-app-body">Words/);
+    assert.doesNotMatch(replaced, /sf-prose/);
+    for (const name of ['toString', '__proto__', 'Acme/Unknown'])
+        assert.doesNotMatch(draw({ $body: name }, registered), /sf-body-form/);
+});
 test('custom link component receives href, modal and attributes', () => {
     let received;
     raw(

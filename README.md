@@ -132,7 +132,7 @@ export default function History({ feed }: { feed: FeedPayload }) {
 ```
 
 Function components work with Inertia 2/3's React adapter and the Laravel React
-starter kit. `FeedProvider` supplies the `FEED_LINK`, `FEED_COMPONENTS`, `FEED_NOW`,
+starter kit. `FeedProvider` supplies the `FEED_LINK`, `FEED_BODIES`, `FEED_COMPONENTS`, `FEED_NOW`,
 `FEED_FILE_LABELLER` and `FEED_MEDIA_OBJECT_PLACEMENT` seams. `body`, `annotations`
 and `time` render props replace Vue slots. Groups use native `<details>`.
 The initial SSR/hydration render uses stable ISO dates; after mount, labels
@@ -396,6 +396,52 @@ three and hide when children are shown.
 The [Filament inventory](workbench/filament-inventory.md) lists the rendering
 boundary and the integration features that stay in the plugin.
 
+### Custom body types
+
+An app or package draws its own body type, such as `Acme/Shipment`, by giving
+each kit a renderer for that exact type. A renderer receives the body's payload
+and the entity that carries it. A renderer registered for one of core's types
+replaces the kit's own. A body whose type has no renderer draws nothing.
+
+**Blade** maps the type segment by segment to a view under the `storyfeed`
+namespace: `Acme/Shipment` draws `components/body/acme/shipment.blade.php`,
+which receives the body as `$body` and its entity as `$entity`. An app adds it
+in `resources/views/vendor/storyfeed`. A package adds its views to the
+namespace from its service provider:
+
+```php
+$this->loadViewsFrom(__DIR__.'/../resources/views', 'storyfeed');
+```
+
+```blade
+{{-- resources/views/vendor/storyfeed/components/body/acme/shipment.blade.php --}}
+@props(['body', 'entity' => null])
+<p>{{ $body['carrier'] }} · {{ $body['tracking'] }}</p>
+```
+
+**Vue** reads the `FEED_BODIES` injection key. Install renderers with the
+`feedBodies()` plugin, which merges each map into those already installed, or
+`provide()` a map for one part of the page. A renderer receives `payload`,
+`entityLabel`, `entityUrl` and `entityMedia` props:
+
+```ts
+import { feedBodies } from '@/components/storyfeed/body';
+import Shipment from '@/components/Shipment.vue';
+
+createApp(App).use(feedBodies({ 'Acme/Shipment': Shipment }));
+```
+
+**React** reads `FEED_BODIES` from `FeedProvider`; nested providers merge their
+maps. A renderer receives `BodyProps`:
+
+```tsx
+import { FeedProvider, type BodyProps } from '@/components/storyfeed';
+
+const Shipment = ({ payload }: BodyProps) => <p>{payload.carrier} · {payload.tracking}</p>;
+
+<FeedProvider FEED_BODIES={{ 'Acme/Shipment': Shipment }}>…</FeedProvider>
+```
+
 ## Customising the Views
 
 Publish the views to change the markup:
@@ -415,7 +461,8 @@ no view draws `icons/activity`.
 **Your own body types.** A body type draws the component named after it:
 `Acme/Attachment` draws
 `resources/views/vendor/storyfeed/components/body/acme/attachment.blade.php`,
-which receives the body as `$body` and its entity as `$entity`.
+which receives the body as `$body` and its entity as `$entity`. See
+[Custom body types](#custom-body-types) for the Vue and React kits.
 
 **Words.** Headline words such as "Someone" and "a removed order" are core's
 translation lines (`php artisan vendor:publish --tag=storyfeed-translations`).

@@ -12,6 +12,11 @@ export const BODY_NAMES: readonly string[] = [
 
 export type ResolvedDetail = { name: string; payload: Record<string, any> };
 
+/** Whether a renderer draws this body; by default, core's types. A kit passes its own. */
+export type DrawsBody = (name: string, payload: Record<string, any>) => boolean;
+
+const drawsCoreBody: DrawsBody = (name) => BODY_NAMES.includes(name);
+
 /**
  * Walk a `data` map and return the details it carries, in the order found.
  *
@@ -19,19 +24,17 @@ export type ResolvedDetail = { name: string; payload: Record<string, any> };
  * so finding one means walking. Details never nest, so the walk stops at the
  * first one on a branch; the depth bound matches core's own `details` check.
  */
-export function formsIn(data: unknown, depth = 4): ResolvedDetail[] {
+export function formsIn(data: unknown, depth = 4, draws: DrawsBody = drawsCoreBody): ResolvedDetail[] {
     if (depth < 0 || data === null || typeof data !== 'object') return [];
 
     const map = data as Record<string, any>;
     const name = map.$body;
 
     if (typeof name === 'string') {
-        const known = BODY_NAMES.includes(name);
-
-        return known ? [{ name, payload: map }] : [];
+        return draws(name, map) ? [{ name, payload: map }] : [];
     }
 
-    return Object.values(map).flatMap((value) => formsIn(value, depth - 1));
+    return Object.values(map).flatMap((value) => formsIn(value, depth - 1, draws));
 }
 
 /**
@@ -42,14 +45,13 @@ export function formsIn(data: unknown, depth = 4): ResolvedDetail[] {
  * unrecognised name still draws nothing, which is the same rule and the same
  * reason.
  */
-export function resolve(body: unknown): ResolvedDetail[] {
+export function resolve(body: unknown, draws: DrawsBody = drawsCoreBody): ResolvedDetail[] {
     if (!Array.isArray(body)) return [];
 
     return body.flatMap((form) => {
         const name = (form ?? {})['$body'];
-        const known = BODY_NAMES.includes(name);
 
-        return known ? [{ name, payload: form }] : [];
+        return typeof name === 'string' && draws(name, form) ? [{ name, payload: form }] : [];
     });
 }
 

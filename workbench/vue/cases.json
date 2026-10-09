@@ -1545,5 +1545,38 @@
         "headline": "MediaObject empty"
       }
     ]
+  },
+  {
+    "name": "App body type",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "app-body-shipment",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "label": "Order #1042",
+          "url": "#order-1042",
+          "body": [
+            {
+              "$body": "Acme/Shipment",
+              "$v": 1,
+              "carrier": "UPS",
+              "tracking": "1Z999AA10123456784"
+            }
+          ]
+        },
+        "glyph": "file-up",
+        "headline": "Shipment registered"
+      }
+    ]
   }
 ]

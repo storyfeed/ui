@@ -365,13 +365,25 @@ const FORMS: Record<string, ComponentType<BodyProps>> = Object.fromEntries(
         MediaObject,
     }).map(([name, component]) => [`Storyfeed/Body/${name}`, component]),
 );
-export const formsIn = (data: unknown, depth = 4) =>
-    discover(data, depth).map(({ name, payload }) => ({
-        component: FORMS[name],
-        payload,
-    }));
-export const resolve = (body: unknown) =>
-    resolveBodies(body).map(({ name, payload }) => ({
-        component: FORMS[name],
-        payload,
-    }));
+type Bodies = Readonly<Record<string, ComponentType<BodyProps>>>;
+/** An app's renderer for a type wins over the kit's own, as a published Blade view does. */
+const rendererFor = (name: string, bodies: Bodies) =>
+    Object.hasOwn(bodies, name)
+        ? bodies[name]
+        : Object.hasOwn(FORMS, name)
+          ? FORMS[name]
+          : undefined;
+export const formsIn = (data: unknown, depth = 4, bodies: Bodies = {}) =>
+    discover(data, depth, (name) => rendererFor(name, bodies) !== undefined).map(
+        ({ name, payload }) => ({
+            component: rendererFor(name, bodies)!,
+            payload,
+        }),
+    );
+export const resolve = (body: unknown, bodies: Bodies = {}) =>
+    resolveBodies(body, (name) => rendererFor(name, bodies) !== undefined).map(
+        ({ name, payload }) => ({
+            component: rendererFor(name, bodies)!,
+            payload,
+        }),
+    );

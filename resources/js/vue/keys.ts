@@ -30,6 +30,17 @@ export const FEED_LINK = Symbol('feedLink') as InjectionKey<Component | string>;
  */
 export const FEED_NOW = Symbol('feedNow') as InjectionKey<number>;
 
+/**
+ * Renderers for app body types, keyed by the exact body type
+ * (`'Acme/Shipment'`). Each receives the props a built-in body does:
+ * `payload`, and `entityLabel`, `entityUrl` and `entityMedia` for the entity
+ * that carries it. A core type registered here replaces the kit's renderer.
+ * Install several maps with the `feedBodies()` plugin, which merges them.
+ */
+export const FEED_BODIES = Symbol('feedBodies') as InjectionKey<
+    Readonly<Record<string, Component>>
+>;
+
 /** App-owned Component bodies, keyed by their exact payload name. */
 export const FEED_COMPONENTS = Symbol('feedComponents') as InjectionKey<
     Readonly<Record<string, Component>>

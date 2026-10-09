@@ -70,6 +70,8 @@ final class WorkbenchTest extends TestCase
         Carbon::setTestNow('2026-08-14T15:00:00Z');
         app(BodyComponents::class)->register('App/Message', 'workbench::message');
         app('view')->addNamespace('workbench', __DIR__);
+        // An app or package adds body renderers by adding views to the namespace.
+        app('view')->addNamespace('storyfeed', __DIR__.'/views');
         $payload = json_decode(file_get_contents(__DIR__.'/vue/sample-payload.json'), true, flags: JSON_THROW_ON_ERROR);
         $bodies = json_decode(file_get_contents(__DIR__.'/vue/body-payload.json'), true, flags: JSON_THROW_ON_ERROR);
         $icons = json_decode(file_get_contents(dirname(__DIR__).'/build/workbench-icons.json'), true, flags: JSON_THROW_ON_ERROR);

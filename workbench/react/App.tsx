@@ -1,6 +1,7 @@
 import { FeedProvider, FeedStream } from '../../resources/js/react';
 import { MediaObject } from '../../resources/js/react/body';
 import type { FeedNode } from '../../resources/js/shared/types';
+import Shipment from './Shipment';
 import payload from '../vue/sample-payload.json';
 import bodies from '../vue/body-payload.json';
 import cases from '../vue/cases.json';
@@ -20,6 +21,7 @@ export default function App() {
             FEED_COMPONENTS={{
                 'App/Message': ({ message }) => <strong>{message}</strong>,
             }}
+            FEED_BODIES={{ 'Acme/Shipment': Shipment }}
         >
             <main className="comparison single">
                 <article className="pane converted">

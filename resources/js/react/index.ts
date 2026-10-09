@@ -13,5 +13,6 @@ export * from './context';
 export * from './useRelativeTime';
 export type { FeedStreamProps } from './FeedStream';
 export type { FeedRenderProps, NodeProps } from './FeedItem';
+export type { BodyProps } from './body';
 export type * from '../shared/types';
 export * from '../shared/rail';
