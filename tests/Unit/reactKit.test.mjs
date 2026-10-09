@@ -614,6 +614,12 @@ test('rich prose and ItemList render inside Typography prose at the feed size', 
         assert.doesNotMatch(html, /\bprose-(sm|base|lg|xl|2xl)\b/);
     }
 });
+test('a slim Excerpt v2 without truncated is truncated; v1 without it is whole', () => {
+    assert.match(raw('Excerpt', { payload: { $v: 2, text: 'Part' } }), /aria-hidden="true">…/);
+    assert.doesNotMatch(raw('Excerpt', { payload: { $v: 2, text: 'Whole', truncated: false } }), /…/);
+    assert.doesNotMatch(raw('Excerpt', { payload: { $v: 1, text: 'Hand-written' } }), /…/);
+    assert.doesNotMatch(raw('Excerpt', { payload: { text: 'Unversioned' } }), /…/);
+});
 test('ItemList states overflow conjunction and owning URL fallback', () => {
     assert.match(
         text(raw('ItemList', { payload: { items: ['First'], totalItems: 3 } })),

@@ -8,6 +8,10 @@
 - A group draws its sampled objects as a row of their avatars when they have no photographs ("Ana added Ben, Cara and 2 others to Kitchen remodel"), in Blade, Vue and React. Only declared avatars count (`media.icon`, or `media.initials` with `media.color`); each links to its entity, and "+N" counts the objects not sampled. The row never shows the actor, and is skipped with fewer than two avatars or when every avatar is the same picture. The Blade kit adds an `avatar-row` component and the React kit exports `FeedAvatarRow`.
 - A body whose type has no renderer draws its `$fallback` line, as one muted line of escaped text, in Blade, Vue and React. A registered renderer or view always wins, and a body without a fallback still draws nothing.
 
+### Fixed
+
+- Excerpt reads core's slim v2 payload, where `truncated` is written only when false: an Excerpt without the flag shows its ellipsis in Blade, Vue and React, as core's `Excerpt::upgrade()` reads it. v1 bodies without the flag still read as whole.
+
 ### Changed
 
 - A group's photograph strip reads only its objects, never its actors or other roles, in Blade, Vue and React, so a group no longer pulls an actor's photo into the strip.

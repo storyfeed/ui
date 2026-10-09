@@ -65,6 +65,11 @@ export function fallbackOf(payload: Record<string, any>): string | null {
     return typeof line === 'string' && line.trim() !== '' ? line : null;
 }
 
+/** Whether an Excerpt is a fragment. From v2 core writes `truncated` only when false. */
+export function isTruncated(payload: Record<string, any>): boolean {
+    return 'truncated' in payload ? Boolean(payload.truncated) : (typeof payload.$v === 'number' ? payload.$v : 1) >= 2;
+}
+
 /** Only an Image body opts a sampled entity into the photograph strip. */
 export function imageOf(entity: any): any {
     const bodies = [...resolve(entity?.body), ...formsIn(entity?.data)];

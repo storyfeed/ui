@@ -109,6 +109,15 @@ it('keeps long rich text instead of silently truncating it', function () {
     expect(render_bodies(Prose::html($source)))->toContain('The end.</p>');
 });
 
+it('reads a slim excerpt: from v2 an absent truncated flag means truncated', function () {
+    $render = fn (array $body) => render_blade('<x-storyfeed::body.excerpt :body="$body" />', ['body' => $body]);
+
+    expect($render(['$v' => 2, 'text' => 'Part']))->toContain('<blockquote>Part<span aria-hidden="true">…</span></blockquote>')
+        ->and($render(['$v' => 2, 'text' => 'Whole', 'truncated' => false]))->toContain('<blockquote>Whole</blockquote>')
+        ->and($render(['$v' => 1, 'text' => 'Hand-written']))->toContain('<blockquote>Hand-written</blockquote>')
+        ->and($render(['text' => 'Unversioned']))->toContain('<blockquote>Unversioned</blockquote>');
+});
+
 it('escapes excerpt text and source and only marks truncated passages', function () {
     expect(render_blade('<x-storyfeed::body.excerpt :body="$body" />', [
         'body' => ['text' => '<b>Quoted</b>', 'from' => '<Source>', 'truncated' => false],

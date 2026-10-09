@@ -602,6 +602,14 @@ test('rich prose and ItemList render inside Typography prose at the feed size', 
     }
 });
 
+test('a slim Excerpt v2 without truncated is truncated; v1 without it is whole', async () => {
+    const path = '/resources/js/vue/body/Excerpt.vue';
+    assert.match(await render(path, { payload: { $v: 2, text: 'Part' } }), /aria-hidden="true">…/);
+    assert.doesNotMatch(await render(path, { payload: { $v: 2, text: 'Whole', truncated: false } }), /…/);
+    assert.doesNotMatch(await render(path, { payload: { $v: 1, text: 'Hand-written' } }), /…/);
+    assert.doesNotMatch(await render(path, { payload: { text: 'Unversioned' } }), /…/);
+});
+
 test('ItemList states the conjunction before overflow', async () => {
     const html = await render('/resources/js/vue/body/ItemList.vue', { payload: { items: ['First'], totalItems: 3 } });
     assert.match(textOf(html), /Firstand 2 more/);

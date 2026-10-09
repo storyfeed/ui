@@ -2,6 +2,7 @@ import type { ComponentType } from 'react';
 import {
     fallbackOf,
     formsIn as discover,
+    isTruncated,
     resolve as resolveBodies,
 } from '../../shared/body';
 import { fileLabel } from '../../shared/fileLabels';
@@ -30,7 +31,7 @@ export function Excerpt({ payload }: BodyProps) {
         <figure className="sf-excerpt-block m-0">
             <blockquote className="sf-excerpt m-0 border-l-2 border-border pl-3 text-base whitespace-pre-wrap text-muted-foreground italic">
                 {payload.text}
-                {payload.truncated && <span aria-hidden="true">…</span>}
+                {isTruncated(payload) && <span aria-hidden="true">…</span>}
             </blockquote>
             {payload.from && (
                 <figcaption className="sf-excerpt__from mt-0.5 text-sm text-muted-foreground">
