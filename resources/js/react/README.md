@@ -61,7 +61,8 @@ Use your app's append/merge pagination policy when loading older pages.
 All provider names retain the Vue seams' meaning:
 
 - `FEED_LINK`: a component accepting `href` and children. Entity attributes are
-  forwarded; host components also receive `modal` when true. Defaults to `a`.
+  forwarded; host components also receive `modal` when true, as does a
+  CallToAction's action. Defaults to `a`.
 - `FEED_BODIES`: a map of exact body types (`'Acme/Shipment'`) to renderers that
   receive `BodyProps`. Nested providers merge; one registered for a core type
   replaces the kit's. A type with no renderer draws its `$fallback` line as

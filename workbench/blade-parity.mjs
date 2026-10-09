@@ -13,6 +13,13 @@ const bodyTexts = {
         'Order #1042 Item Qty Price Starter plan 1 $9.00 Extra seats 4 $40.00 Delivery to 12 Harbour Street Wellington — $0.00 Subtotal $49.00 Total $49.00',
         'Carrier UPS Tracking 1Z999AA10123456784 Note —',
     ],
+    'Call to action': [
+        'The countdown to 1.0 Five milestones to a stable release. See the roadmap→',
+        'Open the changelog→',
+        'Every milestone, newest first. View→',
+        'Release notes Nothing to click here.',
+        'Still a heading',
+    ],
     'Body fallback': ['Invoice #1042 · $49.00 due Friday', 'UPS · 1Z999AA10123456784', '<b>Escaped</b>, never HTML'],
 };
 const output = process.env.STORYFEED_SCREENSHOTS ?? '/private/tmp/claude-501/-Users-jasper-Dev-projects-storyfeed/2b79c0b9-803e-4825-b1bd-040d9078ad01/scratchpad/kit-adopt';
@@ -146,7 +153,7 @@ try {
                     }
                 }
                 const geometry = await Promise.all(frames.map(frame => frame.evaluate(() => {
-                    const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media', '.sf-facts', '.sf-facts__row', '.sf-facts__label', '.sf-facts__value', '.sf-facts__value > span', '.sf-rich-text', '.sf-rich-text *', '.sf-list-block', '.sf-list__prose *', '.sf-avatar-row', '.sf-avatar-row > *', '.sf-avatar-row .sf-avatar', '.sf-table-block', '.sf-table__prose *', '.sf-media-object__image img'];
+                    const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media', '.sf-facts', '.sf-facts__row', '.sf-facts__label', '.sf-facts__value', '.sf-facts__value > span', '.sf-rich-text', '.sf-rich-text *', '.sf-list-block', '.sf-list__prose *', '.sf-avatar-row', '.sf-avatar-row > *', '.sf-avatar-row .sf-avatar', '.sf-table-block', '.sf-table__prose *', '.sf-media-object__image img', '.sf-cta', '.sf-cta > *', '.sf-cta__action'];
                     return Object.fromEntries(selectors.map(selector => [selector, [...document.querySelectorAll(selector)].filter(e => !e.closest('details:not([open]) .sf-children') && e.getClientRects().length && e.getBoundingClientRect().height > 0).map(e => {
                         const r = e.getBoundingClientRect();
                         return { x: r.x, y: r.y, w: r.width, h: r.height, text: e.textContent.trim().replace(/\s+/g, ' ') };
@@ -171,6 +178,11 @@ try {
                     const texts = await frames[i].locator(`.example:has(>h2:text-is("${section}")) .sf-body-form`).allTextContents();
                     // Kits differ only in whitespace between tags, which renders as nothing.
                     assert.deepEqual(texts.map(t => t.replace(/\s+/g, '')), expected.map(t => t.replace(/\s+/g, '')), `${renderers[i]}: ${section}`);
+                }
+                // A call to action's button keeps its link and safe attributes; an href-less one goes to its entity.
+                if (state === 'collapsed' && text === 'default') for (let i = 0; i < frames.length; i++) {
+                    const actions = await frames[i].locator('.example:has(>h2:text-is("Call to action")) .sf-cta__action').evaluateAll(links => links.map(a => [a.getAttribute('href'), a.getAttribute('target'), a.hasAttribute('onclick')]));
+                    assert.deepEqual(actions, [['#roadmap', '_blank', false], ['#changelog', null, false], ['#roadmap-page', null, false]], `${renderers[i]}: call to action links`);
                 }
                 // Time ranges on the meta line: collapsed by shared month or day, open ends, nothing without one.
                 if (state === 'collapsed' && text === 'default') for (let i = 0; i < frames.length; i++) {

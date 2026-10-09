@@ -656,6 +656,19 @@ test('Table draws inside prose with a tfoot, escaped cells that keep line breaks
     assert.doesNotMatch(slim, /<thead|<tfoot|<figcaption/);
     assert.equal(render('Table', { payload: { headers: ['A'] } }), '');
 });
+test('a call to action draws one button; modal reaches a host link, attributes are filtered, href-less goes to the entity', () => {
+    const action = (href, extra = {}) => ({ label: 'See <it>', link: { href, modal: false, attributes: {}, ...extra } });
+    const draw = (payload, options = {}) => render('CallToAction', { payload, entityUrl: '/roadmap' }, options);
+    assert.equal(draw({ subject: 'The countdown', content: 'Five milestones.', action: action('/next', { modal: true, attributes: { target: '_blank', onclick: 'x' } }) }),
+        '<div class="sf-cta"><p class="sf-cta__subject">The countdown</p><p class="sf-cta__content">Five milestones.</p><a target="_blank" href="/next" class="sf-cta__action">See &lt;it&gt;<span aria-hidden="true">→</span></a></div>');
+    assert.equal(draw({ action: action('/next') }), '<a href="/next" class="sf-cta__action">See &lt;it&gt;<span aria-hidden="true">→</span></a>');
+    assert.match(draw({ content: 'Mine', action: action(null) }), /href="\/roadmap"/);
+    assert.equal(draw({ subject: 'Heading', action: { link: { href: '/x' } } }), '<div class="sf-cta"><p class="sf-cta__subject">Heading</p></div>');
+    assert.equal(draw({ action: { label: 'No link' } }), '');
+    const HostLink = ({ href, modal, children }) => h('a', { href, 'data-modal': String(modal ?? false) }, children);
+    assert.match(draw({ action: action('/next', { modal: true }) }, { FEED_LINK: HostLink }), /data-modal="true"/);
+    assert.match(draw({ action: action('/next') }, { FEED_LINK: HostLink }), /data-modal="false"/);
+});
 test('ItemList states overflow conjunction and owning URL fallback', () => {
     assert.match(
         text(raw('ItemList', { payload: { items: ['First'], totalItems: 3 } })),

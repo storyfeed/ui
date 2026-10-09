@@ -8,6 +8,7 @@ import ItemList from './ItemList.vue'
 import Image from './Image.vue'
 import MediaObject from './MediaObject.vue'
 import Table from './Table.vue'
+import CallToAction from './CallToAction.vue'
 import Fallback from './Fallback.vue'
 
 /**
@@ -33,6 +34,7 @@ const FORMS: Record<string, Component> = {
     'Storyfeed/Body/Image': Image,
     'Storyfeed/Body/MediaObject': MediaObject,
     'Storyfeed/Body/Table': Table,
+    'Storyfeed/Body/CallToAction': CallToAction,
 }
 
 import { inject, type App, type Plugin } from 'vue';

@@ -109,7 +109,8 @@ const forms = computed(() => {
     const attributed = (found: any) => ({
         ...found,
         entityLabel: object?.label ?? null,
-        entityUrl: object?.url ?? null,
+        // Core 0.17 moves an entity's URL to `link.href`.
+        entityUrl: object?.url ?? object?.link?.href ?? null,
         entityMedia: object?.media ?? null,
     });
 

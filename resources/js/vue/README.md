@@ -37,7 +37,8 @@ invert and code needs a dark surface in both themes.
 ## Seams
 
 - Provide `FEED_LINK` from `keys.ts` with Inertia's `Link` (or any Vue component
-  accepting `href`) to replace anchors. Entity attributes are forwarded.
+  accepting `href`) to replace anchors. Entity attributes are forwarded, and a
+  CallToAction whose link is `modal` passes `modal` to it.
 - Provide `FEED_NOW` with a millisecond timestamp for deterministic SSR/static
   rendering. Otherwise the calendar ladder updates after mount. Dates keep
   machine-readable datetimes, absolute hover titles and the `#time` slot.

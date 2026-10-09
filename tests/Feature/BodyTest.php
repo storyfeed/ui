@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
+use Storyfeed\Body\CallToAction;
 use Storyfeed\Body\Component;
 use Storyfeed\Body\Excerpt;
 use Storyfeed\Body\FileAttachment;
@@ -289,6 +290,28 @@ it('draws core\'s Table body through the feed', function () {
     $html = render_bodies(Table::make(['Item', 'Price'])->title('Receipt')->row(['Seats', '$40.00'])->footer(['Total', '$49.00']));
 
     expect($html)->toContain('<figcaption>Receipt</figcaption>', '<thead><tr><th>Item</th><th>Price</th></tr></thead>', '<tr><td>Seats</td><td>$40.00</td></tr>', '<tr><td>Total</td><td>$49.00</td></tr>');
+});
+
+it('draws a call to action as a plain link button, with safe attributes and its entity as the default target', function () {
+    $render = fn (array $body) => Blade::render('<x-storyfeed::body.call-to-action :body="$body" :entity="$entity" />', ['body' => $body, 'entity' => Entity::of(['label' => 'Roadmap', 'url' => '/roadmap', 'link' => ['href' => '/roadmap']])]);
+    $action = fn (?string $href, array $attributes = [], bool $modal = false) => ['label' => 'See <it>', 'link' => ['href' => $href, 'modal' => $modal, 'attributes' => $attributes]];
+
+    expect(structural_html($render(['subject' => 'The countdown', 'content' => 'Five milestones.', 'action' => $action('/next', ['target' => '_blank', 'onclick' => 'x'], true)])))
+        ->toBe('<div> <p>The countdown</p> <p>Five milestones.</p> <a href="/next" target="_blank">See &lt;it&gt;<span aria-hidden="true">→</span></a> </div>')
+        ->and(structural_html($render(['action' => $action('/next')])))->toBe('<a href="/next">See &lt;it&gt;<span aria-hidden="true">→</span></a>')
+        ->and(structural_html($render(['content' => 'Mine', 'action' => $action(null)])))->toContain('<a href="/roadmap">')
+        ->and(structural_html($render(['subject' => 'Heading', 'action' => ['link' => ['href' => '/x']]])))->toBe('<div> <p>Heading</p> </div>')
+        ->and($render(['action' => ['label' => 'No link']]))->toBe('')
+        ->and($render([]))->toBe('');
+});
+
+it('draws core\'s CallToAction body through the feed', function () {
+    if (! class_exists(CallToAction::class)) {
+        $this->markTestSkipped('This core has no CallToAction body.');
+    }
+
+    expect(render_bodies(CallToAction::make(subject: 'The countdown to 1.0')->action('See the roadmap', '/roadmap')))
+        ->toContain('<p>The countdown to 1.0</p>', '<a href="/roadmap">See the roadmap<span aria-hidden="true">→</span></a>');
 });
 
 it('renders an unordered item list with plain list semantics', function () {

@@ -639,6 +639,26 @@ test('activity rows draw their time range after the time; groups never do', asyn
     assert.doesNotMatch(await render('/resources/js/vue/FeedGroup.vue', { item: { ...group, starts_at: '2026-10-01T12:00:00Z' } }), /sf-meta__range/);
 });
 
+test('a call to action draws one button; modal reaches a host link, attributes are filtered, href-less goes to the entity', async () => {
+    const { FEED_LINK } = await server.ssrLoadModule('/resources/js/vue/keys.ts');
+    const { default: CallToAction } = await server.ssrLoadModule('/resources/js/vue/body/CallToAction.vue');
+    const action = (href, extra = {}) => ({ label: 'See <it>', link: { href, modal: false, attributes: {}, ...extra } });
+    const draw = async (payload, link) => {
+        const app = createSSRApp({ render: () => h(CallToAction, { payload, entityUrl: '/roadmap' }) });
+        if (link) app.provide(FEED_LINK, link);
+        return structural(await renderToString(app)).replace(/<!--[\s\S]*?-->/g, '');
+    };
+    assert.equal(await draw({ subject: 'The countdown', content: 'Five milestones.', action: action('/next', { modal: true, attributes: { target: '_blank', onclick: 'x' } }) }),
+        '<div class="sf-cta"><p class="sf-cta__subject">The countdown</p><p class="sf-cta__content">Five milestones.</p><a target="_blank" href="/next" class="sf-cta__action">See &lt;it&gt;<span aria-hidden="true">→</span></a></div>');
+    assert.equal(await draw({ action: action('/next') }), '<a href="/next" class="sf-cta__action">See &lt;it&gt;<span aria-hidden="true">→</span></a>');
+    assert.match(await draw({ content: 'Mine', action: action(null) }), /href="\/roadmap"/);
+    assert.equal(await draw({ subject: 'Heading', action: { link: { href: '/x' } } }), '<div class="sf-cta"><p class="sf-cta__subject">Heading</p></div>');
+    assert.equal(await draw({ action: { label: 'No link' } }), '');
+    const HostLink = { props: ['href', 'modal'], render() { return h('a', { href: this.href, 'data-modal': String(this.modal ?? false) }, this.$slots.default?.()); } };
+    assert.match(await draw({ action: action('/next', { modal: true }) }, HostLink), /data-modal="true"/);
+    assert.match(await draw({ action: action('/next') }, HostLink), /data-modal="false"/);
+});
+
 test('ItemList states the conjunction before overflow', async () => {
     const html = await render('/resources/js/vue/body/ItemList.vue', { payload: { items: ['First'], totalItems: 3 } });
     assert.match(textOf(html), /Firstand 2 more/);

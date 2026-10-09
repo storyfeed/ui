@@ -9,6 +9,7 @@ import { fileLabel } from '../../shared/fileLabels';
 import { isRich, renderProse } from '../../shared/prose';
 import { readTable, type TableCell } from '../../shared/table';
 import { pictureShape } from '../../shared/picture';
+import { readCallToAction } from '../../shared/callToAction';
 import FeedMedia from '../FeedMedia';
 import { useFeedOptions } from '../context';
 export { imageOf } from '../../shared/body';
@@ -18,6 +19,42 @@ export interface BodyProps {
     entityUrl?: string | null;
     entityMedia?: Record<string, any> | null;
     imagePlacement?: 'beside' | 'below';
+}
+/**
+ * `Storyfeed/Body/CallToAction`: an optional heading and a sentence or two,
+ * then one action, drawn as a button. A lone action draws as the button
+ * alone. A `modal` link asks the host's `FEED_LINK` (Inertia's `Link`) to open
+ * it in a modal; a plain anchor ignores it.
+ */
+export function CallToAction({ payload, entityUrl }: BodyProps) {
+    const { FEED_LINK: Link = 'a' } = useFeedOptions();
+    const cta = readCallToAction(payload, entityUrl);
+    if (!cta) return null;
+    const action = (className: string) =>
+        cta.action && (
+            <Link
+                {...cta.action.attributes}
+                href={cta.action.href}
+                {...(Link !== 'a' && cta.action.modal ? { modal: true } : {})}
+                className={className}
+            >
+                {cta.action.label}
+                <span aria-hidden="true">→</span>
+            </Link>
+        );
+    if (!cta.subject && !cta.content)
+        return action('sf-cta__action inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground no-underline hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring');
+    return (
+        <div className="sf-cta mt-1.5 flex min-w-0 max-w-128 flex-col items-start gap-1 rounded-lg border border-border bg-card p-3 [overflow-wrap:anywhere]">
+            {cta.subject && (
+                <p className="sf-cta__subject m-0 text-base font-medium text-foreground">{cta.subject}</p>
+            )}
+            {cta.content && (
+                <p className="sf-cta__content m-0 text-base leading-[1.6] whitespace-pre-line text-muted-foreground">{cta.content}</p>
+            )}
+            {action('sf-cta__action inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground no-underline hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring mt-1.5')}
+        </div>
+    );
 }
 export function ComponentBody({ payload }: BodyProps) {
     const { FEED_COMPONENTS: registry = {} } = useFeedOptions();
@@ -452,6 +489,7 @@ const FORMS: Record<string, ComponentType<BodyProps>> = Object.fromEntries(
         Image,
         MediaObject,
         Table,
+        CallToAction,
     }).map(([name, component]) => [`Storyfeed/Body/${name}`, component]),
 );
 type Bodies = Readonly<Record<string, ComponentType<BodyProps>>>;

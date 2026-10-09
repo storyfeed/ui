@@ -67,7 +67,8 @@ export default function FeedItem({
             (found) => ({
                 ...found,
                 entityLabel: object?.label,
-                entityUrl: object?.url,
+                // Core 0.17 moves an entity's URL to `link.href`.
+                entityUrl: object?.url ?? object?.link?.href,
                 entityMedia: object?.media,
             }),
         ),

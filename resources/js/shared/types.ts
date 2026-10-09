@@ -29,6 +29,8 @@ export interface FeedEntity {
     /** What a deleted entity left behind; null for a live one. */
     tombstone?: FeedTombstone | null;
     attributes?: Record<string, string>;
+    /** Core 0.17's single link shape, which replaces `url`, `modal` and `attributes`. */
+    link?: { href: string | null; modal?: boolean; attributes?: Record<string, unknown> } | null;
     /**
      * App-specific extras. This kit still reads `initials` and `avatar_color`
      * when `media` declares neither; that fallback goes in the next release.

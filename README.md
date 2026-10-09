@@ -188,8 +188,14 @@ can be used on its own:
 
 Each of core's body types has a component in `components/body`: `key-value`,
 `excerpt`, `prose`, `file-attachment` (including stored `File`), `item-list`,
-`image`, `component` and `media-object`. A body
-type with no component draws nothing.
+`image`, `component`, `media-object`, `table` and `call-to-action`. A body
+type with no component draws its `$fallback` line, or nothing.
+
+A CallToAction draws its heading and text in a card with its one action as a
+button, or the button alone when it has neither. Blade draws a plain link with
+the link's safe attributes; the Vue and React kits also pass `modal` to a host
+`FEED_LINK` such as Inertia's `Link`. An action without an `href` goes to the
+body's own entity.
 
 Prose displays plain text and unknown media types as escaped text. It renders
 Markdown as GitHub-flavoured Markdown (tables, strikethrough, autolinks and task

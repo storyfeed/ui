@@ -9,6 +9,7 @@ export const BODY_NAMES: readonly string[] = [
     'Storyfeed/Body/Image',
     'Storyfeed/Body/MediaObject',
     'Storyfeed/Body/Table',
+    'Storyfeed/Body/CallToAction',
 ];
 
 export type ResolvedDetail = { name: string; payload: Record<string, any> };

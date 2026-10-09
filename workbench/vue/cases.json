@@ -2667,5 +2667,230 @@
         "headline": "A single date"
       }
     ]
+  },
+  {
+    "name": "Call to action",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "cta-full",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "Storyfeed started the countdown to 1.0",
+        "object": {
+          "type": "page",
+          "id": "cta-full",
+          "label": "Roadmap",
+          "url": "#roadmap-page",
+          "link": {
+            "href": "#roadmap-page",
+            "modal": false,
+            "attributes": {}
+          },
+          "media": null,
+          "data": null,
+          "tombstone": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/CallToAction",
+              "$v": 1,
+              "subject": "The countdown to 1.0",
+              "content": "Five milestones to a stable release.",
+              "action": {
+                "label": "See the roadmap",
+                "link": {
+                  "href": "#roadmap",
+                  "modal": true,
+                  "attributes": {
+                    "target": "_blank",
+                    "onclick": "alert(1)"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kind": "activity",
+        "id": "cta-lone",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "A lone action",
+        "object": {
+          "type": "page",
+          "id": "cta-lone",
+          "label": "Roadmap",
+          "url": "#roadmap-page",
+          "link": {
+            "href": "#roadmap-page",
+            "modal": false,
+            "attributes": {}
+          },
+          "media": null,
+          "data": null,
+          "tombstone": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/CallToAction",
+              "$v": 1,
+              "action": {
+                "label": "Open the changelog",
+                "link": {
+                  "href": "#changelog",
+                  "modal": false,
+                  "attributes": {}
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kind": "activity",
+        "id": "cta-entity",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "An action to its own entity",
+        "object": {
+          "type": "page",
+          "id": "cta-entity",
+          "label": "Roadmap",
+          "url": "#roadmap-page",
+          "link": {
+            "href": "#roadmap-page",
+            "modal": false,
+            "attributes": {}
+          },
+          "media": null,
+          "data": null,
+          "tombstone": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/CallToAction",
+              "$v": 1,
+              "content": "Every milestone, newest first.",
+              "action": {
+                "label": "View",
+                "link": {
+                  "href": null,
+                  "modal": false,
+                  "attributes": {}
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "kind": "activity",
+        "id": "cta-text",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "No action",
+        "object": {
+          "type": "page",
+          "id": "cta-text",
+          "label": "Roadmap",
+          "url": "#roadmap-page",
+          "link": {
+            "href": "#roadmap-page",
+            "modal": false,
+            "attributes": {}
+          },
+          "media": null,
+          "data": null,
+          "tombstone": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/CallToAction",
+              "$v": 1,
+              "subject": "Release notes",
+              "content": "Nothing to click here."
+            }
+          ]
+        }
+      },
+      {
+        "kind": "activity",
+        "id": "cta-malformed",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "glyph": "file-up",
+        "headline": "A malformed action",
+        "object": {
+          "type": "page",
+          "id": "cta-malformed",
+          "label": "Roadmap",
+          "url": "#roadmap-page",
+          "link": {
+            "href": "#roadmap-page",
+            "modal": false,
+            "attributes": {}
+          },
+          "media": null,
+          "data": null,
+          "tombstone": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/CallToAction",
+              "$v": 1,
+              "subject": "Still a heading",
+              "action": {
+                "link": {
+                  "href": "#nowhere",
+                  "modal": false,
+                  "attributes": {}
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
   }
 ]
