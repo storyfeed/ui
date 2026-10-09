@@ -146,19 +146,48 @@ it('uses only pinned group singulars', function () {
     }
 });
 
-it('samples Image bodies across every group role and deduplicates and caps strips', function () {
+it('samples Image bodies of the featured objects only, never the actor, and deduplicates and caps strips', function () {
     $photo = fn ($src) => ['type' => 'document', 'id' => $src, 'label' => 'Artwork', 'url' => '/art'.$src, 'body' => [['$body' => 'Storyfeed/Body/Image', 'image' => 'preview']], 'media' => ['preview' => ['src' => $src]]];
     $base = ['kind' => 'group', 'headline' => 'Updates', 'count' => 4];
-    foreach (['objects', 'actors', 'targets', 'contexts', 'origins', 'results', 'instruments', 'locations', 'generators'] as $role) {
+    $item = [...$base, 'sample' => ['objects' => [$photo('/picture')]]];
+    expect(render_blade('<x-storyfeed::group :group="$item" />', compact('item')))->toContain('src="/picture"');
+    foreach (['actors', 'targets', 'contexts', 'origins', 'results', 'instruments', 'locations', 'generators'] as $role) {
         $item = [...$base, 'sample' => [$role => [$photo('/picture')]]];
-        expect(render_blade('<x-storyfeed::group :group="$item" />', compact('item')))->toContain('src="/picture"');
+        expect(Blade::render('<x-storyfeed::group :group="$item" />', compact('item')))->not->toContain('src="/picture"', 'class="sf-media-strip');
     }
-    $item = [...$base, 'sample' => ['objects' => [$photo('/a'), $photo('/b')], 'targets' => [$photo('/a'), $photo('/c'), $photo('/d')]]];
+    $item = [...$base, 'sample' => ['objects' => [$photo('/a'), $photo('/b'), $photo('/a'), $photo('/c'), $photo('/d')]]];
     $html = render_blade('<x-storyfeed::group :group="$item" />', compact('item'));
     expect(substr_count($html, '<img'))->toBe(3)->and($html)->toContain('src="/a"', 'src="/b"', 'src="/c"')->not->toContain('src="/d"');
-
 });
 
+it('draws a group\'s featured objects as an avatar row, only from declared avatars', function () {
+    $declared = fn (string $id, ?array $media) => ['type' => 'person', 'id' => $id, 'label' => "Person {$id}", 'url' => "/people/{$id}", 'media' => $media];
+    $ben = $declared('ben', ['icon' => ['src' => '/ben.svg']]);
+    $cara = $declared('cara', ['initials' => 'CL', 'color' => '#f2c94c']);
+    $row = function (array $sample, array $distinct = [], array $extra = [], array $props = []) {
+        $item = ['kind' => 'group', 'headline' => 'Updates', 'count' => 4, 'sample' => $sample, 'distinct' => $distinct, 'children' => [['kind' => 'activity', 'headline' => 'Member']], ...$extra];
+        $html = Blade::render('<x-storyfeed::group :group="$item" :interactive="$interactive" :collapsed="$collapsed" />', ['item' => $item, 'interactive' => $props['interactive'] ?? true, 'collapsed' => $props['collapsed'] ?? true]);
+        $section = str_contains($html, 'class="sf-avatar-row ') ? explode('</div>', explode('class="sf-avatar-row ', $html)[1])[0] : null;
+
+        return $section === null ? null : [
+            'labels' => preg_match_all('/aria-label="([^"]+)"/', $section, $labels) ? $labels[1] : [],
+            'hrefs' => preg_match_all('/href="([^"]+)"/', $section, $hrefs) ? $hrefs[1] : [],
+        ];
+    };
+
+    expect($row(['actors' => [$declared('ana', null)], 'objects' => [$ben, $cara, $declared('dev', ['initials' => 'DP', 'color' => '#1e3a8a'])]], ['objects' => 5]))
+        ->toBe(['labels' => ['Person ben', 'Person cara', 'Person dev', '2 more'], 'hrefs' => ['/people/ben', '/people/cara', '/people/dev']])
+        ->and($row(['objects' => [$ben, $cara]], ['objects' => 2]))->toBe(['labels' => ['Person ben', 'Person cara'], 'hrefs' => ['/people/ben', '/people/cara']])
+        // Never the actors: one object and several commenters draw no row.
+        ->and($row(['actors' => [$ben, $cara], 'objects' => [$declared('brief', ['initials' => 'BR', 'color' => '#e11d48'])]], ['actors' => 4, 'objects' => 1]))->toBeNull()
+        // Fewer than two declared avatars, identical pictures, deleted or undeclared entities add nothing.
+        ->and($row(['objects' => [$ben, $declared('plain', null), $declared('half', ['initials' => 'HA'])]]))->toBeNull()
+        ->and($row(['objects' => [$ben, $declared('ben2', ['icon' => ['src' => '/ben.svg']])]]))->toBeNull()
+        ->and($row(['objects' => [$ben, [...$cara, 'tombstone' => ['formerType' => 'person']]]]))->toBeNull()
+        // Photographs take the strip instead, and an open static group shows its members rather than a row.
+        ->and($row(['objects' => [[...$ben, 'id' => 'photo', 'body' => [['$body' => 'Storyfeed/Body/Image', 'image' => 'preview']], 'media' => ['icon' => ['src' => '/i.svg'], 'preview' => ['src' => '/photo.jpg']]], $ben, $cara]]))->toBeNull()
+        ->and($row(['objects' => [$ben, $cara]], [], [], ['interactive' => false, 'collapsed' => false]))->toBeNull();
+});
 it('supports file MIME labels and host labellers through the feed without changing the body', function () {
     $body = ['$body' => 'Storyfeed/Body/FileAttachment', 'name' => 'report.csv', 'size' => 21_000_000, 'mediaType' => 'text/csv'];
     $item = ['kind' => 'activity', 'object' => ['label' => 'report.csv', 'body' => [$body]]];

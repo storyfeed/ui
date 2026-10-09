@@ -321,13 +321,20 @@ state opens unnamed groups, or all groups when `interactive` is false.
 group. With `:interactive="false"`, no toggle is rendered and only the chosen
 server state is drawn. Groups show honest truncated-member counts and up to
 three sampled faces. Image bodies opt sampled objects into a linked media
-strip, hidden while the group's children are visible.
+strip. When those objects have no photographs, a group draws them as a row of their
+avatars instead ("Ana added Ben, Cara and 2 others to Kitchen remodel"): only
+avatars an object declares (`media.icon`, or `media.initials` with
+`media.color`), each linked to its entity and labelled with its name, with
+"+N" for the objects not sampled. The row is skipped when it would add
+nothing: fewer than two avatars, or all the same picture.
+Both hide while the group's children are visible.
 
 A raw JSON feed can also be rendered with `:items="$payload['items']"` and
 `:next-cursor="$payload['next_cursor']"`; `page` is optional on that path.
 The `footer` slot replaces the pager (for example, with a Livewire load-more
-control). `divider`, `avatar`, `rail` and `media-strip` are standalone
-components; `media-strip` accepts `tiles`, `overflow`, and a `renderer` callback.
+control). `divider`, `avatar`, `avatar-row`, `rail` and `media-strip` are standalone
+components; `media-strip` accepts `tiles`, `overflow`, and a `renderer` callback,
+and `avatar-row` accepts `entities`, `overflow` and the `avatar` renderer.
 
 ### Component bodies and host seams
 
@@ -391,8 +398,8 @@ the parent posture and dense rows suppress its badge.
 Groups use explicit pinned singular slots and their own headline/template.
 Summary rendering has been removed from all three kits, mirroring core.
 Unknown extra payload keys are ignored. Sample photograph strips read Image
-bodies across every role, objects first, deduplicate image sources, cap at
-three and hide when children are shown.
+bodies of the group's objects only, never its actors, deduplicate image
+sources, cap at three and hide when children are shown.
 The [Filament inventory](workbench/filament-inventory.md) lists the rendering
 boundary and the integration features that stay in the plugin.
 

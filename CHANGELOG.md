@@ -5,10 +5,12 @@
 ### Added
 
 - Vue and React draw app body types. Register a renderer by its exact type: `app.use(feedBodies({ 'Acme/Shipment': Shipment }))` or `provide(FEED_BODIES, …)` in Vue, `<FeedProvider FEED_BODIES={{ 'Acme/Shipment': Shipment }}>` in React. Renderers receive the built-in bodies' props, a renderer for a core type replaces the kit's, and a type with no renderer still draws nothing. The README's "Custom body types" covers all three kits.
+- A group draws its sampled objects as a row of their avatars when they have no photographs ("Ana added Ben, Cara and 2 others to Kitchen remodel"), in Blade, Vue and React. Only declared avatars count (`media.icon`, or `media.initials` with `media.color`); each links to its entity, and "+N" counts the objects not sampled. The row never shows the actor, and is skipped with fewer than two avatars or when every avatar is the same picture. The Blade kit adds an `avatar-row` component and the React kit exports `FeedAvatarRow`.
 - A body whose type has no renderer draws its `$fallback` line, as one muted line of escaped text, in Blade, Vue and React. A registered renderer or view always wins, and a body without a fallback still draws nothing.
 
 ### Changed
 
+- A group's photograph strip reads only its objects, never its actors or other roles, in Blade, Vue and React, so a group no longer pulls an actor's photo into the strip.
 - The kits require the Tailwind Typography plugin. Rich `Prose` (Markdown and HTML) and `ItemList` render inside Typography's `prose` in Blade, Vue and React, replacing the kits' hand-rolled list, table, quotation and heading styles. Install `@tailwindcss/typography` and add `@plugin "@tailwindcss/typography";` beside the kit's `@source` line. The `prose` colours come from the starter-kit tokens, so dark mode follows them, and its size is inherited from the feed, so `--sf-font-size` and the browser's text size scale its tables, lists and headings with the rest of the feed.
 
 ## v0.5.0 - 2026-10-09

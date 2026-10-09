@@ -521,19 +521,43 @@ const photoEntity = src => ({
     media: { preview: { src, width: 200, height: 100 } },
 });
 
-test('group strips sample all roles, objects first, deduplicate by source and cap at three', async () => {
-    for (const role of ['objects', 'actors', 'targets', 'contexts', 'origins', 'results', 'instruments', 'locations', 'generators']) {
+test('group strips sample only the featured objects, never the actor, deduplicate and cap at three', async () => {
+    assert.match(await render('/resources/js/vue/FeedGroup.vue', { item: { ...group, sample: { objects: [photoEntity('/picture')] } } }), /src="\/picture"/);
+    for (const role of ['actors', 'targets', 'contexts', 'origins', 'results', 'instruments', 'locations', 'generators']) {
         const html = await render('/resources/js/vue/FeedGroup.vue', { item: { ...group, sample: { [role]: [photoEntity('/picture')] } } });
-        assert.match(html, /src="\/picture"/);
+        assert.doesNotMatch(html, /src="\/picture"|class="sf-media-strip/, role);
     }
     const html = await render('/resources/js/vue/FeedGroup.vue', { item: { ...group, sample: {
-        objects: [photoEntity('/a'), photoEntity('/b')],
-        targets: [photoEntity('/a'), photoEntity('/c'), photoEntity('/d')],
+        objects: [photoEntity('/a'), photoEntity('/b'), photoEntity('/a'), photoEntity('/c'), photoEntity('/d')],
     } } });
     assert.deepEqual([...html.matchAll(/<img[^>]+src="([^"]+)"/g)].map(match => match[1]), ['/a', '/b', '/c']);
     assert.match(html, /href="\/art\/\/c"/);
 });
 
+test('a group draws its featured objects as an avatar row, only from declared avatars', async () => {
+    const declared = (id, media) => ({ ...activity.actor, id, label: `Person ${id}`, url: `/people/${id}`, media });
+    const ben = declared('ben', { icon: { src: '/ben.svg' } });
+    const cara = declared('cara', { initials: 'CL', color: '#f2c94c' });
+    const row = async (sample, distinct = {}, extra = {}) => {
+        const html = await render('/resources/js/vue/FeedGroup.vue', { item: { ...group, sample, distinct, ...extra } });
+        const section = html.split('class="sf-avatar-row"')[1]?.split('class="sf-toggle"')[0] ?? null;
+
+        return section && { labels: [...section.matchAll(/aria-label="([^"]+)"/g)].map(m => m[1]), hrefs: [...section.matchAll(/href="([^"]+)"/g)].map(m => m[1]) };
+    };
+
+    assert.deepEqual(await row({ actors: [activity.actor], objects: [ben, cara, declared('dev', { initials: 'DP', color: '#1e3a8a' })] }, { objects: 5 }),
+        { labels: ['Person ben', 'Person cara', 'Person dev', '2 more'], hrefs: ['/people/ben', '/people/cara', '/people/dev'] });
+    assert.deepEqual(await row({ objects: [ben, cara] }, { objects: 2 }), { labels: ['Person ben', 'Person cara'], hrefs: ['/people/ben', '/people/cara'] });
+    // Never the actors: one object and several commenters draw no row.
+    assert.equal(await row({ actors: [ben, cara], objects: [declared('brief', { initials: 'BR', color: '#e11d48' })] }, { actors: 4, objects: 1 }), null);
+    // Fewer than two declared avatars, identical pictures, deleted or undeclared entities add nothing.
+    assert.equal(await row({ objects: [ben, declared('plain', null), declared('half', { initials: 'HA' })] }), null);
+    assert.equal(await row({ objects: [ben, declared('ben2', { icon: { src: '/ben.svg' } })] }), null);
+    assert.equal(await row({ objects: [ben, { ...cara, tombstone: { formerType: 'person' } }] }), null);
+    // Photographs take the strip instead, and the row hides while the members are shown.
+    assert.equal(await row({ objects: [{ ...photoEntity('/photo'), media: { ...photoEntity('/photo').media, icon: { src: '/i.svg' } } }, ben, cara] }), null);
+    assert.equal(await row({ objects: [ben, cara] }, {}, { headline_template: null }), null);
+});
 test('expanded groups suppress sampled media', async () => {
     const item = { ...group, sample: { actors: [activity.actor], objects: [photoEntity('/suppressed')] } };
     const expanded = await render('/resources/js/vue/FeedGroup.vue', { item: { ...item, headline_template: null } });

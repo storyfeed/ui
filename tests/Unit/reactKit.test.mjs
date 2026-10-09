@@ -486,37 +486,39 @@ test('group singular slots use explicit pins even when distinct=1', () => {
         );
     }
 });
-test('group strips sample all roles, objects first, deduplicate and cap at three', () => {
-    for (const role of [
-        'objects',
-        'actors',
-        'targets',
-        'contexts',
-        'origins',
-        'results',
-        'instruments',
-        'locations',
-        'generators',
-    ])
-        assert.match(
-            raw('FeedGroup', {
-                item: { ...group, sample: { [role]: [photo('/picture')] } },
-            }),
-            /src="\/picture"/,
-        );
+test('group strips sample only the featured objects, never the actor, deduplicate and cap at three', () => {
+    assert.match(raw('FeedGroup', { item: { ...group, sample: { objects: [photo('/picture')] } } }), /src="\/picture"/);
+    for (const role of ['actors', 'targets', 'contexts', 'origins', 'results', 'instruments', 'locations', 'generators'])
+        assert.doesNotMatch(raw('FeedGroup', { item: { ...group, sample: { [role]: [photo('/picture')] } } }), /src="\/picture"|class="sf-media-strip/, role);
     const html = raw('FeedGroup', {
-        item: {
-            ...group,
-            sample: {
-                objects: [photo('/a'), photo('/b')],
-                targets: [photo('/a'), photo('/c'), photo('/d')],
-            },
-        },
+        item: { ...group, sample: { objects: [photo('/a'), photo('/b'), photo('/a'), photo('/c'), photo('/d')] } },
     });
     assert.deepEqual(
         [...html.matchAll(/<img[^>]+src="([^"]+)"/g)].map((m) => m[1]),
         ['/a', '/b', '/c'],
     );
+});
+test('a group draws its featured objects as an avatar row, only from declared avatars', () => {
+    const declared = (id, media) => ({ ...person(id), label: `Person ${id}`, url: `/people/${id}`, media });
+    const ben = declared('ben', { icon: { src: '/ben.svg' } });
+    const cara = declared('cara', { initials: 'CL', color: '#f2c94c' });
+    const row = (sample, distinct = {}, extra = {}, props = {}) => {
+        const html = raw('FeedGroup', { item: { ...group, sample, distinct, ...extra }, ...props });
+        const section = html.split('class="sf-avatar-row ')[1]?.split('</div>')[0] ?? null;
+
+        return section && { labels: [...section.matchAll(/aria-label="([^"]+)"/g)].map((m) => m[1]), hrefs: [...section.matchAll(/href="([^"]+)"/g)].map((m) => m[1]) };
+    };
+
+    assert.deepEqual(row({ actors: [activity.actor], objects: [ben, cara, declared('dev', { initials: 'DP', color: '#1e3a8a' })] }, { objects: 5 }),
+        { labels: ['Person ben', 'Person cara', 'Person dev', '2 more'], hrefs: ['/people/ben', '/people/cara', '/people/dev'] });
+    assert.deepEqual(row({ objects: [ben, cara] }, { objects: 2 }), { labels: ['Person ben', 'Person cara'], hrefs: ['/people/ben', '/people/cara'] });
+    assert.equal(row({ actors: [ben, cara], objects: [declared('brief', { initials: 'BR', color: '#e11d48' })] }, { actors: 4, objects: 1 }), null);
+    assert.equal(row({ objects: [ben, declared('plain', null), declared('half', { initials: 'HA' })] }), null);
+    assert.equal(row({ objects: [ben, declared('ben2', { icon: { src: '/ben.svg' } })] }), null);
+    assert.equal(row({ objects: [ben, { ...cara, tombstone: { formerType: 'person' } }] }), null);
+    assert.equal(row({ objects: [{ ...photo('/photo'), media: { ...photo('/photo').media, icon: { src: '/i.svg' } } }, ben, cara] }), null);
+    // An open static group shows its members, so no row; an interactive one hides it with CSS.
+    assert.equal(row({ objects: [ben, cara] }, {}, {}, { interactive: false, collapsed: false }), null);
 });
 test('native details open unnamed groups, preserve truncated totals and independent child rails', () => {
     const html = raw('FeedGroup', {

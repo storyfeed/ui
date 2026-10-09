@@ -71,7 +71,7 @@ final class Avatar
     }
 
     /** The declared disc colour when it is the `#rrggbb` core emits, else null. */
-    private static function declaredColor(Entity $entity): ?string
+    public static function declaredColor(Entity $entity): ?string
     {
         $color = $entity->media()?->get('color');
 

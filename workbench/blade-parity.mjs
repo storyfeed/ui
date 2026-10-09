@@ -140,7 +140,7 @@ try {
                     }
                 }
                 const geometry = await Promise.all(frames.map(frame => frame.evaluate(() => {
-                    const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media', '.sf-facts', '.sf-facts__row', '.sf-facts__label', '.sf-facts__value', '.sf-facts__value > span', '.sf-rich-text', '.sf-rich-text *', '.sf-list-block', '.sf-list__prose *'];
+                    const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media', '.sf-facts', '.sf-facts__row', '.sf-facts__label', '.sf-facts__value', '.sf-facts__value > span', '.sf-rich-text', '.sf-rich-text *', '.sf-list-block', '.sf-list__prose *', '.sf-avatar-row', '.sf-avatar-row > *', '.sf-avatar-row .sf-avatar'];
                     return Object.fromEntries(selectors.map(selector => [selector, [...document.querySelectorAll(selector)].filter(e => !e.closest('details:not([open]) .sf-children') && e.getClientRects().length && e.getBoundingClientRect().height > 0).map(e => {
                         const r = e.getBoundingClientRect();
                         return { x: r.x, y: r.y, w: r.width, h: r.height, text: e.textContent.trim().replace(/\s+/g, ' ') };
@@ -164,6 +164,22 @@ try {
                 if (text === 'default') for (const [section, expected] of Object.entries(bodyTexts)) for (let i = 0; i < frames.length; i++) {
                     const texts = await frames[i].locator(`.example:has(>h2:text-is("${section}")) .sf-body-form`).allTextContents();
                     assert.deepEqual(texts.map(t => t.trim().replace(/\s+/g, ' ')), expected, `${renderers[i]}: ${section}`);
+                }
+                // A group's featured objects draw as an avatar row; the actor never feeds the row or the strip.
+                if (text === 'default' && state === 'collapsed') for (let i = 0; i < frames.length; i++) {
+                    const rows = await frames[i].locator('.example:has(>h2:text-is("Featured avatar row")) .sf-row:not(.sf-children .sf-row)').evaluateAll(rows => rows.map(row => ({
+                        avatars: [...row.querySelectorAll('.sf-avatar-row .sf-avatar')].map(avatar => [avatar.getAttribute('aria-label'), avatar.closest('a')?.getAttribute('href') ?? null]),
+                        more: row.querySelector('.sf-avatar-row__more')?.textContent.trim() ?? null,
+                        strip: row.querySelectorAll('.sf-media-strip').length,
+                    })));
+                    assert.deepEqual(rows, [
+                        { avatars: [['Ben Okafor', '#ben'], ['Cara Lindqvist', '#cara'], ['Dev Patel', '#dev']], more: '+2', strip: 0 },
+                        { avatars: [['Ben Okafor', '#ben'], ['Cara Lindqvist', '#cara']], more: null, strip: 0 },
+                        { avatars: [], more: null, strip: 0 },
+                        { avatars: [], more: null, strip: 0 },
+                        { avatars: [], more: null, strip: 0 },
+                        { avatars: [], more: null, strip: 0 },
+                    ], `${renderers[i]}: featured avatar rows`);
                 }
                 if (renderers.length === 3 && text === 'default') for (let i = 0; i < frames.length; i++) {
                     const icons = frames[i].locator('.example:has(>h2:text-is("Linked object icon frames")) .sf-object-media > a');

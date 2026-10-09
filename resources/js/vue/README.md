@@ -78,8 +78,15 @@ Group avatar samples never imply that one actor represents many.
 Groups consume core's explicit pinned singular slots; distinct=1 alone does
 not pin a role. Groups read their own headline/template; Summary rendering
 has been removed, mirroring core. Unknown extra payload keys are ignored.
-Group photograph strips sample Image bodies in all roles, objects first,
-deduplicate by image source and cap at three. Expanded groups suppress the strip.
+Group photograph strips sample Image bodies of the group's objects only, never
+its actors, deduplicate by image source and cap at three.
+When those objects have no photographs, a group draws them as a row of their
+avatars instead ("Ana added Ben, Cara and 2 others to Kitchen remodel"): only
+avatars an object declares (`media.icon`, or `media.initials` with
+`media.color`), each linked to its entity and labelled with its name, with
+"+N" for the objects not sampled. The row is skipped when it would add
+nothing: fewer than two avatars, or all the same picture.
+Expanded groups suppress the strip and the row.
 
 `grouped=false` hides day headings. `dividers` maps item IDs to labels to render
 before those items. `divider-style="dot"` is the default;

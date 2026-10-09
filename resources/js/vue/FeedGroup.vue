@@ -2,12 +2,14 @@
 import { computed, ref, toRef } from 'vue';
 import { imageOf } from './body';
 import EntityAvatar from './EntityAvatar.vue';
+import FeedAvatarRow from './FeedAvatarRow.vue';
 import FeedHeadline from './FeedHeadline.vue';
 import FeedIcon from './FeedIcon.vue';
 import FeedItem from './FeedItem.vue';
 import FeedMediaStrip from './FeedMediaStrip.vue';
 import FeedMeta from './FeedMeta.vue';
 import FeedMedia from './FeedMedia.vue';
+import { avatarRow, featured } from '../shared/avatarRow';
 import { rail as parseRail, railFor } from '../shared/rail';
 import type { Rail, RailName } from '../shared/rail';
 import type { FeedNode, GroupNode, FeedSingularRole } from '../shared/types';
@@ -73,8 +75,9 @@ const entities = computed(() => ({
 }));
 
 /**
- * A collapsed group samples at most three Image bodies, objects first and
- * then the other roles. The same image source appears only once, with its
+ * A collapsed group samples at most three Image bodies of its featured
+ * entities (the objects), never the actor's: the strip shows what the row is
+ * about, not who did it. The same image source appears only once, with its
  * first entity's link. Distinct role totals cannot count unseen photographs,
  * so the default strip makes no media overflow claim.
  *
@@ -87,8 +90,7 @@ const strip = computed(() => {
     }
 
     const seen = new Set<string>();
-    const tiles = ['objects', 'actors', 'targets', 'contexts', 'origins', 'results', 'instruments', 'locations', 'generators']
-        .flatMap(role => props.item.sample[role as keyof typeof props.item.sample] ?? [])
+    const tiles = featured(props.item)
         .flatMap(entity => {
             const image = imageOf(entity);
             if (!image || seen.has(image.src)) return [];
@@ -99,6 +101,13 @@ const strip = computed(() => {
 
     return { tiles, overflow: 0 };
 });
+
+/**
+ * Featured entities with avatars but no photographs draw as a row of their
+ * avatars instead, so the same entities never show twice. It hides with the
+ * strip while the members are visible.
+ */
+const row = computed(() => expanded.value || strip.value.tiles.length ? null : avatarRow(props.item));
 
 // `count` is the TRUE total and `children` is capped by the server, so the
 // remainder has to be stated rather than implied by the list length.
@@ -196,6 +205,7 @@ const hiddenBeyondChildren = computed(
                 :tiles="strip.tiles"
                 :overflow="strip.overflow"
             />
+            <FeedAvatarRow v-else-if="row" :entities="row.entities" :overflow="row.overflow" />
 
             <div :class="icon ? 'sf-object-media mt-2 flex items-start gap-3' : 'contents'">
                 <FeedMedia

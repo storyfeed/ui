@@ -1628,5 +1628,583 @@
         "headline": "Bodies without renderers"
       }
     ]
+  },
+  {
+    "name": "Featured avatar row",
+    "collapsed": true,
+    "items": [
+      {
+        "kind": "group",
+        "id": "row-composite",
+        "axis": "repeat",
+        "count": 5,
+        "verb": "added",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": null,
+        "headline": "Ana added Ben, Cara and 2 others to Kitchen remodel",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": [
+            {
+              "type": "person",
+              "id": "ben",
+              "label": "Ben Okafor",
+              "url": "#ben",
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%230f766e%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E",
+                  "alt": "Ben Okafor"
+                }
+              },
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "cara",
+              "label": "Cara Lindqvist",
+              "url": "#cara",
+              "media": {
+                "initials": "CL",
+                "color": "#f2c94c"
+              },
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "dev",
+              "label": "Dev Patel",
+              "url": "#dev",
+              "media": {
+                "initials": "DP",
+                "color": "#1e3a8a"
+              },
+              "data": null,
+              "tombstone": null
+            }
+          ]
+        },
+        "distinct": {
+          "actors": 1,
+          "objects": 5
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "row-composite-child",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Ben, Cara and 2 others to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "ben",
+              "label": "Ben Okafor",
+              "url": "#ben",
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%230f766e%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E",
+                  "alt": "Ben Okafor"
+                }
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          }
+        ]
+      },
+      {
+        "kind": "group",
+        "id": "row-two",
+        "axis": "repeat",
+        "count": 2,
+        "verb": "added",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": null,
+        "headline": "Ana added Ben and Cara to Kitchen remodel",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": [
+            {
+              "type": "person",
+              "id": "ben",
+              "label": "Ben Okafor",
+              "url": "#ben",
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%230f766e%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E",
+                  "alt": "Ben Okafor"
+                }
+              },
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "cara",
+              "label": "Cara Lindqvist",
+              "url": "#cara",
+              "media": {
+                "initials": "CL",
+                "color": "#f2c94c"
+              },
+              "data": null,
+              "tombstone": null
+            }
+          ]
+        },
+        "distinct": {
+          "actors": 1,
+          "objects": 2
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "row-two-child",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Ben and Cara to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "ben",
+              "label": "Ben Okafor",
+              "url": "#ben",
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%230f766e%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E",
+                  "alt": "Ben Okafor"
+                }
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          }
+        ]
+      },
+      {
+        "kind": "group",
+        "id": "row-commenters",
+        "axis": "repeat",
+        "count": 4,
+        "verb": "added",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": null,
+        "headline": "Gus, Hana and 2 others commented on the brief",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "gus",
+              "label": "Gus Ito",
+              "url": "#gus",
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%239333ea%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E"
+                }
+              },
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "hana",
+              "label": "Hana Kim",
+              "url": "#hana",
+              "media": {
+                "initials": "HK",
+                "color": "#16a34a"
+              },
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": [
+            {
+              "type": "document",
+              "id": "brief",
+              "label": "the brief",
+              "url": "#brief",
+              "media": {
+                "initials": "BR",
+                "color": "#e11d48"
+              },
+              "data": null,
+              "tombstone": null
+            }
+          ]
+        },
+        "distinct": {
+          "actors": 2,
+          "objects": 1
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "row-commenters-child",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Gus, Hana and 2 others commented on the brief",
+            "actor": {
+              "type": "person",
+              "id": "gus",
+              "label": "Gus Ito",
+              "url": "#gus",
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%239333ea%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E"
+                }
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "document",
+              "id": "brief",
+              "label": "the brief",
+              "url": "#brief",
+              "media": {
+                "initials": "BR",
+                "color": "#e11d48"
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          }
+        ]
+      },
+      {
+        "kind": "group",
+        "id": "row-identical",
+        "axis": "repeat",
+        "count": 6,
+        "verb": "added",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": null,
+        "headline": "Ana uploaded 6 plans",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": [
+            {
+              "type": "file",
+              "id": "f0",
+              "label": "plan-0.pdf",
+              "url": "#f0",
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%2364748b%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E",
+                  "alt": "PDF"
+                }
+              },
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "file",
+              "id": "f1",
+              "label": "plan-1.pdf",
+              "url": "#f1",
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%2364748b%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E",
+                  "alt": "PDF"
+                }
+              },
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "file",
+              "id": "f2",
+              "label": "plan-2.pdf",
+              "url": "#f2",
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%2364748b%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E",
+                  "alt": "PDF"
+                }
+              },
+              "data": null,
+              "tombstone": null
+            }
+          ]
+        },
+        "distinct": {
+          "actors": 1,
+          "objects": 6
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "row-identical-child",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana uploaded 6 plans",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "f0",
+              "label": "plan-0.pdf",
+              "url": "#f0",
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%2364748b%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E",
+                  "alt": "PDF"
+                }
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          }
+        ]
+      },
+      {
+        "kind": "group",
+        "id": "row-undeclared",
+        "axis": "repeat",
+        "count": 2,
+        "verb": "added",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": null,
+        "headline": "Ana added Eve and Finn",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": [
+            {
+              "type": "person",
+              "id": "eve",
+              "label": "Eve Moreau",
+              "url": "#eve",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "finn",
+              "label": "Finn Doyle",
+              "url": "#finn",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ]
+        },
+        "distinct": {
+          "actors": 1,
+          "objects": 2
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "row-undeclared-child",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Eve and Finn",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "eve",
+              "label": "Eve Moreau",
+              "url": "#eve",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          }
+        ]
+      },
+      {
+        "kind": "group",
+        "id": "row-actor-photo",
+        "axis": "repeat",
+        "count": 2,
+        "verb": "added",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": null,
+        "headline": "Ivy posted 2 notes",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ivy",
+              "label": "Ivy Chen",
+              "url": "#ivy",
+              "media": {
+                "preview": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%23ef4444%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E",
+                  "width": 160,
+                  "height": 100,
+                  "alt": "Ivy's photo"
+                }
+              },
+              "data": null,
+              "tombstone": null,
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "image": "preview"
+                }
+              ]
+            }
+          ],
+          "objects": [
+            {
+              "type": "person",
+              "id": "n1",
+              "label": "a note",
+              "url": "#n1",
+              "media": {
+                "initials": "N1",
+                "color": "#334155"
+              },
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "n2",
+              "label": "another note",
+              "url": "#n2",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ]
+        },
+        "distinct": {
+          "actors": 1,
+          "objects": 2
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "row-actor-photo-child",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ivy posted 2 notes",
+            "actor": {
+              "type": "person",
+              "id": "ivy",
+              "label": "Ivy Chen",
+              "url": "#ivy",
+              "media": {
+                "preview": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%23ef4444%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E",
+                  "width": 160,
+                  "height": 100,
+                  "alt": "Ivy's photo"
+                }
+              },
+              "data": null,
+              "tombstone": null,
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "image": "preview"
+                }
+              ]
+            },
+            "object": {
+              "type": "person",
+              "id": "n1",
+              "label": "a note",
+              "url": "#n1",
+              "media": {
+                "initials": "N1",
+                "color": "#334155"
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          }
+        ]
+      }
+    ]
   }
 ]

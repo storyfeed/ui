@@ -1,5 +1,7 @@
-import type { GroupNode, FeedRole } from '../shared/types';
+import type { GroupNode } from '../shared/types';
 import { imageOf } from '../shared/body';
+import { avatarRow, featured } from '../shared/avatarRow';
+import FeedAvatarRow from './FeedAvatarRow';
 import FeedItem, { useNodeTime } from './FeedItem';
 import type { NodeProps } from './FeedItem';
 import FeedHeadline from './FeedHeadline';
@@ -30,18 +32,8 @@ export default function FeedGroup({
     const Disclosure = interactive ? 'details' : 'div';
     const hidden = Math.max(0, item.count - item.children.length);
     const seen = new Set<string>();
-    const tiles = [
-        'objects',
-        'actors',
-        'targets',
-        'contexts',
-        'origins',
-        'results',
-        'instruments',
-        'locations',
-        'generators',
-    ]
-        .flatMap((role) => item.sample[role as FeedRole] ?? [])
+    // The featured entities (the objects), never the actor: see the Vue kit's FeedGroup.
+    const tiles = featured(item)
         .flatMap((entity) => {
             const image = imageOf(entity);
             if (!image || seen.has(image.src)) return [];
@@ -49,6 +41,7 @@ export default function FeedGroup({
             return [{ image, href: entity.url ?? null }];
         })
         .slice(0, 3);
+    const row = tiles.length || (!interactive && open) ? null : avatarRow(item);
     return (
         <div
             className={`sf-row relative flex items-start gap-(--sf-gap)${
@@ -65,7 +58,7 @@ export default function FeedGroup({
                 line={!(isLast && !interactive && !open)}
             />
             <div
-                className={`sf-body min-w-0 flex-1 pt-1.5 [&:has(>.sf-disclosure[open])>.sf-media-strip]:hidden ${
+                className={`sf-body min-w-0 flex-1 pt-1.5 [&:has(>.sf-disclosure[open])>.sf-media-strip]:hidden [&:has(>.sf-disclosure[open])>.sf-avatar-row]:hidden ${
                     !isLast || (!interactive && open)
                         ? 'sf-body--spaced pb-5'
                         : '[&:has(>.sf-disclosure[open])]:pb-5'
@@ -87,6 +80,12 @@ export default function FeedGroup({
                     {timestamp}
                 </FeedMeta>
                 <FeedMediaStrip tiles={!interactive && open ? [] : tiles} />
+                {row && (
+                    <FeedAvatarRow
+                        entities={row.entities}
+                        overflow={row.overflow}
+                    />
+                )}
                 <div
                     className={
                         icon
