@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Str;
 use Storyfeed\Body\Component;
 use Storyfeed\Body\Excerpt;
 use Storyfeed\Body\FileAttachment;
@@ -238,4 +239,21 @@ it('renders Image from the named slot with escaped caption and fallback alt', fu
         'entity' => $entity,
     ]);
     expect($blank)->not->toContain('<img', '<figcaption', 'Hidden');
+});
+
+it('renders Prose Markdown as GitHub-flavoured Markdown', function () {
+    $html = render_bodies(Prose::markdown("| a | b |\n|:--|--:|\n| 1 | 2 |\n\n~~gone~~ ~one~ www.example.com\n\n- [x] done\n- [ ] todo"));
+
+    expect($html)->toContain(
+        '<table> <thead> <tr> <th align="left">a</th> <th align="right">b</th> </tr> </thead> <tbody> <tr> <td align="left">1</td> <td align="right">2</td> </tr> </tbody> </table>',
+        '<p><del>gone</del> <del>one</del> <a href="http://www.example.com">www.example.com</a></p>',
+        '<ul> <li><input type="checkbox" disabled checked /> done</li> <li><input type="checkbox" disabled /> todo</li> </ul>',
+    );
+});
+
+it('keeps server-rendered task boxes and drops every other input', function () {
+    $html = render_bodies(Prose::html(Str::markdown("- [x] shipped\n- [ ] next").'<p><input type="checkbox"> <input type="text" value="x"> <input type="checkbox" checked></p>'));
+
+    expect($html)->toContain('<li><input type="checkbox" disabled checked /> shipped</li>', '<li><input type="checkbox" disabled /> next</li>')
+        ->and(substr_count($html, '<input'))->toBe(2);
 });

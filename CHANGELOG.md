@@ -4,6 +4,8 @@
 
 ### Changed
 
+- Prose Markdown renders as GitHub-flavoured Markdown in Blade, Vue and React: tables, strikethrough, autolinks and read-only task lists. The Vue and React kits render it with `micromark` and its GFM extensions instead of `markdown-it`; install `micromark`, `micromark-extension-gfm-autolink-literal`, `micromark-extension-gfm-strikethrough`, `micromark-extension-gfm-table` and `micromark-extension-gfm-task-list-item`, and remove `markdown-it`.
+- The rich-text sanitizer keeps task-list checkboxes (`input[type=checkbox][disabled]`, with `checked`) on both the Markdown and HTML paths, so `Prose::html(Str::markdown("- [x] …"))` keeps its completion state. No other input passes.
 - Feeds render larger by default: body text is `1rem` (was 13.5px), metadata and captions `0.875rem`. Text, spacing, avatars, badges and the rail are sized on Tailwind's rem scale in Blade, Vue and React, so a feed follows the reader's browser text size and scales as one unit.
 - The group toggle is at least 24px tall (WCAG 2.2 target size).
 

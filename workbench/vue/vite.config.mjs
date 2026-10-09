@@ -31,7 +31,7 @@ export default defineConfig(({ mode }) => {
             'reference-feed': parity ? `${reference}/FeedStream.vue` : resolve('resources/js/vue/FeedStream.vue'),
             'reference-keys': parity ? `${reference}/keys.ts` : resolve('resources/js/vue/keys.ts'),
             // Resolve reference imports against this worktree's installed dependencies.
-            ...Object.fromEntries(['vue', 'lucide-vue-next', 'markdown-it', 'sanitize-html'].map(name => [name, resolve(`node_modules/${name}`)])),
+            ...Object.fromEntries(['vue', 'lucide-vue-next', 'micromark', 'micromark-extension-gfm-autolink-literal', 'micromark-extension-gfm-strikethrough', 'micromark-extension-gfm-table', 'micromark-extension-gfm-task-list-item', 'sanitize-html'].map(name => [name, resolve(`node_modules/${name}`)])),
         }, dedupe: ['vue'] },
         server: { fs: { allow: [resolve('.'), reference] }, host: '127.0.0.1' },
         build: { outDir: resolve('build/vue'), emptyOutDir: true },

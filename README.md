@@ -52,7 +52,7 @@ Copy the Vue 3 kit into your app:
 
 ```bash
 php artisan storyfeed:ui vue
-npm install lucide-vue-next markdown-it sanitize-html
+npm install lucide-vue-next micromark micromark-extension-gfm-autolink-literal micromark-extension-gfm-strikethrough micromark-extension-gfm-table micromark-extension-gfm-task-list-item sanitize-html
 ```
 
 The default destination is `resources/js/components/storyfeed/`; change it with
@@ -95,8 +95,8 @@ Copy the React 19 kit, including its shared TypeScript core:
 
 ```bash
 php artisan storyfeed:ui react
-npm install react@^19 react-dom@^19 lucide-react markdown-it sanitize-html
-npm install -D @types/react @types/react-dom @types/markdown-it @types/sanitize-html
+npm install react@^19 react-dom@^19 lucide-react micromark micromark-extension-gfm-autolink-literal micromark-extension-gfm-strikethrough micromark-extension-gfm-table micromark-extension-gfm-task-list-item sanitize-html
+npm install -D @types/react @types/react-dom @types/sanitize-html
 ```
 
 The default destination, `--path`, `--diff` and `--force` semantics are the same
@@ -177,10 +177,30 @@ Each of core's body types has a component in `components/body`: `key-value`,
 `image`, `component` and `media-object`. A body
 type with no component draws nothing.
 
-Prose displays plain text and unknown media types as escaped text. It parses
-Markdown with raw HTML and unsafe links disabled, and sanitizes rich HTML at
-render time using Symfony's HTML Sanitizer. Verbatim content is always escaped
+Prose displays plain text and unknown media types as escaped text. It renders
+Markdown as GitHub-flavoured Markdown (tables, strikethrough, autolinks and task
+lists) with raw HTML and unsafe links disabled, and sanitizes rich HTML at
+render time using Symfony's HTML Sanitizer. A task list's checkboxes are the
+only inputs kept, and they stay disabled. Verbatim content is always escaped
 and preserves its source whitespace.
+
+#### Render Markdown in a Prose body
+
+```php
+use Illuminate\Support\Str;
+use Storyfeed\Body\Prose;
+
+// Each kit renders the Markdown when it displays the feed.
+Prose::markdown($source);
+
+// Your application renders it once, on the server.
+Prose::html(Str::markdown($source));
+```
+
+`Prose::markdown` keeps the Markdown source in the payload, so a consumer that
+does not display HTML still receives it. `Prose::html` stores the HTML that
+Laravel's GitHub-flavoured converter returns, or any converter and extensions
+your application chooses; every kit displays that same HTML, sanitized.
 
 ### Styling
 

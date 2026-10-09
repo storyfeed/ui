@@ -84,8 +84,8 @@ class InstallUiCommand extends Command
         $this->line('@source "'.str_replace(['\\', '"'], ['/', '\\"'], $cssSource).'";');
         $this->line('Components expect the Laravel '.($kit === 'vue' ? 'Vue' : 'React').' starter-kit colour tokens and Tailwind v4.');
         $this->line($kit === 'vue'
-            ? 'Install Vue 3, lucide-vue-next, markdown-it and sanitize-html in your app.'
-            : 'Install React 19, react-dom, lucide-react, markdown-it and sanitize-html in your app.');
+            ? 'Install Vue 3, lucide-vue-next, micromark with its GFM extensions and sanitize-html in your app.'
+            : 'Install React 19, react-dom, lucide-react, micromark with its GFM extensions and sanitize-html in your app.');
         $this->line('Copied files belong to your app. Edit freely; rerun with --diff to review updates.');
 
         return self::SUCCESS;

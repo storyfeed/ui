@@ -147,6 +147,221 @@
   },
   {
     "kind": "activity",
+    "id": "body-gfm-table",
+    "verb": "posted",
+    "published_at": "2026-08-14T12:00:00Z",
+    "headline_template": ":actor posted :object",
+    "actor": {
+      "type": "person",
+      "id": "ada",
+      "label": "Ada Lovelace",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "object": {
+      "type": "person",
+      "id": "object-gfm-table",
+      "label": "GFM table",
+      "url": "#ada",
+      "media": {
+        "preview": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+          "width": 160,
+          "height": 100,
+          "alt": "Illustrated preview"
+        }
+      },
+      "data": null,
+      "tombstone": null,
+      "body": [
+        {
+          "$body": "Storyfeed/Body/Prose",
+          "title": "GFM table",
+          "mediaType": "text/markdown",
+          "content": "| Plan | Seats | Price |\n|:--|:-:|--:|\n| Starter | 3 | $9 |\n| Team | 25 | $49 |"
+        }
+      ]
+    },
+    "target": null,
+    "context": null,
+    "glyph": "file-up"
+  },
+  {
+    "kind": "activity",
+    "id": "body-gfm-strikethrough",
+    "verb": "posted",
+    "published_at": "2026-08-14T12:00:00Z",
+    "headline_template": ":actor posted :object",
+    "actor": {
+      "type": "person",
+      "id": "ada",
+      "label": "Ada Lovelace",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "object": {
+      "type": "person",
+      "id": "object-gfm-strikethrough",
+      "label": "GFM strikethrough",
+      "url": "#ada",
+      "media": {
+        "preview": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+          "width": 160,
+          "height": 100,
+          "alt": "Illustrated preview"
+        }
+      },
+      "data": null,
+      "tombstone": null,
+      "body": [
+        {
+          "$body": "Storyfeed/Body/Prose",
+          "title": "GFM strikethrough",
+          "mediaType": "text/markdown",
+          "content": "~~Friday~~ Monday, and ~maybe~ Tuesday."
+        }
+      ]
+    },
+    "target": null,
+    "context": null,
+    "glyph": "file-up"
+  },
+  {
+    "kind": "activity",
+    "id": "body-gfm-autolinks",
+    "verb": "posted",
+    "published_at": "2026-08-14T12:00:00Z",
+    "headline_template": ":actor posted :object",
+    "actor": {
+      "type": "person",
+      "id": "ada",
+      "label": "Ada Lovelace",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "object": {
+      "type": "person",
+      "id": "object-gfm-autolinks",
+      "label": "GFM autolinks",
+      "url": "#ada",
+      "media": {
+        "preview": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+          "width": 160,
+          "height": 100,
+          "alt": "Illustrated preview"
+        }
+      },
+      "data": null,
+      "tombstone": null,
+      "body": [
+        {
+          "$body": "Storyfeed/Body/Prose",
+          "title": "GFM autolinks",
+          "mediaType": "text/markdown",
+          "content": "Notes at www.example.com, https://example.com/roadmap. or ada@example.com"
+        }
+      ]
+    },
+    "target": null,
+    "context": null,
+    "glyph": "file-up"
+  },
+  {
+    "kind": "activity",
+    "id": "body-gfm-tasks",
+    "verb": "posted",
+    "published_at": "2026-08-14T12:00:00Z",
+    "headline_template": ":actor posted :object",
+    "actor": {
+      "type": "person",
+      "id": "ada",
+      "label": "Ada Lovelace",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "object": {
+      "type": "person",
+      "id": "object-gfm-tasks",
+      "label": "GFM task list",
+      "url": "#ada",
+      "media": {
+        "preview": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+          "width": 160,
+          "height": 100,
+          "alt": "Illustrated preview"
+        }
+      },
+      "data": null,
+      "tombstone": null,
+      "body": [
+        {
+          "$body": "Storyfeed/Body/Prose",
+          "title": "GFM task list",
+          "mediaType": "text/markdown",
+          "content": "- [x] Ship the table\n- [ ] Write the docs\n  - [x] Draft\n  - [ ] Review"
+        }
+      ]
+    },
+    "target": null,
+    "context": null,
+    "glyph": "file-up"
+  },
+  {
+    "kind": "activity",
+    "id": "body-gfm-tasks-html",
+    "verb": "posted",
+    "published_at": "2026-08-14T12:00:00Z",
+    "headline_template": ":actor posted :object",
+    "actor": {
+      "type": "person",
+      "id": "ada",
+      "label": "Ada Lovelace",
+      "url": "#ada",
+      "media": null,
+      "data": null,
+      "tombstone": null
+    },
+    "object": {
+      "type": "person",
+      "id": "object-gfm-tasks-html",
+      "label": "Server-rendered task list",
+      "url": "#ada",
+      "media": {
+        "preview": {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+          "width": 160,
+          "height": 100,
+          "alt": "Illustrated preview"
+        }
+      },
+      "data": null,
+      "tombstone": null,
+      "body": [
+        {
+          "$body": "Storyfeed/Body/Prose",
+          "title": "Server-rendered task list",
+          "mediaType": "text/html",
+          "content": "<ul>\n<li><input checked=\"\" disabled=\"\" type=\"checkbox\"> Shipped on the server</li>\n<li><input disabled=\"\" type=\"checkbox\"> Next</li>\n<li><input type=\"checkbox\"> An enabled box is dropped</li>\n<li><input type=\"text\" value=\"x\"> Other inputs are dropped</li>\n</ul>\n"
+        }
+      ]
+    },
+    "target": null,
+    "context": null,
+    "glyph": "file-up"
+  },
+  {
+    "kind": "activity",
     "id": "body-3",
     "verb": "posted",
     "published_at": "2026-08-14T12:00:00Z",

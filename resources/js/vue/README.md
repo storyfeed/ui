@@ -3,8 +3,13 @@
 Vue 3, TypeScript and Tailwind v4. Copied files belong to the app. Import
 `FeedStream.vue` and pass core's serialized `items` directly; pass
 `next-cursor` and handle `@load-more` for pagination. No kit CSS is required.
-Install `lucide-vue-next`, `markdown-it` and `sanitize-html`. The copy command
-includes the framework-free core in a self-contained `shared/` directory.
+Install its dependencies:
+
+```bash
+npm install lucide-vue-next micromark micromark-extension-gfm-autolink-literal micromark-extension-gfm-strikethrough micromark-extension-gfm-table micromark-extension-gfm-task-list-item sanitize-html
+```
+
+The copy command includes the framework-free core in a self-contained `shared/` directory.
 
 Use the Laravel Vue starter-kit tokens: `background`, `foreground`, `card`,
 `muted`, `muted-foreground`, `primary`, `primary-foreground`, `border` and `ring`.

@@ -5,8 +5,8 @@ Laravel React starter kit and Inertia 2/3's React adapter. Install with:
 
 ```sh
 php artisan storyfeed:ui react
-npm install react@^19 react-dom@^19 lucide-react markdown-it sanitize-html
-npm install -D @types/react @types/react-dom @types/markdown-it @types/sanitize-html
+npm install react@^19 react-dom@^19 lucide-react micromark micromark-extension-gfm-autolink-literal micromark-extension-gfm-strikethrough micromark-extension-gfm-table micromark-extension-gfm-task-list-item sanitize-html
+npm install -D @types/react @types/react-dom @types/sanitize-html
 ```
 
 The default destination is `resources/js/components/storyfeed`. `--path` changes

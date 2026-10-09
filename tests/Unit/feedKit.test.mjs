@@ -94,6 +94,25 @@ test('rich prose strips unsafe HTML and verbatim keeps escaped source', async ()
     );
 });
 
+const gfmSource = '| a | b |\n|:--|--:|\n| 1 | 2 |\n\n~~gone~~ ~one~ www.example.com\n\n- [x] done\n- [ ] todo';
+const gfmExpected = [
+    '<table> <thead> <tr> <th align="left">a</th> <th align="right">b</th> </tr> </thead> <tbody> <tr> <td align="left">1</td> <td align="right">2</td> </tr> </tbody> </table>',
+    '<p><del>gone</del> <del>one</del> <a href="http://www.example.com">www.example.com</a></p>',
+    '<ul> <li><input type="checkbox" disabled checked /> done</li> <li><input type="checkbox" disabled /> todo</li> </ul>',
+];
+const serverTasks = '<ul>\n<li><input checked="" disabled="" type="checkbox"> shipped</li>\n<li><input disabled="" type="checkbox"> next</li>\n</ul>\n<p><input type="checkbox"> <input type="text" value="x"> <input type="checkbox" checked></p>';
+test('Prose Markdown renders GitHub-flavoured Markdown, identical to Blade', async () => {
+    const payload = { content: gfmSource, mediaType: 'text/markdown' };
+    const html = (await render('/resources/js/vue/body/Prose.vue', { payload })).replace(/\s+/g, ' ');
+    for (const expected of gfmExpected) assert.ok(html.includes(expected), expected);
+});
+test('server-rendered task lists keep only their disabled checkboxes', async () => {
+    const payload = { content: serverTasks, mediaType: 'text/html' };
+    const html = (await render('/resources/js/vue/body/Prose.vue', { payload })).replace(/\s+/g, ' ');
+    assert.ok(html.includes('<li><input type="checkbox" disabled checked /> shipped</li> <li><input type="checkbox" disabled /> next</li>'));
+    assert.equal(html.match(/<input/g).length, 2);
+});
+
 {
     const base = '/resources/js/vue';
     const { formatTimestamp } = await server.ssrLoadModule(
