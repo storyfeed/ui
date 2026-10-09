@@ -10,6 +10,7 @@ use Storyfeed\Body\ItemList;
 use Storyfeed\Body\KeyValue;
 use Storyfeed\Body\MediaObject;
 use Storyfeed\Body\Prose;
+use Storyfeed\Body\Table;
 use Storyfeed\Contracts\FeedBody;
 use Storyfeed\Facades\Story;
 use Storyfeed\Facades\Storyfeed;
@@ -237,6 +238,40 @@ it('draws a body\'s escaped fallback line when its type has no view, and the vie
     app('view')->prependNamespace('storyfeed', $views);
 
     expect($render(['$body' => 'Acme/Invoice', '$fallback' => 'Fallback']))->toBe('<div data-storyfeed-body> <em>Drawn</em> </div>');
+});
+
+it('draws a table inside Typography prose, with footer rows in a tfoot and plain cells that keep their line breaks', function () {
+    $body = ['$body' => 'Storyfeed/Body/Table', '$v' => 1, 'title' => 'Order <1042>', 'headers' => ['Item', 'Price'],
+        'rows' => [["Delivery to\n12 Harbour Street", '<b>$0</b>'], [['label' => 'Seats', 'href' => '/seats'], null], [['label' => 'Owned', 'href' => null]], 'not a row'],
+        'footer' => [['Total', 49.5]]];
+    $html = Blade::render('<x-storyfeed::body.table :body="$body" :entity="$entity" />', ['body' => $body, 'entity' => Entity::of(['label' => 'Order', 'url' => '/orders/1', 'link' => ['href' => '/orders/1']])]);
+
+    expect($html)->toMatch('/class="sf-table__prose [^"]*\bprose max-w-none text-\[length:inherit\][^"]*\[&_:is\(th,td\)\]:whitespace-pre-line/')
+        ->and(structural_html($html))->toContain(
+            '<figcaption>Order &lt;1042&gt;</figcaption>',
+            '<thead><tr><th>Item</th><th>Price</th></tr></thead>',
+            '<tr><td>Delivery to 12 Harbour Street</td><td>&lt;b&gt;$0&lt;/b&gt;</td></tr>',
+            '<tr><td><a href="/seats">Seats</a></td><td><span>—</span></td></tr>',
+            '<tr><td><a href="/orders/1">Owned</a></td><td><span>—</span></td></tr>',
+            '<tfoot> <tr><td>Total</td><td>49.5</td></tr> </tfoot>',
+        )
+        ->and($html)->toContain("Delivery to\n12 Harbour Street");
+
+    // Slim: no title, headers or footer; nothing drawn without rows.
+    expect(structural_html(Blade::render('<x-storyfeed::body.table :body="$body" />', ['body' => ['rows' => [['a', 'b'], ['c']]]])))
+        ->toContain('<tbody> <tr><td>a</td><td>b</td></tr> <tr><td>c</td><td><span>—</span></td></tr> </tbody>')
+        ->not->toContain('<thead', '<tfoot', '<figcaption')
+        ->and(Blade::render('<x-storyfeed::body.table :body="$body" />', ['body' => ['headers' => ['A']]]))->toBe('');
+});
+
+it('draws core\'s Table body through the feed', function () {
+    if (! class_exists(Table::class)) {
+        $this->markTestSkipped('This core has no Table body.');
+    }
+
+    $html = render_bodies(Table::make(['Item', 'Price'])->title('Receipt')->row(['Seats', '$40.00'])->footer(['Total', '$49.00']));
+
+    expect($html)->toContain('<figcaption>Receipt</figcaption>', '<thead><tr><th>Item</th><th>Price</th></tr></thead>', '<tr><td>Seats</td><td>$40.00</td></tr>', '<tr><td>Total</td><td>$49.00</td></tr>');
 });
 
 it('renders an unordered item list with plain list semantics', function () {

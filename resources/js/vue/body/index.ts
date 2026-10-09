@@ -7,6 +7,7 @@ import Prose from './Prose.vue'
 import ItemList from './ItemList.vue'
 import Image from './Image.vue'
 import MediaObject from './MediaObject.vue'
+import Table from './Table.vue'
 import Fallback from './Fallback.vue'
 
 /**
@@ -31,6 +32,7 @@ const FORMS: Record<string, Component> = {
     'Storyfeed/Body/ItemList': ItemList,
     'Storyfeed/Body/Image': Image,
     'Storyfeed/Body/MediaObject': MediaObject,
+    'Storyfeed/Body/Table': Table,
 }
 
 import { inject, type App, type Plugin } from 'vue';

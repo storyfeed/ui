@@ -50,7 +50,7 @@ npm install -D @tailwindcss/typography
 @source "../../vendor/storyfeed/ui/resources/views";
 ```
 
-Text-shaped bodies (rich `Prose` and `ItemList`) render inside Typography's
+Text-shaped bodies (rich `Prose`, `ItemList` and `Table`) render inside Typography's
 `prose`, coloured from your tokens and sized by the feed (see
 [Set the feed's size](#set-the-feeds-size)), so they follow dark mode with the rest of the feed.
 
@@ -262,7 +262,7 @@ these. For another Tailwind v4 app, add this minimal theme to `app.css` after
 Add or remove the `dark` class on your layout to choose the theme. The kit is
 all Tailwind utilities; the avatar's declared colour and a picture's aspect
 ratio are data-driven inline styles. Verbatim prose keeps a dark code surface
-in both themes. Rich prose and lists use Typography's `prose` with its colours
+in both themes. Rich prose, lists and tables use Typography's `prose` with its colours
 mapped to your tokens, and quotations carry their own utility styles.
 
 #### Set the feed's size

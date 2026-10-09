@@ -10,7 +10,7 @@ npm install lucide-vue-next micromark micromark-extension-gfm-autolink-literal m
 npm install -D @tailwindcss/typography
 ```
 
-Rich `Prose` and `ItemList` render inside Typography's `prose`, so register the
+Rich `Prose`, `ItemList` and `Table` render inside Typography's `prose`, so register the
 plugin in `resources/css/app.css`:
 
 ```css

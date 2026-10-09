@@ -25,7 +25,7 @@ Register the Typography plugin and, if needed, the kit in `resources/css/app.css
 
 Use Laravel starter-kit tokens: `background`, `foreground`, `card`, `muted`,
 `muted-foreground`, `primary`, `primary-foreground`, `border`, and `ring`.
-The kit adds no stylesheet. Rich `Prose` and `ItemList` render inside
+The kit adds no stylesheet. Rich `Prose`, `ItemList` and `Table` render inside
 Typography's `prose`, coloured from the same tokens. Dark mode follows your
 starter-kit tokens. The `sf-*` classes remain semantic hooks.
 

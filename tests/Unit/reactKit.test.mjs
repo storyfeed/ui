@@ -620,6 +620,25 @@ test('a slim Excerpt v2 without truncated is truncated; v1 without it is whole',
     assert.doesNotMatch(raw('Excerpt', { payload: { $v: 1, text: 'Hand-written' } }), /…/);
     assert.doesNotMatch(raw('Excerpt', { payload: { text: 'Unversioned' } }), /…/);
 });
+test('Table draws inside prose with a tfoot, escaped cells that keep line breaks, links and an empty mark', () => {
+    const payload = { $body: 'Storyfeed/Body/Table', title: 'Order <1042>', headers: ['Item', 'Price'],
+        rows: [['Delivery to\n12 Harbour Street', '<b>$0</b>'], [{ label: 'Seats', href: '/seats' }, null], [{ label: 'Owned', href: null }], 'not a row'],
+        footer: [['Total', 49.5]] };
+    assert.match(raw('Table', { payload, entityUrl: '/orders/1' }), /class="sf-table__prose [^"]*\bprose max-w-none text-\[length:inherit\][^"]*\[&amp;_:is\(th,td\)\]:whitespace-pre-line/);
+    const html = render('Table', { payload, entityUrl: '/orders/1' });
+    for (const expected of [
+        '<figcaption class="sf-table__title">Order &lt;1042&gt;</figcaption>',
+        '<thead><tr><th>Item</th><th>Price</th></tr></thead>',
+        '<tr><td>Delivery to\n12 Harbour Street</td><td>&lt;b&gt;$0&lt;/b&gt;</td></tr>',
+        '<tr><td><a href="/seats" class="sf-entity">Seats</a></td><td><span class="sf-table__empty">—</span></td></tr>',
+        '<tr><td><a href="/orders/1" class="sf-entity">Owned</a></td>',
+        '<tfoot><tr><td>Total</td><td>49.5</td></tr></tfoot>',
+    ]) assert.ok(html.includes(expected), expected);
+    const slim = render('Table', { payload: { rows: [['a', 'b'], ['c']] } });
+    assert.ok(slim.includes('<tbody><tr><td>a</td><td>b</td></tr><tr><td>c</td><td><span class="sf-table__empty">—</span></td></tr></tbody>'), slim);
+    assert.doesNotMatch(slim, /<thead|<tfoot|<figcaption/);
+    assert.equal(render('Table', { payload: { headers: ['A'] } }), '');
+});
 test('ItemList states overflow conjunction and owning URL fallback', () => {
     assert.match(
         text(raw('ItemList', { payload: { items: ['First'], totalItems: 3 } })),

@@ -2206,5 +2206,114 @@
         ]
       }
     ]
+  },
+  {
+    "name": "Table body",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "table-receipt",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "label": "Order #1042",
+          "url": "#order-1042",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Table",
+              "$v": 1,
+              "$fallback": "Order #1042",
+              "title": "Order #1042",
+              "headers": [
+                "Item",
+                "Qty",
+                "Price"
+              ],
+              "rows": [
+                [
+                  "Starter plan",
+                  1,
+                  "$9.00"
+                ],
+                [
+                  {
+                    "label": "Extra seats",
+                    "href": "#seats"
+                  },
+                  4,
+                  "$40.00"
+                ],
+                [
+                  "Delivery to\n12 Harbour Street\nWellington",
+                  null,
+                  "$0.00"
+                ]
+              ],
+              "footer": [
+                [
+                  "Subtotal",
+                  "",
+                  "$49.00"
+                ],
+                [
+                  "Total",
+                  "",
+                  "$49.00"
+                ]
+              ]
+            }
+          ]
+        },
+        "glyph": "file-up",
+        "headline": "Receipt"
+      },
+      {
+        "kind": "activity",
+        "id": "table-slim",
+        "published_at": "2026-08-14T12:00:00Z",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "label": "Shipment",
+          "url": "#shipment",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Table",
+              "$v": 1,
+              "rows": [
+                [
+                  "Carrier",
+                  "UPS"
+                ],
+                [
+                  "Tracking",
+                  "1Z999AA10123456784"
+                ],
+                [
+                  "Note"
+                ]
+              ]
+            }
+          ]
+        },
+        "glyph": "file-up",
+        "headline": "Shipment details"
+      }
+    ]
   }
 ]

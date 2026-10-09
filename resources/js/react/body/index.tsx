@@ -7,6 +7,7 @@ import {
 } from '../../shared/body';
 import { fileLabel } from '../../shared/fileLabels';
 import { isRich, renderProse } from '../../shared/prose';
+import { readTable, type TableCell } from '../../shared/table';
 import FeedMedia from '../FeedMedia';
 import { useFeedOptions } from '../context';
 export { imageOf } from '../../shared/body';
@@ -156,6 +157,71 @@ export function ItemList({ payload, entityUrl }: BodyProps) {
                     )}
                 </figcaption>
             )}
+        </figure>
+    );
+}
+/**
+ * `Storyfeed/Body/Table`: a standard table inside Typography's `prose`, footer
+ * rows in a `<tfoot>`. Cells are plain text that keeps its line breaks, a
+ * number, a link, or nothing (drawn as a dash).
+ */
+export function Table({ payload, entityUrl }: BodyProps) {
+    const { FEED_LINK: Link = 'a' } = useFeedOptions();
+    const table = readTable(payload);
+    if (!table) return null;
+    const draw = (cell: TableCell) => {
+        if (cell === null)
+            return <span className="sf-table__empty text-muted-foreground">—</span>;
+        if (typeof cell !== 'object') return cell;
+        const href = cell.href ?? entityUrl ?? null;
+        return href ? (
+            <Link
+                href={href}
+                className="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
+            >
+                {cell.label}
+            </Link>
+        ) : (
+            cell.label
+        );
+    };
+    const sections = (
+        [
+            ['tbody', table.rows],
+            ['tfoot', table.footer],
+        ] as const
+    ).filter(([, rows]) => rows.length);
+    return (
+        <figure className="sf-table-block m-0 min-w-0 max-w-144 rounded-lg bg-card px-4 py-3">
+            {table.title && (
+                <figcaption className="sf-table__title mb-1 text-sm text-foreground">
+                    {table.title}
+                </figcaption>
+            )}
+            <div className="sf-table__prose max-h-96 overflow-auto prose max-w-none text-[length:inherit] [overflow-wrap:anywhere] [--tw-prose-body:var(--color-muted-foreground)] [--tw-prose-headings:var(--color-foreground)] [--tw-prose-lead:var(--color-muted-foreground)] [--tw-prose-links:var(--color-primary)] [--tw-prose-bold:var(--color-foreground)] [--tw-prose-counters:var(--color-muted-foreground)] [--tw-prose-bullets:var(--color-muted-foreground)] [--tw-prose-hr:var(--color-border)] [--tw-prose-quotes:var(--color-foreground)] [--tw-prose-quote-borders:var(--color-border)] [--tw-prose-captions:var(--color-muted-foreground)] [--tw-prose-kbd:var(--color-foreground)] [--tw-prose-code:var(--color-foreground)] [--tw-prose-pre-code:var(--color-foreground)] [--tw-prose-pre-bg:var(--color-border)] [--tw-prose-th-borders:var(--color-border)] [--tw-prose-td-borders:var(--color-border)] [&_table]:my-0 [&_table]:w-full [&_:is(th,td)]:whitespace-pre-line [&_tfoot_td]:font-semibold [&_tfoot_td]:text-foreground" tabIndex={0}>
+                <table className="sf-table">
+                    {table.headers.length > 0 && (
+                        <thead>
+                            <tr>
+                                {table.headers.map((header, i) => (
+                                    <th key={i}>{header}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                    )}
+                    {sections.map(([Section, rows]) => (
+                        <Section key={Section}>
+                            {rows.map((row, r) => (
+                                <tr key={r}>
+                                    {row.map((cell, c) => (
+                                        <td key={c}>{draw(cell)}</td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </Section>
+                    ))}
+                </table>
+            </div>
         </figure>
     );
 }
@@ -373,6 +439,7 @@ const FORMS: Record<string, ComponentType<BodyProps>> = Object.fromEntries(
         ItemList,
         Image,
         MediaObject,
+        Table,
     }).map(([name, component]) => [`Storyfeed/Body/${name}`, component]),
 );
 type Bodies = Readonly<Record<string, ComponentType<BodyProps>>>;

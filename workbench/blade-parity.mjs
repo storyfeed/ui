@@ -8,6 +8,11 @@ import { checkMediaObject } from './media-object-parity.mjs';
 const bodyTexts = {
     'App body type': ['UPS · 1Z999AA10123456784'],
     // A fallback line, nothing without one, the registered renderer over its fallback, escaped text.
+    // Header, rows with a link, a kept line break and an empty mark, footer rows; then a slim, headerless, ragged table.
+    'Table body': [
+        'Order #1042 Item Qty Price Starter plan 1 $9.00 Extra seats 4 $40.00 Delivery to 12 Harbour Street Wellington — $0.00 Subtotal $49.00 Total $49.00',
+        'Carrier UPS Tracking 1Z999AA10123456784 Note —',
+    ],
     'Body fallback': ['Invoice #1042 · $49.00 due Friday', 'UPS · 1Z999AA10123456784', '<b>Escaped</b>, never HTML'],
 };
 const output = process.env.STORYFEED_SCREENSHOTS ?? '/private/tmp/claude-501/-Users-jasper-Dev-projects-storyfeed/2b79c0b9-803e-4825-b1bd-040d9078ad01/scratchpad/kit-adopt';
@@ -56,9 +61,10 @@ try {
             for (let i = 0; i < frames.length; i++) {
                 const sizes = await frames[i].evaluate(() => {
                     const size = selector => parseFloat(getComputedStyle(document.querySelector(selector)).fontSize);
-                    return { head: size('.sf-head'), table: size('.sf-rich-text table'), list: size('.sf-list__item') };
+                    return { head: size('.sf-head'), table: size('.sf-rich-text table'), body: size('.sf-table'), list: size('.sf-list__item') };
                 });
                 assert.equal(sizes.table / sizes.head, 0.875, `${renderers[i]} ${text}: Prose table scales with the headline`);
+                assert.equal(sizes.body / sizes.head, 0.875, `${renderers[i]} ${text}: Table body scales with the headline`);
                 assert.equal(sizes.list / sizes.head, 1, `${renderers[i]} ${text}: ItemList scales with the headline`);
             }
             // These fixtures assert pixel geometry at the default text size.
@@ -140,7 +146,7 @@ try {
                     }
                 }
                 const geometry = await Promise.all(frames.map(frame => frame.evaluate(() => {
-                    const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media', '.sf-facts', '.sf-facts__row', '.sf-facts__label', '.sf-facts__value', '.sf-facts__value > span', '.sf-rich-text', '.sf-rich-text *', '.sf-list-block', '.sf-list__prose *', '.sf-avatar-row', '.sf-avatar-row > *', '.sf-avatar-row .sf-avatar'];
+                    const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media', '.sf-facts', '.sf-facts__row', '.sf-facts__label', '.sf-facts__value', '.sf-facts__value > span', '.sf-rich-text', '.sf-rich-text *', '.sf-list-block', '.sf-list__prose *', '.sf-avatar-row', '.sf-avatar-row > *', '.sf-avatar-row .sf-avatar', '.sf-table-block', '.sf-table__prose *'];
                     return Object.fromEntries(selectors.map(selector => [selector, [...document.querySelectorAll(selector)].filter(e => !e.closest('details:not([open]) .sf-children') && e.getClientRects().length && e.getBoundingClientRect().height > 0).map(e => {
                         const r = e.getBoundingClientRect();
                         return { x: r.x, y: r.y, w: r.width, h: r.height, text: e.textContent.trim().replace(/\s+/g, ' ') };
@@ -163,7 +169,8 @@ try {
                 // Fixtures whose bodies every kit must draw with the same text.
                 if (text === 'default') for (const [section, expected] of Object.entries(bodyTexts)) for (let i = 0; i < frames.length; i++) {
                     const texts = await frames[i].locator(`.example:has(>h2:text-is("${section}")) .sf-body-form`).allTextContents();
-                    assert.deepEqual(texts.map(t => t.trim().replace(/\s+/g, ' ')), expected, `${renderers[i]}: ${section}`);
+                    // Kits differ only in whitespace between tags, which renders as nothing.
+                    assert.deepEqual(texts.map(t => t.replace(/\s+/g, '')), expected.map(t => t.replace(/\s+/g, '')), `${renderers[i]}: ${section}`);
                 }
                 // A group's featured objects draw as an avatar row; the actor never feeds the row or the strip.
                 if (text === 'default' && state === 'collapsed') for (let i = 0; i < frames.length; i++) {
