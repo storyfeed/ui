@@ -87,12 +87,12 @@ const hiddenBeyondChildren = computed(
 </script>
 
 <template>
-    <div class="sf-row relative flex items-start gap-(--sf-gap) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter:--spacing(8)] [--sf-gap:--spacing(3)] [--sf-disc:--spacing(8)] [--sf-badge:--spacing(3.5)] [--sf-badge-face:--spacing(4.5)] text-base leading-[1.6]">
+    <div class="sf-row relative flex items-start gap-(--sf-gap-v) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]">
         <!-- Several actors draw as a diagonal pair inside one disc's square (ui#25): the first in front at the bottom-right, where the verb badge sits, the second behind at the top-left. Below a 1.5rem (24px) disc only the front face shows. -->
-        <div class="sf-rail box-content flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
-            <div class="sf-rail__disc relative flex w-(--sf-disc) shrink-0 [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge:--spacing(2.75)] [&:has(>.sf-avatars)>.sf-badge_svg]:size-2">
-                <div v-if="slots.disc === 'actor' && faces.length > 1" class="sf-avatars @container/pair relative size-(--sf-disc) shrink-0">
-                    <span v-for="(actor, index) in faces" :key="actor.id" :class="index === 0 ? 'sf-avatars__face absolute right-0 bottom-0 z-10 flex size-[calc(var(--sf-disc)*2/3)] @max-[1.5rem]/pair:size-full' : 'sf-avatars__face absolute top-0 left-0 flex size-[calc(var(--sf-disc)*2/3)] @max-[1.5rem]/pair:hidden'">
+        <div class="sf-rail box-content flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
+            <div class="sf-rail__disc relative flex w-(--sf-disc-v) shrink-0 [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-v:--spacing(2.75)] [&:has(>.sf-avatars)>.sf-badge_svg]:size-2">
+                <div v-if="slots.disc === 'actor' && faces.length > 1" class="sf-avatars @container/pair relative size-(--sf-disc-v) shrink-0">
+                    <span v-for="(actor, index) in faces" :key="actor.id" :class="index === 0 ? 'sf-avatars__face absolute right-0 bottom-0 z-10 flex size-[calc(var(--sf-disc-v)*2/3)] @max-[1.5rem]/pair:size-full' : 'sf-avatars__face absolute top-0 left-0 flex size-[calc(var(--sf-disc-v)*2/3)] @max-[1.5rem]/pair:hidden'">
                         <EntityAvatar :entity="actor" size="pair" />
                     </span>
                 </div>
@@ -215,7 +215,7 @@ const hiddenBeyondChildren = computed(
                         <slot name="annotations" v-bind="slotProps" />
                     </template>
                 </FeedItem>
-                <p v-if="hiddenBeyondChildren > 0" class="sf-overflow pl-[calc(var(--sf-gutter)+var(--sf-gap))] text-sm leading-[1.6] text-muted-foreground">
+                <p v-if="hiddenBeyondChildren > 0" class="sf-overflow pl-[calc(var(--sf-gutter-v)+var(--sf-gap-v))] text-sm leading-[1.6] text-muted-foreground">
                     …and {{ hiddenBeyondChildren }} more not shown
                 </p>
             </div>

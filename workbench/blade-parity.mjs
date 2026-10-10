@@ -88,6 +88,31 @@ try {
                 assert.equal(hosted.headline, hosted.feed, `${renderers[i]} ${text}: a hosted row's headline ignores the host's base size`);
                 assert.equal(hosted.facts / hosted.headline, 0.875, `${renderers[i]} ${text}: a hosted row's KeyValue sits one step below its headline`);
                 assert.equal(hosted.meta / hosted.headline, 0.875, `${renderers[i]} ${text}: a hosted row's meta line sits one step below its headline`);
+                // The rail's size variables reach a row from the feed or any element around it; unset, they default from --sf-font-size.
+                const rails = await frames[i].evaluate(() => {
+                    const vars = { '--sf-gutter': '4rem', '--sf-gap': '2rem', '--sf-disc': '3rem', '--sf-badge': '1.25rem', '--sf-badge-face': '1.5rem' };
+                    const set = (element, on) => Object.entries(vars).forEach(([name, value]) => on ? element.style.setProperty(name, value) : element.style.removeProperty(name));
+                    const measure = scope => {
+                        const row = [...scope.querySelectorAll('.sf-row')].find(row => row.querySelector(':scope > .sf-rail > .sf-rail__disc'));
+                        const width = selector => scope.querySelector(selector)?.getBoundingClientRect().width;
+                        return { rail: row.querySelector(':scope > .sf-rail').getBoundingClientRect().width, gap: parseFloat(getComputedStyle(row).columnGap), disc: row.querySelector('.sf-rail__disc').getBoundingClientRect().width, badge: width('.sf-rail__disc:not(:has(>.sf-avatars)) > .sf-badge'), face: width('.sf-avatar--badge') };
+                    };
+                    const feeds = [...document.querySelectorAll('.sf-feed')];
+                    const defaults = measure(document);
+                    feeds.forEach(feed => set(feed, true));
+                    const fed = measure(document);
+                    feeds.forEach(feed => set(feed, false));
+                    const host = document.createElement('div');
+                    host.append([...document.querySelectorAll('.example')].find(example => example.querySelector(':scope > h2')?.textContent === 'Type scale').querySelector('.sf-row').cloneNode(true));
+                    document.body.append(host);
+                    set(host, true);
+                    const hosted = measure(host);
+                    host.remove();
+                    return { defaults, fed, hosted, rem: parseFloat(getComputedStyle(document.documentElement).fontSize), em: parseFloat(getComputedStyle(document.querySelector('.sf-feed')).fontSize) };
+                });
+                assert.deepEqual(rails.defaults, { rail: rails.em * 2, gap: rails.em * 0.75, disc: rails.em * 2, badge: rails.em * 0.875, face: rails.em * 1.125 }, `${renderers[i]} ${text}: rail sizes default from --sf-font-size`);
+                assert.deepEqual(rails.fed, { rail: rails.rem * 4, gap: rails.rem * 2, disc: rails.rem * 3, badge: rails.rem * 1.25, face: rails.rem * 1.5 }, `${renderers[i]} ${text}: rail sizes set on the feed reach its rows`);
+                assert.deepEqual({ ...rails.hosted, badge: undefined, face: undefined }, { rail: rails.rem * 4, gap: rails.rem * 2, disc: rails.rem * 3, badge: undefined, face: undefined }, `${renderers[i]} ${text}: rail sizes set around a row outside a feed reach it`);
             }
             // These fixtures assert pixel geometry at the default text size.
             if (text === 'default') {
