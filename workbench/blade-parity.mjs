@@ -268,6 +268,31 @@ try {
                     const unit = await frames[i].evaluate(() => parseFloat(getComputedStyle(document.querySelector('.sf-divider .sf-rail')).fontSize));
                     for (const joint of joints) assert.equal(joint.curveTop, unit * 0.5625 - 0.5, `${renderers[i]} ${width} ${text} ${joint.label}: the gap above the curve`);
                     gaps[renderers[i]] = [...(gaps[renderers[i]] ?? []), ...joints.map(joint => joint.curveTop)];
+                    // ui#43: the dot is a quiet joint, not a bullet: a 0.375em ring in the rail line's colour, filled with the page background, centred on the
+                    // line where the filled dot was, with the same gap above and below.
+                    const dots = await frames[i].locator('.example:has(>h2:text-is("Dot divider (option)")) .sf-divider--dot').evaluateAll(dividers => dividers.map(divider => {
+                        const row = divider.getBoundingClientRect(), node = divider.querySelector('.sf-rail__node'), ring = node.getBoundingClientRect(), style = getComputedStyle(node);
+                        const line = divider.querySelector('.sf-rail__line'), below = line.getBoundingClientRect();
+                        const page = document.createElement('div'); page.className = 'bg-background'; divider.append(page);
+                        const background = getComputedStyle(page).backgroundColor; page.remove();
+                        return {
+                            width: ring.width, height: ring.height, round: style.borderRadius, border: [style.borderTopWidth, style.borderTopStyle, style.borderTopColor], fill: style.backgroundColor,
+                            lineColour: getComputedStyle(line).backgroundColor, background, centreX: ring.left + ring.width / 2, lineX: below.left + below.width / 2,
+                            centreY: ring.top + ring.height / 2 - row.top, above: ring.top - row.top, below: below.top - ring.bottom, lineTop: below.top - row.top,
+                        };
+                    }));
+                    assert.ok(dots.length > 0, `${renderers[i]}: dot dividers measured`);
+                    for (const dot of dots) {
+                        const where = `${renderers[i]} ${width} ${theme} ${text} dot`;
+                        assert.deepEqual([dot.width, dot.height], [unit * 0.375, unit * 0.375], `${where}: the ring is 0.375em`);
+                        assert.ok(parseFloat(dot.round) >= unit * 0.1875, `${where}: the ring is round`);
+                        assert.deepEqual(dot.border, ['1px', 'solid', dot.lineColour], `${where}: the ring is a 1px stroke in the rail line's colour`);
+                        assert.equal(dot.fill, dot.background, `${where}: the ring is filled with the page background`);
+                        assert.equal(dot.centreX, dot.lineX, `${where}: the ring is centred on the rail line`);
+                        assert.equal(dot.centreY, unit * 0.59375, `${where}: the ring is centred where the filled dot was`);
+                        assert.equal(dot.above, dot.below, `${where}: the line stops and resumes the same gap from the ring`);
+                        assert.equal(dot.lineTop, unit * 1.1875, `${where}: the line below starts where it did`);
+                    }
                 }
                 const geometry = await Promise.all(frames.map(frame => frame.evaluate(() => {
                     const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media', '.sf-facts', '.sf-facts__row', '.sf-facts__label', '.sf-facts__value', '.sf-facts__value > span', '.sf-rich-text', '.sf-rich-text *', '.sf-list-block', '.sf-list__prose *', '.sf-media-strip > *', '.sf-avatar--tile', '.sf-table-block', '.sf-table__prose *', '.sf-media-object__image img', '.sf-cta', '.sf-cta > *', '.sf-cta__action'];
