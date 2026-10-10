@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { useId, type CSSProperties, type ReactNode } from 'react';
 import type { FeedNode } from '../shared/types';
 import { readPage, type FeedPageLike } from '../shared/page';
 import FeedNodeView from './FeedNode';
@@ -25,6 +25,8 @@ function Divider({
     label: string;
     style: 'dot' | 'branch';
 }) {
+    // The stroke gradient needs an id unique on the page; React's ids may hold characters a url() reference shouldn't.
+    const gradient = `sf-branch-${useId().replace(/[^\w-]/g, '')}`;
     return (
         <div
             className={`sf-row sf-divider relative flex items-start gap-(--sf-gap) ${style === 'dot' ? 'sf-divider--dot [&_.sf-rail>div:last-child]:mt-1.25' : 'sf-divider--branch'}`}
@@ -36,11 +38,35 @@ function Divider({
                         className="sf-rail__node mt-1.25 size-2.25 shrink-0 rounded-full bg-muted-foreground ring-3 ring-background"
                     />
                 ) : (
-                    // The curve shares the rail line's 1px column and colour; the line continues from its end, leaving a gap above it.
-                    <div
+                    // The curve is the corner of a 1px rect on the rail line's column, darkening from the rail's colour to the label's;
+                    // the line continues from its end, leaving a gap above it.
+                    <svg
                         aria-hidden="true"
-                        className="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap)-var(--spacing)*1.5)] rounded-tl-[calc(var(--spacing)*2)] border-t border-l border-border"
-                    />
+                        className="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap)-var(--spacing)*1.5)] overflow-hidden"
+                    >
+                        <defs>
+                            <linearGradient
+                                id={gradient}
+                                gradientUnits="userSpaceOnUse"
+                                x1="0"
+                                y1="0"
+                                x2="100%"
+                                y2="0"
+                            >
+                                <stop offset="0" className="[stop-color:var(--color-border)]" />
+                                <stop offset="1" className="[stop-color:var(--color-muted-foreground)]" />
+                            </linearGradient>
+                        </defs>
+                        <rect
+                            x="0.5"
+                            y="0.5"
+                            width="200%"
+                            height="200%"
+                            rx="0.5em"
+                            className="fill-none stroke-1"
+                            stroke={`url(#${gradient})`}
+                        />
+                    </svg>
                 )}
                 <div
                     aria-hidden="true"

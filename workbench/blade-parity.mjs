@@ -160,14 +160,15 @@ try {
                         await session.detach();
                     }
                 }
-                // Jasper (ui#34): a branch divider's curve shares the rail line's x, width and colour, and meets the label at the
-                // middle of its cap height. The line above stops at the divider, leaving the same gap before the curve in every
+                // Jasper (ui#34): a branch divider's curve shares the rail line's x and width, darkens from the line's colour to the
+                // label's through a gradient with a page-unique id, and meets the label at the middle of its cap height. The line above stops at the divider, leaving the same gap before the curve in every
                 // kit, and the line below continues from the curve's end.
                 if (state === 'collapsed') for (let i = 0; i < frames.length; i++) {
                     const joints = await frames[i].locator('.example:has(>h2:text-is("Day dividers and a group")), .example:has(>h2:text-is("Per-item divider"))').evaluateAll(sections => sections.flatMap(section => [...section.querySelectorAll('.sf-divider')].map(divider => {
                         const row = divider.getBoundingClientRect();
                         const curve = divider.querySelector('.sf-rail__branch');
-                        const stem = curve.getBoundingClientRect(), style = getComputedStyle(curve);
+                        const stem = curve.getBoundingClientRect(), rect = curve.querySelector('rect'), stroke = parseFloat(getComputedStyle(rect).strokeWidth);
+                        const gradient = curve.querySelector('linearGradient'), stops = [...gradient.querySelectorAll('stop')].map(stop => getComputedStyle(stop).stopColor);
                         const line = divider.querySelector('.sf-rail__line').getBoundingClientRect();
                         const above = [...section.querySelectorAll('.sf-rail__line')].map(l => l.getBoundingClientRect()).filter(l => l.height > 0 && l.bottom <= row.top + 0.01).sort((a, b) => b.bottom - a.bottom)[0];
                         const label = divider.querySelector('.sf-day'), font = getComputedStyle(label);
@@ -175,10 +176,11 @@ try {
                         label.append(probe); const baseline = probe.getBoundingClientRect().top; probe.remove();
                         const context = document.createElement('canvas').getContext('2d'); context.font = `${font.fontWeight} ${font.fontSize} ${font.fontFamily}`;
                         return {
-                            label: label.textContent.trim(), stemX: stem.x, lineX: line.x, stemWidth: parseFloat(style.borderLeftWidth), lineWidth: line.width,
-                            stemColour: style.borderLeftColor, arcColour: style.borderTopColor, lineColour: getComputedStyle(divider.querySelector('.sf-rail__line')).backgroundColor,
+                            label: label.textContent.trim(), stemX: stem.x + rect.x.baseVal.value - stroke / 2, lineX: line.x, stemWidth: stroke, lineWidth: line.width,
+                            stops, lineColour: getComputedStyle(divider.querySelector('.sf-rail__line')).backgroundColor, labelColour: font.color,
+                            gradient: { id: gradient.id, used: rect.getAttribute('stroke') === `url(#${gradient.id})`, unique: document.querySelectorAll(`[id="${gradient.id}"]`).length === 1 },
                             lineTop: line.top - row.top, curveTop: stem.top - row.top, curveEnd: stem.bottom - row.top, above: above && { x: above.x, w: above.width, gap: row.top - above.bottom },
-                            stroke: stem.top + parseFloat(style.borderTopWidth) / 2, capMiddle: baseline - context.measureText('H').actualBoundingBoxAscent / 2,
+                            stroke: stem.top + rect.y.baseVal.value, labelSize: parseFloat(font.fontSize), capMiddle: baseline - context.measureText('H').actualBoundingBoxAscent / 2,
                         };
                     })));
                     assert.equal(joints.length, 4, `${renderers[i]}: branch dividers measured`);
@@ -186,9 +188,10 @@ try {
                         const where = `${renderers[i]} ${width} ${theme} ${text} ${joint.label}`;
                         assert.equal(joint.stemX, joint.lineX, `${where}: the curve's stem shares the rail line's x`);
                         assert.equal(joint.stemWidth, joint.lineWidth, `${where}: the curve's stem is as wide as the rail line`);
-                        assert.equal(joint.stemColour, joint.lineColour, `${where}: the curve is the rail line's colour`);
-                        assert.equal(joint.arcColour, joint.lineColour, `${where}: the curve is the rail line's colour`);
-                        assert.ok(Math.abs(joint.stroke - joint.capMiddle) <= 0.5, `${where}: the curve meets the label's cap middle (${joint.stroke} vs ${joint.capMiddle})`);
+                        assert.deepEqual(joint.stops, [joint.lineColour, joint.labelColour], `${where}: the curve darkens from the rail line's colour to the label's`);
+                        assert.ok(joint.gradient.used && joint.gradient.unique && joint.gradient.id.startsWith('sf-branch-'), `${where}: the curve strokes with its own gradient (${joint.gradient.id})`);
+                        // The join is a fixed 0.5625em, so how closely it meets the cap middle depends on the font's metrics (Arial here, Liberation Sans on CI): within 0.075em of the label.
+                        assert.ok(Math.abs(joint.stroke - joint.capMiddle) <= joint.labelSize * 0.075, `${where}: the curve meets the label's cap middle (${joint.stroke} vs ${joint.capMiddle})`);
                         assert.equal(joint.lineTop, joint.curveEnd, `${where}: the line below continues from the curve's end`);
                         if (joint.above) assert.deepEqual([joint.above.x, joint.above.w, joint.above.gap], [joint.lineX, joint.lineWidth, 0], `${where}: the line above stops at the divider, on the same column`);
                     }

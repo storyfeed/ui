@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, toRef } from 'vue';
+import { computed, toRef, useId } from 'vue';
 import FeedNodeView from './FeedNode.vue';
 import type { Rail, RailName } from '../shared/rail';
 import type { FeedNode } from '../shared/types';
@@ -56,6 +56,8 @@ const nodes = computed(() => props.items ?? read.value.items);
 const cursor = computed(() => props.nextCursor ?? read.value.nextCursor);
 
 const days = useFeedDays(toRef(() => nodes.value));
+// Each branch divider's stroke gradient needs an id unique on the page.
+const gradientId = `sf-branch-${useId()}`;
 </script>
 
 <template>
@@ -75,7 +77,15 @@ const days = useFeedDays(toRef(() => nodes.value));
                 >
                     <div class="sf-rail relative flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
                         <div v-if="dividerStyle === 'dot'" aria-hidden="true" class="sf-rail__node mt-1.25 size-2.25 shrink-0 rounded-full bg-muted-foreground ring-3 ring-background" />
-                        <div v-else aria-hidden="true" class="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap)-var(--spacing)*1.5)] rounded-tl-[calc(var(--spacing)*2)] border-t border-l border-border" />
+                        <svg v-else aria-hidden="true" class="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap)-var(--spacing)*1.5)] overflow-hidden">
+                            <defs>
+                                <linearGradient :id="`${gradientId}-day-${dayIndex}`" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100%" y2="0">
+                                    <stop offset="0" class="[stop-color:var(--color-border)]" />
+                                    <stop offset="1" class="[stop-color:var(--color-muted-foreground)]" />
+                                </linearGradient>
+                            </defs>
+                            <rect x="0.5" y="0.5" width="200%" height="200%" rx="0.5em" class="fill-none stroke-1" :stroke="`url(#${gradientId}-day-${dayIndex})`" />
+                        </svg>
                         <div
                             aria-hidden="true"
                             :class="['sf-rail__line w-px flex-1 bg-border', dividerStyle === 'dot' ? 'mt-1' : 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]']"
@@ -98,7 +108,15 @@ const days = useFeedDays(toRef(() => nodes.value));
                     >
                         <div class="sf-rail relative flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
                             <div v-if="dividerStyle === 'dot'" aria-hidden="true" class="sf-rail__node mt-1.25 size-2.25 shrink-0 rounded-full bg-muted-foreground ring-3 ring-background" />
-                            <div v-else aria-hidden="true" class="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap)-var(--spacing)*1.5)] rounded-tl-[calc(var(--spacing)*2)] border-t border-l border-border" />
+                            <svg v-else aria-hidden="true" class="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap)-var(--spacing)*1.5)] overflow-hidden">
+                                <defs>
+                                    <linearGradient :id="`${gradientId}-item-${dayIndex}-${index}`" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100%" y2="0">
+                                        <stop offset="0" class="[stop-color:var(--color-border)]" />
+                                        <stop offset="1" class="[stop-color:var(--color-muted-foreground)]" />
+                                    </linearGradient>
+                                </defs>
+                                <rect x="0.5" y="0.5" width="200%" height="200%" rx="0.5em" class="fill-none stroke-1" :stroke="`url(#${gradientId}-item-${dayIndex}-${index})`" />
+                            </svg>
                             <div
                                 aria-hidden="true"
                                 :class="['sf-rail__line w-px flex-1 bg-border', dividerStyle === 'dot' ? 'mt-1' : 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]']"
