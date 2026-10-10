@@ -107,6 +107,11 @@ export interface ActivityNode extends BaseNode {
     kind: 'activity';
     verb: string;
     /**
+     * The role whose entity this activity features (storyfeed/storyfeed#76),
+     * or null when it features none. Absent before core 0.19: the object.
+     */
+    featured?: FeedSingularRole | null;
+    /**
      * The time range the activity describes (core 0.17, AS2 `startTime` /
      * `endTime`), beside `published_at` and never instead of it. Either end
      * may be null on its own: a range open at that end.
@@ -149,9 +154,10 @@ export interface GroupNode extends BaseNode {
     children: ActivityNode[];
     children_truncated: boolean;
     /** Every role is a list, even when the axis pins it to one. */
-    sample: Partial<Record<FeedRole, FeedEntity[]>>;
-    /** True distinct totals per role, for computing overflow. */
-    distinct: Partial<Record<FeedRole, number>>;
+    /** `featured` (storyfeed/storyfeed#93): each sampled member's featured entity, newest first; an entity can repeat. */
+    sample: Partial<Record<FeedRole, FeedEntity[]>> & { featured?: FeedEntity[] };
+    /** True distinct totals per role, for computing overflow; `featured` counts the members with a featured entity. */
+    distinct: Partial<Record<FeedRole, number>> & { featured?: number };
     /** How many of the distinct entities per role are tombstones. */
     distinct_tombstoned?: Partial<Record<FeedRole, number>>;
 }

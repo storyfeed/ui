@@ -30,12 +30,48 @@ final class Strip
     }
 
     /**
-     * The entity a member activity features. The object, until core sends
-     * `sample.featured` (0.20); this is the one place that changes.
+     * The entity a member activity features: the role it names in `featured`
+     * (storyfeed/storyfeed#76), none when that is null, and the object before
+     * core sent the field. Mirrors `featuredOf()` in `shared/strip.ts`.
      */
     public static function featured(FeedItem $member): ?Entity
     {
-        return $member->object();
+        if (! array_key_exists('featured', $member->toArray())) {
+            return $member->object();
+        }
+
+        $role = $member->get('featured');
+
+        return is_string($role) && $role !== '' ? $member->entity($role) : null;
+    }
+
+    /**
+     * The entities a strip draws, one per sampled member, newest first:
+     * core's `sample.featured` when it sends one (storyfeed/storyfeed#93),
+     * else each member's own featured entity. With the total of members that
+     * feature one. Mirrors `stripEntities()`.
+     *
+     * @return array{entities: list<Entity>, total: int}
+     */
+    public static function entities(FeedItem $group): array
+    {
+        $sample = $group->get('sample');
+        if (is_array($sample) && is_array($sample['featured'] ?? null)) {
+            $entities = array_values(array_map(fn (array $entity) => Entity::of(array_filter($entity, is_string(...), ARRAY_FILTER_USE_KEY)), array_filter($sample['featured'], is_array(...))));
+            $distinct = $group->get('distinct');
+            $total = is_array($distinct) && is_int($distinct['featured'] ?? null) ? $distinct['featured'] : $group->count();
+
+            return ['entities' => $entities, 'total' => max($total, count($entities))];
+        }
+
+        $entities = [];
+        foreach (self::members($group) as $member) {
+            if (($entity = self::featured($member)) !== null) {
+                $entities[] = $entity;
+            }
+        }
+
+        return ['entities' => $entities, 'total' => max($group->count(), count($entities))];
     }
 
     /**
@@ -48,19 +84,13 @@ final class Strip
      */
     public static function of(FeedItem $group): ?array
     {
-        $all = [];
-        foreach (self::members($group) as $member) {
-            $entity = self::featured($member);
-            if ($entity !== null) {
-                $all[] = self::tile($entity);
-            }
-        }
+        ['entities' => $entities, 'total' => $total] = self::entities($group);
+        $all = array_map(self::tile(...), $entities);
 
         if (count(array_unique(array_map(self::sameness(...), $all))) < 2) {
             return null;
         }
 
-        $total = max($group->count(), count($all));
         $tiles = array_slice($all, 0, $total > self::SLOTS ? self::SLOTS - 1 : self::SLOTS);
 
         return ['tiles' => $tiles, 'overflow' => $total - count($tiles)];

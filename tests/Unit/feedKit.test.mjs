@@ -938,3 +938,13 @@ test('FeedStream reads a whole page: core #95 JSON under data, the older items e
     assert.doesNotMatch(await renderRaw('/resources/js/vue/FeedStream.vue', { page: { items: nodes, next_cursor: null } }), /sf-more/, 'no cursor, no more');
     assert.match(await renderRaw('/resources/js/vue/FeedStream.vue', { page: { items: nodes, next_cursor: null } }), /Ada Lovelace/);
 });
+
+test('a group strip reads core #93\'s sample.featured, else each member\'s featured role', async () => {
+    const draw = async (item) => stripTiles(await renderRaw('/resources/js/vue/FeedGroup.vue', { item }));
+    const members = [stripPhoto(1), stripPhoto(2), stripPhoto(3), stripPhoto(4), stripPhoto(5)].map((object, n) => stripMember(n, object));
+    // sample.featured wins over the members' objects, and distinct.featured counts the +N.
+    assert.deepEqual((await draw({ ...group, count: 9, children: members, sample: { actors: group.sample.actors, featured: [stripAna, stripBen, stripPhoto(7)] }, distinct: { actors: 1, featured: 7 } })).tiles, ['/ana.jpg', 'tile:BO', '/p7.jpg', '+4']);
+    // Without it, each member's featured role (storyfeed/storyfeed#76): its target here, nothing when null.
+    const featuring = [{ ...stripMember(0, stripPhoto(1)), featured: 'target', target: stripBen }, { ...stripMember(1, stripPhoto(2)), featured: null }, stripMember(2, stripPhoto(3))];
+    assert.deepEqual((await draw({ ...group, count: 3, children: featuring, sample: { actors: group.sample.actors } })).tiles, ['tile:BO', '/p3.jpg', '+1']);
+});

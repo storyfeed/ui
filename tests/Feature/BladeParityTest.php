@@ -190,6 +190,18 @@ it('draws a group strip of one tile per member activity, never a blank', functio
         ->and($draw([$ben, $ben, $ben]))->toBeNull()
         ->and($draw([null, null]))->toBeNull();
 
+    // Core #93's sample.featured wins over the members' objects, and distinct.featured counts the +N.
+    $item = ['kind' => 'group', 'headline' => 'Updates', 'count' => 9, 'distinct' => ['featured' => 7], 'sample' => ['featured' => [$ana, $ben, $photo(7)]],
+        'children' => array_map(fn ($n) => ['kind' => 'activity', 'headline' => 'Member', 'object' => $photo($n)], [1, 2, 3, 4, 5])];
+    expect(strip_tiles(Blade::render('<x-storyfeed::group :group="$item" />', compact('item')))['tiles'])->toBe(['/ana.jpg', 'tile:BO', '/p7.jpg', '+4']);
+    // Without it, each member's featured role (storyfeed/storyfeed#76): its target here, nothing when null.
+    $item = ['kind' => 'group', 'headline' => 'Updates', 'count' => 3, 'children' => [
+        ['kind' => 'activity', 'headline' => 'Member', 'object' => $photo(1), 'featured' => 'target', 'target' => $ben],
+        ['kind' => 'activity', 'headline' => 'Member', 'object' => $photo(2), 'featured' => null],
+        ['kind' => 'activity', 'headline' => 'Member', 'object' => $photo(3)],
+    ]];
+    expect(strip_tiles(Blade::render('<x-storyfeed::group :group="$item" />', compact('item')))['tiles'])->toBe(['tile:BO', '/p3.jpg', '+1']);
+
     // Jasper (ui#27): "+N" opens the group like "Show all N"; a static group keeps a plain tile.
     $item = ['kind' => 'group', 'id' => 'g6', 'headline' => 'Updates', 'count' => 6, 'children' => array_map(fn ($object) => ['kind' => 'activity', 'headline' => 'Member', 'object' => $object], [$photo(1), $ana, $ben, $photo(2), $photo(3), $photo(4)])];
     $live = Blade::render('<x-storyfeed::group :group="$item" />', compact('item'));
