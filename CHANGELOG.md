@@ -6,6 +6,7 @@
 
 ### Added
 
+- The group strip reads core's `sample.featured` (storyfeed/storyfeed#93) when a group carries it: one featured entity per sampled member, newest first, with "+N" counted from `distinct.featured`. Without it, each member's own featured entity: the role its `featured` names (storyfeed/storyfeed#76), none when that is null, and the object before core sent the field. In Blade, Vue and React.
 - The kits read every page shape core returns (storyfeed/storyfeed#95) as well as the older ones: Blade's `page` takes core 0.13–0.18's `FeedPage`, core main's collection from `get()`, its cursor or simple paginator (the next cursor encoded for the pager), or decoded JSON with the nodes under `data` or `items`; `next-cursor` also takes a `Cursor`. Vue's and React's `FeedStream` take a `page` prop in place of `items` and `nextCursor`, reading the JSON either way, and React exports `readPage()` for an app's own Live refresh.
 - An Image body draws its own picture (core 0.18's Image v3, `Image::make('https://…/day-3.jpg')`, stored as `src`) at its declared width and height, in Blade, Vue and React. Without one it draws the entity's slot it names as before, now including custom slots (`Image::make($this->getFeedMedia('sparkline'))`, read from `media.slots.sparkline`). A stored or custom-slot picture also stands for its entity in a group's photograph strip. v1 and v2 rows naming no slot still show the `preview`; a v3 row naming nothing draws nothing, as core reads it. The kits read these payloads themselves, so they draw the same on every supported core.
 

@@ -5942,7 +5942,7 @@
     "items": [
       {
         "kind": "group",
-        "id": "grp_44821e4de8f20204655b3e0a299aec35c7abba90",
+        "id": "grp_djIfcmVwZWF0H2IxOmU2OTA4MzUxNDgyM2I4NGZjMDkxMTA0MGQ2NmUyMTA3OTAzZDcyNWYyYjRmZDNhOTM5MDE1N2Q2YjRiMjc4YWQ6MDFtNGowcnNxbjNkbW1mMGszajZhZDF6djc",
         "axis": "repeat",
         "count": 6,
         "verb": "add",
@@ -6002,6 +6002,9 @@
         "origin": null,
         "result": null,
         "instrument": null,
+        "location": null,
+        "generator": null,
+        "featured": null,
         "sample": {
           "actors": [
             {
@@ -6142,7 +6145,95 @@
           "contexts": [],
           "origins": [],
           "results": [],
-          "instruments": []
+          "instruments": [],
+          "locations": [],
+          "generators": [],
+          "featured": [
+            {
+              "type": "person",
+              "id": "10",
+              "label": "Gia Romano",
+              "link": {
+                "href": "/people/10",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "parlour"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/parlour.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "9",
+              "label": "Iris Novak",
+              "link": {
+                "href": "/people/9",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "IN",
+                "color": "#b45309",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "8",
+              "label": "Eli Brooks",
+              "link": {
+                "href": "/people/8",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "arcade"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/arcade.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            }
+          ]
         },
         "distinct": {
           "actors": 1,
@@ -6151,12 +6242,15 @@
           "contexts": 0,
           "origins": 0,
           "results": 0,
-          "instruments": 0
+          "instruments": 0,
+          "locations": 0,
+          "generators": 0,
+          "featured": 6
         },
         "children": [
           {
             "kind": "activity",
-            "id": "01m4hxw6drsv72kv221hcspqbj",
+            "id": "01m4j0rsrrndrjrdecv5j8n70s",
             "verb": "add",
             "published_at": "2026-08-14T12:06:00.000000Z",
             "starts_at": null,
@@ -6245,6 +6339,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -6253,7 +6350,7 @@
           },
           {
             "kind": "activity",
-            "id": "01m4hxw6dhs28vy5189atqggwt",
+            "id": "01m4j0rsrhbjq6gkgkt8vf544v",
             "verb": "add",
             "published_at": "2026-08-14T12:05:00.000000Z",
             "starts_at": null,
@@ -6336,6 +6433,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -6344,7 +6444,7 @@
           },
           {
             "kind": "activity",
-            "id": "01m4hxw6d9ye82kv0r13arpc95",
+            "id": "01m4j0rsrb6w7s9sde0has553m",
             "verb": "add",
             "published_at": "2026-08-14T12:04:00.000000Z",
             "starts_at": null,
@@ -6433,6 +6533,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -6441,7 +6544,7 @@
           },
           {
             "kind": "activity",
-            "id": "01m4hxw6d278mvqzzxxx9dwhby",
+            "id": "01m4j0rsr5pyew5hm6h4y44zh4",
             "verb": "add",
             "published_at": "2026-08-14T12:03:00.000000Z",
             "starts_at": null,
@@ -6524,6 +6627,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -6532,7 +6638,7 @@
           },
           {
             "kind": "activity",
-            "id": "01m4hxw6cv63cfxhrzne0xwn0t",
+            "id": "01m4j0rsqyepzcbx1n3v82y5f8",
             "verb": "add",
             "published_at": "2026-08-14T12:02:00.000000Z",
             "starts_at": null,
@@ -6615,6 +6721,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -6623,7 +6732,7 @@
           },
           {
             "kind": "activity",
-            "id": "01m4hxw6c8ryysgqkvf953qx8h",
+            "id": "01m4j0rsqn3dmmf0k3j6ad1zv7",
             "verb": "add",
             "published_at": "2026-08-14T12:01:00.000000Z",
             "starts_at": null,
@@ -6706,6 +6815,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -6723,7 +6835,10 @@
           "contexts": 0,
           "origins": 0,
           "results": 0,
-          "instruments": 0
+          "instruments": 0,
+          "locations": 0,
+          "generators": 0,
+          "featured": 0
         }
       }
     ]
@@ -6735,7 +6850,7 @@
     "items": [
       {
         "kind": "group",
-        "id": "grp_c828f785c12d9f10cdb2ea2ae6881466864f5cdc",
+        "id": "grp_djIfcmVwZWF0H2IxOjlhY2NjOTJjODYxMGE5ZDdhOWI5MDE0OTZiYzU3YmRiYjExMjcyM2ZiZGFjOTljZTEwZTAwYzY2MDkxZDhhYmM6MDFtNGowcnNzMTl3dDdzNWR6dnZrcXY1cXM",
         "axis": "repeat",
         "count": 9,
         "verb": "upload",
@@ -6801,6 +6916,9 @@
         "origin": null,
         "result": null,
         "instrument": null,
+        "location": null,
+        "generator": null,
+        "featured": null,
         "sample": {
           "actors": [
             {
@@ -6977,7 +7095,125 @@
           "contexts": [],
           "origins": [],
           "results": [],
-          "instruments": []
+          "instruments": [],
+          "locations": [],
+          "generators": [],
+          "featured": [
+            {
+              "type": "file",
+              "id": "9",
+              "label": "IMG_4082.jpg",
+              "link": {
+                "href": "/files/9",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "street"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/street.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#c2410c",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_4082.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            {
+              "type": "file",
+              "id": "8",
+              "label": "IMG_4072.jpg",
+              "link": {
+                "href": "/files/8",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "arcade"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/arcade.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#4d7c0f",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_4072.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            {
+              "type": "file",
+              "id": "7",
+              "label": "IMG_4062.jpg",
+              "link": {
+                "href": "/files/7",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "sundae"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/sundae.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#15803d",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_4062.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            }
+          ]
         },
         "distinct": {
           "actors": 1,
@@ -6986,12 +7222,15 @@
           "contexts": 0,
           "origins": 0,
           "results": 0,
-          "instruments": 0
+          "instruments": 0,
+          "locations": 0,
+          "generators": 0,
+          "featured": 9
         },
         "children": [
           {
             "kind": "activity",
-            "id": "01m4hxw6fw6en3ef79gdq99p72",
+            "id": "01m4j0rstw3qsxhnvv1kgrrf9q",
             "verb": "upload",
             "published_at": "2026-08-14T12:35:00.000000Z",
             "starts_at": null,
@@ -7094,6 +7333,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -7102,7 +7344,7 @@
           },
           {
             "kind": "activity",
-            "id": "01m4hxw6fmf5yr45t6jr1h7exn",
+            "id": "01m4j0rstn7kznf303ay65p4e5",
             "verb": "upload",
             "published_at": "2026-08-14T12:34:00.000000Z",
             "starts_at": null,
@@ -7205,6 +7447,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -7213,7 +7458,7 @@
           },
           {
             "kind": "activity",
-            "id": "01m4hxw6fd2b0b12qh246z36ss",
+            "id": "01m4j0rstdkrb0rz23hwhan7dy",
             "verb": "upload",
             "published_at": "2026-08-14T12:33:00.000000Z",
             "starts_at": null,
@@ -7316,6 +7561,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -7324,7 +7572,7 @@
           },
           {
             "kind": "activity",
-            "id": "01m4hxw6f7tc73m6psbakjphha",
+            "id": "01m4j0rst5p3shxr31p6stades",
             "verb": "upload",
             "published_at": "2026-08-14T12:32:00.000000Z",
             "starts_at": null,
@@ -7427,6 +7675,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -7435,7 +7686,7 @@
           },
           {
             "kind": "activity",
-            "id": "01m4hxw6ez5e7mh6wxr1y8jmd3",
+            "id": "01m4j0rssyctn93536s844aj5v",
             "verb": "upload",
             "published_at": "2026-08-14T12:31:00.000000Z",
             "starts_at": null,
@@ -7538,6 +7789,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -7546,7 +7800,7 @@
           },
           {
             "kind": "activity",
-            "id": "01m4hxw6eqzrwb1904wn0gdan4",
+            "id": "01m4j0rssqpmawv34mbx57xs8f",
             "verb": "upload",
             "published_at": "2026-08-14T12:30:00.000000Z",
             "starts_at": null,
@@ -7649,6 +7903,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -7657,7 +7914,7 @@
           },
           {
             "kind": "activity",
-            "id": "01m4hxw6eg7434r0694x3c2xaa",
+            "id": "01m4j0rssfvp7qmbz9aqckxj10",
             "verb": "upload",
             "published_at": "2026-08-14T12:29:00.000000Z",
             "starts_at": null,
@@ -7760,6 +8017,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -7768,7 +8028,7 @@
           },
           {
             "kind": "activity",
-            "id": "01m4hxw6e9504s54hdrse6x9aj",
+            "id": "01m4j0rss8rvprm2wjbqha9c33",
             "verb": "upload",
             "published_at": "2026-08-14T12:28:00.000000Z",
             "starts_at": null,
@@ -7871,6 +8131,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -7879,7 +8142,7 @@
           },
           {
             "kind": "activity",
-            "id": "01m4hxw6e25ejxwe2fv4185x2q",
+            "id": "01m4j0rss19wt7s5dzvvkqv5qs",
             "verb": "upload",
             "published_at": "2026-08-14T12:27:00.000000Z",
             "starts_at": null,
@@ -7982,6 +8245,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -7999,7 +8265,10 @@
           "contexts": 0,
           "origins": 0,
           "results": 0,
-          "instruments": 0
+          "instruments": 0,
+          "locations": 0,
+          "generators": 0,
+          "featured": 0
         }
       }
     ]
@@ -8011,7 +8280,7 @@
     "items": [
       {
         "kind": "group",
-        "id": "grp_921dcbca031d0efb26a7cf917a53af976249eca0",
+        "id": "grp_djIfcmVwZWF0H2IxOjQ0NjNiYWEzZmRkNDA3OTg1N2UzNTkwYTM3OGIxZTEzNzM2ODcxY2IyN2U4YzIzNTBlYmU1N2FmYjY0MDcwOGM6MDFtNGowcnN2M3F5MDExbTd5cmVraDhqZnY",
         "axis": "repeat",
         "count": 3,
         "verb": "share",
@@ -8071,6 +8340,9 @@
         "origin": null,
         "result": null,
         "instrument": null,
+        "location": null,
+        "generator": null,
+        "featured": null,
         "sample": {
           "actors": [
             {
@@ -8221,7 +8493,105 @@
           "contexts": [],
           "origins": [],
           "results": [],
-          "instruments": []
+          "instruments": [],
+          "locations": [],
+          "generators": [],
+          "featured": [
+            {
+              "type": "file",
+              "id": "12",
+              "label": "Measurements",
+              "link": {
+                "href": "/files/12",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "note",
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "M",
+                "color": "#0f766e",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            {
+              "type": "file",
+              "id": "11",
+              "label": "Quote from the electrician.pdf",
+              "link": {
+                "href": "/files/11",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "pdf",
+                "photo": null
+              },
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%23b91c1c%22%2F%3E%3Cpath%20d%3D%22M20%2012h17l11%2011v29H20z%22%20fill%3D%22%23fff%22%2F%3E%3Cpath%20d%3D%22M37%2012v11h11%22%20fill%3D%22%23fecaca%22%2F%3E%3Ctext%20x%3D%2234%22%20y%3D%2245%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2211%22%20font-weight%3D%22700%22%20fill%3D%22%23b91c1c%22%20text-anchor%3D%22middle%22%3EPDF%3C%2Ftext%3E%3C%2Fsvg%3E",
+                  "mediaType": "image/svg+xml",
+                  "width": 64,
+                  "height": 64,
+                  "alt": "PDF"
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            {
+              "type": "file",
+              "id": "10",
+              "label": "Cabinet mock-up.jpg",
+              "link": {
+                "href": "/files/10",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "newspapers"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/newspapers.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "CM",
+                "color": "#0f766e",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "Cabinet mock-up.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            }
+          ]
         },
         "distinct": {
           "actors": 1,
@@ -8230,12 +8600,15 @@
           "contexts": 0,
           "origins": 0,
           "results": 0,
-          "instruments": 0
+          "instruments": 0,
+          "locations": 0,
+          "generators": 0,
+          "featured": 3
         },
         "children": [
           {
             "kind": "activity",
-            "id": "01m4hxw6gnzt6faar51n4ytks2",
+            "id": "01m4j0rsvj308eq3wy84z8ey1z",
             "verb": "share",
             "published_at": "2026-08-14T12:58:00.000000Z",
             "starts_at": null,
@@ -8319,6 +8692,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -8327,7 +8703,7 @@
           },
           {
             "kind": "activity",
-            "id": "01m4hxw6gckmbm8v3sgzq3dpzc",
+            "id": "01m4j0rsvbr0qx4sq84bfdh65e",
             "verb": "share",
             "published_at": "2026-08-14T12:57:00.000000Z",
             "starts_at": null,
@@ -8417,6 +8793,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -8425,7 +8804,7 @@
           },
           {
             "kind": "activity",
-            "id": "01m4hxw6g5qq4dxh7dk3my0w2s",
+            "id": "01m4j0rsv3qy011m7yrekh8jfv",
             "verb": "share",
             "published_at": "2026-08-14T12:56:00.000000Z",
             "starts_at": null,
@@ -8522,6 +8901,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -8539,7 +8921,10 @@
           "contexts": 0,
           "origins": 0,
           "results": 0,
-          "instruments": 0
+          "instruments": 0,
+          "locations": 0,
+          "generators": 0,
+          "featured": 0
         }
       }
     ]
@@ -8551,7 +8936,7 @@
     "items": [
       {
         "kind": "group",
-        "id": "grp_8042abb751e0da349a439034bdd57bd32a2f52a8",
+        "id": "grp_djIfcmVwZWF0H2IxOjQwNTI0MDYwZjNhYTMxMDM1NTA2ZmIzNzgzNzRjMmM0ZTIxZDFmYzVhYTllM2U4MmEyY2ZhZmFiZGJiZjY2NTA6MDFtNGowcnN2dDV6MDczYjloNmZjdzI1MDU",
         "axis": "repeat",
         "count": 2,
         "verb": "upload",
@@ -8617,6 +9002,9 @@
         "origin": null,
         "result": null,
         "instrument": null,
+        "location": null,
+        "generator": null,
+        "featured": null,
         "sample": {
           "actors": [
             {
@@ -8755,7 +9143,87 @@
           "contexts": [],
           "origins": [],
           "results": [],
-          "instruments": []
+          "instruments": [],
+          "locations": [],
+          "generators": [],
+          "featured": [
+            {
+              "type": "file",
+              "id": "14",
+              "label": "IMG_5110.jpg",
+              "link": {
+                "href": "/files/14",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "fireworks"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/fireworks.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#0e7490",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_5110.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            {
+              "type": "file",
+              "id": "13",
+              "label": "IMG_5100.jpg",
+              "link": {
+                "href": "/files/13",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "pretzels"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/pretzels.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#4d7c0f",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_5100.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            }
+          ]
         },
         "distinct": {
           "actors": 1,
@@ -8764,12 +9232,15 @@
           "contexts": 0,
           "origins": 0,
           "results": 0,
-          "instruments": 0
+          "instruments": 0,
+          "locations": 0,
+          "generators": 0,
+          "featured": 2
         },
         "children": [
           {
             "kind": "activity",
-            "id": "01m4hxw6h5qqe0n2pd8v64dg12",
+            "id": "01m4j0rsw17dhr4sr8mm79djwt",
             "verb": "upload",
             "published_at": "2026-08-14T13:20:00.000000Z",
             "starts_at": null,
@@ -8872,6 +9343,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -8880,7 +9354,7 @@
           },
           {
             "kind": "activity",
-            "id": "01m4hxw6gyxddd2ws58yq9zq5h",
+            "id": "01m4j0rsvt5z073b9h6fcw2505",
             "verb": "upload",
             "published_at": "2026-08-14T13:19:00.000000Z",
             "starts_at": null,
@@ -8983,6 +9457,9 @@
             "origin": null,
             "result": null,
             "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
             "data": null,
             "tombstoned": [],
             "redundant": false,
@@ -9000,7 +9477,10 @@
           "contexts": 0,
           "origins": 0,
           "results": 0,
-          "instruments": 0
+          "instruments": 0,
+          "locations": 0,
+          "generators": 0,
+          "featured": 0
         }
       }
     ]

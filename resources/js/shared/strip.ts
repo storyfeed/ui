@@ -30,11 +30,33 @@ export function stripMembers(group: GroupNode): ActivityNode[] {
 }
 
 /**
- * The entity a member activity features. The object, until core sends
- * `sample.featured` (0.20); this is the one place that changes.
+ * The entity a member activity features: the role it names in `featured`
+ * (storyfeed/storyfeed#76), none when that is null, and the object before
+ * core sent the field.
  */
 export function featuredOf(member: ActivityNode): FeedEntity | null {
-    return member?.object ?? null;
+    if (!member) return null;
+    if (!('featured' in member)) return member.object ?? null;
+
+    return member.featured ? ((member as Record<string, any>)[member.featured] ?? null) : null;
+}
+
+/**
+ * The entities a strip draws, one per sampled member, newest first: core's
+ * `sample.featured` when it sends one (storyfeed/storyfeed#93), else each
+ * member's own featured entity. With the total of members that feature one.
+ */
+export function stripEntities(group: GroupNode): { entities: FeedEntity[]; total: number } {
+    const featured = group.sample?.featured;
+    if (Array.isArray(featured)) {
+        const total = group.distinct?.featured;
+
+        return { entities: featured, total: Math.max(typeof total === 'number' ? total : group.count ?? 0, featured.length) };
+    }
+
+    const entities = stripMembers(group).map(featuredOf).filter((entity): entity is FeedEntity => Boolean(entity));
+
+    return { entities, total: Math.max(group.count ?? 0, entities.length) };
 }
 
 function tileOf(entity: FeedEntity): StripTile {
@@ -56,10 +78,10 @@ function sameness(tile: StripTile): string {
  * that, three and a "+N" tile counting the members not shown.
  */
 export function strip(group: GroupNode): { tiles: StripTile[]; overflow: number } | null {
-    const all = stripMembers(group).map(featuredOf).filter((entity): entity is FeedEntity => Boolean(entity)).map(tileOf);
+    const { entities, total } = stripEntities(group);
+    const all = entities.map(tileOf);
     if (new Set(all.map(sameness)).size < 2) return null;
 
-    const total = Math.max(group.count ?? 0, all.length);
     const tiles = all.slice(0, total > STRIP_SLOTS ? STRIP_SLOTS - 1 : STRIP_SLOTS);
 
     return { tiles, overflow: total - tiles.length };
