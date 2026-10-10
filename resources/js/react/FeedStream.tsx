@@ -29,13 +29,13 @@ function Divider({
     const gradient = `sf-branch-${useId().replace(/[^\w-]/g, '')}`;
     return (
         <div
-            className={`sf-row sf-divider relative flex items-start gap-(--sf-gap-v) ${style === 'dot' ? 'sf-divider--dot [&_.sf-rail>div:last-child]:mt-1.25' : 'sf-divider--branch'}`}
+            className={`sf-row sf-divider relative flex items-start gap-(--sf-gap-v) ${style === 'dot' ? 'sf-divider--dot [&_.sf-rail>div:last-child]:mt-[calc(var(--spacing)*1.625)]' : 'sf-divider--branch'}`}
         >
             <div className="sf-rail relative flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
                 {style === 'dot' ? (
                     <div
                         aria-hidden="true"
-                        className="sf-rail__node mt-1.25 size-2.25 shrink-0 rounded-full bg-muted-foreground ring-3 ring-background"
+                        className="sf-rail__node mt-[calc(var(--spacing)*1.625)] size-1.5 shrink-0 rounded-full border border-border bg-background"
                     />
                 ) : (
                     // The curve is the corner of a 1px rect on the rail line's column, darkening from the rail's colour to the label's;

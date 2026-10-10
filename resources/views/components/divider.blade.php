@@ -1,9 +1,9 @@
 @props(['label', 'dividerStyle' => 'branch'])
 @php($gradient = 'sf-branch-'.\Illuminate\Support\Str::random(10))
-<div {{ $attributes->class(['sf-row sf-divider relative flex items-start gap-[var(--sf-gap,--spacing(3))]', 'sf-divider--dot [&_.sf-rail>div:last-child]:mt-1.25' => $dividerStyle === 'dot', 'sf-divider--branch' => $dividerStyle !== 'dot']) }}>
+<div {{ $attributes->class(['sf-row sf-divider relative flex items-start gap-[var(--sf-gap,--spacing(3))]', 'sf-divider--dot [&_.sf-rail>div:last-child]:mt-[calc(var(--spacing)*1.625)]' => $dividerStyle === 'dot', 'sf-divider--branch' => $dividerStyle !== 'dot']) }}>
     <div class="sf-rail relative flex w-[var(--sf-gutter,--spacing(8))] shrink-0 flex-col items-center self-stretch">
 @if ($dividerStyle === 'dot')
-            <div aria-hidden="true" class="sf-rail__node mt-1.25 size-2.25 shrink-0 rounded-full bg-muted-foreground ring-3 ring-background"></div>
+            <div aria-hidden="true" class="sf-rail__node mt-[calc(var(--spacing)*1.625)] size-1.5 shrink-0 rounded-full border border-border bg-background"></div>
         <div aria-hidden="true" class="sf-rail__line mt-1 w-px flex-1 bg-border"></div>
 @else
             {{-- The curve is the corner of a 1px rect on the rail line's column, darkening from the rail's colour to the label's; the line continues from its end, leaving a gap above it. --}}
