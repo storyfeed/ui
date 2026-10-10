@@ -112,7 +112,7 @@ export default function FeedStream({
                 <div role="list">
                     {days.map((day, dayIndex) => (
                         <section key={`${day.label}:${dayIndex}`}>
-                            {grouped && (
+                            {grouped && day.label !== null && (
                                 <Divider
                                     label={day.label}
                                     style={dividerStyle}

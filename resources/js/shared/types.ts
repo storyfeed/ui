@@ -84,7 +84,8 @@ export interface FeedImage {
 
 interface BaseNode extends FeedEntities {
     id: string;
-    published_at: string;
+    /** Null for a dateless entry (a composed feed's or a source's): no time is drawn. */
+    published_at: string | null;
     headline_template: string | null;
     /** Pre-rendered fallback for closure-based grammar. */
     headline?: string | null;
@@ -105,7 +106,8 @@ interface BaseNode extends FeedEntities {
 
 export interface ActivityNode extends BaseNode {
     kind: 'activity';
-    verb: string;
+    /** Null for an entry that only has its own headline. */
+    verb: string | null;
     /**
      * The role whose entity this activity features (storyfeed/storyfeed#76),
      * or null when it features none. Absent before core 0.19: the object.

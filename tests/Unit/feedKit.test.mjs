@@ -994,3 +994,32 @@ test('initials and icons size from their own circle, and a badge grows outward f
         for (const fixed of ['[&_svg]:size-3.5', '[&_svg]:size-2.5', 'text-[length:--spacing(2.25)]']) assert.ok(!html.includes(attr(fixed)), fixed);
     }
 });
+
+test('a dateless entry draws no time, no tooltip and no day of its own (storyfeed/storyfeed#127)', async () => {
+    const dateless = { ...activity, id: 'dateless', published_at: null };
+    for (const [path, props] of [['/resources/js/vue/FeedItem.vue', { item: dateless }], ['/resources/js/vue/FeedGroup.vue', { item: { ...group, published_at: null } }]]) {
+        const html = await renderRaw(path, props);
+        assert.match(html, /Ada Lovelace/, path);
+        assert.doesNotMatch(html, /<time|sf-time|Invalid Date|NaN|1970/, path);
+    }
+    const days = async items => (await render('/resources/js/vue/FeedStream.vue', { items })).match(/class="sf-day"/g)?.length ?? 0;
+    const at = (id, published_at) => ({ ...activity, id, published_at });
+    // Like feed.blade.php: a dateless entry neither starts a day nor ends one, so the next dated entry on that day draws no second heading.
+    assert.equal(await days([at('a', '2026-10-07T12:00:00Z'), at('b', null), at('c', '2026-10-07T10:00:00Z'), at('d', '2026-10-05T10:00:00Z')]), 2);
+    const leading = await render('/resources/js/vue/FeedStream.vue', { items: [at('b', null), at('a', '2026-10-07T12:00:00Z')] });
+    assert.equal(leading.match(/class="sf-day"/g).length, 1);
+    assert.equal(await days([at('b', null)]), 0);
+    const { feedDays } = await server.ssrLoadModule('/resources/js/shared/days.ts');
+    assert.deepEqual(feedDays([at('b', null), at('a', '2026-10-07T12:00:00Z'), at('c', null)], Date.parse('2026-10-07T13:00:00Z')).map(day => [day.label, day.items.map(item => item.id)]), [[null, ['b']], ['Today', ['a', 'c']]]);
+});
+
+test('a null verb is left out of the fallback headline (storyfeed/storyfeed#127)', async () => {
+    const item = { ...activity, verb: null, headline_template: null, headline: null, actor: null, object: { ...entity, id: '2', label: 'Order #1001', media: null } };
+    const text = async props => (await renderRaw('/resources/js/vue/FeedHeadline.vue', { entities: item, template: null, headline: null, ...props })).replace(/<!--.*?-->/g, '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+    assert.equal(await text({ verb: null }), 'Someone Order #1001');
+    // The verb, when there is one, keeps a space on both sides.
+    assert.equal(await text({ verb: 'shipped' }), 'Someone shipped Order #1001');
+    const row = await renderRaw('/resources/js/vue/FeedItem.vue', { item });
+    assert.doesNotMatch(row, /null/);
+    assert.match(await renderRaw('/resources/js/vue/FeedItem.vue', { item: { ...item, headline: 'Imported from the archive' } }), /Imported from the archive/);
+});

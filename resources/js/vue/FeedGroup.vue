@@ -152,8 +152,9 @@ const hiddenBeyondChildren = computed(
                 <template v-if="$slots.time">
                     <slot name="time" :node="item" :label="time.label.value" />
                 </template>
+                <!-- A dateless entry draws no time. -->
                 <time
-                    v-else
+                    v-else-if="item.published_at !== null"
                     :datetime="item.published_at"
                     :title="time.full.value"
                     class="sf-time text-sm text-muted-foreground"

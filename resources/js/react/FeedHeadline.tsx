@@ -106,7 +106,7 @@ export default function FeedHeadline({
                         entity={entities.actor ?? null}
                         fallback="Someone"
                     />
-                    {' ' + verb}
+                    {verb && ' ' + verb}
                     {entities.object && (
                         <>
                             {' '}

@@ -25,18 +25,27 @@ export function dayLabel(date: Date, pinned: number | null): string {
     });
 }
 
-export function feedDays<T extends { published_at: string }>(
+/**
+ * A dateless node (`published_at: null`) starts no day and doesn't end one: it
+ * joins the day before it, and the next dated node on that day joins too. One
+ * at the top of the page sits in a day with no label, which draws no divider.
+ */
+export function feedDays<T extends { published_at: string | null }>(
     items: T[],
     pinned: number | null,
 ) {
-    const days: { label: string; items: T[] }[] = [];
+    const days: { label: string | null; items: T[] }[] = [];
     let currentKey: string | null = null;
     for (const item of items) {
-        const date = new Date(item.published_at);
-        const key = date.toDateString();
-        if (key !== currentKey) {
-            currentKey = key;
-            days.push({ label: dayLabel(date, pinned), items: [] });
+        if (item.published_at === null) {
+            if (days.length === 0) days.push({ label: null, items: [] });
+        } else {
+            const date = new Date(item.published_at);
+            const key = date.toDateString();
+            if (key !== currentKey) {
+                currentKey = key;
+                days.push({ label: dayLabel(date, pinned), items: [] });
+            }
         }
         days[days.length - 1]!.items.push(item);
     }
