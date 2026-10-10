@@ -4,7 +4,7 @@
 
 ### Changed
 
-- The branch divider is now the default, in Blade, Vue and React (ui#34): day headings (Today, Yesterday, dates) and per-item `dividers` draw as a curve off the rail into the label, the joint storyfeed.dev uses, instead of a dot on the rail. The curve grows out of the rail line itself: the same 1px column, x and border colour, with the line running unbroken through each divider (the first divider of a feed starts the line at its curve), and it meets the label at the middle of its cap height. It is now drawn with CSS borders rather than an SVG, so a `stroke` rule on `.sf-rail__branch` no longer applies; style it with `border-color` like `.sf-rail__line`. Pass `divider-style="dot"` (Blade, Vue) or `dividerStyle="dot"` (React) for the old look.
+- The branch divider is now the default, in Blade, Vue and React (ui#34): day headings (Today, Yesterday, dates) and per-item `dividers` draw as a curve off the rail into the label, the joint storyfeed.dev uses, instead of a dot on the rail. The curve sits on the rail line's own column, 1px wide in the border colour. The line above stops a small, fixed gap before the curve, the line below continues from the curve's end, and the curve meets the label at the middle of its cap height. It is now drawn with CSS borders rather than an SVG, so a `stroke` rule on `.sf-rail__branch` no longer applies; style it with `border-color` like `.sf-rail__line`. Pass `divider-style="dot"` (Blade, Vue) or `dividerStyle="dot"` (React) for the old look.
 
 ## v0.7.0 - 2026-10-10
 

@@ -78,7 +78,7 @@ const days = useFeedDays(toRef(() => nodes.value));
                         <div v-else aria-hidden="true" class="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap)-var(--spacing)*1.5)] rounded-tl-[calc(var(--spacing)*2)] border-t border-l border-border" />
                         <div
                             aria-hidden="true"
-                            :class="['sf-rail__line w-px flex-1 bg-border', dividerStyle === 'dot' ? 'mt-1' : { 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]': dayIndex === 0 }]"
+                            :class="['sf-rail__line w-px flex-1 bg-border', dividerStyle === 'dot' ? 'mt-1' : 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]']"
                         />
                     </div>
                     <h2 class="sf-day m-0 border-0 pt-0 pb-5 text-xs leading-[1.6] font-semibold tracking-[0.05em] text-muted-foreground uppercase">{{ day.label }}</h2>
@@ -101,7 +101,7 @@ const days = useFeedDays(toRef(() => nodes.value));
                             <div v-else aria-hidden="true" class="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap)-var(--spacing)*1.5)] rounded-tl-[calc(var(--spacing)*2)] border-t border-l border-border" />
                             <div
                                 aria-hidden="true"
-                                :class="['sf-rail__line w-px flex-1 bg-border', dividerStyle === 'dot' ? 'mt-1' : { 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]': !grouped && dayIndex === 0 && index === 0 }]"
+                                :class="['sf-rail__line w-px flex-1 bg-border', dividerStyle === 'dot' ? 'mt-1' : 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]']"
                             />
                         </div>
                         <h2 class="sf-day m-0 border-0 pt-0 pb-5 text-xs leading-[1.6] font-semibold tracking-[0.05em] text-muted-foreground uppercase">{{ dividers[item.id] }}</h2>

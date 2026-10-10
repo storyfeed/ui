@@ -21,11 +21,9 @@ export interface FeedStreamProps extends NodeProps {
 function Divider({
     label,
     style,
-    first,
 }: {
     label: string;
     style: 'dot' | 'branch';
-    first: boolean;
 }) {
     return (
         <div
@@ -38,7 +36,7 @@ function Divider({
                         className="sf-rail__node mt-1.25 size-2.25 shrink-0 rounded-full bg-muted-foreground ring-3 ring-background"
                     />
                 ) : (
-                    // The curve shares the rail line's 1px column and colour; the line runs through it unless nothing is above.
+                    // The curve shares the rail line's 1px column and colour; the line continues from its end, leaving a gap above it.
                     <div
                         aria-hidden="true"
                         className="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap)-var(--spacing)*1.5)] rounded-tl-[calc(var(--spacing)*2)] border-t border-l border-border"
@@ -46,7 +44,7 @@ function Divider({
                 )}
                 <div
                     aria-hidden="true"
-                    className={`sf-rail__line w-px flex-1 bg-border${style === 'dot' ? ' mt-1' : first ? ' mt-[calc(0.5625em-0.5px+var(--spacing)*2)]' : ''}`}
+                    className={`sf-rail__line w-px flex-1 bg-border ${style === 'dot' ? 'mt-1' : 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]'}`}
                 />
             </div>
             <h2 className="sf-day m-0 border-0 pt-0 pb-5 text-xs leading-[1.6] font-semibold tracking-[0.05em] text-muted-foreground uppercase">
@@ -92,7 +90,6 @@ export default function FeedStream({
                                 <Divider
                                     label={day.label}
                                     style={dividerStyle}
-                                    first={dayIndex === 0}
                                 />
                             )}
                             {day.items.map((item, i) => (
@@ -101,11 +98,6 @@ export default function FeedStream({
                                         <Divider
                                             label={dividers[item.id]}
                                             style={dividerStyle}
-                                            first={
-                                                !grouped &&
-                                                dayIndex === 0 &&
-                                                i === 0
-                                            }
                                         />
                                     )}
                                     <FeedNodeView
