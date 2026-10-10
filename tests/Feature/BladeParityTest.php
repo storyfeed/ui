@@ -24,7 +24,8 @@ it('keeps the four rail configurations honest across absent and multiple actors'
         ->and(Rail::slots('activity', 1, true))->toBe(['disc' => 'activity', 'badge' => 'actor'])
         ->and(Rail::slots('actor-only', 0, true))->toBe(['disc' => 'activity', 'badge' => 'none'])
         ->and(Rail::slots('activity-only', 1, false))->toBe(['disc' => 'actor', 'badge' => 'none'])
-        ->and(Rail::slots('actor', 2, true))->toBe(['disc' => 'actor', 'badge' => 'none'])
+        ->and(Rail::slots('actor', 2, true))->toBe(['disc' => 'actor', 'badge' => 'activity'])
+        ->and(Rail::slots('actor', 3, true))->toBe(['disc' => 'actor', 'badge' => 'activity'])
         ->and(Rail::slots('activity', 2, true))->toBe(['disc' => 'activity', 'badge' => 'none'])
         ->and(Rail::slots('actor', 1, true, true))->toBe(['disc' => 'actor', 'badge' => 'none'])
         ->and(Rail::slots(null, 0, false))->toBe(['disc' => 'none', 'badge' => 'none']);
@@ -325,3 +326,15 @@ it('wraps a long headline inside its column instead of running off a narrow feed
     expect(Blade::render('<x-storyfeed::feed :items="[$item]" :grouped="false" />', compact('item')))
         ->toMatch('/class="sf-headline[^"]*\[overflow-wrap:anywhere\]/');
 })->with(['activity', 'group']);
+
+it('stacks several actors tightly behind the front face, which keeps its verb badge', function () {
+    $item = ['kind' => 'group', 'headline' => 'Ana, Ben and Cara posted', 'count' => 3, 'children' => [], 'glyph' => 'file-up',
+        'sample' => ['actors' => [['id' => 'a', 'label' => 'Ana'], ['id' => 'b', 'label' => 'Ben'], ['id' => 'c', 'label' => 'Cara'], ['id' => 'd', 'label' => 'Dev']]]];
+    $rail = explode('class="sf-body', Blade::render('<x-storyfeed::feed :items="[$item]" rail="actor" />', compact('item')))[0];
+    expect(substr_count($rail, 'sf-avatar--md'))->toBe(3)
+        ->and(substr_count($rail, 'sf-badge absolute'))->toBe(1)
+        ->and($rail)->toContain('-mt-[calc(var(--sf-disc)*3/4)]')->not->toContain('sf-avatar--badge');
+    // A face badge never stands for several actors.
+    $rail = explode('class="sf-body', Blade::render('<x-storyfeed::feed :items="[$item]" rail="activity" />', compact('item')))[0];
+    expect($rail)->not->toContain('sf-avatar--badge');
+});

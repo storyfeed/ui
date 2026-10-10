@@ -22,6 +22,7 @@ final class Rail
         $other = $primary === 'actor' ? 'activity' : 'actor';
         $disc = $has[$primary] ? $primary : ($has[$other] ? $other : 'none');
 
-        return ['disc' => $disc, 'badge' => $disc === $primary && $has[$secondary] && $actors <= 1 ? $secondary : 'none'];
+        // A stack keeps its verb badge; only a face badge on several actors is suppressed (ui#25).
+        return ['disc' => $disc, 'badge' => $disc === $primary && $has[$secondary] && ($secondary !== 'actor' || $actors <= 1) ? $secondary : 'none'];
     }
 }

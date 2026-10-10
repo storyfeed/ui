@@ -4305,5 +4305,366 @@
         "glyph": "file-up"
       }
     ]
+  },
+  {
+    "name": "Rail stacks",
+    "rail": "actor",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "stack-one",
+        "verb": "post",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actor posted an update",
+        "actor": {
+          "type": "person",
+          "id": "ana",
+          "label": "Ana Ortiz",
+          "url": "#ana",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": null,
+        "target": null,
+        "context": null,
+        "glyph": "file-up"
+      },
+      {
+        "kind": "group",
+        "id": "stack-two",
+        "axis": "repeat",
+        "count": 2,
+        "verb": "post",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actors posted updates",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Ortiz",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "ben",
+              "label": "Ben Okafor",
+              "url": "#ben",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": []
+        },
+        "distinct": {
+          "actors": 2,
+          "objects": 0
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "stack-two-c",
+            "verb": "post",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline_template": ":actor posted an update",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Ortiz",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": null,
+            "target": null,
+            "context": null,
+            "glyph": "file-up"
+          }
+        ]
+      },
+      {
+        "kind": "group",
+        "id": "stack-three",
+        "axis": "repeat",
+        "count": 4,
+        "verb": "post",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actors posted updates",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Ortiz",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "ben",
+              "label": "Ben Okafor",
+              "url": "#ben",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "cara",
+              "label": "Cara Lindqvist",
+              "url": "#cara",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "dev",
+              "label": "Dev Patel",
+              "url": "#dev",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": []
+        },
+        "distinct": {
+          "actors": 4,
+          "objects": 0
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "stack-three-c",
+            "verb": "post",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline_template": ":actor posted an update",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Ortiz",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": null,
+            "target": null,
+            "context": null,
+            "glyph": "file-up"
+          }
+        ]
+      },
+      {
+        "kind": "group",
+        "id": "stack-media",
+        "axis": "repeat",
+        "count": 3,
+        "verb": "posted",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actors posted :count updates",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Ortiz",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "ben",
+              "label": "Ben Okafor",
+              "url": "#ben",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "cara",
+              "label": "Cara Lindqvist",
+              "url": "#cara",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": [
+            {
+              "type": "person",
+              "id": "photo",
+              "label": "a photograph",
+              "url": "#ada",
+              "media": {
+                "preview": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+                  "width": 160,
+                  "height": 100,
+                  "alt": "Illustrated preview"
+                }
+              },
+              "data": null,
+              "tombstone": null,
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "image": "preview",
+                  "caption": "Sample photograph"
+                }
+              ]
+            },
+            {
+              "type": "person",
+              "id": "photo2",
+              "label": "a photograph",
+              "url": "#ada",
+              "media": {
+                "preview": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+                  "width": 160,
+                  "height": 100,
+                  "alt": "Illustrated preview"
+                }
+              },
+              "data": null,
+              "tombstone": null,
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "image": "preview",
+                  "caption": "Sample photograph"
+                }
+              ]
+            }
+          ]
+        },
+        "distinct": {
+          "actors": 3,
+          "objects": 2
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "child",
+            "verb": "posted",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline_template": ":actor posted :object",
+            "actor": {
+              "type": "person",
+              "id": "ada",
+              "label": "Ada Lovelace",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "object-0",
+              "label": "a status",
+              "url": "#ada",
+              "media": {
+                "preview": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2250%22%20r%3D%2228%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+                  "width": 160,
+                  "height": 100,
+                  "alt": "Illustrated preview"
+                }
+              },
+              "data": null,
+              "tombstone": null,
+              "body": []
+            },
+            "target": null,
+            "context": null,
+            "glyph": "file-up"
+          }
+        ]
+      },
+      {
+        "kind": "group",
+        "id": "stack-last",
+        "axis": "repeat",
+        "count": 3,
+        "verb": "post",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actors posted updates",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Ortiz",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "ben",
+              "label": "Ben Okafor",
+              "url": "#ben",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "cara",
+              "label": "Cara Lindqvist",
+              "url": "#cara",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": []
+        },
+        "distinct": {
+          "actors": 3,
+          "objects": 0
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "stack-last-c",
+            "verb": "post",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline_template": ":actor posted an update",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Ortiz",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": null,
+            "target": null,
+            "context": null,
+            "glyph": "file-up"
+          }
+        ]
+      }
+    ]
   }
 ]

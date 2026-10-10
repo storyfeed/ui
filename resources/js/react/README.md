@@ -104,8 +104,9 @@ stays pinned. This initial ISO presentation is React-specific.
 
 `rail` takes `actor`, `activity`, `actor-only`, `activity-only`, or a structured
 `Rail`. `childRail` independently overrides expanded members; dense children
-suppress badges. Groups sample at most three faces and never imply that one face
-represents many. Explicit singular payload slots pin roles; `distinct=1` does not.
+suppress badges. Groups sample at most three faces, drawn as a tight stack: the
+first face in full with its glyph badge, the others peeking out a quarter disc
+below it. A face badge never stands for several actors. Explicit singular payload slots pin roles; `distinct=1` does not.
 
 Groups use native `<details>` with keyboard disclosure and no JavaScript state.
 Unnamed groups start open. True member totals and truncation remain visible.

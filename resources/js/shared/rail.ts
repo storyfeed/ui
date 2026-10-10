@@ -97,10 +97,11 @@ export function other(slot: RailSlot): RailSlot {
  * fallen-back disc is already holding the secondary's subject, and a badge
  * repeating it would be the same fact twice in 2rem.
  *
- * MORE THAN ONE FACE SUPPRESSES IT. Geometry: a badge over a stacked pair sits
- * on the seam between two discs and reads as a third. Honesty: a single face on
- * a group of several actors is the one-actor lie the sample list exists to
- * refuse. Either reason alone would do; together they are non-negotiable.
+ * A STACK KEEPS ITS VERB BADGE. Several actors draw as one front face with
+ * the others peeking out a quarter disc below it, so the badge sits on the
+ * front face's corner exactly as on a single actor's (ui#25). What more than
+ * one face still suppresses is a FACE badge: a single face on a group of
+ * several actors is the one-actor lie the sample list exists to refuse.
  */
 export function railFor(
     of: Rail,
@@ -121,7 +122,7 @@ export function railFor(
           : 'none';
 
     const badge =
-        disc === of.primary && available[of.secondary] && has.actors <= 1
+        disc === of.primary && available[of.secondary] && (of.secondary !== 'actor' || has.actors <= 1)
             ? of.secondary
             : 'none';
 

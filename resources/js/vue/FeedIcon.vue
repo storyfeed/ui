@@ -117,7 +117,7 @@ const intent = computed(() =>
 <template>
     <span
         class="sf-icon-slot"
-        :class="variant === 'badge' ? 'sf-badge absolute top-[calc(var(--sf-disc)-var(--sf-badge)+--spacing(0.5))] left-[calc(50%+var(--sf-disc)/2-var(--sf-badge))] flex size-(--sf-badge) items-center justify-center rounded-full bg-background text-muted-foreground ring-[length:--spacing(0.375)] ring-background [&_svg]:size-2.5' : 'sf-icon flex size-[var(--sf-disc,--spacing(8))] shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted-foreground [&_svg]:size-3.5'"
+        :class="variant === 'badge' ? 'sf-badge absolute z-30 top-[calc(var(--sf-disc)-var(--sf-badge)+--spacing(0.5))] left-[calc(50%+var(--sf-disc)/2-var(--sf-badge))] flex size-(--sf-badge) items-center justify-center rounded-full bg-background text-muted-foreground ring-[length:--spacing(0.375)] ring-background [&_svg]:size-2.5' : 'sf-icon flex size-[var(--sf-disc,--spacing(8))] shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted-foreground [&_svg]:size-3.5'"
         :data-sf-intent="intent"
         aria-hidden="true"
     >

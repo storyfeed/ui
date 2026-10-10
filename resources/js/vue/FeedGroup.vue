@@ -34,9 +34,9 @@ const resolved = computed<Rail>(() =>
     parseRail(props.rail === null ? 'actor-only' : props.rail),
 );
 
-// A group's faces come from its sample, capped at three — and more than one of
-// them suppresses the badge, because a single face over a group of several
-// actors is the one-actor lie the sample list exists to refuse.
+// A group's faces come from its sample, capped at three, drawn as a tight stack:
+// the first in full with its glyph badge, the others peeking out a quarter disc
+// below it. A face BADGE never stands for several actors (see `railFor()`).
 const faces = computed(() => (props.item.sample.actors ?? []).slice(0, 3));
 
 const slots = computed(() =>
@@ -115,10 +115,10 @@ const hiddenBeyondChildren = computed(
 
 <template>
     <div class="sf-row relative flex items-start gap-(--sf-gap)">
-        <!-- Faces overlap downward on the rail without shifting the text column. -->
+        <!-- Several faces stack tightly: the first in full, with its badge, and the others a quarter disc below and behind it, without shifting the text column. -->
         <div class="sf-rail box-content flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
             <div class="sf-rail__disc relative flex w-(--sf-disc) shrink-0">
-                <div v-if="slots.disc === 'actor'" class="sf-avatars flex flex-col [&>*+*]:-mt-3 [&>:first-child:nth-last-child(n+2)]:z-20 [&>:nth-child(2)]:z-10 [&>:nth-child(3)]:z-0">
+                <div v-if="slots.disc === 'actor'" class="sf-avatars flex flex-col [&>*+*]:-mt-[calc(var(--sf-disc)*3/4)] [&>:first-child:nth-last-child(n+2)]:z-20 [&>:nth-child(2)]:z-10 [&>:nth-child(3)]:z-0">
                     <EntityAvatar
                         v-for="actor in faces"
                         :key="actor.id"

@@ -3,11 +3,11 @@
     $faces = $item->isGroup() ? $item->actors()->take(3) : collect([$item->actor()])->filter();
     $slots = \Storyfeed\Ui\Support\Rail::slots($rail, $faces->count(), $item->glyph() !== null, $dense);
 @endphp
-{{-- Faces overlap downward on the rail without shifting the text column. --}}
+{{-- Several faces stack tightly: the first in full, with its badge, and the others a quarter disc below and behind it, without shifting the text column. --}}
 <div class="sf-rail box-content flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
     <div class="sf-rail__disc relative flex w-(--sf-disc) shrink-0">
 @if ($slots['disc'] === 'actor')
-            <div class="sf-avatars flex flex-col [&>*+*]:-mt-3 [&>:first-child:nth-last-child(n+2)]:z-20 [&>:nth-child(2)]:z-10 [&>:nth-child(3)]:z-0">
+            <div class="sf-avatars flex flex-col [&>*+*]:-mt-[calc(var(--sf-disc)*3/4)] [&>:first-child:nth-last-child(n+2)]:z-20 [&>:nth-child(2)]:z-10 [&>:nth-child(3)]:z-0">
 @foreach ($faces as $face)
 @if (isset($renderers['avatar']))
                         {!! $renderers['avatar']($face, 'md') !!}

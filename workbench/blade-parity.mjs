@@ -84,7 +84,7 @@ try {
                     await frames[0].locator('.sf-toggle').evaluateAll(buttons => buttons.forEach(button => { if (button.getAttribute('aria-expanded') === 'false') button.click(); }));
                     for (const frame of frames.slice(1)) await frame.locator('details').evaluateAll(nodes => nodes.forEach(node => node.open = true));
                 }
-                // A stack starts on the same rail as a single face, then grows downward.
+                // A stack starts on the same rail as a single face, with its badge, and each face behind peeks a quarter disc lower.
                 if (text === 'default') for (let i = 0; i < frames.length; i++) {
                     const fixture = frames[i].locator('.example:has(>h2:text-is("Stacked actors and truncated members"))');
                     const joints = await fixture.evaluate(section => {
@@ -93,9 +93,11 @@ try {
                             const rail = row.querySelector(':scope > .sf-rail');
                             const elements = [...rail.querySelectorAll('.sf-avatar')];
                             const faces = elements.map(e => e.getBoundingClientRect());
+                            // A face in front owns each overlap; each face behind owns the strip that peeks out below.
                             const overlapOwners = faces.slice(1).map((r, i) => {
-                                const hit = document.elementFromPoint(r.x + r.width / 2, r.y + 6);
-                                return hit?.closest('.sf-avatar') === elements[i];
+                                const owner = elements.indexOf(document.elementFromPoint(r.x + r.width / 2, r.y + 6)?.closest('.sf-avatar'));
+                                const peek = document.elementFromPoint(r.x + r.width / 2, r.bottom - 2)?.closest('.sf-avatar');
+                                return owner >= 0 && owner <= i && peek === elements[i + 1];
                             });
                             const before = faces.map(r => [r.x, r.y, r.width, r.height]);
                             const savedZ = elements.map(e => e.style.zIndex);
@@ -124,12 +126,12 @@ try {
                         assert.equal(joint.faces[0].y - joint.top, first.y - joints[0].top, 'first face vertical position');
                         assert.equal(joint.head, joints[0].head, 'headline aligns with single actor');
                         assert.equal(joint.line, first.x + first.w / 2, `${renderers[i]}: rail through first face`);
-                        assert.equal(joint.badge, 0);
+                        assert.equal(joint.badge, joints[0].badge, `${renderers[i]}: a stack keeps the front face's badge`);
                         assert.deepEqual(joint.before, joint.withoutOrder, 'paint order does not change geometry');
-                        assert.ok(joint.overlapOwners.every(Boolean), 'upper face owns each visible overlap');
+                        assert.ok(joint.overlapOwners.every(Boolean), 'a face in front owns each overlap and each face behind its peeking strip');
                         joint.faces.slice(1).forEach((face, j) => {
                             assert.equal(face.x, first.x, 'faces share the rail centre');
-                            assert.equal(face.y, joint.faces[j].y + face.h - 12, 'retain 12px vertical overlap');
+                            assert.equal(face.y, joint.faces[j].y + face.h / 4, 'each face behind peeks a quarter disc lower');
                             assert.ok(Number(joint.faces[j].z) > Number(face.z), 'earlier face paints above the next');
                         });
                         const last = joint.faces.at(-1);

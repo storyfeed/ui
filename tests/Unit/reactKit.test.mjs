@@ -423,9 +423,10 @@ test('all rail configurations preserve fallback and dense/crowd badge suppressio
             kit.railFor(kit.rail(name), { actors: 0, glyph: false }),
             { disc: 'none', badge: 'none' },
         );
+        // A stack keeps its verb badge; a face badge never stands for several actors.
         assert.equal(
             kit.railFor(kit.rail(name), { actors: 3, glyph: true }).badge,
-            'none',
+            kit.rail(name).secondary === 'activity' ? 'activity' : 'none',
         );
     }
     assert.deepEqual(
@@ -452,7 +453,10 @@ test('all rail configurations preserve fallback and dense/crowd badge suppressio
     });
     assert.equal((html.split('sf-avatars')[1].split('</div>')[0].match(/sf-avatar--md/g) ?? []).length, 3);
     assert.doesNotMatch(html, /padding-right/);
-    assert.doesNotMatch(html, /sf-badge absolute/);
+    // The front face keeps its verb badge, exactly once; a face badge never stands for the crowd.
+    assert.equal((html.match(/sf-badge absolute/g) ?? []).length, 1);
+    assert.doesNotMatch(html, /sf-avatar--badge/);
+    assert.match(html, /-mt-\[calc\(var\(--sf-disc\)\*3\/4\)\]/);
 });
 test('body discovery handles current/historical names, depth bounds and unknown tokens', () => {
     const form = { $body: 'Storyfeed/Body/File', name: 'old.pdf' };

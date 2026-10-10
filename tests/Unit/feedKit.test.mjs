@@ -464,7 +464,8 @@ test('all rail configurations retain honest fallback and badge suppression', asy
         const configured = rail(name);
         assert.deepEqual(railFor(configured, { actors: 0, glyph: false }), { disc: 'none', badge: 'none' });
         assert.equal(railFor(withoutSecondary(configured), { actors: 1, glyph: true }).badge, 'none');
-        assert.equal(railFor(configured, { actors: 3, glyph: true }).badge, 'none');
+        // A stack keeps its verb badge; a face badge never stands for several actors.
+        assert.equal(railFor(configured, { actors: 3, glyph: true }).badge, configured.secondary === 'activity' ? 'activity' : 'none');
     }
     assert.deepEqual(railFor(rail('actor'), { actors: 0, glyph: true }), { disc: 'activity', badge: 'none' });
     assert.deepEqual(railFor(rail('activity'), { actors: 1, glyph: false }), { disc: 'actor', badge: 'none' });
@@ -761,7 +762,12 @@ test('actor rails show glyph badges and childRail independently selects glyph-on
     assert.doesNotMatch(children, /sf-avatar|sf-badge/);
     const crowd = await render('/resources/js/vue/FeedGroup.vue', { item: { ...group, sample: { actors: [activity.actor, { ...activity.actor, id: '2' }, { ...activity.actor, id: '3' }] } }, rail: 'actor' });
     assert.equal((crowd.split('sf-avatars')[1].split('</div>')[0].match(/sf-avatar--md/g) ?? []).length, 3);
-    assert.doesNotMatch(crowd, /sf-badge|padding-right/);
+    // The front face keeps its verb badge, exactly once; a face badge never stands for the crowd.
+    assert.equal((crowd.match(/sf-badge/g) ?? []).length, 1);
+    assert.doesNotMatch(crowd, /sf-avatar--badge|padding-right/);
+    const pair = { ...group, sample: { actors: [activity.actor, { ...activity.actor, id: '2' }] } };
+    assert.match(await renderRaw('/resources/js/vue/FeedGroup.vue', { item: pair, rail: 'actor' }), /-mt-\[calc\(var\(--sf-disc\)\*3\/4\)\]/);
+    assert.doesNotMatch(await renderRaw('/resources/js/vue/FeedGroup.vue', { item: pair, rail: 'activity' }), /sf-avatar--badge/);
 });
 
 test('hosts can choose below placement for automatic MediaObject bodies', async () => {
