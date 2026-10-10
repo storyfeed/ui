@@ -2,14 +2,22 @@ import { imageOf } from '../../resources/js/shared/body';
 import type { FeedEntity, GroupNode } from '../../resources/js/shared/types';
 
 /**
- * Strip policies to compare (scratchpad 680). Each rewrites only the group's
+ * Strip policies to compare (scratchpad 680). Most rewrite only the group's
  * `sample.featured` / `distinct.featured`, so the real, unchanged kit draws
- * the result: an empty list draws no strip.
+ * the result (an empty list draws no strip). A `mock` variant suppresses the
+ * kit's strip and draws `MockStrip` in its place, for tiles the kit lacks.
  */
-export type Variant = { key: string; title: string; rule: string; group: GroupNode };
+export type MockTile = { label: string; image: Record<string, any> | null };
+export type Variant = { key: string; title: string; rule: string; group: GroupNode; mock?: { tiles: MockTile[]; overflow: number } };
 
-const photo = (entity: FeedEntity) => Boolean(imageOf(entity));
-const icon = (entity: FeedEntity) => Boolean(!entity.tombstone && (entity as any).media?.icon?.src);
+/** Ruled 2026-10-10: a real photo/image, or an icon the app declared (media.icon). */
+const pictureOf = (entity: FeedEntity): Record<string, any> | null => {
+    const image = imageOf(entity);
+    if (image) return image;
+    const icon = !entity.tombstone ? (entity as any).media?.icon : null;
+
+    return icon?.src ? { ...icon, alt: icon.alt ?? entity.label ?? '' } : null;
+};
 
 function withStrip(group: GroupNode, featured: FeedEntity[], total?: number): GroupNode {
     const copy = structuredClone(group) as any;
@@ -20,6 +28,15 @@ function withStrip(group: GroupNode, featured: FeedEntity[], total?: number): Gr
 }
 
 const none = (group: GroupNode) => withStrip(group, [], 0);
+
+/** Every sampled member as a tile: its picture, else a quiet name tile. Mirrors the kit's 4 slots. */
+function nameTiles(group: GroupNode): { tiles: MockTile[]; overflow: number } {
+    const featured = (group.sample.featured ?? []) as FeedEntity[];
+    const tiles = featured.map(entity => ({ label: entity.label ?? '', image: pictureOf(entity) }))
+        .slice(0, group.count > 4 ? 3 : 4);
+
+    return { tiles, overflow: group.count - tiles.length };
+}
 
 export function variants(group: GroupNode): Variant[] {
     const current: Variant = { key: 'current', title: 'Current', rule: 'One tile per member: its picture, else its initials.', group };
@@ -35,31 +52,23 @@ export function variants(group: GroupNode): Variant[] {
     }
 
     const featured = (group.sample.featured ?? []) as FeedEntity[];
-    const withPhoto = featured.filter(photo);
-    const withPicture = featured.filter(entity => photo(entity) || icon(entity));
+    const pictured = featured.filter(entity => pictureOf(entity));
 
-    if (withPicture.length === 0) {
-        return [current, { key: 'refined', title: 'Refined', rule: 'One actor, no pictures: no strip, just the headline and Show all.', group: none(group) }];
-    }
-
-    if (withPicture.length === featured.length && withPhoto.length === 0) {
+    if (pictured.length === 0) {
         return [
             current,
-            { key: 'icon-counts', title: 'Refined, icon counts', rule: 'A declared media.icon is a real picture: the strip draws the icons.', group },
-            { key: 'photos-only', title: 'Refined, photos only', rule: 'Only an Image body or preview counts: no strip.', group: none(group) },
+            { key: 'refined', title: 'Refined: no strip', rule: 'One actor, nothing pictured: just the headline and Show all.', group: none(group) },
+            { key: 'names', title: 'Name tiles only', rule: 'Mock: every member as a quiet name tile, the whole label.', group: none(group), mock: nameTiles(group) },
         ];
     }
 
-    if (withPicture.length === featured.length) {
-        return [current, { key: 'refined', title: 'Refined', rule: 'Every member has a picture: the strip, as today.', group }];
+    if (pictured.length === featured.length) {
+        return [current, { key: 'refined', title: 'Refined', rule: 'Every member pictured (a photo, or an icon the app declared): the strip, as today.', group }];
     }
-
-    const most = withPicture.length * 2 > featured.length;
 
     return [
         current,
-        { key: 'a', title: '(a) Pictured only', rule: 'Tiles only for members with pictures; "+N" counts the rest.', group: withStrip(group, withPicture, group.count) },
-        { key: 'b', title: '(b) All or nothing', rule: 'A strip only when every member has a picture.', group: none(group) },
-        { key: 'c', title: '(c) Most', rule: `A strip when most sampled members have one (${withPicture.length} of ${featured.length}); the rest fall back to initials.`, group: most ? group : none(group) },
+        { key: 'a', title: '(a) Pictured only', rule: 'Picked: tiles only for pictured members; "+N" counts the rest.', group: withStrip(group, pictured, group.count) },
+        { key: 'a-prime', title: "(a') Pictured + name tiles", rule: 'Mock: unpictured members as quiet name tiles instead of initials.', group: none(group), mock: nameTiles(group) },
     ];
 }
