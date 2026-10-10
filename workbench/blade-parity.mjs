@@ -116,7 +116,8 @@ try {
                             return { faces: faces.map(r => ({ x: r.x - disc.x, y: r.y - disc.y, w: r.width, h: r.height })), disc: { x: disc.x, y: disc.y - row.getBoundingClientRect().y, w: disc.width, h: disc.height },
                                 labels: elements.map(e => [e.getAttribute('aria-label'), e.textContent.trim()]),
                                 line: line ? line.x + line.width / 2 : null, lineY: line ? line.y - row.getBoundingClientRect().y : null, head: head.x,
-                                badge: rail.querySelectorAll('.sf-badge').length, overlap };
+                                badge: rail.querySelectorAll('.sf-badge').length, overlap,
+                                badgeBox: (b => b && { right: b.right - disc.x, bottom: b.bottom - disc.y, w: b.width, h: b.height })(rail.querySelector('.sf-badge')?.getBoundingClientRect()) };
                         });
                     });
                     assert.equal(joints.length, 4);
@@ -137,6 +138,11 @@ try {
                         assert.equal(joint.line, single.line, `${renderers[i]}: the rail runs through the pair's centre`);
                         assert.equal(joint.lineY, single.lineY, `${renderers[i]}: the line starts where it does under one face`);
                         assert.equal(joint.badge, single.badge, `${renderers[i]}: the pair keeps the front face's badge`);
+                        // Jasper's pick (ui#25 (a)): a smaller badge that balances the smaller faces, anchored where every other row's sits.
+                        near(joint.badgeBox.w, d * 11 / 32, 'the pair badge is 11/32 of the disc'); near(joint.badgeBox.h, d * 11 / 32, 'the pair badge is round');
+                        near(joint.badgeBox.right, single.badgeBox.right, 'the pair badge keeps the single badge\'s right edge');
+                        near(joint.badgeBox.bottom, single.badgeBox.bottom, 'the pair badge keeps the single badge\'s bottom edge');
+                        assert.ok(single.badgeBox.w > joint.badgeBox.w, `${renderers[i]}: a single actor's badge keeps its size`);
                     }
                     assert.ok(joints[0].badge > 0, 'single actor retains activity badge');
                     await fixture.screenshot({ path: `${output}/k2-${renderers[i]}-${state}-${theme}-${width}.png` });

@@ -10,7 +10,7 @@
     only the front face shows, filling it. The count stays in the headline.
 --}}
 <div class="sf-rail box-content flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
-    <div class="sf-rail__disc relative flex w-(--sf-disc) shrink-0">
+    <div class="sf-rail__disc relative flex w-(--sf-disc) shrink-0 [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge:--spacing(2.75)] [&:has(>.sf-avatars)>.sf-badge_svg]:size-2">
 @if ($slots['disc'] === 'actor' && $faces->count() > 1)
             <div class="sf-avatars @container/pair relative size-(--sf-disc) shrink-0">
 @foreach ($faces as $face)

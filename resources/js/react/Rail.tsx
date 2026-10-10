@@ -51,7 +51,7 @@ export default function Rail({
         );
     return (
         <div className="sf-rail box-content flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
-            <div className="sf-rail__disc relative flex w-(--sf-disc) shrink-0">
+            <div className="sf-rail__disc relative flex w-(--sf-disc) shrink-0 [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge:--spacing(2.75)] [&:has(>.sf-avatars)>.sf-badge_svg]:size-2">
                 {disc}
                 {slots.badge === 'activity' ? (
                     <FeedIcon icon={glyph} variant="badge" />

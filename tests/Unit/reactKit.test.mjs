@@ -460,6 +460,8 @@ test('all rail configurations preserve fallback and dense/crowd badge suppressio
     assert.equal((html.match(/sf-badge absolute/g) ?? []).length, 1);
     assert.doesNotMatch(html, /sf-avatar--badge/);
     assert.match(html, /@container\/pair/);
+    // A pair's verb badge is smaller, in the same place (ui#25 (a)).
+    assert.match(html, /\[&amp;:has\(&gt;\.sf-avatars\)&gt;\.sf-badge\]:\[--sf-badge:--spacing\(2\.75\)\]/);
 });
 test('body discovery handles current/historical names, depth bounds and unknown tokens', () => {
     const form = { $body: 'Storyfeed/Body/File', name: 'old.pdf' };
@@ -558,7 +560,7 @@ test('native details open unnamed groups, preserve truncated totals and independ
     );
     const child = html.split('sf-children mt-3')[1];
     assert.match(child, /sf-icon/);
-    assert.doesNotMatch(child, /sf-avatar|sf-badge absolute/);
+    assert.doesNotMatch(child, /class="sf-avatar |sf-badge absolute/);
 });
 test('files retain names, decimal sizes and MIME labels without guessing extensions', () => {
     for (const [size, expected] of [

@@ -106,7 +106,7 @@ stays pinned. This initial ISO presentation is React-specific.
 `Rail`. `childRail` independently overrides expanded members; dense children
 suppress badges. Several actors draw as a diagonal pair inside one disc's
 square: the first in front at the bottom-right with the glyph badge, the second
-behind at the top-left, each 2/3 of the disc; below a 1.5rem (24px) disc only the front
+behind at the top-left, each 2/3 of the disc, with a smaller glyph badge in the usual place; below a 1.5rem (24px) disc only the front
 face shows. A face badge never stands for several actors. Explicit singular payload slots pin roles; `distinct=1` does not.
 
 Groups use native `<details>` with keyboard disclosure and no JavaScript state.

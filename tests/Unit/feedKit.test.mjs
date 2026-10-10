@@ -774,6 +774,8 @@ test('actor rails show glyph badges and childRail independently selects glyph-on
     const front = (await renderRaw('/resources/js/vue/FeedGroup.vue', { item: pair, rail: 'actor' })).split('sf-avatars__face')[1];
     assert.match(front, /right-0 bottom-0 z-10/);
     assert.match(front, /size-\[calc\(var\(--sf-disc\)\*2\/3\)\]/);
+    // A pair's verb badge is smaller, in the same place (ui#25 (a)).
+    assert.match(await renderRaw('/resources/js/vue/FeedGroup.vue', { item: pair, rail: 'actor' }), /\[&amp;:has\(&gt;\.sf-avatars\)&gt;\.sf-badge\]:\[--sf-badge:--spacing\(2\.75\)\]/);
     assert.doesNotMatch(await renderRaw('/resources/js/vue/FeedGroup.vue', { item: pair, rail: 'activity' }), /sf-avatar--badge/);
 });
 

@@ -216,7 +216,7 @@ it('lets dense child rails answer a different question from the actor-badged par
     $html = Blade::render('<x-storyfeed::feed :items="[$item]" rail="actor" child-rail="activity-only" :interactive="false" />', compact('item'));
     expect($html)->toContain('sf-badge');
     $children = explode('class="sf-children', $html)[1];
-    expect($children)->toContain('sf-icon')->not->toContain('sf-avatar', 'sf-badge');
+    expect($children)->toContain('sf-icon')->not->toContain('class="sf-avatar ', 'sf-badge absolute');
 });
 
 it('draws an Image body naming the icon slot as the linked thumbnail and lets the media host take over', function () {
@@ -344,7 +344,7 @@ it('draws several actors as a diagonal pair whose front face keeps the verb badg
     expect(array_map(fn ($face) => [$face[1], $face[2]], $faces))->toBe([['Ana', 'A'], ['Ben', 'B']])
         ->and(explode('sf-avatars__face', $rail)[1])->toContain('right-0 bottom-0 z-10')
         ->and(substr_count($rail, 'sf-badge absolute'))->toBe(1)
-        ->and($rail)->toContain('@container/pair')->not->toContain('sf-avatar--badge');
+        ->and($rail)->toContain('@container/pair', '[&:has(>.sf-avatars)>.sf-badge]:[--sf-badge:--spacing(2.75)]')->not->toContain('sf-avatar--badge');
     // A face badge never stands for several actors.
     $rail = explode('class="sf-body', Blade::render('<x-storyfeed::feed :items="[$item]" rail="activity" />', compact('item')))[0];
     expect($rail)->not->toContain('sf-avatar--badge');
