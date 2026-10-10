@@ -118,7 +118,8 @@ avatars an object declares (`media.icon`, or `media.initials` with
 `media.color`), each linked to its entity and labelled with its name, with
 "+N" for the objects not sampled. The row is skipped when it would add
 nothing: fewer than two avatars, or all the same picture.
-Open groups hide the strip and the row.
+Expanding a group adds its members below and keeps the strip, the row and the
+rail faces in place.
 Summary rendering has been removed from all kits, mirroring core. Unknown extra
 payload keys are ignored.
 

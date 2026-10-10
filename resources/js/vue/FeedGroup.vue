@@ -78,14 +78,10 @@ const entities = computed(() => ({
  * first entity's link. Distinct role totals cannot count unseen photographs,
  * so the default strip makes no media overflow claim.
  *
- * The strip hides when the members themselves are visible — a sample of a list
- * you are already looking at is noise.
+ * Expanding adds, it never takes away: the strip stays in place while the
+ * members show below it (ui#26).
  */
 const strip = computed(() => {
-    if (expanded.value) {
-        return { tiles: [], overflow: 0 };
-    }
-
     const seen = new Set<string>();
     const tiles = featured(props.item)
         .flatMap(entity => {
@@ -101,10 +97,10 @@ const strip = computed(() => {
 
 /**
  * Featured entities with avatars but no photographs draw as a row of their
- * avatars instead, so the same entities never show twice. It hides with the
- * strip while the members are visible.
+ * avatars instead, so the same entities never show twice. Like the strip, it
+ * stays in place while the members are visible.
  */
-const row = computed(() => expanded.value || strip.value.tiles.length ? null : avatarRow(props.item));
+const row = computed(() => strip.value.tiles.length ? null : avatarRow(props.item));
 
 // `count` is the TRUE total and `children` is capped by the server, so the
 // remainder has to be stated rather than implied by the list length.
@@ -198,7 +194,7 @@ const hiddenBeyondChildren = computed(
                 every kind of node except the interesting one.
             -->
             <FeedMediaStrip
-                v-if="!expanded && strip.tiles.length"
+                v-if="strip.tiles.length"
                 :tiles="strip.tiles"
                 :overflow="strip.overflow"
             />

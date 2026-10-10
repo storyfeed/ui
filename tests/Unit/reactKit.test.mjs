@@ -538,8 +538,9 @@ test('a group draws its featured objects as an avatar row, only from declared av
     assert.equal(row({ objects: [ben, declared('ben2', { icon: { src: '/ben.svg' } })] }), null);
     assert.equal(row({ objects: [ben, { ...cara, tombstone: { formerType: 'person' } }] }), null);
     assert.equal(row({ objects: [{ ...photo('/photo'), media: { ...photo('/photo').media, icon: { src: '/i.svg' } } }, ben, cara] }), null);
-    // An open static group shows its members, so no row; an interactive one hides it with CSS.
-    assert.equal(row({ objects: [ben, cara] }, {}, {}, { interactive: false, collapsed: false }), null);
+    // Expanding adds, it never takes away: an open group keeps its row (ui#26).
+    assert.deepEqual(row({ objects: [ben, cara] }, {}, {}, { interactive: false, collapsed: false })?.labels, ['Person ben', 'Person cara']);
+    assert.deepEqual(row({ objects: [ben, cara] }, {}, {}, { collapsed: false })?.labels, ['Person ben', 'Person cara']);
 });
 test('native details open unnamed groups, preserve truncated totals and independent child rails', () => {
     const html = raw('FeedGroup', {

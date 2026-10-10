@@ -185,9 +185,10 @@ it('draws a group\'s featured objects as an avatar row, only from declared avata
         ->and($row(['objects' => [$ben, $declared('plain', null), $declared('half', ['initials' => 'HA'])]]))->toBeNull()
         ->and($row(['objects' => [$ben, $declared('ben2', ['icon' => ['src' => '/ben.svg']])]]))->toBeNull()
         ->and($row(['objects' => [$ben, [...$cara, 'tombstone' => ['formerType' => 'person']]]]))->toBeNull()
-        // Photographs take the strip instead, and an open static group shows its members rather than a row.
+        // Photographs take the strip instead; an open group keeps its row (ui#26).
         ->and($row(['objects' => [[...$ben, 'id' => 'photo', 'body' => [['$body' => 'Storyfeed/Body/Image', 'image' => 'preview']], 'media' => ['icon' => ['src' => '/i.svg'], 'preview' => ['src' => '/photo.jpg']]], $ben, $cara]]))->toBeNull()
-        ->and($row(['objects' => [$ben, $cara]], [], [], ['interactive' => false, 'collapsed' => false]))->toBeNull();
+        ->and($row(['objects' => [$ben, $cara]], [], [], ['interactive' => false, 'collapsed' => false])['labels'] ?? null)->toBe(['Person ben', 'Person cara'])
+        ->and($row(['objects' => [$ben, $cara]], [], [], ['collapsed' => false])['labels'] ?? null)->toBe(['Person ben', 'Person cara']);
 });
 it('supports file MIME labels and host labellers through the feed without changing the body', function () {
     $body = ['$body' => 'Storyfeed/Body/FileAttachment', 'name' => 'report.csv', 'size' => 21_000_000, 'mediaType' => 'text/csv'];
@@ -338,3 +339,16 @@ it('stacks several actors tightly behind the front face, which keeps its verb ba
     $rail = explode('class="sf-body', Blade::render('<x-storyfeed::feed :items="[$item]" rail="activity" />', compact('item')))[0];
     expect($rail)->not->toContain('sf-avatar--badge');
 });
+
+it('keeps a group\'s rail faces and strip in place when it expands', function (bool $interactive) {
+    $photo = fn (string $src) => ['type' => 'photo', 'id' => $src, 'label' => 'Photo', 'url' => '/photos'.$src, 'body' => [['$body' => 'Storyfeed/Body/Image', 'image' => 'preview']], 'media' => ['preview' => ['src' => $src]]];
+    $item = ['kind' => 'group', 'headline' => 'Ana and Ben uploaded photos', 'count' => 2, 'glyph' => 'file-up',
+        'sample' => ['actors' => [['id' => 'ana', 'label' => 'Ana'], ['id' => 'ben', 'label' => 'Ben']], 'objects' => [$photo('/one.jpg'), $photo('/two.jpg')]],
+        'children' => [['kind' => 'activity', 'headline' => 'Ana uploaded a photo'], ['kind' => 'activity', 'headline' => 'Ben uploaded a photo']]];
+    $html = Blade::render('<x-storyfeed::feed :items="[$item]" rail="actor" :interactive="$interactive" :collapsed="false" />', compact('item', 'interactive'));
+    $head = explode('class="sf-children', $html)[0];
+    expect(substr_count($head, 'sf-avatar--md'))->toBe(2)
+        ->and($head)->toContain('sf-media-strip', 'src="/one.jpg"', 'src="/two.jpg"')
+        ->not->toContain(':has(>.sf-disclosure[open])>.sf-media-strip]:hidden');
+    expect($html)->toContain('Ana uploaded a photo', 'Ben uploaded a photo');
+})->with(['interactive' => true, 'static' => false]);

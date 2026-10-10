@@ -555,15 +555,18 @@ test('a group draws its featured objects as an avatar row, only from declared av
     assert.equal(await row({ objects: [ben, declared('plain', null), declared('half', { initials: 'HA' })] }), null);
     assert.equal(await row({ objects: [ben, declared('ben2', { icon: { src: '/ben.svg' } })] }), null);
     assert.equal(await row({ objects: [ben, { ...cara, tombstone: { formerType: 'person' } }] }), null);
-    // Photographs take the strip instead, and the row hides while the members are shown.
+    // Photographs take the strip instead; an open group keeps its row (ui#26).
     assert.equal(await row({ objects: [{ ...photoEntity('/photo'), media: { ...photoEntity('/photo').media, icon: { src: '/i.svg' } } }, ben, cara] }), null);
-    assert.equal(await row({ objects: [ben, cara] }, {}, { headline_template: null }), null);
+    assert.deepEqual((await row({ objects: [ben, cara] }, {}, { headline_template: null }))?.labels, ['Person ben', 'Person cara']);
 });
-test('expanded groups suppress sampled media', async () => {
-    const item = { ...group, sample: { actors: [activity.actor], objects: [photoEntity('/suppressed')] } };
-    const expanded = await render('/resources/js/vue/FeedGroup.vue', { item: { ...item, headline_template: null } });
+test('expanding a group keeps its rail faces and sampled media in place', async () => {
+    const item = { ...group, sample: { actors: [activity.actor, { ...activity.actor, id: '2' }], objects: [photoEntity('/kept')] } };
+    const expanded = await render('/resources/js/vue/FeedGroup.vue', { item: { ...item, headline_template: null }, rail: 'actor' });
     assert.match(expanded, /Show less/);
-    assert.doesNotMatch(expanded, /\/suppressed|sf-media-strip/);
+    const head = expanded.split('class="sf-children"')[0];
+    assert.match(head, /\/kept/);
+    assert.match(head, /sf-media-strip/);
+    assert.equal((head.match(/sf-avatar--md/g) ?? []).length, 2);
 });
 
 test('files retain names, decimal sizes and MIME labels without extension guesses', async () => {

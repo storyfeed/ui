@@ -1777,10 +1777,10 @@
         "children": [
           {
             "kind": "activity",
-            "id": "row-composite-child",
+            "id": "row-composite-0",
             "verb": "added",
             "published_at": "2026-08-14T12:00:00Z",
-            "headline": "Ana added Ben, Cara and 2 others to Kitchen remodel",
+            "headline": "Ana added Ben to Kitchen remodel",
             "actor": {
               "type": "person",
               "id": "ana",
@@ -1805,8 +1805,119 @@
               "tombstone": null
             },
             "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "row-composite-1",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Cara to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "cara",
+              "label": "Cara Lindqvist",
+              "url": "#cara",
+              "media": {
+                "initials": "CL",
+                "color": "#f2c94c"
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "row-composite-2",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Dev to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "dev",
+              "label": "Dev Patel",
+              "url": "#dev",
+              "media": {
+                "initials": "DP",
+                "color": "#1e3a8a"
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "row-composite-3",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Eli to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "eli",
+              "label": "Eli Brooks",
+              "url": "#eli",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "row-composite-4",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Fay to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "fay",
+              "label": "Fay Laurent",
+              "url": "#fay",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
           }
-        ]
+        ],
+        "children_truncated": false
       },
       {
         "kind": "group",
@@ -1866,10 +1977,10 @@
         "children": [
           {
             "kind": "activity",
-            "id": "row-two-child",
+            "id": "row-two-0",
             "verb": "added",
             "published_at": "2026-08-14T12:00:00Z",
-            "headline": "Ana added Ben and Cara to Kitchen remodel",
+            "headline": "Ana added Ben to Kitchen remodel",
             "actor": {
               "type": "person",
               "id": "ana",
@@ -1894,8 +2005,38 @@
               "tombstone": null
             },
             "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "row-two-1",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Cara to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "cara",
+              "label": "Cara Lindqvist",
+              "url": "#cara",
+              "media": {
+                "initials": "CL",
+                "color": "#f2c94c"
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
           }
-        ]
+        ],
+        "children_truncated": false
       },
       {
         "kind": "group",
@@ -1957,10 +2098,10 @@
         "children": [
           {
             "kind": "activity",
-            "id": "row-commenters-child",
-            "verb": "added",
+            "id": "row-commenters-0",
+            "verb": "comment",
             "published_at": "2026-08-14T12:00:00Z",
-            "headline": "Gus, Hana and 2 others commented on the brief",
+            "headline": "Gus commented on the brief",
             "actor": {
               "type": "person",
               "id": "gus",
@@ -1987,8 +2128,99 @@
               "tombstone": null
             },
             "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "row-commenters-1",
+            "verb": "comment",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Hana commented on the brief",
+            "actor": {
+              "type": "person",
+              "id": "hana",
+              "label": "Hana Kim",
+              "url": "#hana",
+              "media": {
+                "initials": "HK",
+                "color": "#16a34a"
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "document",
+              "id": "brief",
+              "label": "the brief",
+              "url": "#brief",
+              "media": {
+                "initials": "BR",
+                "color": "#e11d48"
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "row-commenters-2",
+            "verb": "comment",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ivo commented on the brief",
+            "actor": {
+              "type": "person",
+              "id": "ivo",
+              "label": "Ivo Novak",
+              "url": "#ivo",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "document",
+              "id": "brief",
+              "label": "the brief",
+              "url": "#brief",
+              "media": {
+                "initials": "BR",
+                "color": "#e11d48"
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "row-commenters-3",
+            "verb": "comment",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Jun commented on the brief",
+            "actor": {
+              "type": "person",
+              "id": "jun",
+              "label": "Jun Park",
+              "url": "#jun",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "document",
+              "id": "brief",
+              "label": "the brief",
+              "url": "#brief",
+              "media": {
+                "initials": "BR",
+                "color": "#e11d48"
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
           }
-        ]
+        ],
+        "children_truncated": false
       },
       {
         "kind": "group",
@@ -2064,10 +2296,10 @@
         "children": [
           {
             "kind": "activity",
-            "id": "row-identical-child",
+            "id": "row-identical-0",
             "verb": "added",
             "published_at": "2026-08-14T12:00:00Z",
-            "headline": "Ana uploaded 6 plans",
+            "headline": "Ana uploaded plan-0.pdf",
             "actor": {
               "type": "person",
               "id": "ana",
@@ -2092,8 +2324,164 @@
               "tombstone": null
             },
             "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "row-identical-1",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana uploaded plan-1.pdf",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "f1",
+              "label": "plan-1.pdf",
+              "url": "#f1",
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%2364748b%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E",
+                  "alt": "PDF"
+                }
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "row-identical-2",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana uploaded plan-2.pdf",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "f2",
+              "label": "plan-2.pdf",
+              "url": "#f2",
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%2364748b%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E",
+                  "alt": "PDF"
+                }
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "row-identical-3",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana uploaded plan-3.pdf",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "plan-3",
+              "label": "plan-3.pdf",
+              "url": "#plan-3",
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%2364748b%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E",
+                  "alt": "PDF"
+                }
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "row-identical-4",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana uploaded plan-4.pdf",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "plan-4",
+              "label": "plan-4.pdf",
+              "url": "#plan-4",
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%2364748b%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E",
+                  "alt": "PDF"
+                }
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "row-identical-5",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana uploaded plan-5.pdf",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "plan-5",
+              "label": "plan-5.pdf",
+              "url": "#plan-5",
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%2364748b%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E",
+                  "alt": "PDF"
+                }
+              },
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
           }
-        ]
+        ],
+        "children_truncated": false
       },
       {
         "kind": "group",
@@ -2145,10 +2533,10 @@
         "children": [
           {
             "kind": "activity",
-            "id": "row-undeclared-child",
+            "id": "row-undeclared-0",
             "verb": "added",
             "published_at": "2026-08-14T12:00:00Z",
-            "headline": "Ana added Eve and Finn",
+            "headline": "Ana added Eve",
             "actor": {
               "type": "person",
               "id": "ana",
@@ -2168,8 +2556,35 @@
               "tombstone": null
             },
             "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "row-undeclared-1",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Finn",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "finn",
+              "label": "Finn Doyle",
+              "url": "#finn",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
           }
-        ]
+        ],
+        "children_truncated": false
       },
       {
         "kind": "group",
@@ -2237,10 +2652,10 @@
         "children": [
           {
             "kind": "activity",
-            "id": "row-actor-photo-child",
+            "id": "row-actor-photo-0",
             "verb": "added",
             "published_at": "2026-08-14T12:00:00Z",
-            "headline": "Ivy posted 2 notes",
+            "headline": "Ivy posted a note",
             "actor": {
               "type": "person",
               "id": "ivy",
@@ -2276,8 +2691,48 @@
               "tombstone": null
             },
             "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "row-actor-photo-1",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ivy posted another note",
+            "actor": {
+              "type": "person",
+              "id": "ivy",
+              "label": "Ivy Chen",
+              "url": "#ivy",
+              "media": {
+                "preview": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%23ef4444%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2226%22%20r%3D%2212%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E",
+                  "width": 160,
+                  "height": 100,
+                  "alt": "Ivy's photo"
+                }
+              },
+              "data": null,
+              "tombstone": null,
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "image": "preview"
+                }
+              ]
+            },
+            "object": {
+              "type": "person",
+              "id": "n2",
+              "label": "another note",
+              "url": "#n2",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
           }
-        ]
+        ],
+        "children_truncated": false
       }
     ]
   },
@@ -4664,6 +5119,721 @@
             "glyph": "file-up"
           }
         ]
+      }
+    ]
+  },
+  {
+    "name": "Truncated members",
+    "collapsed": true,
+    "items": [
+      {
+        "kind": "group",
+        "id": "long-members",
+        "axis": "repeat",
+        "count": 30,
+        "verb": "added",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline": "Ana added 30 people to Kitchen remodel",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": [
+            {
+              "type": "person",
+              "id": "ben",
+              "label": "Ben Okafor",
+              "url": "#ben",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "cara",
+              "label": "Cara Lindqvist",
+              "url": "#cara",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "dev",
+              "label": "Dev Patel",
+              "url": "#dev",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ]
+        },
+        "distinct": {
+          "actors": 1,
+          "objects": 30
+        },
+        "glyph": "file-up",
+        "children": [
+          {
+            "kind": "activity",
+            "id": "long-members-0",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Ben to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "ben",
+              "label": "Ben Okafor",
+              "url": "#ben",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-1",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Cara to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "cara",
+              "label": "Cara Lindqvist",
+              "url": "#cara",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-2",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Dev to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "dev",
+              "label": "Dev Patel",
+              "url": "#dev",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-3",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Eli to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "eli",
+              "label": "Eli Brooks",
+              "url": "#eli",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-4",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Fay to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "fay",
+              "label": "Fay Laurent",
+              "url": "#fay",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-5",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Gia to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "gia",
+              "label": "Gia Romano",
+              "url": "#gia",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-6",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Hugo to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "hugo",
+              "label": "Hugo Martin",
+              "url": "#hugo",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-7",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Iris to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "iris",
+              "label": "Iris Novak",
+              "url": "#iris",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-8",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Jon to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "jon",
+              "label": "Jon Bauer",
+              "url": "#jon",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-9",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Kai to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "kai",
+              "label": "Kai Sato",
+              "url": "#kai",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-10",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Lea to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "lea",
+              "label": "Lea Fischer",
+              "url": "#lea",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-11",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Max to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "max",
+              "label": "Max Rossi",
+              "url": "#max",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-12",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Nia to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "nia",
+              "label": "Nia Adeyemi",
+              "url": "#nia",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-13",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Omar to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "omar",
+              "label": "Omar Haddad",
+              "url": "#omar",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-14",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Pia to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "pia",
+              "label": "Pia Holm",
+              "url": "#pia",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-15",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Quin to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "quin",
+              "label": "Quin Walsh",
+              "url": "#quin",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-16",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Rui to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "rui",
+              "label": "Rui Costa",
+              "url": "#rui",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-17",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Sara to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "sara",
+              "label": "Sara Lind",
+              "url": "#sara",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-18",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Tom to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "tom",
+              "label": "Tom Becker",
+              "url": "#tom",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-19",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Uma to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "uma",
+              "label": "Uma Rao",
+              "url": "#uma",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-20",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Vik to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "vik",
+              "label": "Vik Shah",
+              "url": "#vik",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-21",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Wen to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "wen",
+              "label": "Wen Li",
+              "url": "#wen",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-22",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Xan to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "xan",
+              "label": "Xan Ortiz",
+              "url": "#xan",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-23",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Yara to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "yara",
+              "label": "Yara Saleh",
+              "url": "#yara",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-members-24",
+            "verb": "added",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline": "Ana added Zoe to Kitchen remodel",
+            "actor": {
+              "type": "person",
+              "id": "ana",
+              "label": "Ana Silva",
+              "url": "#ana",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "zoe",
+              "label": "Zoe Clark",
+              "url": "#zoe",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "glyph": "file-up"
+          }
+        ],
+        "children_truncated": true
       }
     ]
   }

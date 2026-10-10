@@ -39,7 +39,8 @@ export default function FeedGroup({
             return [{ image, href: entityLink(entity)?.href ?? null }];
         })
         .slice(0, 3);
-    const row = tiles.length || (!interactive && open) ? null : avatarRow(item);
+    // Expanding adds, it never takes away: strip and avatar row stay in place (ui#26).
+    const row = tiles.length ? null : avatarRow(item);
     return (
         <div
             className={`sf-row relative flex items-start gap-(--sf-gap)${
@@ -56,7 +57,7 @@ export default function FeedGroup({
                 line={!(isLast && !interactive && !open)}
             />
             <div
-                className={`sf-body min-w-0 flex-1 pt-1.5 [&:has(>.sf-disclosure[open])>.sf-media-strip]:hidden [&:has(>.sf-disclosure[open])>.sf-avatar-row]:hidden ${
+                className={`sf-body min-w-0 flex-1 pt-1.5 ${
                     !isLast || (!interactive && open)
                         ? 'sf-body--spaced pb-5'
                         : '[&:has(>.sf-disclosure[open])]:pb-5'
@@ -77,7 +78,7 @@ export default function FeedGroup({
                 <FeedMeta node={item} templates={[item.headline_template]}>
                     {timestamp}
                 </FeedMeta>
-                <FeedMediaStrip tiles={!interactive && open ? [] : tiles} />
+                <FeedMediaStrip tiles={tiles} />
                 {row && (
                     <FeedAvatarRow
                         entities={row.entities}
