@@ -23,7 +23,7 @@
         "illuminate/support": "^12.0||^13.0",
         "illuminate/view": "^12.0||^13.0",
         "league/commonmark": "^2.7",
-        "storyfeed/storyfeed": "^0.13 || ^0.14 || ^0.15 || ^0.16 || ^0.17 || 0.16.x-dev || 0.17.x-dev",
+        "storyfeed/storyfeed": "^0.13 || ^0.14 || ^0.15 || ^0.16 || ^0.17 || ^0.18 || 0.17.x-dev || 0.18.x-dev",
         "symfony/html-sanitizer": "^7.3 || ^8.0"
     },
     "require-dev": {

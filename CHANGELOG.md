@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v0.7.0 - 2026-10-10
+
 ### Added
 
 - An Image body draws its own picture (core 0.18's Image v3, `Image::make('https://…/day-3.jpg')`, stored as `src`) at its declared width and height, in Blade, Vue and React. Without one it draws the entity's slot it names as before, now including custom slots (`Image::make($this->getFeedMedia('sparkline'))`, read from `media.slots.sparkline`). A stored or custom-slot picture also stands for its entity in a group's photograph strip. v1 and v2 rows naming no slot still show the `preview`; a v3 row naming nothing draws nothing, as core reads it. The kits read these payloads themselves, so they draw the same on every supported core.
