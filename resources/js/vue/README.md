@@ -102,9 +102,10 @@ footnotes and captions 0.75em (see the root README's type scale). Verbatim
 Prose uses `--sf-code-bg`/`--sf-code-fg`. Flowing text is never
 capped; code and verbatim blocks scroll past `--sf-prose-max-h` (default `24rem`),
 and a body's own `$meta.maxHeight` overrides either; see the root README.
-The root's Tailwind arbitrary properties also expose `--sf-gutter`, `--sf-gap`,
-`--sf-disc`, `--sf-badge` and `--sf-badge-face`. Override on the `FeedStream`
-element, for example `style="--sf-gutter: 2.5rem"`. The primary avatar/icon
+`--sf-gutter`, `--sf-gap`, `--sf-disc`, `--sf-badge` and `--sf-badge-face`
+size the rail. Set them on the `FeedStream`, a lone row or any element around
+either, for example `style="--sf-gutter: 2.5rem"`; unset, they scale with
+`--sf-font-size`. The primary avatar/icon
 size follows `--sf-disc`; stacked faces share that size and overlap downward
 along the rail, keeping the headline aligned with single-actor rows.
 The `sf-*` classes remain semantic hooks; styling lives in utilities.

@@ -29,11 +29,11 @@ export default function Rail({
         slots.disc === 'actor' && faces.length > 1 ? (
             // A diagonal pair inside one disc's square (ui#25): the first actor in
             // front at the bottom-right, where the badge sits, the second behind.
-            <div className="sf-avatars @container/pair relative size-(--sf-disc) shrink-0">
+            <div className="sf-avatars @container/pair relative size-(--sf-disc-v) shrink-0">
                 {faces.slice(0, 2).map((face, i) => (
                     <span
                         key={`${face.type}:${face.id}:${i}`}
-                        className={i === 0 ? 'sf-avatars__face absolute right-0 bottom-0 z-10 flex size-[calc(var(--sf-disc)*2/3)] @max-[1.5rem]/pair:size-full' : 'sf-avatars__face absolute top-0 left-0 flex size-[calc(var(--sf-disc)*2/3)] @max-[1.5rem]/pair:hidden'}
+                        className={i === 0 ? 'sf-avatars__face absolute right-0 bottom-0 z-10 flex size-[calc(var(--sf-disc-v)*2/3)] @max-[1.5rem]/pair:size-full' : 'sf-avatars__face absolute top-0 left-0 flex size-[calc(var(--sf-disc-v)*2/3)] @max-[1.5rem]/pair:hidden'}
                     >
                         <EntityAvatar entity={face} size="pair" />
                     </span>
@@ -50,8 +50,8 @@ export default function Rail({
             />
         );
     return (
-        <div className="sf-rail box-content flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
-            <div className="sf-rail__disc relative flex w-(--sf-disc) shrink-0 [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge:--spacing(2.75)] [&:has(>.sf-avatars)>.sf-badge_svg]:size-2">
+        <div className="sf-rail box-content flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
+            <div className="sf-rail__disc relative flex w-(--sf-disc-v) shrink-0 [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-v:--spacing(2.75)] [&:has(>.sf-avatars)>.sf-badge_svg]:size-2">
                 {disc}
                 {slots.badge === 'activity' ? (
                     <FeedIcon icon={glyph} variant="badge" />

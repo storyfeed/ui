@@ -462,7 +462,7 @@ test('all rail configurations preserve fallback and dense/crowd badge suppressio
     assert.doesNotMatch(html, /sf-avatar--badge/);
     assert.match(html, /@container\/pair/);
     // A pair's verb badge is smaller, in the same place (ui#25 (a)).
-    assert.match(html, /\[&amp;:has\(&gt;\.sf-avatars\)&gt;\.sf-badge\]:\[--sf-badge:--spacing\(2\.75\)\]/);
+    assert.match(html, /\[&amp;:has\(&gt;\.sf-avatars\)&gt;\.sf-badge\]:\[--sf-badge-v:--spacing\(2\.75\)\]/);
 });
 test('body discovery handles current/historical names, depth bounds and unknown tokens', () => {
     const form = { $body: 'Storyfeed/Body/File', name: 'old.pdf' };
@@ -994,4 +994,16 @@ test('a group strip reads core #93\'s sample.featured, else each member\'s featu
     // Without it, each member's featured role (storyfeed/storyfeed#76): its target here, nothing when null.
     const featuring = [{ ...stripMember(0, stripPhoto(1)), featured: 'target', target: stripBen }, { ...stripMember(1, stripPhoto(2)), featured: null }, stripMember(2, stripPhoto(3))];
     assert.deepEqual((draw({ ...group, count: 3, children: featuring, sample: { actors: group.sample.actors } })).tiles, ['tile:BO', '/p3.jpg', '+1']);
+});
+
+test('rail size variables set around a feed or a lone row reach the rail', () => {
+    // A row or feed that redeclared --sf-gutter and friends would shadow anything set higher up; each reads them with its own default instead.
+    for (const [name, props] of [['FeedStream', { items: [activity, group] }], ['FeedItem', { item: activity }], ['FeedGroup', { item: group }]]) {
+        const html = raw(name, props);
+        const root = html.match(/class="([^"]*)"/)[1];
+        for (const [variable, size] of [['gutter', 8], ['gap', 3], ['disc', 8], ['badge', 3.5], ['badge-face', 4.5]]) {
+            assert.ok(root.includes(`[--sf-${variable}-v:var(--sf-${variable},--spacing(${size}))]`), `${name}: --sf-${variable} falls back to ${size} steps`);
+        }
+        assert.doesNotMatch(html, /\[--sf-(gutter|gap|disc|badge|badge-face):/, `${name}: no element redeclares a public size variable`);
+    }
 });

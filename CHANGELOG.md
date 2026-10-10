@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- `--sf-gutter`, `--sf-gap`, `--sf-disc`, `--sf-badge` and `--sf-badge-face` set on the feed, a lone row or any element around them now reach the rail, in Blade, Vue and React (ui#36). The feed and every row redeclared them with their own defaults, so a value set higher up never applied: `--sf-gutter: 4rem` on the feed left the rail at 32px. Unset, they still default from `--sf-font-size`.
+
 ### Changed
 
 - The branch divider is now the default, in Blade, Vue and React (ui#34): day headings (Today, Yesterday, dates) and per-item `dividers` draw as a curve off the rail into the label, the joint storyfeed.dev uses, instead of a dot on the rail. The curve sits on the rail line's own column, 1px wide, and darkens as it leaves the rail: an SVG gradient from the rail's colour (`--color-border`) to the label's (`--color-muted-foreground`), so light, dark and app themes follow. Each divider's gradient has its own id. The line above stops a small, fixed gap before the curve, the line below continues from the curve's end, and the curve meets the label at the middle of its cap height. A `stroke` rule on `.sf-rail__branch` no longer reaches the curve; set those two colour tokens instead. Pass `divider-style="dot"` (Blade, Vue) or `dividerStyle="dot"` (React) for the old look.

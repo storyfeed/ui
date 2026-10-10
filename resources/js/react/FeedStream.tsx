@@ -29,9 +29,9 @@ function Divider({
     const gradient = `sf-branch-${useId().replace(/[^\w-]/g, '')}`;
     return (
         <div
-            className={`sf-row sf-divider relative flex items-start gap-(--sf-gap) ${style === 'dot' ? 'sf-divider--dot [&_.sf-rail>div:last-child]:mt-1.25' : 'sf-divider--branch'}`}
+            className={`sf-row sf-divider relative flex items-start gap-(--sf-gap-v) ${style === 'dot' ? 'sf-divider--dot [&_.sf-rail>div:last-child]:mt-1.25' : 'sf-divider--branch'}`}
         >
-            <div className="sf-rail relative flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
+            <div className="sf-rail relative flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
                 {style === 'dot' ? (
                     <div
                         aria-hidden="true"
@@ -42,7 +42,7 @@ function Divider({
                     // the line continues from its end, leaving a gap above it.
                     <svg
                         aria-hidden="true"
-                        className="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap)-var(--spacing)*1.5)] overflow-hidden"
+                        className="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap-v)-var(--spacing)*1.5)] overflow-hidden"
                     >
                         <defs>
                             <linearGradient
@@ -101,7 +101,7 @@ export default function FeedStream({
     const days = useFeedDays(items);
     return (
         <div
-            className={`sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter:--spacing(8)] [--sf-gap:--spacing(3)] [--sf-disc:--spacing(8)] [--sf-badge:--spacing(3.5)] [--sf-badge-face:--spacing(4.5)] text-base leading-[1.6] text-muted-foreground ${className}`}
+            className={`sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6] text-muted-foreground ${className}`}
             style={style}
         >
             {!items.length ? (
@@ -142,8 +142,8 @@ export default function FeedStream({
                         </section>
                     ))}
                     {nextCursor && (
-                        <div className="sf-row relative flex items-start gap-(--sf-gap)">
-                            <div className="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
+                        <div className="sf-row relative flex items-start gap-(--sf-gap-v)">
+                            <div className="sf-rail flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
                                 <div
                                     aria-hidden="true"
                                     className="sf-rail__line mt-1 w-px flex-1 bg-border"
