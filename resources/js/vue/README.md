@@ -1,8 +1,9 @@
 # Storyfeed Vue kit
 
 Vue 3, TypeScript and Tailwind v4. Copied files belong to the app. Import
-`FeedStream.vue` and pass core's serialized `items` directly; pass
-`next-cursor` and handle `@load-more` for pagination. No kit CSS is required.
+`FeedStream.vue` and pass core's page JSON as `page` (nodes under `data` from
+storyfeed/storyfeed#95, under `items` before it), or `items` and
+`next-cursor` yourself; handle `@load-more` for pagination. No kit CSS is required.
 Install its dependencies:
 
 ```bash

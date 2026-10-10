@@ -1,7 +1,9 @@
 @props(['page' => null, 'items' => null, 'nextCursor' => null, 'cursorName' => 'cursor', 'grouped' => true, 'rail' => null, 'childRail' => null, 'dividers' => [], 'dividerStyle' => 'dot', 'interactive' => true, 'collapsed' => null, 'timezone' => null, 'renderers' => []])
 @php
-    $items = collect($items ?? $page?->collect() ?? [])->map(fn ($item) => \Storyfeed\Support\FeedItem::of($item));
-    $cursor = $nextCursor ?? $page?->nextCursor();
+    // Any page core reads: a FeedPage (core <=0.18), a collection or paginator (storyfeed/storyfeed#95), or its JSON.
+    $read = \Storyfeed\Ui\Support\Page::read($page);
+    $items = collect($items ?? $read['items'])->map(fn ($item) => \Storyfeed\Support\FeedItem::of($item));
+    $cursor = $nextCursor instanceof \Illuminate\Pagination\Cursor ? $nextCursor->encode() : ($nextCursor ?? $read['cursor']);
     $previousDay = null;
 @endphp
 <div {{ $attributes->class('sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter:--spacing(8)] [--sf-gap:--spacing(3)] [--sf-disc:--spacing(8)] [--sf-badge:--spacing(3.5)] [--sf-badge-face:--spacing(4.5)] text-base leading-[1.6] text-muted-foreground') }}>

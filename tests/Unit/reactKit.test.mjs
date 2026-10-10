@@ -971,3 +971,16 @@ test('expanding a group keeps its rail faces and strip in place', () => {
     assert.equal((head.match(/sf-avatar--pair/g) ?? []).length, 2);
     assert.doesNotMatch(head, /:has\(&gt;\.sf-disclosure\[open\]\)&gt;\.sf-media-strip\]:hidden/);
 });
+
+test('FeedStream reads a whole page: core #95 JSON under data, the older items envelope, or a plain list', () => {
+    const nodes = [activity, { ...activity, id: 'second' }];
+    assert.deepEqual(kit.readPage({ data: nodes, next_cursor: 'next' }), { items: nodes, nextCursor: 'next' });
+    assert.deepEqual(kit.readPage({ payload_version: 1, items: nodes, next_cursor: null, sync_token: null }), { items: nodes, nextCursor: null });
+    assert.deepEqual(kit.readPage(nodes), { items: nodes, nextCursor: null });
+    assert.deepEqual(kit.readPage(undefined), { items: [], nextCursor: null });
+    const html = raw('FeedStream', { page: { data: nodes, next_cursor: 'next' } });
+    assert.equal((html.match(/role="listitem"/g) ?? []).length, 2, 'both nodes from data');
+    assert.match(html, /sf-more/, 'the next cursor offers more');
+    assert.doesNotMatch(raw('FeedStream', { page: { items: nodes, next_cursor: null } }), /sf-more/, 'no cursor, no more');
+    assert.match(raw('FeedStream', { page: { items: nodes, next_cursor: null } }), /Ada Lovelace/);
+});

@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { toRef } from 'vue';
+import { computed, toRef } from 'vue';
 import FeedNodeView from './FeedNode.vue';
 import type { Rail, RailName } from '../shared/rail';
 import type { FeedNode } from '../shared/types';
+import { readPage, type FeedPageLike } from '../shared/page';
 import { useFeedDays } from './useRelativeTime';
 
 const props = withDefaults(
     defineProps<{
-        items: FeedNode[];
+        items?: FeedNode[];
         /** Null means the end of the feed — never an empty page. */
         nextCursor?: string | null;
+        /** A whole page in place of `items` and `nextCursor`: core's JSON, with the nodes under `data` (#95) or `items`. */
+        page?: FeedPageLike;
         loadingMore?: boolean;
         /** Set false for a static excerpt with no day headings. */
         grouped?: boolean;
@@ -33,7 +36,9 @@ const props = withDefaults(
         dividerStyle?: 'dot' | 'branch';
     }>(),
     {
-        nextCursor: null,
+        items: undefined,
+        nextCursor: undefined,
+        page: undefined,
         loadingMore: false,
         grouped: true,
         interactive: true,
@@ -46,12 +51,16 @@ const props = withDefaults(
 
 const emit = defineEmits<{ loadMore: [] }>();
 
-const days = useFeedDays(toRef(() => props.items));
+const read = computed(() => readPage(props.page));
+const nodes = computed(() => props.items ?? read.value.items);
+const cursor = computed(() => props.nextCursor ?? read.value.nextCursor);
+
+const days = useFeedDays(toRef(() => nodes.value));
 </script>
 
 <template>
     <div class="sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter:--spacing(8)] [--sf-gap:--spacing(3)] [--sf-disc:--spacing(8)] [--sf-badge:--spacing(3.5)] [--sf-badge-face:--spacing(4.5)] text-base leading-[1.6] text-muted-foreground">
-        <div v-if="items.length === 0" class="sf-empty rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">
+        <div v-if="nodes.length === 0" class="sf-empty rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">
             <slot name="empty">No activity yet.</slot>
         </div>
 
@@ -118,7 +127,7 @@ const days = useFeedDays(toRef(() => props.items));
                         :is-last="
                             dayIndex === days.length - 1 &&
                             index === day.items.length - 1 &&
-                            !nextCursor
+                            !cursor
                         "
                         :rail="rail"
                         :child-rail="childRail"
@@ -138,7 +147,7 @@ const days = useFeedDays(toRef(() => props.items));
                 </div>
             </section>
 
-            <div v-if="nextCursor" class="sf-row relative flex items-start gap-(--sf-gap)">
+            <div v-if="cursor" class="sf-row relative flex items-start gap-(--sf-gap)">
                 <div class="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
                     <div aria-hidden="true" class="sf-rail__line mt-1 w-px flex-1 bg-border" />
                 </div>
