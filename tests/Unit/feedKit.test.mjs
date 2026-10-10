@@ -522,49 +522,52 @@ const photoEntity = src => ({
     media: { preview: { src, width: 200, height: 100 } },
 });
 
-test('group strips sample only the featured objects, never the actor, deduplicate and cap at three', async () => {
-    assert.match(await render('/resources/js/vue/FeedGroup.vue', { item: { ...group, sample: { objects: [photoEntity('/picture')] } } }), /src="\/picture"/);
-    for (const role of ['actors', 'targets', 'contexts', 'origins', 'results', 'instruments', 'locations', 'generators']) {
-        const html = await render('/resources/js/vue/FeedGroup.vue', { item: { ...group, sample: { [role]: [photoEntity('/picture')] } } });
-        assert.doesNotMatch(html, /src="\/picture"|class="sf-media-strip/, role);
-    }
-    const html = await render('/resources/js/vue/FeedGroup.vue', { item: { ...group, sample: {
-        objects: [photoEntity('/a'), photoEntity('/b'), photoEntity('/a'), photoEntity('/c'), photoEntity('/d')],
-    } } });
-    assert.deepEqual([...html.matchAll(/<img[^>]+src="([^"]+)"/g)].map(match => match[1]), ['/a', '/b', '/c']);
-    assert.match(html, /href="\/art\/\/c"/);
+const stripMember = (n, object) => ({ ...activity, id: `member-${n}`, object });
+const stripPhoto = (n) => ({ type: 'photo', id: String(n), label: `IMG_${n}.jpg`, url: `/photos/${n}`, body: [{ $body: 'Storyfeed/Body/Image', image: 'preview' }], media: { preview: { src: `/p${n}.jpg`, width: 192, height: 144 } } });
+const stripAna = { type: 'person', id: 'ana', label: 'Ana Silva', url: '/people/ana', media: { icon: { src: '/ana.jpg' } } };
+const stripBen = { type: 'person', id: 'ben', label: 'Ben Okafor', url: '/people/ben', media: { icon: null, initials: 'BO', color: '#438d98' } };
+const stripGone = { type: 'person', id: 'cara', label: null, url: null, media: { icon: null, initials: '?', color: '#6b7280' }, tombstone: { formerType: 'person' } };
+const stripDee = { type: 'person', id: 'dee', label: 'Dee Ford', url: '/people/dee', media: null };
+/** A group's strip in order (a src, `tile:<initials>` or `+N`) and its links, or null when there is none. */
+const stripTiles = (html) => {
+    const section = html.replace(/<!--.*?-->/g, '').split('sf-media-strip ')[1]?.split(/sf-toggle|sf-children/)[0];
+    if (section === undefined) return null;
+    const tiles = [...section.matchAll(/<img[^>]+src="([^"]+)"|class="[^"]*sf-avatar--tile[^"]*"[^>]*>([^<]*)<|sf-media-strip__more[^>]*>\+(\d+)</g)]
+        .map((m) => m[1] ?? (m[2] !== undefined ? `tile:${m[2].trim()}` : `+${m[3]}`));
+    return { tiles, hrefs: [...section.matchAll(/href="([^"]+)"/g)].map((m) => m[1]) };
+};
+test('a group strip draws one tile per member activity, never a blank', async () => {
+    const draw = async (objects, count = objects.length) => stripTiles(await renderRaw('/resources/js/vue/FeedGroup.vue', { item: { ...group, count, children: objects.map((object, n) => stripMember(n, object)), children_truncated: false, sample: { actors: group.sample.actors } } }));
+    // Pictures (an Image body, else the icon), else the avatar; past four tiles, three and "+N" from the count.
+    assert.deepEqual(await draw([stripPhoto(1), stripAna, stripBen, stripPhoto(2), stripPhoto(3), stripPhoto(4)]),
+        { tiles: ['/p1.jpg', '/ana.jpg', 'tile:BO', '+3'], hrefs: ['/photos/1', '/people/ana', '/people/ben'] });
+    assert.deepEqual((await draw([stripPhoto(1), stripAna, stripBen, stripPhoto(2)])).tiles, ['/p1.jpg', '/ana.jpg', 'tile:BO', '/p2.jpg']);
+    // Members the server didn't ship still count.
+    assert.deepEqual((await draw([stripPhoto(1), stripBen], 9)).tiles, ['/p1.jpg', 'tile:BO', '+7']);
+    // A deleted entity is a muted, unlinked tile; an entity without declared media still gets its initials.
+    assert.deepEqual(await draw([stripBen, stripGone, stripDee]), { tiles: ['tile:BO', 'tile:?', 'tile:DF'], hrefs: ['/people/ben', '/people/dee'] });
+    // A member that features nothing has no tile, but is counted.
+    assert.deepEqual((await draw([stripBen, stripPhoto(1), null])).tiles, ['tile:BO', '/p1.jpg', '+1']);
+    // Identical tiles, or nothing featured (never the actor), draw no strip.
+    assert.equal(await draw([stripBen, stripBen, stripBen]), null);
+    assert.equal(await draw([null, null]), null);
+    // Jasper (ui#27): "+N" opens the group like "Show all N"; a static group keeps a plain tile.
+    const six = { ...group, count: 6, children: [stripPhoto(1), stripAna, stripBen, stripPhoto(2), stripPhoto(3), stripPhoto(4)].map((object, n) => stripMember(n, object)), children_truncated: false, sample: { actors: group.sample.actors } };
+    const live = await renderRaw('/resources/js/vue/FeedGroup.vue', { item: six });
+    const button = live.match(/<button[^>]*sf-media-strip__more[^>]*>|<button[^>]*aria-label="Show all 6"[^>]*>/)[0];
+    assert.match(button, /aria-label="Show all 6"/);
+    assert.match(button, /aria-expanded="false"/);
+    const controls = button.match(/aria-controls="([^"]+)"/)[1];
+    assert.ok(live.includes(`id="${controls}"`), 'the +N tile controls the members');
+    assert.doesNotMatch(await renderRaw('/resources/js/vue/FeedGroup.vue', { item: six, interactive: false }), /<button[^>]*sf-media-strip__more/);
 });
 
-test('a group draws its featured objects as an avatar row, only from declared avatars', async () => {
-    const declared = (id, media) => ({ ...activity.actor, id, label: `Person ${id}`, url: `/people/${id}`, media });
-    const ben = declared('ben', { icon: { src: '/ben.svg' } });
-    const cara = declared('cara', { initials: 'CL', color: '#f2c94c' });
-    const row = async (sample, distinct = {}, extra = {}) => {
-        const html = await render('/resources/js/vue/FeedGroup.vue', { item: { ...group, sample, distinct, ...extra } });
-        const section = html.split('class="sf-avatar-row"')[1]?.split('class="sf-toggle"')[0] ?? null;
-
-        return section && { labels: [...section.matchAll(/aria-label="([^"]+)"/g)].map(m => m[1]), hrefs: [...section.matchAll(/href="([^"]+)"/g)].map(m => m[1]) };
-    };
-
-    assert.deepEqual(await row({ actors: [activity.actor], objects: [ben, cara, declared('dev', { initials: 'DP', color: '#1e3a8a' })] }, { objects: 5 }),
-        { labels: ['Person ben', 'Person cara', 'Person dev', '2 more'], hrefs: ['/people/ben', '/people/cara', '/people/dev'] });
-    assert.deepEqual(await row({ objects: [ben, cara] }, { objects: 2 }), { labels: ['Person ben', 'Person cara'], hrefs: ['/people/ben', '/people/cara'] });
-    // Never the actors: one object and several commenters draw no row.
-    assert.equal(await row({ actors: [ben, cara], objects: [declared('brief', { initials: 'BR', color: '#e11d48' })] }, { actors: 4, objects: 1 }), null);
-    // Fewer than two declared avatars, identical pictures, deleted or undeclared entities add nothing.
-    assert.equal(await row({ objects: [ben, declared('plain', null), declared('half', { initials: 'HA' })] }), null);
-    assert.equal(await row({ objects: [ben, declared('ben2', { icon: { src: '/ben.svg' } })] }), null);
-    assert.equal(await row({ objects: [ben, { ...cara, tombstone: { formerType: 'person' } }] }), null);
-    // Photographs take the strip instead; an open group keeps its row (ui#26).
-    assert.equal(await row({ objects: [{ ...photoEntity('/photo'), media: { ...photoEntity('/photo').media, icon: { src: '/i.svg' } } }, ben, cara] }), null);
-    assert.deepEqual((await row({ objects: [ben, cara] }, {}, { headline_template: null }))?.labels, ['Person ben', 'Person cara']);
-});
-test('expanding a group keeps its rail faces and sampled media in place', async () => {
-    const item = { ...group, sample: { actors: [activity.actor, { ...activity.actor, id: '2' }], objects: [photoEntity('/kept')] } };
-    const expanded = await render('/resources/js/vue/FeedGroup.vue', { item: { ...item, headline_template: null }, rail: 'actor' });
+test('expanding a group keeps its rail faces and strip in place', async () => {
+    const item = { ...group, count: 2, headline_template: null, children: [stripMember(1, stripPhoto(1)), stripMember(2, stripPhoto(2))], sample: { actors: [activity.actor, { ...activity.actor, id: '2' }] } };
+    const expanded = await render('/resources/js/vue/FeedGroup.vue', { item, rail: 'actor' });
     assert.match(expanded, /Show less/);
     const head = expanded.split('class="sf-children"')[0];
-    assert.match(head, /\/kept/);
+    assert.match(head, /\/p1\.jpg/);
     assert.match(head, /sf-media-strip/);
     assert.equal((head.match(/sf-avatar--pair/g) ?? []).length, 2);
 });
@@ -915,7 +918,8 @@ test("an Image body draws its own picture, else the slot it names, custom slots 
 
 test("a stored or custom-slot Image stands for its entity in a group's strip", async () => {
     const photo = (id, body, media = null) => ({ type: 'document', id, label: id, url: '/' + id, body: [{ $body: 'Storyfeed/Body/Image', $v: 3, ...body }], media });
-    const item = { ...group, children: [], count: 2, sample: { actors: group.sample.actors, objects: [photo('a', { src: '/own.jpg' }), photo('b', { image: 'slots.chart' }, { slots: { chart: { src: '/chart.svg' } } })] } };
+    const objects = [photo('a', { src: '/own.jpg' }), photo('b', { image: 'slots.chart' }, { slots: { chart: { src: '/chart.svg' } } })];
+    const item = { ...group, count: 2, children: objects.map((object, n) => ({ ...activity, id: `m${n}`, object })), sample: { actors: group.sample.actors } };
     const html = await renderRaw('/resources/js/vue/FeedStream.vue', { items: [item], grouped: false });
     assert.match(html, /src="\/own\.jpg"/);
     assert.match(html, /src="\/chart\.svg"/);

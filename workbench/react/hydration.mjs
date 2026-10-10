@@ -3,6 +3,7 @@ import { createServer } from 'vite';
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server';
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 const server = await createServer({
     configFile: false,
     appType: 'custom',
@@ -36,6 +37,17 @@ const server = await createServer({
 const { default: Fixture } = await server.ssrLoadModule(
     '/workbench/react/HydrationFixture.tsx',
 );
+// The strip samples' photographs (`npm run workbench` copies them into build/).
+server.middlewares.use(async (req, res, next) => {
+    if (!req.url.startsWith('/workbench-media/')) return next();
+    try {
+        res.setHeader('Content-Type', 'image/jpeg');
+        res.end(await readFile(new URL(`../media/${req.url.slice('/workbench-media/'.length).replace(/[^a-z0-9.-]/gi, '')}`, import.meta.url)));
+    } catch {
+        res.statusCode = 404;
+        res.end();
+    }
+});
 server.middlewares.use(async (req, res, next) => {
     if (!req.url.startsWith('/hydrate')) return next();
     const pinned = req.url.includes('pinned');

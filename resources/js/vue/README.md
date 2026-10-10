@@ -81,15 +81,14 @@ Group avatar samples never imply that one actor represents many.
 Groups consume core's explicit pinned singular slots; distinct=1 alone does
 not pin a role. Groups read their own headline/template; Summary rendering
 has been removed, mirroring core. Unknown extra payload keys are ignored.
-Group photograph strips sample Image bodies of the group's objects only, never
-its actors, deduplicate by image source and cap at three.
-When those objects have no photographs, a group draws them as a row of their
-avatars instead ("Ana added Ben, Cara and 2 others to Kitchen remodel"): only
-avatars an object declares (`media.icon`, or `media.initials` with
-`media.color`), each linked to its entity and labelled with its name, with
-"+N" for the objects not sampled. The row is skipped when it would add
-nothing: fewer than two avatars, or all the same picture.
-Expanded groups suppress the strip and the row.
+Below the headline, a group draws a strip: one tile per member activity, newest first, each the
+thumbnail of what that activity features: its picture (an Image body, else
+its icon), else that entity's avatar, its initials on its colour. Every tile
+is the same rounded square, spaced, never overlapped, and links to its entity;
+a deleted entity is a muted, unlinked tile. Up to four tiles; past that, three
+and a "+N" tile counting the members not shown. On a group that can open, the "+N" tile opens and
+closes it like "Show all N". A strip of identical tiles is
+skipped. It stays in place when the group expands.
 
 `grouped=false` hides day headings. `dividers` maps item IDs to labels to render
 before those items. `divider-style="dot"` is the default;

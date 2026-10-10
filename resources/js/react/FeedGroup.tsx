@@ -1,8 +1,6 @@
+import { useId, useState, type SyntheticEvent } from 'react';
 import type { GroupNode } from '../shared/types';
-import { imageOf } from '../shared/body';
-import { avatarRow, featured } from '../shared/avatarRow';
-import { entityLink } from '../shared/link';
-import FeedAvatarRow from './FeedAvatarRow';
+import { strip as stripOf } from '../shared/strip';
 import FeedItem, { useNodeTime } from './FeedItem';
 import type { NodeProps } from './FeedItem';
 import FeedHeadline from './FeedHeadline';
@@ -27,20 +25,15 @@ export default function FeedGroup({
         (collapsed === null
             ? !interactive || (!item.headline_template && !item.headline)
             : !collapsed);
+    // The disclosure's state, shared with the strip's "+N" tile, which opens and
+    // closes the members like the summary does (ui#27); `onToggle` keeps it in
+    // step with the native summary.
+    const [isOpen, setOpen] = useState(open);
+    const membersId = `sf-members-${useId()}`;
     const Disclosure = interactive ? 'details' : 'div';
     const hidden = Math.max(0, item.count - item.children.length);
-    const seen = new Set<string>();
-    // The featured entities (the objects), never the actor: see the Vue kit's FeedGroup.
-    const tiles = featured(item)
-        .flatMap((entity) => {
-            const image = imageOf(entity);
-            if (!image || seen.has(image.src)) return [];
-            seen.add(image.src);
-            return [{ image, href: entityLink(entity)?.href ?? null }];
-        })
-        .slice(0, 3);
-    // Expanding adds, it never takes away: strip and avatar row stay in place (ui#26).
-    const row = tiles.length ? null : avatarRow(item);
+    // One tile per member activity; it stays in place when the group expands (ui#26, ui#27).
+    const strip = stripOf(item);
     return (
         <div
             className={`sf-row relative flex items-start gap-(--sf-gap) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter:--spacing(8)] [--sf-gap:--spacing(3)] [--sf-disc:--spacing(8)] [--sf-badge:--spacing(3.5)] [--sf-badge-face:--spacing(4.5)] text-base leading-[1.6]${
@@ -78,13 +71,15 @@ export default function FeedGroup({
                 <FeedMeta node={item} templates={[item.headline_template]}>
                     {timestamp}
                 </FeedMeta>
-                <FeedMediaStrip tiles={tiles} />
-                {row && (
-                    <FeedAvatarRow
-                        entities={row.entities}
-                        overflow={row.overflow}
-                    />
-                )}
+                <FeedMediaStrip
+                    tiles={strip?.tiles ?? []}
+                    overflow={strip?.overflow}
+                    toggle={
+                        interactive && item.children.length > 0
+                            ? { expanded: isOpen, controls: membersId, label: `Show all ${item.count}`, onToggle: () => setOpen((value) => !value) }
+                            : null
+                    }
+                />
                 {body?.({ node: item })}
                 {annotations?.({ node: item })}
                 {item.children.length > 0 && (
@@ -94,7 +89,7 @@ export default function FeedGroup({
                                 ? 'group/disclosure sf-disclosure print:[&::details-content]:block print:[&::details-content]:[content-visibility:visible]'
                                 : undefined
                         }
-                        {...(interactive ? { open } : {})}
+                        {...(interactive ? { open: isOpen, onToggle: (event: SyntheticEvent<HTMLElement>) => setOpen((event.currentTarget as HTMLDetailsElement).open) } : {})}
                     >
                         {interactive && (
                             <summary className="sf-toggle mt-1 inline-flex min-h-6 items-center cursor-pointer list-none rounded-sm border-0 bg-transparent p-0 text-sm leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden print:hidden">
@@ -105,6 +100,7 @@ export default function FeedGroup({
                             </summary>
                         )}
                         <div
+                            id={membersId}
                             className={`sf-children mt-3 ${
                                 !interactive && !open
                                     ? 'hidden print:block'

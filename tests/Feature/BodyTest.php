@@ -455,10 +455,8 @@ it('draws an Image body\'s own picture, else the slot it names, custom slots inc
 
 it('lets a stored or custom-slot Image stand for its entity in a group\'s strip', function () {
     $photo = fn (string $id, array $body, array $media = []) => ['type' => 'document', 'id' => $id, 'label' => $id, 'url' => '/'.$id, 'body' => [['$body' => 'Storyfeed/Body/Image', '$v' => 3, ...$body]], 'media' => $media];
-    $item = ['kind' => 'group', 'headline' => 'Three photos', 'count' => 2, 'sample' => ['objects' => [
-        $photo('a', ['src' => '/own.jpg']),
-        $photo('b', ['image' => 'slots.chart'], ['slots' => ['chart' => ['src' => '/chart.svg']]]),
-    ]], 'children' => []];
+    $objects = [$photo('a', ['src' => '/own.jpg']), $photo('b', ['image' => 'slots.chart'], ['slots' => ['chart' => ['src' => '/chart.svg']]])];
+    $item = ['kind' => 'group', 'headline' => 'Two photos', 'count' => 2, 'children' => array_map(fn (array $object) => ['kind' => 'activity', 'headline' => 'A photo', 'object' => $object], $objects)];
     expect(Blade::render('<x-storyfeed::feed :items="[$item]" :grouped="false" />', compact('item')))->toContain('src="/own.jpg"', 'src="/chart.svg"');
 });
 

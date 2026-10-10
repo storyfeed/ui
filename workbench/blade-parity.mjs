@@ -160,7 +160,7 @@ try {
                     }
                 }
                 const geometry = await Promise.all(frames.map(frame => frame.evaluate(() => {
-                    const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media', '.sf-facts', '.sf-facts__row', '.sf-facts__label', '.sf-facts__value', '.sf-facts__value > span', '.sf-rich-text', '.sf-rich-text *', '.sf-list-block', '.sf-list__prose *', '.sf-avatar-row', '.sf-avatar-row > *', '.sf-avatar-row .sf-avatar', '.sf-table-block', '.sf-table__prose *', '.sf-media-object__image img', '.sf-cta', '.sf-cta > *', '.sf-cta__action'];
+                    const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media', '.sf-facts', '.sf-facts__row', '.sf-facts__label', '.sf-facts__value', '.sf-facts__value > span', '.sf-rich-text', '.sf-rich-text *', '.sf-list-block', '.sf-list__prose *', '.sf-media-strip > *', '.sf-avatar--tile', '.sf-table-block', '.sf-table__prose *', '.sf-media-object__image img', '.sf-cta', '.sf-cta > *', '.sf-cta__action'];
                     return Object.fromEntries(selectors.map(selector => [selector, [...document.querySelectorAll(selector)].filter(e => !e.closest('details:not([open]) .sf-children') && e.getClientRects().length && e.getBoundingClientRect().height > 0).map(e => {
                         const r = e.getBoundingClientRect();
                         return { x: r.x, y: r.y, w: r.width, h: r.height, text: e.textContent.trim().replace(/\s+/g, ' ') };
@@ -243,21 +243,47 @@ try {
                     }));
                     assert.deepEqual(cards, [[1.9, 'cover'], [1, 'cover'], [1, 'cover'], [1.9, 'contain'], [1, 'cover']].map(([ratio, fit]) => ({ ratio, fit, readable: true })), `${renderers[i]} ${width} ${text}: card pictures`);
                 }
-                // A group's featured objects draw as an avatar row; the actor never feeds the row or the strip.
+                // A group's strip: one uniform square tile per member activity, a picture or the entity's avatar, then "+N" (ui#27).
                 if (text === 'default' && state === 'collapsed') for (let i = 0; i < frames.length; i++) {
-                    const rows = await frames[i].locator('.example:has(>h2:text-is("Featured avatar row")) .sf-row:not(.sf-children .sf-row)').evaluateAll(rows => rows.map(row => ({
-                        avatars: [...row.querySelectorAll('.sf-avatar-row .sf-avatar')].map(avatar => [avatar.getAttribute('aria-label'), avatar.closest('a')?.getAttribute('href') ?? null]),
-                        more: row.querySelector('.sf-avatar-row__more')?.textContent.trim() ?? null,
-                        strip: row.querySelectorAll('.sf-media-strip').length,
+                    const strips = await frames[i].locator('.example:has(>h2:text-matches("^Strip: ")) .sf-row:not(.sf-children .sf-row) .sf-media-strip').evaluateAll(strips => strips.map(strip => [...strip.children].map(tile => {
+                        const box = tile.getBoundingClientRect();
+                        const href = tile.getAttribute('href');
+                        const kind = tile.classList.contains('sf-media-strip__more') ? tile.textContent.trim() : tile.querySelector('img') ? 'picture' : `avatar:${tile.querySelector('.sf-avatar')?.textContent.trim() ?? tile.textContent.trim()}`;
+                        return { kind, href, w: Math.round(box.width * 100) / 100, h: Math.round(box.height * 100) / 100 };
                     })));
-                    assert.deepEqual(rows, [
-                        { avatars: [['Ben Okafor', '#ben'], ['Cara Lindqvist', '#cara'], ['Dev Patel', '#dev']], more: '+2', strip: 0 },
-                        { avatars: [['Ben Okafor', '#ben'], ['Cara Lindqvist', '#cara']], more: null, strip: 0 },
-                        { avatars: [], more: null, strip: 0 },
-                        { avatars: [], more: null, strip: 0 },
-                        { avatars: [], more: null, strip: 0 },
-                        { avatars: [], more: null, strip: 0 },
-                    ], `${renderers[i]}: featured avatar rows`);
+                    assert.deepEqual(strips.map(tiles => tiles.map(tile => tile.kind)), [
+                        ['picture', 'avatar:IN', 'picture', '+3'],
+                        ['picture', 'picture', 'picture', '+6'],
+                        ['avatar:M', 'picture', 'picture'],
+                        ['picture', 'picture'],
+                    ], `${renderers[i]} ${width}: strip tiles`);
+                    const sizes = strips.flat().map(tile => [tile.w, tile.h]);
+                    assert.ok(sizes.every(([w, h]) => w === sizes[0][0] && h === sizes[0][0]), `${renderers[i]} ${width}: every strip tile is the same square`);
+                    assert.ok(strips.flat().filter(tile => !tile.kind.startsWith('+')).every(tile => tile.href?.startsWith('/')), `${renderers[i]}: every tile links to its entity`);
+                    // Jasper (ui#27): the "+N" tile opens and closes the group exactly like "Show all N", by click and by keyboard.
+                    const album = frames[i].locator('.example:has(>h2:text-is("Strip: photos uploaded to an album")) .sf-row:not(.sf-children .sf-row)').first();
+                    const more = album.locator('.sf-media-strip__more');
+                    assert.equal(await more.evaluate(button => button.tagName), 'BUTTON', `${renderers[i]}: the +N tile is a button`);
+                    assert.equal(await more.getAttribute('aria-label'), 'Show all 9', `${renderers[i]}: the +N tile's name`);
+                    assert.equal(await more.getAttribute('aria-controls'), await album.locator('.sf-children').getAttribute('id'), `${renderers[i]}: the +N tile controls the members`);
+                    const read = async () => ({ open: await album.locator('.sf-children').isVisible(), expanded: await more.getAttribute('aria-expanded') });
+                    // A details element announces its toggle a task later, so wait for the state rather than reading it once.
+                    const settle = async (want) => { for (let t = 0; t < 40; t++) { const now = await read(); if (now.open === want.open && now.expanded === want.expanded) return now; await new Promise(r => setTimeout(r, 50)); } return read(); };
+                    assert.deepEqual(await settle({ open: false, expanded: 'false' }), { open: false, expanded: 'false' }, `${renderers[i]}: collapsed to start`);
+                    await more.click();
+                    assert.deepEqual(await settle({ open: true, expanded: 'true' }), { open: true, expanded: 'true' }, `${renderers[i]}: clicking +N opens the group`);
+                    assert.match(await album.locator('.sf-toggle').innerText(), /Show less/, `${renderers[i]}: the toggle follows`);
+                    await more.click();
+                    assert.deepEqual(await settle({ open: false, expanded: 'false' }), { open: false, expanded: 'false' }, `${renderers[i]}: clicking +N again closes it`);
+                    await more.focus();
+                    await more.press('Enter');
+                    assert.deepEqual(await settle({ open: true, expanded: 'true' }), { open: true, expanded: 'true' }, `${renderers[i]}: Enter opens the group`);
+                    await more.press(' ');
+                    assert.deepEqual(await settle({ open: false, expanded: 'false' }), { open: false, expanded: 'false' }, `${renderers[i]}: Space closes it`);
+                    await album.locator('.sf-toggle').click();
+                    assert.deepEqual(await settle({ open: true, expanded: 'true' }), { open: true, expanded: 'true' }, `${renderers[i]}: the +N tile follows the toggle`);
+                    await album.locator('.sf-toggle').click();
+                    assert.deepEqual(await settle({ open: false, expanded: 'false' }), { open: false, expanded: 'false' }, `${renderers[i]}: and closes with it`);
                 }
                 if (renderers.length === 3 && text === 'default') for (let i = 0; i < frames.length; i++) {
                     const icons = frames[i].locator('.example:has(>h2:text-is("Icon Image bodies")) .sf-object-media > a');

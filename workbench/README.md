@@ -50,3 +50,14 @@ full row width (ui#23). All three kits require 0px geometry parity. The "Type
 scale" case also re-renders a row inside a 14px host to check it keeps its own
 sizes. Light/dark card captures
 and measurements use `k4-`.
+
+## Group strip samples
+
+The "Strip: …" cases in `vue/cases.json` are real core output, not hand-built
+nodes: `StripCasesTest.php` publishes four scenes through core (people added
+to a project, photos uploaded to an album, a mixed group, a two-member group),
+reads them back as a live feed and writes each group into `cases.json`. They
+need core 0.18 (every entity has an avatar); install core main and run
+`npm run workbench:strip-cases` to regenerate them. The photographs are the
+docs world's Unsplash set, reduced in `media/` (credits in `media/CREDITS.md`);
+`npm run workbench` copies them to `build/workbench-media/`.

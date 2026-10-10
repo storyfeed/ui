@@ -147,49 +147,56 @@ it('uses only pinned group singulars', function () {
     }
 });
 
-it('samples Image bodies of the featured objects only, never the actor, and deduplicates and caps strips', function () {
-    $photo = fn ($src) => ['type' => 'document', 'id' => $src, 'label' => 'Artwork', 'url' => '/art'.$src, 'body' => [['$body' => 'Storyfeed/Body/Image', 'image' => 'preview']], 'media' => ['preview' => ['src' => $src]]];
-    $base = ['kind' => 'group', 'headline' => 'Updates', 'count' => 4];
-    $item = [...$base, 'sample' => ['objects' => [$photo('/picture')]]];
-    expect(render_blade('<x-storyfeed::group :group="$item" />', compact('item')))->toContain('src="/picture"');
-    foreach (['actors', 'targets', 'contexts', 'origins', 'results', 'instruments', 'locations', 'generators'] as $role) {
-        $item = [...$base, 'sample' => [$role => [$photo('/picture')]]];
-        expect(Blade::render('<x-storyfeed::group :group="$item" />', compact('item')))->not->toContain('src="/picture"', 'class="sf-media-strip');
+/** A group's strip in order (a src, `tile:<initials>` or `+N`) and its links, or null when there is none. */
+function strip_tiles(string $html): ?array
+{
+    $html = (string) preg_replace('/<!--.*?-->/s', '', $html);
+    if (! str_contains($html, 'sf-media-strip ')) {
+        return null;
     }
-    $item = [...$base, 'sample' => ['objects' => [$photo('/a'), $photo('/b'), $photo('/a'), $photo('/c'), $photo('/d')]]];
-    $html = render_blade('<x-storyfeed::group :group="$item" />', compact('item'));
-    expect(substr_count($html, '<img'))->toBe(3)->and($html)->toContain('src="/a"', 'src="/b"', 'src="/c"')->not->toContain('src="/d"');
-});
+    $section = preg_split('/sf-toggle|sf-children/', explode('sf-media-strip ', $html, 2)[1])[0];
+    preg_match_all('/<img[^>]+src="([^"]+)"|class="[^"]*sf-avatar--tile[^"]*"[^>]*>([^<]*)<|sf-media-strip__more[^>]*>\+(\d+)</', $section, $matches, PREG_SET_ORDER);
+    preg_match_all('/href="([^"]+)"/', $section, $hrefs);
 
-it('draws a group\'s featured objects as an avatar row, only from declared avatars', function () {
-    $declared = fn (string $id, ?array $media) => ['type' => 'person', 'id' => $id, 'label' => "Person {$id}", 'url' => "/people/{$id}", 'media' => $media];
-    $ben = $declared('ben', ['icon' => ['src' => '/ben.svg']]);
-    $cara = $declared('cara', ['initials' => 'CL', 'color' => '#f2c94c']);
-    $row = function (array $sample, array $distinct = [], array $extra = [], array $props = []) {
-        $item = ['kind' => 'group', 'headline' => 'Updates', 'count' => 4, 'sample' => $sample, 'distinct' => $distinct, 'children' => [['kind' => 'activity', 'headline' => 'Member']], ...$extra];
-        $html = Blade::render('<x-storyfeed::group :group="$item" :interactive="$interactive" :collapsed="$collapsed" />', ['item' => $item, 'interactive' => $props['interactive'] ?? true, 'collapsed' => $props['collapsed'] ?? true]);
-        $section = str_contains($html, 'class="sf-avatar-row ') ? explode('</div>', explode('class="sf-avatar-row ', $html)[1])[0] : null;
+    return [
+        'tiles' => array_map(fn (array $m) => ($m[1] ?? '') !== '' ? $m[1] : (isset($m[3]) ? '+'.$m[3] : 'tile:'.trim($m[2])), $matches),
+        'hrefs' => $hrefs[1],
+    ];
+}
 
-        return $section === null ? null : [
-            'labels' => preg_match_all('/aria-label="([^"]+)"/', $section, $labels) ? $labels[1] : [],
-            'hrefs' => preg_match_all('/href="([^"]+)"/', $section, $hrefs) ? $hrefs[1] : [],
-        ];
+it('draws a group strip of one tile per member activity, never a blank', function () {
+    $photo = fn (int $n) => ['type' => 'photo', 'id' => (string) $n, 'label' => "IMG_{$n}.jpg", 'url' => "/photos/{$n}", 'body' => [['$body' => 'Storyfeed/Body/Image', 'image' => 'preview']], 'media' => ['preview' => ['src' => "/p{$n}.jpg", 'width' => 192, 'height' => 144]]];
+    $ana = ['type' => 'person', 'id' => 'ana', 'label' => 'Ana Silva', 'url' => '/people/ana', 'media' => ['icon' => ['src' => '/ana.jpg']]];
+    $ben = ['type' => 'person', 'id' => 'ben', 'label' => 'Ben Okafor', 'url' => '/people/ben', 'media' => ['icon' => null, 'initials' => 'BO', 'color' => '#438d98']];
+    $gone = ['type' => 'person', 'id' => 'cara', 'label' => null, 'url' => null, 'media' => ['icon' => null, 'initials' => '?', 'color' => '#6b7280'], 'tombstone' => ['formerType' => 'person']];
+    $dee = ['type' => 'person', 'id' => 'dee', 'label' => 'Dee Ford', 'url' => '/people/dee', 'media' => null];
+    $draw = function (array $objects, ?int $count = null) {
+        $item = ['kind' => 'group', 'headline' => 'Updates', 'count' => $count ?? count($objects), 'children' => array_map(fn ($object) => ['kind' => 'activity', 'headline' => 'Member', 'object' => $object], $objects)];
+
+        return strip_tiles(Blade::render('<x-storyfeed::group :group="$item" />', compact('item')));
     };
 
-    expect($row(['actors' => [$declared('ana', null)], 'objects' => [$ben, $cara, $declared('dev', ['initials' => 'DP', 'color' => '#1e3a8a'])]], ['objects' => 5]))
-        ->toBe(['labels' => ['Person ben', 'Person cara', 'Person dev', '2 more'], 'hrefs' => ['/people/ben', '/people/cara', '/people/dev']])
-        ->and($row(['objects' => [$ben, $cara]], ['objects' => 2]))->toBe(['labels' => ['Person ben', 'Person cara'], 'hrefs' => ['/people/ben', '/people/cara']])
-        // Never the actors: one object and several commenters draw no row.
-        ->and($row(['actors' => [$ben, $cara], 'objects' => [$declared('brief', ['initials' => 'BR', 'color' => '#e11d48'])]], ['actors' => 4, 'objects' => 1]))->toBeNull()
-        // Fewer than two declared avatars, identical pictures, deleted or undeclared entities add nothing.
-        ->and($row(['objects' => [$ben, $declared('plain', null), $declared('half', ['initials' => 'HA'])]]))->toBeNull()
-        ->and($row(['objects' => [$ben, $declared('ben2', ['icon' => ['src' => '/ben.svg']])]]))->toBeNull()
-        ->and($row(['objects' => [$ben, [...$cara, 'tombstone' => ['formerType' => 'person']]]]))->toBeNull()
-        // Photographs take the strip instead; an open group keeps its row (ui#26).
-        ->and($row(['objects' => [[...$ben, 'id' => 'photo', 'body' => [['$body' => 'Storyfeed/Body/Image', 'image' => 'preview']], 'media' => ['icon' => ['src' => '/i.svg'], 'preview' => ['src' => '/photo.jpg']]], $ben, $cara]]))->toBeNull()
-        ->and($row(['objects' => [$ben, $cara]], [], [], ['interactive' => false, 'collapsed' => false])['labels'] ?? null)->toBe(['Person ben', 'Person cara'])
-        ->and($row(['objects' => [$ben, $cara]], [], [], ['collapsed' => false])['labels'] ?? null)->toBe(['Person ben', 'Person cara']);
+    // Pictures (an Image body, else the icon), else the avatar; past four tiles, three and "+N" from the count.
+    expect($draw([$photo(1), $ana, $ben, $photo(2), $photo(3), $photo(4)]))
+        ->toBe(['tiles' => ['/p1.jpg', '/ana.jpg', 'tile:BO', '+3'], 'hrefs' => ['/photos/1', '/people/ana', '/people/ben']])
+        ->and($draw([$photo(1), $ana, $ben, $photo(2)])['tiles'])->toBe(['/p1.jpg', '/ana.jpg', 'tile:BO', '/p2.jpg'])
+        // Members the server didn't ship still count.
+        ->and($draw([$photo(1), $ben], 9)['tiles'])->toBe(['/p1.jpg', 'tile:BO', '+7'])
+        // A deleted entity is a muted, unlinked tile; an entity without declared media still gets its initials.
+        ->and($draw([$ben, $gone, $dee]))->toBe(['tiles' => ['tile:BO', 'tile:?', 'tile:DF'], 'hrefs' => ['/people/ben', '/people/dee']])
+        // A member that features nothing has no tile, but is counted.
+        ->and($draw([$ben, $photo(1), null])['tiles'])->toBe(['tile:BO', '/p1.jpg', '+1'])
+        // Identical tiles, or nothing featured (never the actor), draw no strip.
+        ->and($draw([$ben, $ben, $ben]))->toBeNull()
+        ->and($draw([null, null]))->toBeNull();
+
+    // Jasper (ui#27): "+N" opens the group like "Show all N"; a static group keeps a plain tile.
+    $item = ['kind' => 'group', 'id' => 'g6', 'headline' => 'Updates', 'count' => 6, 'children' => array_map(fn ($object) => ['kind' => 'activity', 'headline' => 'Member', 'object' => $object], [$photo(1), $ana, $ben, $photo(2), $photo(3), $photo(4)])];
+    $live = Blade::render('<x-storyfeed::group :group="$item" />', compact('item'));
+    expect($live)->toMatch('/<button type="button" aria-label="Show all 6" aria-expanded="false" aria-controls="sf-members-g6"/')->toContain('id="sf-members-g6"', 'ontoggle=');
+    expect(Blade::render('<x-storyfeed::group :group="$item" :interactive="false" />', compact('item')))->not->toContain('<button type="button" aria-label="Show all 6"');
 });
+
 it('supports file MIME labels and host labellers through the feed without changing the body', function () {
     $body = ['$body' => 'Storyfeed/Body/FileAttachment', 'name' => 'report.csv', 'size' => 21_000_000, 'mediaType' => 'text/csv'];
     $item = ['kind' => 'activity', 'object' => ['label' => 'report.csv', 'body' => [$body]]];
@@ -353,8 +360,8 @@ it('draws several actors as a diagonal pair whose front face keeps the verb badg
 it('keeps a group\'s rail faces and strip in place when it expands', function (bool $interactive) {
     $photo = fn (string $src) => ['type' => 'photo', 'id' => $src, 'label' => 'Photo', 'url' => '/photos'.$src, 'body' => [['$body' => 'Storyfeed/Body/Image', 'image' => 'preview']], 'media' => ['preview' => ['src' => $src]]];
     $item = ['kind' => 'group', 'headline' => 'Ana and Ben uploaded photos', 'count' => 2, 'glyph' => 'file-up',
-        'sample' => ['actors' => [['id' => 'ana', 'label' => 'Ana'], ['id' => 'ben', 'label' => 'Ben']], 'objects' => [$photo('/one.jpg'), $photo('/two.jpg')]],
-        'children' => [['kind' => 'activity', 'headline' => 'Ana uploaded a photo'], ['kind' => 'activity', 'headline' => 'Ben uploaded a photo']]];
+        'sample' => ['actors' => [['id' => 'ana', 'label' => 'Ana'], ['id' => 'ben', 'label' => 'Ben']]],
+        'children' => [['kind' => 'activity', 'headline' => 'Ana uploaded a photo', 'object' => $photo('/one.jpg')], ['kind' => 'activity', 'headline' => 'Ben uploaded a photo', 'object' => $photo('/two.jpg')]]];
     $html = Blade::render('<x-storyfeed::feed :items="[$item]" rail="actor" :interactive="$interactive" :collapsed="false" />', compact('item', 'interactive'));
     $head = explode('class="sf-children', $html)[0];
     expect(substr_count($head, 'sf-avatar--pair'))->toBe(2)

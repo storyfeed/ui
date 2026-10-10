@@ -17,8 +17,8 @@ export default function EntityAvatar({
     className = '',
 }: {
     entity: FeedEntity | null;
-    /** `pair` is one face of a rail's diagonal pair (ui#25). */
-    size?: 'sm' | 'md' | 'badge' | 'pair';
+    /** `tile` fills a group strip's rounded square (ui#27); `pair` is one face of a rail's diagonal pair (ui#25). */
+    size?: 'sm' | 'md' | 'badge' | 'tile' | 'pair';
     /** Extra classes, such as a pair face's placement. */
     className?: string;
 }) {
@@ -55,6 +55,7 @@ export default function EntityAvatar({
         md: 'sf-avatar--md size-[var(--sf-disc,--spacing(8))] text-xs',
         sm: 'sf-avatar--sm size-6 text-[length:--spacing(2.5)]',
         pair: 'sf-avatar--pair size-full text-[length:--spacing(2.75)]',
+        tile: 'sf-avatar--tile aspect-square size-full rounded-lg! ring-0! text-[length:--spacing(5)]',
         badge: 'sf-avatar--badge [--sf-badge:var(--sf-badge-face)] absolute top-[calc(var(--sf-disc)-var(--sf-badge)+--spacing(0.5))] left-[calc(50%+var(--sf-disc)/2-var(--sf-badge))] size-(--sf-badge) text-[length:--spacing(2.25)]',
     };
     return (

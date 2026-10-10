@@ -5934,5 +5934,3075 @@
         "glyph": "file-up"
       }
     ]
+  },
+  {
+    "name": "Strip: people added to a project",
+    "rail": "actor",
+    "collapsed": true,
+    "items": [
+      {
+        "kind": "group",
+        "id": "grp_44821e4de8f20204655b3e0a299aec35c7abba90",
+        "axis": "repeat",
+        "count": 6,
+        "verb": "add",
+        "published_at": "2026-08-14T12:06:00.000000Z",
+        "headline_template": ":actor added :count people to :target",
+        "headline": null,
+        "glyph": "user-plus",
+        "glyph_intent": null,
+        "actor": {
+          "type": "person",
+          "id": "1",
+          "label": "Ana Silva",
+          "link": {
+            "href": "/people/1",
+            "modal": false,
+            "attributes": []
+          },
+          "data": {
+            "photo": null
+          },
+          "media": {
+            "icon": null,
+            "image": null,
+            "preview": null,
+            "initials": "AS",
+            "color": "#4338ca",
+            "files": [],
+            "slots": []
+          },
+          "body": null,
+          "tombstone": null
+        },
+        "object": null,
+        "target": {
+          "type": "project",
+          "id": "1",
+          "label": "Kitchen remodel",
+          "link": {
+            "href": "/projects/1",
+            "modal": false,
+            "attributes": []
+          },
+          "data": [],
+          "media": {
+            "icon": null,
+            "image": null,
+            "preview": null,
+            "initials": "KR",
+            "color": "#7e22ce",
+            "files": [],
+            "slots": []
+          },
+          "body": null,
+          "tombstone": null
+        },
+        "context": null,
+        "origin": null,
+        "result": null,
+        "instrument": null,
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "1",
+              "label": "Ana Silva",
+              "link": {
+                "href": "/people/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "AS",
+                "color": "#4338ca",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            }
+          ],
+          "objects": [
+            {
+              "type": "person",
+              "id": "10",
+              "label": "Gia Romano",
+              "link": {
+                "href": "/people/10",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "parlour"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/parlour.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "9",
+              "label": "Iris Novak",
+              "link": {
+                "href": "/people/9",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "IN",
+                "color": "#b45309",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "8",
+              "label": "Eli Brooks",
+              "link": {
+                "href": "/people/8",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "arcade"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/arcade.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            }
+          ],
+          "targets": [
+            {
+              "type": "project",
+              "id": "1",
+              "label": "Kitchen remodel",
+              "link": {
+                "href": "/projects/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "KR",
+                "color": "#7e22ce",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            }
+          ],
+          "contexts": [],
+          "origins": [],
+          "results": [],
+          "instruments": []
+        },
+        "distinct": {
+          "actors": 1,
+          "objects": 6,
+          "targets": 1,
+          "contexts": 0,
+          "origins": 0,
+          "results": 0,
+          "instruments": 0
+        },
+        "children": [
+          {
+            "kind": "activity",
+            "id": "01m4hxw6drsv72kv221hcspqbj",
+            "verb": "add",
+            "published_at": "2026-08-14T12:06:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor added :object to :target",
+            "headline": null,
+            "glyph": "user-plus",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "1",
+              "label": "Ana Silva",
+              "link": {
+                "href": "/people/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "AS",
+                "color": "#4338ca",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "10",
+              "label": "Gia Romano",
+              "link": {
+                "href": "/people/10",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "parlour"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/parlour.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "1",
+              "label": "Kitchen remodel",
+              "link": {
+                "href": "/projects/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "KR",
+                "color": "#7e22ce",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4hxw6dhs28vy5189atqggwt",
+            "verb": "add",
+            "published_at": "2026-08-14T12:05:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor added :object to :target",
+            "headline": null,
+            "glyph": "user-plus",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "1",
+              "label": "Ana Silva",
+              "link": {
+                "href": "/people/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "AS",
+                "color": "#4338ca",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "9",
+              "label": "Iris Novak",
+              "link": {
+                "href": "/people/9",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "IN",
+                "color": "#b45309",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "1",
+              "label": "Kitchen remodel",
+              "link": {
+                "href": "/projects/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "KR",
+                "color": "#7e22ce",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4hxw6d9ye82kv0r13arpc95",
+            "verb": "add",
+            "published_at": "2026-08-14T12:04:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor added :object to :target",
+            "headline": null,
+            "glyph": "user-plus",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "1",
+              "label": "Ana Silva",
+              "link": {
+                "href": "/people/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "AS",
+                "color": "#4338ca",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "8",
+              "label": "Eli Brooks",
+              "link": {
+                "href": "/people/8",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "arcade"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/arcade.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "1",
+              "label": "Kitchen remodel",
+              "link": {
+                "href": "/projects/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "KR",
+                "color": "#7e22ce",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4hxw6d278mvqzzxxx9dwhby",
+            "verb": "add",
+            "published_at": "2026-08-14T12:03:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor added :object to :target",
+            "headline": null,
+            "glyph": "user-plus",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "1",
+              "label": "Ana Silva",
+              "link": {
+                "href": "/people/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "AS",
+                "color": "#4338ca",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "7",
+              "label": "Jon Bauer",
+              "link": {
+                "href": "/people/7",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "JB",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "1",
+              "label": "Kitchen remodel",
+              "link": {
+                "href": "/projects/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "KR",
+                "color": "#7e22ce",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4hxw6cv63cfxhrzne0xwn0t",
+            "verb": "add",
+            "published_at": "2026-08-14T12:02:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor added :object to :target",
+            "headline": null,
+            "glyph": "user-plus",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "1",
+              "label": "Ana Silva",
+              "link": {
+                "href": "/people/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "AS",
+                "color": "#4338ca",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "6",
+              "label": "Hugo Martin",
+              "link": {
+                "href": "/people/6",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "HM",
+                "color": "#c2410c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "1",
+              "label": "Kitchen remodel",
+              "link": {
+                "href": "/projects/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "KR",
+                "color": "#7e22ce",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4hxw6c8ryysgqkvf953qx8h",
+            "verb": "add",
+            "published_at": "2026-08-14T12:01:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor added :object to :target",
+            "headline": null,
+            "glyph": "user-plus",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "1",
+              "label": "Ana Silva",
+              "link": {
+                "href": "/people/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "AS",
+                "color": "#4338ca",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "5",
+              "label": "Fay Laurent",
+              "link": {
+                "href": "/people/5",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "FL",
+                "color": "#4d7c0f",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "1",
+              "label": "Kitchen remodel",
+              "link": {
+                "href": "/projects/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "KR",
+                "color": "#7e22ce",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          }
+        ],
+        "children_truncated": false,
+        "tombstoned": [],
+        "redundant": false,
+        "distinct_tombstoned": {
+          "actors": 0,
+          "objects": 0,
+          "targets": 0,
+          "contexts": 0,
+          "origins": 0,
+          "results": 0,
+          "instruments": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "Strip: photos uploaded to an album",
+    "rail": "actor",
+    "collapsed": true,
+    "items": [
+      {
+        "kind": "group",
+        "id": "grp_c828f785c12d9f10cdb2ea2ae6881466864f5cdc",
+        "axis": "repeat",
+        "count": 9,
+        "verb": "upload",
+        "published_at": "2026-08-14T12:35:00.000000Z",
+        "headline_template": ":actor uploaded :count photos to :target",
+        "headline": null,
+        "glyph": "image",
+        "glyph_intent": null,
+        "actor": {
+          "type": "person",
+          "id": "2",
+          "label": "Ben Okafor",
+          "link": {
+            "href": "/people/2",
+            "modal": false,
+            "attributes": []
+          },
+          "data": {
+            "photo": "carousel"
+          },
+          "media": {
+            "icon": {
+              "src": "/workbench-media/carousel.jpg",
+              "mediaType": "image/jpeg",
+              "width": 192,
+              "height": 144,
+              "alt": null
+            },
+            "image": null,
+            "preview": null,
+            "initials": null,
+            "color": null,
+            "files": [],
+            "slots": []
+          },
+          "body": null,
+          "tombstone": null
+        },
+        "object": null,
+        "target": {
+          "type": "project",
+          "id": "2",
+          "label": "Summer fair",
+          "link": {
+            "href": "/projects/2",
+            "modal": false,
+            "attributes": []
+          },
+          "data": [],
+          "media": {
+            "icon": null,
+            "image": null,
+            "preview": null,
+            "initials": "SF",
+            "color": "#be123c",
+            "files": [],
+            "slots": []
+          },
+          "body": null,
+          "tombstone": null
+        },
+        "context": null,
+        "origin": null,
+        "result": null,
+        "instrument": null,
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "2",
+              "label": "Ben Okafor",
+              "link": {
+                "href": "/people/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "carousel"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/carousel.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            }
+          ],
+          "objects": [
+            {
+              "type": "file",
+              "id": "9",
+              "label": "IMG_4082.jpg",
+              "link": {
+                "href": "/files/9",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "street"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/street.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#c2410c",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_4082.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            {
+              "type": "file",
+              "id": "8",
+              "label": "IMG_4072.jpg",
+              "link": {
+                "href": "/files/8",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "arcade"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/arcade.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#4d7c0f",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_4072.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            {
+              "type": "file",
+              "id": "7",
+              "label": "IMG_4062.jpg",
+              "link": {
+                "href": "/files/7",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "sundae"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/sundae.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#15803d",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_4062.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            }
+          ],
+          "targets": [
+            {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            }
+          ],
+          "contexts": [],
+          "origins": [],
+          "results": [],
+          "instruments": []
+        },
+        "distinct": {
+          "actors": 1,
+          "objects": 9,
+          "targets": 1,
+          "contexts": 0,
+          "origins": 0,
+          "results": 0,
+          "instruments": 0
+        },
+        "children": [
+          {
+            "kind": "activity",
+            "id": "01m4hxw6fw6en3ef79gdq99p72",
+            "verb": "upload",
+            "published_at": "2026-08-14T12:35:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor uploaded :object to :target",
+            "headline": null,
+            "glyph": "image",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "2",
+              "label": "Ben Okafor",
+              "link": {
+                "href": "/people/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "carousel"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/carousel.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "9",
+              "label": "IMG_4082.jpg",
+              "link": {
+                "href": "/files/9",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "street"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/street.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#c2410c",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_4082.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4hxw6fmf5yr45t6jr1h7exn",
+            "verb": "upload",
+            "published_at": "2026-08-14T12:34:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor uploaded :object to :target",
+            "headline": null,
+            "glyph": "image",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "2",
+              "label": "Ben Okafor",
+              "link": {
+                "href": "/people/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "carousel"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/carousel.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "8",
+              "label": "IMG_4072.jpg",
+              "link": {
+                "href": "/files/8",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "arcade"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/arcade.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#4d7c0f",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_4072.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4hxw6fd2b0b12qh246z36ss",
+            "verb": "upload",
+            "published_at": "2026-08-14T12:33:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor uploaded :object to :target",
+            "headline": null,
+            "glyph": "image",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "2",
+              "label": "Ben Okafor",
+              "link": {
+                "href": "/people/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "carousel"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/carousel.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "7",
+              "label": "IMG_4062.jpg",
+              "link": {
+                "href": "/files/7",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "sundae"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/sundae.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#15803d",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_4062.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4hxw6f7tc73m6psbakjphha",
+            "verb": "upload",
+            "published_at": "2026-08-14T12:32:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor uploaded :object to :target",
+            "headline": null,
+            "glyph": "image",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "2",
+              "label": "Ben Okafor",
+              "link": {
+                "href": "/people/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "carousel"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/carousel.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "6",
+              "label": "IMG_4052.jpg",
+              "link": {
+                "href": "/files/6",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "hotdog"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/hotdog.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#0e7490",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_4052.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4hxw6ez5e7mh6wxr1y8jmd3",
+            "verb": "upload",
+            "published_at": "2026-08-14T12:31:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor uploaded :object to :target",
+            "headline": null,
+            "glyph": "image",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "2",
+              "label": "Ben Okafor",
+              "link": {
+                "href": "/people/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "carousel"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/carousel.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "5",
+              "label": "IMG_4042.jpg",
+              "link": {
+                "href": "/files/5",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "pretzel"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/pretzel.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#9f1239",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_4042.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4hxw6eqzrwb1904wn0gdan4",
+            "verb": "upload",
+            "published_at": "2026-08-14T12:30:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor uploaded :object to :target",
+            "headline": null,
+            "glyph": "image",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "2",
+              "label": "Ben Okafor",
+              "link": {
+                "href": "/people/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "carousel"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/carousel.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "4",
+              "label": "IMG_4032.jpg",
+              "link": {
+                "href": "/files/4",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "carousel"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/carousel.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#a21caf",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_4032.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4hxw6eg7434r0694x3c2xaa",
+            "verb": "upload",
+            "published_at": "2026-08-14T12:29:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor uploaded :object to :target",
+            "headline": null,
+            "glyph": "image",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "2",
+              "label": "Ben Okafor",
+              "link": {
+                "href": "/people/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "carousel"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/carousel.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "3",
+              "label": "IMG_4022.jpg",
+              "link": {
+                "href": "/files/3",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "ferris"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/ferris.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#1d4ed8",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_4022.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4hxw6e9504s54hdrse6x9aj",
+            "verb": "upload",
+            "published_at": "2026-08-14T12:28:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor uploaded :object to :target",
+            "headline": null,
+            "glyph": "image",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "2",
+              "label": "Ben Okafor",
+              "link": {
+                "href": "/people/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "carousel"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/carousel.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "2",
+              "label": "IMG_4012.jpg",
+              "link": {
+                "href": "/files/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "fireworks"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/fireworks.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#7e22ce",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_4012.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4hxw6e25ejxwe2fv4185x2q",
+            "verb": "upload",
+            "published_at": "2026-08-14T12:27:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor uploaded :object to :target",
+            "headline": null,
+            "glyph": "image",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "2",
+              "label": "Ben Okafor",
+              "link": {
+                "href": "/people/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "carousel"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/carousel.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "1",
+              "label": "IMG_4002.jpg",
+              "link": {
+                "href": "/files/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "fair"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/fair.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#1d4ed8",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_4002.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          }
+        ],
+        "children_truncated": false,
+        "tombstoned": [],
+        "redundant": false,
+        "distinct_tombstoned": {
+          "actors": 0,
+          "objects": 0,
+          "targets": 0,
+          "contexts": 0,
+          "origins": 0,
+          "results": 0,
+          "instruments": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "Strip: a mixed group",
+    "rail": "actor",
+    "collapsed": true,
+    "items": [
+      {
+        "kind": "group",
+        "id": "grp_921dcbca031d0efb26a7cf917a53af976249eca0",
+        "axis": "repeat",
+        "count": 3,
+        "verb": "share",
+        "published_at": "2026-08-14T12:58:00.000000Z",
+        "headline_template": ":actor shared :count files in :target",
+        "headline": null,
+        "glyph": "file-up",
+        "glyph_intent": null,
+        "actor": {
+          "type": "person",
+          "id": "3",
+          "label": "Cara Lindqvist",
+          "link": {
+            "href": "/people/3",
+            "modal": false,
+            "attributes": []
+          },
+          "data": {
+            "photo": null
+          },
+          "media": {
+            "icon": null,
+            "image": null,
+            "preview": null,
+            "initials": "CL",
+            "color": "#15803d",
+            "files": [],
+            "slots": []
+          },
+          "body": null,
+          "tombstone": null
+        },
+        "object": null,
+        "target": {
+          "type": "project",
+          "id": "1",
+          "label": "Kitchen remodel",
+          "link": {
+            "href": "/projects/1",
+            "modal": false,
+            "attributes": []
+          },
+          "data": [],
+          "media": {
+            "icon": null,
+            "image": null,
+            "preview": null,
+            "initials": "KR",
+            "color": "#7e22ce",
+            "files": [],
+            "slots": []
+          },
+          "body": null,
+          "tombstone": null
+        },
+        "context": null,
+        "origin": null,
+        "result": null,
+        "instrument": null,
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "3",
+              "label": "Cara Lindqvist",
+              "link": {
+                "href": "/people/3",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "CL",
+                "color": "#15803d",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            }
+          ],
+          "objects": [
+            {
+              "type": "file",
+              "id": "12",
+              "label": "Measurements",
+              "link": {
+                "href": "/files/12",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "note",
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "M",
+                "color": "#0f766e",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            {
+              "type": "file",
+              "id": "11",
+              "label": "Quote from the electrician.pdf",
+              "link": {
+                "href": "/files/11",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "pdf",
+                "photo": null
+              },
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%23b91c1c%22%2F%3E%3Cpath%20d%3D%22M20%2012h17l11%2011v29H20z%22%20fill%3D%22%23fff%22%2F%3E%3Cpath%20d%3D%22M37%2012v11h11%22%20fill%3D%22%23fecaca%22%2F%3E%3Ctext%20x%3D%2234%22%20y%3D%2245%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2211%22%20font-weight%3D%22700%22%20fill%3D%22%23b91c1c%22%20text-anchor%3D%22middle%22%3EPDF%3C%2Ftext%3E%3C%2Fsvg%3E",
+                  "mediaType": "image/svg+xml",
+                  "width": 64,
+                  "height": 64,
+                  "alt": "PDF"
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            {
+              "type": "file",
+              "id": "10",
+              "label": "Cabinet mock-up.jpg",
+              "link": {
+                "href": "/files/10",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "newspapers"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/newspapers.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "CM",
+                "color": "#0f766e",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "Cabinet mock-up.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            }
+          ],
+          "targets": [
+            {
+              "type": "project",
+              "id": "1",
+              "label": "Kitchen remodel",
+              "link": {
+                "href": "/projects/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "KR",
+                "color": "#7e22ce",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            }
+          ],
+          "contexts": [],
+          "origins": [],
+          "results": [],
+          "instruments": []
+        },
+        "distinct": {
+          "actors": 1,
+          "objects": 3,
+          "targets": 1,
+          "contexts": 0,
+          "origins": 0,
+          "results": 0,
+          "instruments": 0
+        },
+        "children": [
+          {
+            "kind": "activity",
+            "id": "01m4hxw6gnzt6faar51n4ytks2",
+            "verb": "share",
+            "published_at": "2026-08-14T12:58:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor shared :object in :target",
+            "headline": null,
+            "glyph": "file-up",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "3",
+              "label": "Cara Lindqvist",
+              "link": {
+                "href": "/people/3",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "CL",
+                "color": "#15803d",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "12",
+              "label": "Measurements",
+              "link": {
+                "href": "/files/12",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "note",
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "M",
+                "color": "#0f766e",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "1",
+              "label": "Kitchen remodel",
+              "link": {
+                "href": "/projects/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "KR",
+                "color": "#7e22ce",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4hxw6gckmbm8v3sgzq3dpzc",
+            "verb": "share",
+            "published_at": "2026-08-14T12:57:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor shared :object in :target",
+            "headline": null,
+            "glyph": "file-up",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "3",
+              "label": "Cara Lindqvist",
+              "link": {
+                "href": "/people/3",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "CL",
+                "color": "#15803d",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "11",
+              "label": "Quote from the electrician.pdf",
+              "link": {
+                "href": "/files/11",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "pdf",
+                "photo": null
+              },
+              "media": {
+                "icon": {
+                  "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%23b91c1c%22%2F%3E%3Cpath%20d%3D%22M20%2012h17l11%2011v29H20z%22%20fill%3D%22%23fff%22%2F%3E%3Cpath%20d%3D%22M37%2012v11h11%22%20fill%3D%22%23fecaca%22%2F%3E%3Ctext%20x%3D%2234%22%20y%3D%2245%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2211%22%20font-weight%3D%22700%22%20fill%3D%22%23b91c1c%22%20text-anchor%3D%22middle%22%3EPDF%3C%2Ftext%3E%3C%2Fsvg%3E",
+                  "mediaType": "image/svg+xml",
+                  "width": 64,
+                  "height": 64,
+                  "alt": "PDF"
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "1",
+              "label": "Kitchen remodel",
+              "link": {
+                "href": "/projects/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "KR",
+                "color": "#7e22ce",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4hxw6g5qq4dxh7dk3my0w2s",
+            "verb": "share",
+            "published_at": "2026-08-14T12:56:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor shared :object in :target",
+            "headline": null,
+            "glyph": "file-up",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "3",
+              "label": "Cara Lindqvist",
+              "link": {
+                "href": "/people/3",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "CL",
+                "color": "#15803d",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "10",
+              "label": "Cabinet mock-up.jpg",
+              "link": {
+                "href": "/files/10",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "newspapers"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/newspapers.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "CM",
+                "color": "#0f766e",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "Cabinet mock-up.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "1",
+              "label": "Kitchen remodel",
+              "link": {
+                "href": "/projects/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "KR",
+                "color": "#7e22ce",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          }
+        ],
+        "children_truncated": false,
+        "tombstoned": [],
+        "redundant": false,
+        "distinct_tombstoned": {
+          "actors": 0,
+          "objects": 0,
+          "targets": 0,
+          "contexts": 0,
+          "origins": 0,
+          "results": 0,
+          "instruments": 0
+        }
+      }
+    ]
+  },
+  {
+    "name": "Strip: a two-member group",
+    "rail": "actor",
+    "collapsed": true,
+    "items": [
+      {
+        "kind": "group",
+        "id": "grp_8042abb751e0da349a439034bdd57bd32a2f52a8",
+        "axis": "repeat",
+        "count": 2,
+        "verb": "upload",
+        "published_at": "2026-08-14T13:20:00.000000Z",
+        "headline_template": ":actor uploaded :count photos to :target",
+        "headline": null,
+        "glyph": "image",
+        "glyph_intent": null,
+        "actor": {
+          "type": "person",
+          "id": "4",
+          "label": "Dev Patel",
+          "link": {
+            "href": "/people/4",
+            "modal": false,
+            "attributes": []
+          },
+          "data": {
+            "photo": "ferris"
+          },
+          "media": {
+            "icon": {
+              "src": "/workbench-media/ferris.jpg",
+              "mediaType": "image/jpeg",
+              "width": 192,
+              "height": 144,
+              "alt": null
+            },
+            "image": null,
+            "preview": null,
+            "initials": null,
+            "color": null,
+            "files": [],
+            "slots": []
+          },
+          "body": null,
+          "tombstone": null
+        },
+        "object": null,
+        "target": {
+          "type": "project",
+          "id": "3",
+          "label": "Launch plan",
+          "link": {
+            "href": "/projects/3",
+            "modal": false,
+            "attributes": []
+          },
+          "data": [],
+          "media": {
+            "icon": null,
+            "image": null,
+            "preview": null,
+            "initials": "LP",
+            "color": "#7e22ce",
+            "files": [],
+            "slots": []
+          },
+          "body": null,
+          "tombstone": null
+        },
+        "context": null,
+        "origin": null,
+        "result": null,
+        "instrument": null,
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "4",
+              "label": "Dev Patel",
+              "link": {
+                "href": "/people/4",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "ferris"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/ferris.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            }
+          ],
+          "objects": [
+            {
+              "type": "file",
+              "id": "14",
+              "label": "IMG_5110.jpg",
+              "link": {
+                "href": "/files/14",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "fireworks"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/fireworks.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#0e7490",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_5110.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            {
+              "type": "file",
+              "id": "13",
+              "label": "IMG_5100.jpg",
+              "link": {
+                "href": "/files/13",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "pretzels"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/pretzels.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#4d7c0f",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_5100.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            }
+          ],
+          "targets": [
+            {
+              "type": "project",
+              "id": "3",
+              "label": "Launch plan",
+              "link": {
+                "href": "/projects/3",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "LP",
+                "color": "#7e22ce",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            }
+          ],
+          "contexts": [],
+          "origins": [],
+          "results": [],
+          "instruments": []
+        },
+        "distinct": {
+          "actors": 1,
+          "objects": 2,
+          "targets": 1,
+          "contexts": 0,
+          "origins": 0,
+          "results": 0,
+          "instruments": 0
+        },
+        "children": [
+          {
+            "kind": "activity",
+            "id": "01m4hxw6h5qqe0n2pd8v64dg12",
+            "verb": "upload",
+            "published_at": "2026-08-14T13:20:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor uploaded :object to :target",
+            "headline": null,
+            "glyph": "image",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "4",
+              "label": "Dev Patel",
+              "link": {
+                "href": "/people/4",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "ferris"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/ferris.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "14",
+              "label": "IMG_5110.jpg",
+              "link": {
+                "href": "/files/14",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "fireworks"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/fireworks.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#0e7490",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_5110.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "3",
+              "label": "Launch plan",
+              "link": {
+                "href": "/projects/3",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "LP",
+                "color": "#7e22ce",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4hxw6gyxddd2ws58yq9zq5h",
+            "verb": "upload",
+            "published_at": "2026-08-14T13:19:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor uploaded :object to :target",
+            "headline": null,
+            "glyph": "image",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "4",
+              "label": "Dev Patel",
+              "link": {
+                "href": "/people/4",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "ferris"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/ferris.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "file",
+              "id": "13",
+              "label": "IMG_5100.jpg",
+              "link": {
+                "href": "/files/13",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "kind": "photo",
+                "photo": "pretzels"
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/pretzels.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": "I",
+                "color": "#4d7c0f",
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 3,
+                  "alt": "IMG_5100.jpg",
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            "target": {
+              "type": "project",
+              "id": "3",
+              "label": "Launch plan",
+              "link": {
+                "href": "/projects/3",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "LP",
+                "color": "#7e22ce",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          }
+        ],
+        "children_truncated": false,
+        "tombstoned": [],
+        "redundant": false,
+        "distinct_tombstoned": {
+          "actors": 0,
+          "objects": 0,
+          "targets": 0,
+          "contexts": 0,
+          "origins": 0,
+          "results": 0,
+          "instruments": 0
+        }
+      }
+    ]
   }
 ]

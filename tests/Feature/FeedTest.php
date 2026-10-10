@@ -104,7 +104,7 @@ it('opens a group with no headline on its members', function () {
     expect($group->headline()->isFallback())->toBeTrue()
         ->and(render_feed($page))
         ->toContain('<span>2 activities</span>')
-        ->toContain('<details open >');
+        ->toContain('<details open ontoggle=');
 });
 
 it('links to older activity with the next cursor, and not from the last page', function () {

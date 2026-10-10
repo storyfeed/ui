@@ -375,21 +375,21 @@ state opens unnamed groups, or all groups when `interactive` is false.
 `:collapsed="true"` overrides that default; payload `expanded` still opens a
 group. With `:interactive="false"`, no toggle is rendered and only the chosen
 server state is drawn. Groups show honest truncated-member counts and up to
-three sampled faces. Image bodies opt sampled objects into a linked media
-strip. When those objects have no photographs, a group draws them as a row of their
-avatars instead ("Ana added Ben, Cara and 2 others to Kitchen remodel"): only
-avatars an object declares (`media.icon`, or `media.initials` with
-`media.color`), each linked to its entity and labelled with its name, with
-"+N" for the objects not sampled. The row is skipped when it would add
-nothing: fewer than two avatars, or all the same picture.
-Both hide while the group's children are visible.
+three sampled faces. Below the headline, a group draws a strip: one tile per member activity, newest first, each the
+thumbnail of what that activity features: its picture (an Image body, else
+its icon), else that entity's avatar, its initials on its colour. Every tile
+is the same rounded square, spaced, never overlapped, and links to its entity;
+a deleted entity is a muted, unlinked tile. Up to four tiles; past that, three
+and a "+N" tile counting the members not shown. On a group that can open, the "+N" tile opens and
+closes it like "Show all N". A strip of identical tiles is
+skipped. It stays in place when the group expands.
 
 A raw JSON feed can also be rendered with `:items="$payload['items']"` and
 `:next-cursor="$payload['next_cursor']"`; `page` is optional on that path.
 The `footer` slot replaces the pager (for example, with a Livewire load-more
-control). `divider`, `avatar`, `avatar-row`, `rail` and `media-strip` are standalone
-components; `media-strip` accepts `tiles`, `overflow`, and a `renderer` callback,
-and `avatar-row` accepts `entities`, `overflow` and the `avatar` renderer.
+control). `divider`, `avatar`, `rail` and `media-strip` are standalone
+components; `media-strip` accepts `tiles` (from `Strip::of()`, or your own
+`{image, href}` pictures), `overflow`, and a `renderer` callback.
 
 ### Component bodies and host seams
 

@@ -1,15 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, toRef } from 'vue';
-import { imageOf } from './body';
+import { computed, ref, toRef, useId } from 'vue';
 import EntityAvatar from './EntityAvatar.vue';
-import FeedAvatarRow from './FeedAvatarRow.vue';
 import FeedHeadline from './FeedHeadline.vue';
 import FeedIcon from './FeedIcon.vue';
 import FeedItem from './FeedItem.vue';
 import FeedMediaStrip from './FeedMediaStrip.vue';
 import FeedMeta from './FeedMeta.vue';
-import { entityLink } from '../shared/link';
-import { avatarRow, featured } from '../shared/avatarRow';
+import { strip as stripOf } from '../shared/strip';
 import { rail as parseRail, railFor } from '../shared/rail';
 import type { Rail, RailName } from '../shared/rail';
 import type { GroupNode, FeedSingularRole } from '../shared/types';
@@ -52,6 +49,9 @@ const slots = computed(() =>
 // handle it, and it is not an error state.
 const unnamed = computed(() => !props.item.headline_template && !props.item.headline);
 
+// The members' container, which both toggles control (ui#27).
+const membersId = `sf-members-${useId()}`;
+
 const expanded = ref(props.item.expanded || (props.collapsed === null ? (!props.interactive || unnamed.value) : !props.collapsed));
 
 const time = useRelativeTime(toRef(() => props.item.published_at));
@@ -72,35 +72,12 @@ const entities = computed(() => ({
 }));
 
 /**
- * A collapsed group samples at most three Image bodies of its featured
- * entities (the objects), never the actor's: the strip shows what the row is
- * about, not who did it. The same image source appears only once, with its
- * first entity's link. Distinct role totals cannot count unseen photographs,
- * so the default strip makes no media overflow claim.
- *
- * Expanding adds, it never takes away: the strip stays in place while the
- * members show below it (ui#26).
+ * The group's strip: one tile per member activity, the picture of what it
+ * features, else that entity's avatar (see `strip()`). Expanding adds, it never
+ * takes away: the strip stays in place while the members show below it
+ * (ui#26).
  */
-const strip = computed(() => {
-    const seen = new Set<string>();
-    const tiles = featured(props.item)
-        .flatMap(entity => {
-            const image = imageOf(entity);
-            if (!image || seen.has(image.src)) return [];
-            seen.add(image.src);
-            return [{ image, href: entityLink(entity)?.href ?? null }];
-        })
-        .slice(0, 3);
-
-    return { tiles, overflow: 0 };
-});
-
-/**
- * Featured entities with avatars but no photographs draw as a row of their
- * avatars instead, so the same entities never show twice. Like the strip, it
- * stays in place while the members are visible.
- */
-const row = computed(() => strip.value.tiles.length ? null : avatarRow(props.item));
+const strip = computed(() => stripOf(props.item) ?? { tiles: [], overflow: 0 });
 
 // `count` is the TRUE total and `children` is capped by the server, so the
 // remainder has to be stated rather than implied by the list length.
@@ -195,8 +172,9 @@ const hiddenBeyondChildren = computed(
                 v-if="strip.tiles.length"
                 :tiles="strip.tiles"
                 :overflow="strip.overflow"
+                :toggle="interactive && item.children.length > 0 ? { expanded, controls: membersId, label: `Show all ${item.count}` } : null"
+                @toggle="expanded = !expanded"
             />
-            <FeedAvatarRow v-else-if="row" :entities="row.entities" :overflow="row.overflow" />
 
             <slot name="body" :node="item" />
 
@@ -207,12 +185,13 @@ const hiddenBeyondChildren = computed(
                 type="button"
                 class="sf-toggle mt-1 inline-flex min-h-6 items-center cursor-pointer border-0 bg-transparent p-0 text-sm leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring print:hidden"
                 :aria-expanded="expanded"
+                :aria-controls="membersId"
                 @click="expanded = !expanded"
             >
                 {{ expanded ? 'Show less' : `Show all ${item.count}` }}
             </button>
 
-            <div v-if="item.children.length" class="sf-children mt-3" :class="{ 'hidden print:block': !expanded }">
+            <div v-if="item.children.length" :id="membersId" class="sf-children mt-3" :class="{ 'hidden print:block': !expanded }">
                 <FeedItem
                     v-for="(child, index) in item.children"
                     :key="child.id"
