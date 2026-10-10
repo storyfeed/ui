@@ -151,7 +151,7 @@ it('uses only pinned group singulars', function () {
     }
 });
 
-/** A group's strip in order (a src, `tile:<initials>` or `+N`) and its links, or null when there is none. */
+/** A group's strip in order (a src, `name:<label>`, `tile:<initials>` or `+N`) and its links, or null when there is none. */
 function strip_tiles(string $html): ?array
 {
     $html = (string) preg_replace('/<!--.*?-->/s', '', $html);
@@ -159,16 +159,21 @@ function strip_tiles(string $html): ?array
         return null;
     }
     $section = preg_split('/sf-toggle|sf-children/', explode('sf-media-strip ', $html, 2)[1])[0];
-    preg_match_all('/<img[^>]+src="([^"]+)"|class="[^"]*sf-avatar--tile[^"]*"[^>]*>([^<]*)<|sf-media-strip__more[^>]*>\+(\d+)</', $section, $matches, PREG_SET_ORDER);
+    preg_match_all('/<img[^>]+src="([^"]+)"|class="[^"]*sf-avatar--tile[^"]*"[^>]*>([^<]*)<|class="[^"]*sf-media-strip__name[^"]*"[^>]*><span[^>]*>([^<]*)<|sf-media-strip__more[^>]*>\+(\d+)</', $section, $matches, PREG_SET_ORDER);
     preg_match_all('/href="([^"]+)"/', $section, $hrefs);
 
     return [
-        'tiles' => array_map(fn (array $m) => ($m[1] ?? '') !== '' ? $m[1] : (isset($m[3]) ? '+'.$m[3] : 'tile:'.trim($m[2])), $matches),
+        'tiles' => array_map(fn (array $m) => match (true) {
+            ($m[1] ?? '') !== '' => $m[1],
+            isset($m[4]) => '+'.$m[4],
+            isset($m[3]) && $m[3] !== '' => 'name:'.html_entity_decode(trim($m[3]), ENT_QUOTES),
+            default => 'tile:'.trim($m[2]),
+        }, $matches),
         'hrefs' => $hrefs[1],
     ];
 }
 
-it('draws a group strip of one tile per member activity, never a blank', function () {
+it('draws a group strip previewing what its members\' rows show: a picture they draw, else a name tile (ui#47)', function () {
     $photo = fn (int $n) => ['type' => 'photo', 'id' => (string) $n, 'label' => "IMG_{$n}.jpg", 'url' => "/photos/{$n}", 'body' => [['$body' => 'Storyfeed/Body/Image', 'image' => 'preview']], 'media' => ['preview' => ['src' => "/p{$n}.jpg", 'width' => 192, 'height' => 144]]];
     $ana = ['type' => 'person', 'id' => 'ana', 'label' => 'Ana Silva', 'url' => '/people/ana', 'media' => ['icon' => ['src' => '/ana.jpg']]];
     $ben = ['type' => 'person', 'id' => 'ben', 'label' => 'Ben Okafor', 'url' => '/people/ben', 'media' => ['icon' => null, 'initials' => 'BO', 'color' => '#438d98']];
@@ -180,31 +185,47 @@ it('draws a group strip of one tile per member activity, never a blank', functio
         return strip_tiles(Blade::render('<x-storyfeed::group :group="$item" />', compact('item')));
     };
 
-    // Pictures (an Image body, else the icon), else the avatar; past four tiles, three and "+N" from the count.
+    $order = fn (int $n) => ['type' => 'order', 'id' => (string) $n, 'label' => "Order #{$n}", 'url' => "/orders/{$n}", 'media' => ['icon' => null, 'initials' => 'O2', 'color' => '#438d98']];
+    $iconed = fn (string $id) => ['type' => 'product', 'id' => $id, 'label' => $id, 'url' => "/products/{$id}", 'body' => [['$body' => 'Storyfeed/Body/Image', 'image' => 'icon']], 'media' => ['icon' => ['src' => "/{$id}.svg"]]];
+
+    // A picture only from an Image body the row draws; a declared icon alone is a name tile. Past four tiles, three and "+N" from the count.
     expect($draw([$photo(1), $ana, $ben, $photo(2), $photo(3), $photo(4)]))
-        ->toBe(['tiles' => ['/p1.jpg', '/ana.jpg', 'tile:BO', '+3'], 'hrefs' => ['/photos/1', '/people/ana', '/people/ben']])
-        ->and($draw([$photo(1), $ana, $ben, $photo(2)])['tiles'])->toBe(['/p1.jpg', '/ana.jpg', 'tile:BO', '/p2.jpg'])
+        ->toBe(['tiles' => ['/p1.jpg', 'name:Ana Silva', 'name:Ben Okafor', '+3'], 'hrefs' => ['/photos/1', '/people/ana', '/people/ben']])
+        ->and($draw([$photo(1), $ana, $ben, $photo(2)])['tiles'])->toBe(['/p1.jpg', 'name:Ana Silva', 'name:Ben Okafor', '/p2.jpg'])
         // Members the server didn't ship still count.
-        ->and($draw([$photo(1), $ben], 9)['tiles'])->toBe(['/p1.jpg', 'tile:BO', '+7'])
-        // A deleted entity is a muted, unlinked tile; an entity without declared media still gets its initials.
-        ->and($draw([$ben, $gone, $dee]))->toBe(['tiles' => ['tile:BO', 'tile:?', 'tile:DF'], 'hrefs' => ['/people/ben', '/people/dee']])
+        ->and($draw([$photo(1), $ben], 9)['tiles'])->toBe(['/p1.jpg', 'name:Ben Okafor', '+7'])
+        // Jasper: Erica's orders read "Order #2033 / #2032 / #2031", never three "O2" initials.
+        ->and($draw([$order(2033), $order(2032), $order(2031)]))->toBe(['tiles' => ['name:Order #2033', 'name:Order #2032', 'name:Order #2031'], 'hrefs' => ['/orders/2033', '/orders/2032', '/orders/2031']])
+        // An Image body naming the icon slot is drawn by the row, so its icon is a picture tile.
+        ->and($draw([$iconed('mug'), $iconed('tote')])['tiles'])->toBe(['/mug.svg', '/tote.svg'])
+        // A deleted entity keeps its label, unlinked; one with no label has nothing to preview, so "+N" counts it.
+        ->and($draw([$ben, [...$gone, 'label' => 'Cara Diaz'], $dee]))->toBe(['tiles' => ['name:Ben Okafor', 'name:Cara Diaz', 'name:Dee Ford'], 'hrefs' => ['/people/ben', '/people/dee']])
+        ->and($draw([$ben, $gone, $dee]))->toBe(['tiles' => ['name:Ben Okafor', 'name:Dee Ford', '+1'], 'hrefs' => ['/people/ben', '/people/dee']])
         // A member that features nothing has no tile, but is counted.
-        ->and($draw([$ben, $photo(1), null])['tiles'])->toBe(['tile:BO', '/p1.jpg', '+1'])
+        ->and($draw([$ben, $photo(1), null])['tiles'])->toBe(['name:Ben Okafor', '/p1.jpg', '+1'])
         // Identical tiles, or nothing featured (never the actor), draw no strip.
         ->and($draw([$ben, $ben, $ben]))->toBeNull()
         ->and($draw([null, null]))->toBeNull();
+    $item = ['kind' => 'group', 'headline' => 'Orders', 'count' => 3, 'children' => array_map(fn ($n) => ['kind' => 'activity', 'headline' => 'Member', 'object' => $order($n)], [2033, 2032, 2031])];
+    expect(explode('sf-children', Blade::render('<x-storyfeed::group :group="$item" />', compact('item')))[0])->not->toContain('sf-avatar--tile');
+
+    // Several actors featuring one entity draw no strip: the headline names them and the rail shows them.
+    $fair = ['type' => 'place', 'id' => 'fair', 'label' => 'Fun Fair', 'url' => '/fair'];
+    $item = ['kind' => 'group', 'headline' => 'Ana, Ben and Dee checked in at the Fun Fair', 'count' => 3, 'distinct' => ['actors' => 3, 'featured' => 3], 'sample' => ['actors' => [$ana, $ben, $dee], 'featured' => [$fair, $fair, $fair]],
+        'children' => array_map(fn ($actor) => ['kind' => 'activity', 'headline' => 'Member', 'actor' => $actor, 'object' => $fair], [$ana, $ben, $dee])];
+    expect(strip_tiles(Blade::render('<x-storyfeed::group :group="$item" />', compact('item'))))->toBeNull();
 
     // Core #93's sample.featured wins over the members' objects, and distinct.featured counts the +N.
     $item = ['kind' => 'group', 'headline' => 'Updates', 'count' => 9, 'distinct' => ['featured' => 7], 'sample' => ['featured' => [$ana, $ben, $photo(7)]],
         'children' => array_map(fn ($n) => ['kind' => 'activity', 'headline' => 'Member', 'object' => $photo($n)], [1, 2, 3, 4, 5])];
-    expect(strip_tiles(Blade::render('<x-storyfeed::group :group="$item" />', compact('item')))['tiles'])->toBe(['/ana.jpg', 'tile:BO', '/p7.jpg', '+4']);
+    expect(strip_tiles(Blade::render('<x-storyfeed::group :group="$item" />', compact('item')))['tiles'])->toBe(['name:Ana Silva', 'name:Ben Okafor', '/p7.jpg', '+4']);
     // Without it, each member's featured role (storyfeed/storyfeed#76): its target here, nothing when null.
     $item = ['kind' => 'group', 'headline' => 'Updates', 'count' => 3, 'children' => [
         ['kind' => 'activity', 'headline' => 'Member', 'object' => $photo(1), 'featured' => 'target', 'target' => $ben],
         ['kind' => 'activity', 'headline' => 'Member', 'object' => $photo(2), 'featured' => null],
         ['kind' => 'activity', 'headline' => 'Member', 'object' => $photo(3)],
     ]];
-    expect(strip_tiles(Blade::render('<x-storyfeed::group :group="$item" />', compact('item')))['tiles'])->toBe(['tile:BO', '/p3.jpg', '+1']);
+    expect(strip_tiles(Blade::render('<x-storyfeed::group :group="$item" />', compact('item')))['tiles'])->toBe(['name:Ben Okafor', '/p3.jpg', '+1']);
 
     // Jasper (ui#27): "+N" opens the group like "Show all N"; a static group keeps a plain tile.
     $item = ['kind' => 'group', 'id' => 'g6', 'headline' => 'Updates', 'count' => 6, 'children' => array_map(fn ($object) => ['kind' => 'activity', 'headline' => 'Member', 'object' => $object], [$photo(1), $ana, $ben, $photo(2), $photo(3), $photo(4)])];
@@ -373,17 +394,19 @@ it('draws several actors as a diagonal pair whose front face keeps the verb badg
     expect($rail)->not->toContain('sf-avatar--badge');
 });
 
-it('keeps a group\'s rail faces and strip in place when it expands', function (bool $interactive) {
+it('hides a group\'s strip and keeps its rail faces in place when it expands (ui#47)', function (bool $interactive) {
     $photo = fn (string $src) => ['type' => 'photo', 'id' => $src, 'label' => 'Photo', 'url' => '/photos'.$src, 'body' => [['$body' => 'Storyfeed/Body/Image', 'image' => 'preview']], 'media' => ['preview' => ['src' => $src]]];
     $item = ['kind' => 'group', 'headline' => 'Ana and Ben uploaded photos', 'count' => 2, 'glyph' => 'file-up',
         'sample' => ['actors' => [['id' => 'ana', 'label' => 'Ana'], ['id' => 'ben', 'label' => 'Ben']]],
         'children' => [['kind' => 'activity', 'headline' => 'Ana uploaded a photo', 'object' => $photo('/one.jpg')], ['kind' => 'activity', 'headline' => 'Ben uploaded a photo', 'object' => $photo('/two.jpg')]]];
     $html = Blade::render('<x-storyfeed::feed :items="[$item]" rail="actor" :interactive="$interactive" :collapsed="false" />', compact('item', 'interactive'));
     $head = explode('class="sf-children', $html)[0];
-    expect(substr_count($head, 'sf-avatar--pair'))->toBe(2)
-        ->and($head)->toContain('sf-media-strip', 'src="/one.jpg"', 'src="/two.jpg"')
-        ->not->toContain(':has(>.sf-disclosure[open])>.sf-media-strip]:hidden');
-    expect($html)->toContain('Ana uploaded a photo', 'Ben uploaded a photo');
+    expect(substr_count($head, 'sf-avatar--pair'))->toBe(2);
+    // An open native <details> hides the strip with CSS, so toggling it in the browser shows or hides it; a static open group draws none.
+    $interactive
+        ? expect($head)->toContain('sf-media-strip ', '[&:has(>.sf-disclosure[open])>.sf-media-strip]:hidden')
+        : expect($head)->not->toContain('sf-media-strip ');
+    expect($html)->toContain('Ana uploaded a photo', 'Ben uploaded a photo', 'src="/one.jpg"', 'src="/two.jpg"');
 })->with(['interactive' => true, 'static' => false]);
 
 it('lets rail size variables set around a feed or a lone row reach the rail', function (string $component) {

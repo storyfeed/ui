@@ -1,4 +1,3 @@
-import EntityAvatar from './EntityAvatar';
 import FeedMedia from './FeedMedia';
 import { useFeedOptions } from './context';
 import { linkProps } from '../shared/link';
@@ -7,9 +6,10 @@ const tileClass = 'mt-0! aspect-square! size-full! max-w-none! rounded-lg!';
 
 /**
  * A group's strip: one rounded-square tile per member activity, all the same
- * size and spaced, never overlapped (ui#27). A tile is the picture of what the
- * member features, else that entity's avatar, its initials on its colour; the
- * "+N" tile counts the members not shown. Each tile links to its entity.
+ * size and spaced, never overlapped (ui#27). A tile is the picture the
+ * member's row draws, else a quiet name tile with its featured entity's label
+ * (ui#47); the "+N" tile counts the members not shown. Each tile links to its
+ * entity.
  *
  * Build the tiles with `strip()` in `shared/strip.ts`. A tile without an
  * `entity` (an app's own `{ image, href }`) is drawn as a picture.
@@ -37,10 +37,14 @@ export default function FeedMediaStrip({
                         {...linkProps(tile.link, Link)}
                         className="sf-media-strip__link flex rounded-lg focus-visible:outline-2 focus-visible:outline-ring"
                     >
-                        <EntityAvatar entity={tile.entity} size="tile" />
+                        <span className="sf-media-strip__name flex aspect-square min-w-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-background p-1 text-center size-full">
+                            <span className="line-clamp-3 text-[length:--spacing(2.75)] leading-[1.3] break-words text-muted-foreground [hyphens:auto]">{tile.label}</span>
+                        </span>
                     </Link>
                 ) : (
-                    <EntityAvatar key={i} entity={tile.entity} size="tile" />
+                    <span key={i} className="sf-media-strip__name flex aspect-square min-w-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-background p-1 text-center">
+                        <span className="line-clamp-3 text-[length:--spacing(2.75)] leading-[1.3] break-words text-muted-foreground [hyphens:auto]">{tile.label}</span>
+                    </span>
                 ),
             )}
             {!!overflow && toggle ? (

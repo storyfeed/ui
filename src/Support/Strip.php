@@ -6,13 +6,15 @@ use Storyfeed\Support\Entity;
 use Storyfeed\Support\FeedItem;
 
 /**
- * A group's strip: one tile per member activity, each the thumbnail of what
- * that activity features (ui#27). Mirrors `shared/strip.ts`.
+ * A group's strip: one tile per member activity, previewing what that
+ * member's expanded row shows (ui#47). Mirrors `shared/strip.ts`.
  *
- * A tile is the featured entity's picture (its Image body, else its icon),
- * else its avatar: the initials on the colour core derives for every entity.
- * So a member never leaves a blank. Every tile is the same rounded square,
- * whether it stands for a person or a thing.
+ * A tile only shows what the row below draws. A member whose row draws a
+ * picture (its featured entity's Image body) gets that picture; every other
+ * member gets a quiet name tile, its featured entity's label, which the
+ * member's headline names. Never initials, and an icon the entity declares
+ * counts only when an Image body draws it. Every tile is the same rounded
+ * square.
  */
 final class Strip
 {
@@ -76,16 +78,17 @@ final class Strip
 
     /**
      * The tiles and the "+N" count, or null when the strip would show
-     * nothing new: no featured entity, or every tile the same picture. Up to
-     * four tiles; past that, three and a "+N" tile counting the members not
-     * shown.
+     * nothing new: no featured entity, or every tile the same. Up to four
+     * tiles; past that, three and a "+N" tile counting the members not shown.
+     * A member with neither a picture nor a label has nothing to preview, so
+     * the "+N" counts it.
      *
-     * @return array{tiles: list<array{entity: Entity, image: array<array-key, mixed>|null, href: string|null, attributes: array<array-key, mixed>}>, overflow: int}|null
+     * @return array{tiles: list<array{entity: Entity, image: array<array-key, mixed>|null, label: string|null, href: string|null, attributes: array<array-key, mixed>}>, overflow: int}|null
      */
     public static function of(FeedItem $group): ?array
     {
         ['entities' => $entities, 'total' => $total] = self::entities($group);
-        $all = array_map(self::tile(...), $entities);
+        $all = array_values(array_filter(array_map(self::tile(...), $entities), fn (array $tile) => $tile['image'] !== null || $tile['label'] !== null));
 
         if (count(array_unique(array_map(self::sameness(...), $all))) < 2) {
             return null;
@@ -96,7 +99,7 @@ final class Strip
         return ['tiles' => $tiles, 'overflow' => $total - count($tiles)];
     }
 
-    /** @return array{entity: Entity, image: array<array-key, mixed>|null, href: string|null, attributes: array<array-key, mixed>} */
+    /** @return array{entity: Entity, image: array<array-key, mixed>|null, label: string|null, href: string|null, attributes: array<array-key, mixed>} */
     private static function tile(Entity $entity): array
     {
         $link = Links::entity($entity);
@@ -106,12 +109,9 @@ final class Strip
                 break;
             }
         }
-        $icon = $entity->isTombstone() ? null : $entity->media()?->get('icon');
-        if ($image === null && is_array($icon) && is_string($icon['src'] ?? null) && $icon['src'] !== '') {
-            $image = [...$icon, 'alt' => $icon['alt'] ?? $entity->label() ?? ''];
-        }
+        $label = $entity->label();
 
-        return ['entity' => $entity, 'image' => $image, 'href' => $link['href'] ?? null, 'attributes' => $link['attributes'] ?? []];
+        return ['entity' => $entity, 'image' => $image, 'label' => is_string($label) && trim($label) !== '' ? $label : null, 'href' => $link['href'] ?? null, 'attributes' => $link['attributes'] ?? []];
     }
 
     /** @param array{entity: Entity, image: array<array-key, mixed>|null} $tile */

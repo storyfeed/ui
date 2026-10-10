@@ -32,7 +32,7 @@ export default function FeedGroup({
     const membersId = `sf-members-${useId()}`;
     const Disclosure = interactive ? 'details' : 'div';
     const hidden = Math.max(0, item.count - item.children.length);
-    // One tile per member activity; it stays in place when the group expands (ui#26, ui#27).
+    // One tile per member activity, previewing the members, so expanding hides it (ui#47).
     const strip = stripOf(item);
     return (
         <div
@@ -72,7 +72,7 @@ export default function FeedGroup({
                     {timestamp}
                 </FeedMeta>
                 <FeedMediaStrip
-                    tiles={strip?.tiles ?? []}
+                    tiles={isOpen ? [] : strip?.tiles ?? []}
                     overflow={strip?.overflow}
                     toggle={
                         interactive && item.children.length > 0
