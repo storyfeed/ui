@@ -109,7 +109,7 @@ const text = computed(() => {
         :aria-label="entity?.label ?? 'Someone'"
         :title="entity?.label ?? 'Someone'"
         class="sf-avatar flex shrink-0 items-center justify-center rounded-full font-semibold select-none ring-2 ring-background"
-        :class="[{ 'sf-avatar--md size-[var(--sf-disc,--spacing(8))] text-xs': size === 'md', 'sf-avatar--sm size-6 text-[length:--spacing(2.5)]': size === 'sm', 'sf-avatar--pair size-full text-[length:--spacing(2.75)]': size === 'pair', 'sf-avatar--tile aspect-square size-full rounded-lg! ring-0! text-[length:--spacing(5)]': size === 'tile', 'sf-avatar--badge [--sf-badge:var(--sf-badge-face)] absolute top-[calc(var(--sf-disc)-var(--sf-badge)+--spacing(0.5))] left-[calc(50%+var(--sf-disc)/2-var(--sf-badge))] size-(--sf-badge) text-[length:--spacing(2.25)]': size === 'badge' }, entity?.tombstone ? 'bg-muted text-white' : color ? text : 'bg-primary text-primary-foreground']"
+        :class="[{ 'sf-avatar--md size-[var(--sf-disc,--spacing(8))] text-xs': size === 'md', 'sf-avatar--sm size-6 text-[length:--spacing(2.5)]': size === 'sm', 'sf-avatar--pair size-full text-[length:--spacing(2.75)]': size === 'pair', 'sf-avatar--tile aspect-square size-full rounded-lg! ring-0! text-[length:--spacing(5)]': size === 'tile', 'sf-avatar--badge [--sf-badge-v:var(--sf-badge-face-v)] absolute top-[calc(var(--sf-disc-v)-var(--sf-badge-v)+--spacing(0.5))] left-[calc(50%+var(--sf-disc-v)/2-var(--sf-badge-v))] size-(--sf-badge-v) text-[length:--spacing(2.25)]': size === 'badge' }, entity?.tombstone ? 'bg-muted text-white' : color ? text : 'bg-primary text-primary-foreground']"
         :style="color ? { backgroundColor: color } : undefined"
     >
         <img

@@ -346,7 +346,7 @@ it('sizes all three kits on the rem scale, with no pixel arbitrary values', func
 
     // ui#23: every row sets its own size from --sf-font-size, so nothing inherits the host page's base, and no body draws at the headline's size.
     foreach (['resources/views/components/activity.blade.php', 'resources/views/components/group.blade.php', 'resources/js/vue/FeedItem.vue', 'resources/js/vue/FeedGroup.vue', 'resources/js/react/FeedItem.tsx', 'resources/js/react/FeedGroup.tsx'] as $row) {
-        expect(file_get_contents(dirname(__DIR__, 2).'/'.$row))->toContain('[--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)]', '[--sf-badge-face:--spacing(4.5)] text-base leading-[1.6]');
+        expect(file_get_contents(dirname(__DIR__, 2).'/'.$row))->toContain('[--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)]', '[--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]');
     }
     $bodies = collect([...glob(dirname(__DIR__, 2).'/resources/views/components/body/*.blade.php'), ...glob(dirname(__DIR__, 2).'/resources/js/vue/body/*.vue'), dirname(__DIR__, 2).'/resources/js/react/body/index.tsx']);
     expect($bodies->filter(fn (string $file) => preg_match('/\btext-base\b/', (string) file_get_contents($file)) === 1)->map(fn ($file) => basename($file))->values()->all())->toBe([]);
@@ -367,7 +367,7 @@ it('draws several actors as a diagonal pair whose front face keeps the verb badg
     expect(array_map(fn ($face) => [$face[1], $face[2]], $faces))->toBe([['Ana', 'A'], ['Ben', 'B']])
         ->and(explode('sf-avatars__face', $rail)[1])->toContain('right-0 bottom-0 z-10')
         ->and(substr_count($rail, 'sf-badge absolute'))->toBe(1)
-        ->and($rail)->toContain('@container/pair', '[&:has(>.sf-avatars)>.sf-badge]:[--sf-badge:--spacing(2.75)]')->not->toContain('sf-avatar--badge');
+        ->and($rail)->toContain('@container/pair', '[&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-v:--spacing(2.75)]')->not->toContain('sf-avatar--badge');
     // A face badge never stands for several actors.
     $rail = explode('class="sf-body', Blade::render('<x-storyfeed::feed :items="[$item]" rail="activity" />', compact('item')))[0];
     expect($rail)->not->toContain('sf-avatar--badge');
@@ -385,3 +385,18 @@ it('keeps a group\'s rail faces and strip in place when it expands', function (b
         ->not->toContain(':has(>.sf-disclosure[open])>.sf-media-strip]:hidden');
     expect($html)->toContain('Ana uploaded a photo', 'Ben uploaded a photo');
 })->with(['interactive' => true, 'static' => false]);
+
+it('lets rail size variables set around a feed or a lone row reach the rail', function (string $component) {
+    $item = ['kind' => 'group', 'headline' => 'Ana posted', 'count' => 2, 'glyph' => 'file-up', 'sample' => ['actors' => [['id' => 'a', 'label' => 'Ana']]],
+        'children' => [['kind' => 'activity', 'headline' => 'Ana posted', 'glyph' => 'file-up', 'actor' => ['id' => 'a', 'label' => 'Ana']]]];
+    $html = Blade::render($component, ['item' => $item, 'child' => $item['children'][0]]);
+    preg_match('/class="([^"]*)"/', $html, $root);
+
+    // A row or feed that redeclared --sf-gutter and friends would shadow anything set higher up; each reads them with its own default instead.
+    expect($root[1])->toContain('[--sf-gutter-v:var(--sf-gutter,--spacing(8))]', '[--sf-gap-v:var(--sf-gap,--spacing(3))]', '[--sf-disc-v:var(--sf-disc,--spacing(8))]', '[--sf-badge-v:var(--sf-badge,--spacing(3.5))]', '[--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))]')
+        ->and($html)->not->toMatch('/\[--sf-(gutter|gap|disc|badge|badge-face):/');
+})->with([
+    'feed' => '<x-storyfeed::feed :items="[$item]" rail="actor" />',
+    'group' => '<x-storyfeed::group :group="$item" />',
+    'activity' => '<x-storyfeed::activity :activity="$child" />',
+]);

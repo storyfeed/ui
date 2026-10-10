@@ -6,7 +6,7 @@
     $cursor = $nextCursor instanceof \Illuminate\Pagination\Cursor ? $nextCursor->encode() : ($nextCursor ?? $read['cursor']);
     $previousDay = null;
 @endphp
-<div {{ $attributes->class('sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter:--spacing(8)] [--sf-gap:--spacing(3)] [--sf-disc:--spacing(8)] [--sf-badge:--spacing(3.5)] [--sf-badge-face:--spacing(4.5)] text-base leading-[1.6] text-muted-foreground') }}>
+<div {{ $attributes->class('sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6] text-muted-foreground') }}>
 @if ($items->isEmpty())
         <div class="sf-empty rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">{{ $empty ?? __('No activity yet.') }}</div>
 @else

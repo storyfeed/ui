@@ -61,7 +61,7 @@ const gradientId = `sf-branch-${useId()}`;
 </script>
 
 <template>
-    <div class="sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter:--spacing(8)] [--sf-gap:--spacing(3)] [--sf-disc:--spacing(8)] [--sf-badge:--spacing(3.5)] [--sf-badge-face:--spacing(4.5)] text-base leading-[1.6] text-muted-foreground">
+    <div class="sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6] text-muted-foreground">
         <div v-if="nodes.length === 0" class="sf-empty rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">
             <slot name="empty">No activity yet.</slot>
         </div>
@@ -71,13 +71,13 @@ const gradientId = `sf-branch-${useId()}`;
                 <div
                     v-if="grouped"
                     :class="[
-                        'sf-row sf-divider relative flex items-start gap-(--sf-gap)',
+                        'sf-row sf-divider relative flex items-start gap-(--sf-gap-v)',
                         dividerStyle === 'dot' ? 'sf-divider--dot [&_.sf-rail>div:last-child]:mt-1.25' : 'sf-divider--branch',
                     ]"
                 >
-                    <div class="sf-rail relative flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
+                    <div class="sf-rail relative flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
                         <div v-if="dividerStyle === 'dot'" aria-hidden="true" class="sf-rail__node mt-1.25 size-2.25 shrink-0 rounded-full bg-muted-foreground ring-3 ring-background" />
-                        <svg v-else aria-hidden="true" class="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap)-var(--spacing)*1.5)] overflow-hidden">
+                        <svg v-else aria-hidden="true" class="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap-v)-var(--spacing)*1.5)] overflow-hidden">
                             <defs>
                                 <linearGradient :id="`${gradientId}-day-${dayIndex}`" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100%" y2="0">
                                     <stop offset="0" class="[stop-color:var(--color-border)]" />
@@ -102,13 +102,13 @@ const gradientId = `sf-branch-${useId()}`;
                     <div
                         v-if="dividers[item.id]"
                         :class="[
-                            'sf-row sf-divider relative flex items-start gap-(--sf-gap)',
+                            'sf-row sf-divider relative flex items-start gap-(--sf-gap-v)',
                             dividerStyle === 'dot' ? 'sf-divider--dot [&_.sf-rail>div:last-child]:mt-1.25' : 'sf-divider--branch',
                         ]"
                     >
-                        <div class="sf-rail relative flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
+                        <div class="sf-rail relative flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
                             <div v-if="dividerStyle === 'dot'" aria-hidden="true" class="sf-rail__node mt-1.25 size-2.25 shrink-0 rounded-full bg-muted-foreground ring-3 ring-background" />
-                            <svg v-else aria-hidden="true" class="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap)-var(--spacing)*1.5)] overflow-hidden">
+                            <svg v-else aria-hidden="true" class="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap-v)-var(--spacing)*1.5)] overflow-hidden">
                                 <defs>
                                     <linearGradient :id="`${gradientId}-item-${dayIndex}-${index}`" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100%" y2="0">
                                         <stop offset="0" class="[stop-color:var(--color-border)]" />
@@ -149,8 +149,8 @@ const gradientId = `sf-branch-${useId()}`;
                 </div>
             </section>
 
-            <div v-if="cursor" class="sf-row relative flex items-start gap-(--sf-gap)">
-                <div class="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
+            <div v-if="cursor" class="sf-row relative flex items-start gap-(--sf-gap-v)">
+                <div class="sf-rail flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
                     <div aria-hidden="true" class="sf-rail__line mt-1 w-px flex-1 bg-border" />
                 </div>
                 <button

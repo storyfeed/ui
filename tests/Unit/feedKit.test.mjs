@@ -780,9 +780,9 @@ test('actor rails show glyph badges and childRail independently selects glyph-on
     const pair = { ...group, sample: { actors: [activity.actor, { ...activity.actor, id: '2' }] } };
     const front = (await renderRaw('/resources/js/vue/FeedGroup.vue', { item: pair, rail: 'actor' })).split('sf-avatars__face')[1];
     assert.match(front, /right-0 bottom-0 z-10/);
-    assert.match(front, /size-\[calc\(var\(--sf-disc\)\*2\/3\)\]/);
+    assert.match(front, /size-\[calc\(var\(--sf-disc-v\)\*2\/3\)\]/);
     // A pair's verb badge is smaller, in the same place (ui#25 (a)).
-    assert.match(await renderRaw('/resources/js/vue/FeedGroup.vue', { item: pair, rail: 'actor' }), /\[&amp;:has\(&gt;\.sf-avatars\)&gt;\.sf-badge\]:\[--sf-badge:--spacing\(2\.75\)\]/);
+    assert.match(await renderRaw('/resources/js/vue/FeedGroup.vue', { item: pair, rail: 'actor' }), /\[&amp;:has\(&gt;\.sf-avatars\)&gt;\.sf-badge\]:\[--sf-badge-v:--spacing\(2\.75\)\]/);
     assert.doesNotMatch(await renderRaw('/resources/js/vue/FeedGroup.vue', { item: pair, rail: 'activity' }), /sf-avatar--badge/);
 });
 
@@ -951,4 +951,15 @@ test('a group strip reads core #93\'s sample.featured, else each member\'s featu
     // Without it, each member's featured role (storyfeed/storyfeed#76): its target here, nothing when null.
     const featuring = [{ ...stripMember(0, stripPhoto(1)), featured: 'target', target: stripBen }, { ...stripMember(1, stripPhoto(2)), featured: null }, stripMember(2, stripPhoto(3))];
     assert.deepEqual((await draw({ ...group, count: 3, children: featuring, sample: { actors: group.sample.actors } })).tiles, ['tile:BO', '/p3.jpg', '+1']);
+});
+
+test('rail size variables set around a feed or a lone row reach the rail', async () => {
+    // A row or feed that redeclared --sf-gutter and friends would shadow anything set higher up; each reads them with its own default instead.
+    for (const [path, props] of [['/resources/js/vue/FeedStream.vue', { items: [activity, group] }], ['/resources/js/vue/FeedItem.vue', { item: activity }], ['/resources/js/vue/FeedGroup.vue', { item: group }]]) {
+        const root = (await renderRaw(path, props)).match(/class="([^"]*)"/)[1];
+        for (const [name, size] of [['gutter', 8], ['gap', 3], ['disc', 8], ['badge', 3.5], ['badge-face', 4.5]]) {
+            assert.ok(root.includes(`[--sf-${name}-v:var(--sf-${name},--spacing(${size}))]`), `${path}: --sf-${name} falls back to ${size} steps`);
+        }
+        assert.doesNotMatch(await renderRaw(path, props), /\[--sf-(gutter|gap|disc|badge|badge-face):/, `${path}: no element redeclares a public size variable`);
+    }
 });
