@@ -7,6 +7,11 @@
 - A group's strip previews only what its expanded members show, in Blade, Vue and React (ui#47). A member whose row draws a picture (its featured entity's Image body) keeps that picture as its tile; every other member gets a quiet name tile: its featured entity's label in small muted text on a light bordered tile, up to three lines, the same size as the other tiles. Erica's three orders now read "Order #2033", "Order #2032" and "Order #2031" instead of three "O2" initials. Initials tiles are gone from the strip, and an entity's declared `media.icon` no longer makes a tile on its own: only an Image body the row draws does. A member with neither a picture nor a label counts in "+N". Groups whose members all feature one entity still draw no strip.
 - Expanding a group hides its strip, in Blade, Vue and React (ui#47); collapsing shows it again. The head row doesn't move. Since ui#26 the strip stayed while the members showed below it, so it previewed rows that were already on screen.
 
+### Fixed
+
+- A dateless entry (`published_at: null`, from a composed feed or a source; storyfeed/storyfeed#127) draws no time in Vue and React: no `<time>`, no relative label, no hover title, no day heading, as Blade already did. It neither starts a day nor ends one, so the next dated entry on the same day draws no second heading, now in Blade too, where a dateless entry restarted the day. An app's own time slot or renderer is still called.
+- An activity with a null `verb` and no headline leaves the verb out of the fallback sentence in Vue and React ("Someone Order #1001"); it printed "Someone null Order #1001". Vue's fallback also gets back its space before the object ("Someone placed Order #1001", not "placedOrder").
+
 ## v0.8.0 - 2026-10-10
 
 ### Fixed

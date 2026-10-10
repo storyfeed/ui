@@ -27,7 +27,8 @@
 @if ($grouped && $day !== null && $day !== $previousDay)
                     <x-storyfeed::divider :label="$label" :divider-style="$dividerStyle" />
 @endif
-                @php($previousDay = $day)
+                {{-- A dateless entry neither starts a day nor ends one. --}}
+                @php($previousDay = $day ?? $previousDay)
 @if (isset($dividers[$item->id()]))
                     <x-storyfeed::divider :label="$dividers[$item->id()]" :divider-style="$dividerStyle" />
 @endif

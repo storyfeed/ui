@@ -25,9 +25,10 @@ export interface NodeProps extends FeedRenderProps {
 }
 export function useNodeTime(node: FeedNode, time?: FeedRenderProps['time']) {
     const clock = useRelativeTime(node.published_at);
-    return time ? (
-        time({ node, label: clock.label })
-    ) : (
+    // A dateless entry draws no time; an app's own `time` still decides.
+    if (time) return time({ node, label: clock.label });
+    if (node.published_at === null) return null;
+    return (
         <time
             dateTime={node.published_at}
             title={clock.full}

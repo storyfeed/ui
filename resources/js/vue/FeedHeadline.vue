@@ -159,9 +159,9 @@ const actorOverflow = computed(() => overflow('actors'));
 
         <template v-else>
             <EntityLink :entity="entities.actor ?? null" fallback="Someone" />
-            {{ ' ' + verb }}
+            <template v-if="verb">{{ ' ' + verb }}</template>
             <template v-if="entities.object">
-                <EntityLink :entity="entities.object" />
+                {{ ' ' }}<EntityLink :entity="entities.object" />
             </template>
         </template>
     </span>

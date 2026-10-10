@@ -19,13 +19,19 @@ export { FEED_NOW };
  *
  * SSR-safe. No timer is started until mount, so a server or prerender pass
  * produces one deterministic string and never leaves a handle open.
+ *
+ * A null `iso` (a dateless entry) gives empty labels and starts no timer.
  */
-export function useRelativeTime(iso: Ref<string>) {
+export function useRelativeTime(iso: Ref<string | null>) {
     const pinned = inject<number | null>(FEED_NOW, null);
     const now = ref(pinned ?? Date.now());
     let timer: ReturnType<typeof setTimeout> | null = null;
 
     function schedule(): void {
+        if (iso.value === null) {
+            return;
+        }
+
         const delay = refreshDelay(iso.value, now.value);
 
         timer = setTimeout(() => {
@@ -46,24 +52,29 @@ export function useRelativeTime(iso: Ref<string>) {
         }
     });
 
-    const label = computed(() => formatTimestamp(iso.value, now.value));
+    const label = computed(() =>
+        iso.value === null ? '' : formatTimestamp(iso.value, now.value),
+    );
 
     const full = computed<string>(() =>
-        new Date(iso.value).toLocaleString(undefined, {
-            dateStyle: 'medium',
-            timeStyle: 'short',
-        }),
+        iso.value === null
+            ? ''
+            : new Date(iso.value).toLocaleString(undefined, {
+                  dateStyle: 'medium',
+                  timeStyle: 'short',
+              }),
     );
 
     return { label, full };
 }
 
 export interface FeedDay {
-    label: string;
-    items: { published_at: string }[];
+    /** Null for a page that opens with dateless entries: no divider. */
+    label: string | null;
+    items: { published_at: string | null }[];
 }
 
-export function useFeedDays<T extends { published_at: string }>(items: Ref<T[]>) {
+export function useFeedDays<T extends { published_at: string | null }>(items: Ref<T[]>) {
     const pinned = inject<number | null>(FEED_NOW, null);
     return computed(() => feedDays(items.value, pinned));
 }

@@ -178,3 +178,24 @@ it('reads every page shape core returns, and its JSON with the nodes under data 
         ->and(render_blade('<x-storyfeed::feed :items="$items" :next-cursor="$cursor" />', ['items' => $nodes, 'cursor' => new Cursor(['id' => 7])]))
         ->toContain('cursor='.urlencode((new Cursor(['id' => 7]))->encode()));
 });
+
+it('draws a dateless entry with no time and no day of its own (storyfeed/storyfeed#127)', function () {
+    Storyfeed::activity('place', Order::create(['number' => 'A']))->by($this->dana)->publish();
+    $node = json_decode((string) json_encode(Page::read(Storyfeed::feed()->get())['items']), true)[0];
+    $at = fn (string $id, ?string $published) => [...$node, 'id' => $id, 'published_at' => $published];
+    $grouped = fn (array $nodes) => render_blade('<x-storyfeed::feed :page="$page" />', ['page' => $nodes]);
+
+    expect($html = render_feed([$at('a', null)]))->toContain('Order #A')->not->toContain('<time')
+        // A dateless entry neither starts a day nor ends one: the next dated entry on that day draws no second heading.
+        ->and(substr_count($grouped([$at('a', '2026-09-25T12:00:00+00:00'), $at('b', null), $at('c', '2026-09-25T10:00:00+00:00'), $at('d', '2026-09-23T10:00:00+00:00')]), '<h2>'))->toBe(2)
+        ->and(substr_count($grouped([$at('b', null), $at('a', '2026-09-25T12:00:00+00:00')]), '<h2>'))->toBe(1)
+        ->and(substr_count($grouped([$at('b', null)]), '<h2>'))->toBe(0);
+});
+
+it('leaves a null verb out of the fallback headline (storyfeed/storyfeed#127)', function () {
+    Storyfeed::anonymous()->action('place', Order::create(['number' => '9']))->publish();
+    $node = json_decode((string) json_encode(Page::read(Storyfeed::feed()->get())['items']), true)[0];
+
+    expect(render_feed([[...$node, 'verb' => null, 'headline_template' => null, 'headline' => null]]))->not->toContain('null')
+        ->and(render_feed([[...$node, 'verb' => null, 'headline_template' => null, 'headline' => 'Imported from the archive']]))->toContain('<span>Imported from the archive</span>');
+});

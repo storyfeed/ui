@@ -1039,3 +1039,30 @@ test('initials and icons size from their own circle, and a badge grows outward f
         for (const fixed of ['[&_svg]:size-3.5', '[&_svg]:size-2.5', 'text-[length:--spacing(2.25)]']) assert.ok(!html.includes(attr(fixed)), fixed);
     }
 });
+
+test('a dateless entry draws no time, no tooltip and no day of its own (storyfeed/storyfeed#127)', () => {
+    const dateless = { ...activity, id: 'dateless', published_at: null };
+    for (const [name, props] of [['FeedItem', { item: dateless }], ['FeedGroup', { item: { ...group, published_at: null } }]]) {
+        const html = raw(name, props);
+        assert.match(html, /Ada Lovelace/, name);
+        assert.doesNotMatch(html, /<time|sf-time|Invalid Date|NaN|1970/, name);
+    }
+    // An app's own time renderer still decides, as Blade's does.
+    assert.match(raw('FeedItem', { item: dateless, time: ({ node }) => `custom:${node.published_at}` }), /custom:null/);
+    const at = (id, published_at) => ({ ...activity, id, published_at });
+    const days = (items) => raw('FeedStream', { items }).match(/sf-day /g)?.length ?? 0;
+    // Like feed.blade.php: a dateless entry neither starts a day nor ends one, so the next dated entry on that day draws no second heading.
+    assert.equal(days([at('a', '2026-10-07T12:00:00Z'), at('b', null), at('c', '2026-10-07T10:00:00Z'), at('d', '2026-10-05T10:00:00Z')]), 2);
+    assert.equal(days([at('b', null), at('a', '2026-10-07T12:00:00Z')]), 1);
+    assert.equal(days([at('b', null)]), 0);
+});
+
+test('a null verb is left out of the fallback headline (storyfeed/storyfeed#127)', () => {
+    const entities = { actor: null, object: { ...person('Order #1001'), type: 'order' } };
+    const headline = (verb) => text(render('FeedHeadline', { template: null, headline: null, entities, verb }));
+    assert.equal(headline(null), 'Someone Order #1001');
+    assert.equal(headline('shipped'), 'Someone shipped Order #1001');
+    const item = { ...activity, verb: null, headline_template: null, headline: null, actor: null, object: entities.object };
+    assert.doesNotMatch(raw('FeedItem', { item }), /null/);
+    assert.match(raw('FeedItem', { item: { ...item, headline: 'Imported from the archive' } }), /Imported from the archive/);
+});
