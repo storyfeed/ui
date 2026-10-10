@@ -50,7 +50,6 @@ export interface FeedTombstone {
     /** True when the trickle found the deletion rather than an event. */
     approximate: boolean;
     /** Reserved; always null. */
-    removedBy: null;
 }
 
 /** AS2's slot names: the slot is what the picture is FOR. */
