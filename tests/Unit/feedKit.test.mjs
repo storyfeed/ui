@@ -877,3 +877,31 @@ test('a long headline wraps inside its column instead of running off a narrow fe
     const html = await renderRaw('/resources/js/vue/FeedItem.vue', { item: { ...activity, headline_template: null, headline: 'IMG_20260814_120000_HDR_PANORAMA_KITCHEN.jpg' } });
     assert.match(html, /class="sf-headline[^"]*\[overflow-wrap:anywhere\]/);
 });
+
+test("an Image body draws its own picture, else the slot it names, custom slots included", async () => {
+    const media = { icon: { src: '/icon.svg' }, preview: { src: '/preview.jpg', width: 160, height: 100 }, slots: { sparkline: { src: 'data:image/svg+xml,%3Csvg%2F%3E', width: 120, height: 24 } } };
+    const draw = (body, entityMedia = media) => renderRaw('/resources/js/vue/body/Image.vue', { payload: { $body: 'Storyfeed/Body/Image', ...body }, entityMedia });
+    // Its own picture, at its declared size, needing no entity; it wins over a slot.
+    const own = { $v: 3, src: 'https://cdn.example.com/day-3.jpg', width: 1200, height: 800, alt: 'Cabinets installed', caption: 'Day 3' };
+    const html = await draw(own, null);
+    for (const part of ['src="https://cdn.example.com/day-3.jpg"', 'width="1200"', 'height="800"', 'alt="Cabinets installed"', 'Day 3']) assert.ok(html.includes(part), part);
+    assert.doesNotMatch(await draw({ ...own, image: 'preview' }), /\/preview\.jpg/);
+    // A slot: built in, or custom under media.slots.
+    assert.match(await draw({ $v: 3, image: 'preview' }), /src="\/preview\.jpg"[^>]*width="160"|width="160"[^>]*src="\/preview\.jpg"/);
+    const custom = await draw({ $v: 3, image: 'slots.sparkline' });
+    for (const part of ['src="data:image/svg+xml,%3Csvg%2F%3E"', 'width="120"', 'height="24"']) assert.ok(custom.includes(part), part);
+    // v1 and v2 rows naming nothing still show the preview; v3 names its slot always.
+    assert.match(await draw({}), /\/preview\.jpg/);
+    assert.match(await draw({ $v: 2 }), /\/preview\.jpg/);
+    for (const body of [{ $v: 3 }, { $v: 3, image: 'slots.missing' }, { $v: 3, image: 'slots.bad name' }, { image: 'url' }]) assert.doesNotMatch(await draw(body), /<img/, JSON.stringify(body));
+    // Before v3 a body stored no picture of its own: a stray src is not read.
+    assert.doesNotMatch(await draw({ $v: 2, src: '/not-yet.jpg' }), /not-yet/);
+});
+
+test("a stored or custom-slot Image stands for its entity in a group's strip", async () => {
+    const photo = (id, body, media = null) => ({ type: 'document', id, label: id, url: '/' + id, body: [{ $body: 'Storyfeed/Body/Image', $v: 3, ...body }], media });
+    const item = { ...group, children: [], count: 2, sample: { actors: group.sample.actors, objects: [photo('a', { src: '/own.jpg' }), photo('b', { image: 'slots.chart' }, { slots: { chart: { src: '/chart.svg' } } })] } };
+    const html = await renderRaw('/resources/js/vue/FeedStream.vue', { items: [item], grouped: false });
+    assert.match(html, /src="\/own\.jpg"/);
+    assert.match(html, /src="\/chart\.svg"/);
+});

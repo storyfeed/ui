@@ -90,18 +90,38 @@ export function isTruncated(payload: Record<string, any>): boolean {
     return 'truncated' in payload ? Boolean(payload.truncated) : (typeof payload.$v === 'number' ? payload.$v : 1) >= 2;
 }
 
-/** Only an Image body opts a sampled entity into the photograph strip. */
-export function imageOf(entity: any): any {
-    const bodies = [...resolve(entity?.body), ...formsIn(entity?.data)];
-    for (const { payload } of bodies) {
-        if (payload.$body !== 'Storyfeed/Body/Image') continue;
-        const slot = payload.image ?? 'preview';
-        if (!['icon', 'preview', 'image'].includes(slot)) continue;
-        const image = entity?.media?.[slot];
-        if (image?.src)
-            return { ...image, alt: payload.alt ?? payload.caption ?? '' };
-    }
-    return null;
+/**
+ * The picture an Image body draws, or null: its own `src` when it stores one
+ * (core 0.18's Image v3), otherwise the entity's media slot it names, `icon`,
+ * `preview`, `image` or a custom `slots.<name>`. Until v3 a body naming no
+ * slot meant `preview`. The body's alt, falling back to its caption, and its
+ * declared size win over the slot's. Mirrors `Bodies::picture()`.
+ */
+export function pictureOf(payload: Record<string, any>, media: Record<string, any> | null | undefined): Record<string, any> | null {
+    if (payload?.$body !== 'Storyfeed/Body/Image') return null;
+    const version = typeof payload.$v === 'number' ? payload.$v : 1;
+    const own = version >= 3 && typeof payload.src === 'string' && payload.src !== '';
+    const picture = own ? { src: payload.src } : slotOf(media, payload.image ?? (version < 3 ? 'preview' : null));
+    if (typeof picture?.src !== 'string' || picture.src === '') return null;
+    // A declared size wins; with none, the slot's own stands.
+    const size = Object.fromEntries((['width', 'height'] as const)
+        .filter((key) => Number.isInteger(payload[key]) && payload[key] > 0)
+        .map((key) => [key, payload[key]]));
+
+    return {
+        ...picture,
+        ...size,
+        alt: typeof payload.alt === 'string' ? payload.alt : typeof payload.caption === 'string' ? payload.caption : '',
+    };
+}
+
+/** An entity's picture for a slot a body names: a built-in one, or `slots.<name>`. */
+function slotOf(media: Record<string, any> | null | undefined, slot: unknown): Record<string, any> | null {
+    if (typeof slot !== 'string') return null;
+    if (['icon', 'preview', 'image'].includes(slot)) return media?.[slot] ?? null;
+    const name = /^slots\.([A-Za-z][A-Za-z0-9_-]*)$/.exec(slot)?.[1];
+
+    return name !== undefined && media?.slots && Object.hasOwn(media.slots, name) ? media.slots[name] ?? null : null;
 }
 
 /**
@@ -110,14 +130,17 @@ export function imageOf(entity: any): any {
  * object's icon unasked; now only the body asks. Mirrors `Bodies::icon()`.
  */
 export function iconOf(payload: Record<string, any>, media: Record<string, any> | null | undefined): Record<string, any> | null {
-    if (payload?.$body !== 'Storyfeed/Body/Image' || (payload.image ?? 'preview') !== 'icon') return null;
-    const icon = media?.icon;
-    if (!icon?.src) return null;
+    const own = (typeof payload?.$v === 'number' ? payload.$v : 1) >= 3 && typeof payload?.src === 'string' && payload.src !== '';
 
-    return {
-        ...icon,
-        alt: typeof payload.alt === 'string' ? payload.alt : typeof payload.caption === 'string' ? payload.caption : '',
-        width: payload.width ?? icon.width ?? null,
-        height: payload.height ?? icon.height ?? null,
-    };
+    return !own && payload?.image === 'icon' ? pictureOf(payload, media) : null;
+}
+
+/** Only an Image body opts a sampled entity into the photograph strip. */
+export function imageOf(entity: any): any {
+    const bodies = [...resolve(entity?.body), ...formsIn(entity?.data)];
+    for (const { payload } of bodies) {
+        const image = pictureOf(payload, entity?.media);
+        if (image) return image;
+    }
+    return null;
 }

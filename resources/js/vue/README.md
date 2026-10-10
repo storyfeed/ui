@@ -116,9 +116,10 @@ verbatim and plain text are escaped and preserve whitespace. Published
 historical `$v` forms continue to render.
 
 A row shows a picture only when one of its bodies asks for one. An Image body
-naming the object's icon slot (`image: "icon"`) draws as a small thumbnail
-beside the row's other bodies rather than full width; Image bodies naming
-`preview` or `image` keep their size. The thumbnail links to the object's link
+draws its own `src` at its declared size when it stores one, else the entity's
+media slot it names (`icon`, `preview`, `image`, or a custom `slots.<name>`
+read from `media.slots`). One naming the icon slot (`image: "icon"`) draws as
+a small thumbnail beside the row's other bodies rather than full width. The thumbnail links to the object's link
 (`node.object.link.href`, or `url` before core 0.17) through `FEED_LINK` and forwards scalar entity attributes,
 excluding `href`, event handlers and invalid names. A missing URL or tombstone
 renders an unlinked image. An app that registers its own Image renderer through

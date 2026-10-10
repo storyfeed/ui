@@ -1,18 +1,19 @@
 @props(['body', 'entity' => null, 'mediaRenderer' => null])
 
 @php
-    $body = \Storyfeed\Body\Image::upgrade($body, is_int($body['$v'] ?? null) ? $body['$v'] : 1);
-    $picture = $body['image'] !== null ? $entity?->media()?->get($body['image']) : null;
+    // Its own `src`, else the entity's slot it names (see `Bodies::picture()`).
+    $picture = \Storyfeed\Ui\Support\Bodies::picture(['$body' => 'Storyfeed/Body/Image', ...$body], $entity);
+    $caption = is_string($body['caption'] ?? null) ? $body['caption'] : null;
 @endphp
-@if (is_array($picture) && ! empty($picture['src']))
+@if ($picture !== null)
     <figure {{ $attributes->class('sf-image m-0') }}>
         @if ($mediaRenderer)
-            {!! $mediaRenderer(['image' => [...$picture, 'alt' => $body['alt'] ?? $body['caption'] ?? '', 'width' => $body['width'] ?? $picture['width'] ?? null, 'height' => $body['height'] ?? $picture['height'] ?? null], 'href' => null], 'block max-w-full rounded-lg') !!}
+            {!! $mediaRenderer(['image' => $picture, 'href' => null], 'block max-w-full rounded-lg') !!}
         @else
-        <img src="{{ $picture['src'] }}" alt="{{ $body['alt'] ?? $body['caption'] ?? '' }}" width="{{ $body['width'] ?? $picture['width'] ?? '' }}" height="{{ $body['height'] ?? $picture['height'] ?? '' }}" loading="lazy" class="block max-w-full rounded-lg" />
+        <img src="{{ $picture['src'] }}" alt="{{ $picture['alt'] }}" width="{{ $picture['width'] ?? '' }}" height="{{ $picture['height'] ?? '' }}" loading="lazy" class="block max-w-full rounded-lg" />
         @endif
-@if ($body['caption'] !== null && $body['caption'] !== '')
-            <figcaption class="mt-2 text-sm leading-[1.6] text-muted-foreground">{{ $body['caption'] }}</figcaption>
+@if ($caption !== null && $caption !== '')
+            <figcaption class="mt-2 text-sm leading-[1.6] text-muted-foreground">{{ $caption }}</figcaption>
 @endif
     </figure>
 @endif

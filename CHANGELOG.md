@@ -2,13 +2,17 @@
 
 ## Unreleased
 
+### Added
+
+- An Image body draws its own picture (core 0.18's Image v3, `Image::make('https://…/day-3.jpg')`, stored as `src`) at its declared width and height, in Blade, Vue and React. Without one it draws the entity's slot it names as before, now including custom slots (`Image::make($this->getFeedMedia('sparkline'))`, read from `media.slots.sparkline`). A stored or custom-slot picture also stands for its entity in a group's photograph strip. v1 and v2 rows naming no slot still show the `preview`; a v3 row naming nothing draws nothing, as core reads it. The kits read these payloads themselves, so they draw the same on every supported core.
+
 ### Fixed
 
 - A long headline wraps inside its column on a narrow feed instead of running past the edge, in Blade, Vue and React: a word too long for the line (a file name, a long name in a nested row at 200% text) breaks where it must. Nothing changes where the words fit, and apps no longer need their own `overflow-wrap` rule.
 
 ### Changed
 
-- Rows no longer show the object's icon automatically; add `Image::make()->withIcon()` to the rows that should. An Image body naming the icon slot (`image: "icon"`) draws as the small thumbnail beside the row's other bodies, linked to the object, in Blade, Vue and React; Image bodies naming `preview` or `image` keep their size. The kit never adds a picture the payload didn't ask for. The `objectIcon` renderer and `object-icon` prop (Blade) and the `objectIcon` prop (Vue and React) that drew it are removed.
+- Rows no longer show the object's icon automatically; add `Image::make($this->feedMediaIcon())` (core 0.18; `Image::make()->withIcon()` before it) to the rows that should. An Image body naming the icon slot (`image: "icon"`) draws as the small thumbnail beside the row's other bodies, linked to the object, in Blade, Vue and React; Image bodies naming `preview` or `image` keep their size. The kit never adds a picture the payload didn't ask for. The `objectIcon` renderer and `object-icon` prop (Blade) and the `objectIcon` prop (Vue and React) that drew it are removed.
 
 ## v0.6.0 - 2026-10-09
 

@@ -141,9 +141,10 @@ Published historical `$v` forms still render. Rich Markdown/HTML goes through
 the same sanitizer as Vue; plain/verbatim source is escaped.
 
 A row shows a picture only when one of its bodies asks for one. An Image body
-naming the object's icon slot (`image: "icon"`) draws as a small thumbnail
-beside the row's other bodies rather than full width; Image bodies naming
-`preview` or `image` keep their size. The thumbnail
+draws its own `src` at its declared size when it stores one, else the entity's
+media slot it names (`icon`, `preview`, `image`, or a custom `slots.<name>`
+read from `media.slots`). One naming the icon slot (`image: "icon"`) draws as
+a small thumbnail beside the row's other bodies rather than full width. The thumbnail
 links to the object's link (`node.object.link.href`, or `url` before core 0.17) through `FEED_LINK`, with scalar entity attributes
 except `href`, event handlers and invalid names. Missing URLs and tombstones
 produce unlinked images. An app that registers its own Image renderer through

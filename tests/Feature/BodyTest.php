@@ -13,11 +13,13 @@ use Storyfeed\Body\MediaObject;
 use Storyfeed\Body\Prose;
 use Storyfeed\Body\Table;
 use Storyfeed\Contracts\FeedBody;
+use Storyfeed\DeferredMedia;
 use Storyfeed\Facades\Story;
 use Storyfeed\Facades\Storyfeed;
 use Storyfeed\FeedImage;
 use Storyfeed\FeedLink;
 use Storyfeed\FeedResource;
+use Storyfeed\MediaSlot;
 use Storyfeed\Support\Entity;
 use Storyfeed\Support\FeedItem;
 use Storyfeed\Ui\Support\Links;
@@ -187,7 +189,7 @@ it('draws a media object with the entity\'s current picture, once', function () 
         subject: 'Dinner for two',
         content: 'Two pizzas and a dessert.',
         footnote: FeedLink::make('Receipt', '/receipts/1042'),
-    )->withPreview()->withFiles(FeedResource::make('/files/menu.pdf', mediaType: 'application/pdf', name: 'menu.pdf')));
+    )->image(MediaSlot::Preview)->withFiles(FeedResource::make('/files/menu.pdf', mediaType: 'application/pdf', name: 'menu.pdf')));
 
     expect($html)->toContain('src="/img/1042.jpg"', 'width="800"', 'height="600"', 'Dinner for two', 'Two pizzas and a dessert.', 'href="/files/menu.pdf"', 'href="/receipts/1042"')
         ->and(substr_count($html, '/img/1042.jpg'))->toBe(1);
@@ -399,14 +401,14 @@ it('renders stored File, KeyValue v1 and MediaObject v1 bodies without rewriting
 it('renders Image from the named slot with escaped caption and fallback alt', function () {
     $entity = Entity::of(['media' => ['preview' => ['src' => '/preview.jpg'], 'image' => ['src' => '/image.jpg'], 'url' => ['src' => '/not-a-picture']]]);
     $html = Blade::render('<x-storyfeed::body.image :body="$body" :entity="$entity" />', [
-        'body' => Image::make()->caption('<Boat>')->withImage()->toPayload(),
+        'body' => ['$body' => 'Storyfeed/Body/Image', 'caption' => '<Boat>', 'image' => 'image'],
         'entity' => $entity,
     ]);
     expect($html)->toContain('src="/image.jpg"', 'alt="&lt;Boat&gt;"', '&lt;Boat&gt;</figcaption>')
         ->not->toContain('/preview.jpg', '/not-a-picture');
 
     $blank = Blade::render('<x-storyfeed::body.image :body="$body" :entity="$entity" />', [
-        'body' => Image::make()->caption('Hidden')->withIcon()->toPayload(),
+        'body' => ['$body' => 'Storyfeed/Body/Image', 'caption' => 'Hidden', 'image' => 'icon'],
         'entity' => $entity,
     ]);
     expect($blank)->not->toContain('<img', '<figcaption', 'Hidden');
@@ -428,3 +430,43 @@ it('keeps server-rendered task boxes and drops every other input', function () {
     expect($html)->toContain('<li><input type="checkbox" disabled checked /> shipped</li>', '<li><input type="checkbox" disabled /> next</li>')
         ->and(substr_count($html, '<input'))->toBe(2);
 });
+
+it('draws an Image body\'s own picture, else the slot it names, custom slots included', function () {
+    $media = ['icon' => ['src' => '/icon.svg'], 'preview' => ['src' => '/preview.jpg', 'width' => 160, 'height' => 100], 'slots' => ['sparkline' => ['src' => 'data:image/svg+xml,%3Csvg%2F%3E', 'width' => 120, 'height' => 24]]];
+    $entity = Entity::of(['label' => 'Order', 'media' => $media]);
+    $draw = fn (array $body) => Blade::render('<x-storyfeed::body :body="$body" :entity="$entity" />', ['body' => ['$body' => 'Storyfeed/Body/Image', ...$body], 'entity' => $entity]);
+
+    // Its own picture, at its declared size, needing no entity; it wins over a slot.
+    $own = ['$v' => 3, 'src' => 'https://cdn.example.com/day-3.jpg', 'width' => 1200, 'height' => 800, 'alt' => 'Cabinets installed', 'caption' => 'Day 3'];
+    expect(Blade::render('<x-storyfeed::body :body="$body" />', ['body' => ['$body' => 'Storyfeed/Body/Image', ...$own]]))
+        ->toContain('src="https://cdn.example.com/day-3.jpg"', 'width="1200"', 'height="800"', 'alt="Cabinets installed"', 'Day 3');
+    expect($draw([...$own, 'image' => 'preview']))->toContain('day-3.jpg')->not->toContain('/preview.jpg');
+    // A slot: built in, or custom under media.slots.
+    expect($draw(['$v' => 3, 'image' => 'preview']))->toContain('src="/preview.jpg"', 'width="160"');
+    expect($draw(['$v' => 3, 'image' => 'slots.sparkline']))->toContain('src="data:image/svg+xml,%3Csvg%2F%3E"', 'width="120"', 'height="24"');
+    // v1 and v2 rows naming nothing still show the preview; v3 names its slot always.
+    expect($draw([]))->toContain('/preview.jpg')->and($draw(['$v' => 2]))->toContain('/preview.jpg');
+    foreach ([['$v' => 3], ['$v' => 3, 'image' => 'slots.missing'], ['$v' => 3, 'image' => 'slots.bad name'], ['image' => 'url']] as $body) {
+        expect($draw($body))->not->toContain('<img');
+    }
+    // Before v3 a body stored no picture of its own: a stray `src` is not read.
+    expect($draw(['$v' => 2, 'src' => '/not-yet.jpg']))->toContain('/preview.jpg')->not->toContain('/not-yet.jpg');
+});
+
+it('lets a stored or custom-slot Image stand for its entity in a group\'s strip', function () {
+    $photo = fn (string $id, array $body, array $media = []) => ['type' => 'document', 'id' => $id, 'label' => $id, 'url' => '/'.$id, 'body' => [['$body' => 'Storyfeed/Body/Image', '$v' => 3, ...$body]], 'media' => $media];
+    $item = ['kind' => 'group', 'headline' => 'Three photos', 'count' => 2, 'sample' => ['objects' => [
+        $photo('a', ['src' => '/own.jpg']),
+        $photo('b', ['image' => 'slots.chart'], ['slots' => ['chart' => ['src' => '/chart.svg']]]),
+    ]], 'children' => []];
+    expect(Blade::render('<x-storyfeed::feed :items="[$item]" :grouped="false" />', compact('item')))->toContain('src="/own.jpg"', 'src="/chart.svg"');
+});
+
+it('draws the Image bodies core writes from 0.18', function () {
+    $entity = Entity::of(['label' => 'Order', 'media' => ['icon' => null, 'preview' => null, 'image' => null, 'slots' => ['sparkline' => ['src' => '/sparkline.svg', 'width' => 120, 'height' => 24]]]]);
+    $draw = fn (array $body) => Blade::render('<x-storyfeed::body :body="$body" :entity="$entity" />', ['body' => $body, 'entity' => $entity]);
+
+    expect($draw(Image::make('https://cdn.example.com/day-3.jpg')->alt('Cabinets installed')->width(1200)->height(800)->caption('Day 3')->toPayload()))
+        ->toContain('src="https://cdn.example.com/day-3.jpg"', 'width="1200"', 'alt="Cabinets installed"', 'Day 3');
+    expect($draw(Image::make(DeferredMedia::slot('sparkline'))->toPayload()))->toContain('src="/sparkline.svg"', 'height="24"');
+})->skip(! class_exists(DeferredMedia::class), 'core before 0.18 writes no own pictures or custom slots');

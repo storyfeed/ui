@@ -14,6 +14,7 @@ use Storyfeed\Facades\Storyfeed;
 use Storyfeed\FeedImage;
 use Storyfeed\FeedLink;
 use Storyfeed\FeedResource;
+use Storyfeed\MediaSlot;
 use Storyfeed\Support\Entity;
 use Storyfeed\Ui\Support\BodyComponents;
 use Storyfeed\Ui\Tests\Fixtures\Order;
@@ -39,8 +40,8 @@ final class WorkbenchTest extends TestCase
 
         $bodies = [
             'KeyValue' => KeyValue::make(['Pickup' => '12:10 pm', 'Paid' => true, 'Reference' => KeyValue::verbatim('ORD-1042'), 'Table' => KeyValue::placeholder(null, 'not seated')], title: 'Order #1042'),
-            'MediaObject' => MediaObject::make(subject: FeedLink::make('Dinner for two', '/orders/1042'), content: 'Two pizzas and a dessert, ready for pickup at the kitchen.', footnote: FeedLink::make('Receipt', '/receipts/1042'))->withPreview()->withFiles(FeedResource::make('/files/menu.pdf', mediaType: 'application/pdf', name: 'menu.pdf')),
-            'Image' => Image::make(caption: 'Dinner is ready', alt: 'A pizza on a plate')->withPreview(),
+            'MediaObject' => MediaObject::make(subject: FeedLink::make('Dinner for two', '/orders/1042'), content: 'Two pizzas and a dessert, ready for pickup at the kitchen.', footnote: FeedLink::make('Receipt', '/receipts/1042'))->image(MediaSlot::Preview)->withFiles(FeedResource::make('/files/menu.pdf', mediaType: 'application/pdf', name: 'menu.pdf')),
+            'Image' => Image::make(caption: 'Dinner is ready', alt: 'A pizza on a plate'),
             'ItemList' => ItemList::ordered(['Margherita', FeedLink::make('Tiramisu', '/menu/tiramisu')], title: 'Items', totalItems: 5, more: FeedLink::make('See all', '/orders/1042')),
             'FileAttachment' => FileAttachment::make(2516582, 'application/pdf', 'invoice.pdf'),
             'Prose plain' => Prose::make("Please ring the bell on arrival.\nLeave the order with reception if no one answers.", title: 'Delivery instructions'),

@@ -3991,5 +3991,319 @@
         ]
       }
     ]
+  },
+  {
+    "name": "Image pictures",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "own",
+        "verb": "post",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actor posted :object",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "type": "document",
+          "id": "own-o",
+          "label": "Kitchen remodel",
+          "url": "#own",
+          "media": {
+            "icon": {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2232.0%22%20cy%3D%2232.0%22%20r%3D%2221.333333333333332%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+              "width": 64,
+              "height": 64
+            },
+            "preview": {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280.0%22%20cy%3D%2250.0%22%20r%3D%2233.333333333333336%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+              "width": 160,
+              "height": 100,
+              "alt": "Illustrated preview"
+            },
+            "image": null,
+            "initials": null,
+            "color": null,
+            "files": [],
+            "slots": {
+              "sparkline": {
+                "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22120%22%20height%3D%2224%22%3E%3Cpolyline%20points%3D%220%2C20%2020%2C14%2040%2C16%2060%2C8%2080%2C10%20100%2C4%20120%2C6%22%20fill%3D%22none%22%20stroke%3D%22%23438d98%22%20stroke-width%3D%222%22%2F%3E%3C%2Fsvg%3E",
+                "width": 120,
+                "height": 24,
+                "alt": "Orders this week"
+              }
+            }
+          },
+          "data": null,
+          "tombstone": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Image",
+              "$v": 3,
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22200%22%3E%3Crect%20width%3D%22300%22%20height%3D%22200%22%20fill%3D%22%238a6f4e%22%2F%3E%3Ccircle%20cx%3D%22150.0%22%20cy%3D%22100.0%22%20r%3D%2266.66666666666667%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+              "width": 300,
+              "height": 200,
+              "alt": "Cabinets installed",
+              "caption": "Day 3 (its own picture)"
+            }
+          ]
+        },
+        "target": null,
+        "context": null,
+        "glyph": "file-up"
+      },
+      {
+        "kind": "activity",
+        "id": "custom",
+        "verb": "post",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actor posted :object",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "type": "document",
+          "id": "custom-o",
+          "label": "Orders",
+          "url": "#custom",
+          "media": {
+            "icon": {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2232.0%22%20cy%3D%2232.0%22%20r%3D%2221.333333333333332%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+              "width": 64,
+              "height": 64
+            },
+            "preview": {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280.0%22%20cy%3D%2250.0%22%20r%3D%2233.333333333333336%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+              "width": 160,
+              "height": 100,
+              "alt": "Illustrated preview"
+            },
+            "image": null,
+            "initials": null,
+            "color": null,
+            "files": [],
+            "slots": {
+              "sparkline": {
+                "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22120%22%20height%3D%2224%22%3E%3Cpolyline%20points%3D%220%2C20%2020%2C14%2040%2C16%2060%2C8%2080%2C10%20100%2C4%20120%2C6%22%20fill%3D%22none%22%20stroke%3D%22%23438d98%22%20stroke-width%3D%222%22%2F%3E%3C%2Fsvg%3E",
+                "width": 120,
+                "height": 24,
+                "alt": "Orders this week"
+              }
+            }
+          },
+          "data": null,
+          "tombstone": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Image",
+              "$v": 3,
+              "image": "slots.sparkline",
+              "caption": "Orders this week (a custom slot)"
+            }
+          ]
+        },
+        "target": null,
+        "context": null,
+        "glyph": "file-up"
+      },
+      {
+        "kind": "activity",
+        "id": "v2",
+        "verb": "post",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actor posted :object",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "type": "document",
+          "id": "v2-o",
+          "label": "Order #1042",
+          "url": "#v2",
+          "media": {
+            "icon": {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2232.0%22%20cy%3D%2232.0%22%20r%3D%2221.333333333333332%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+              "width": 64,
+              "height": 64
+            },
+            "preview": {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280.0%22%20cy%3D%2250.0%22%20r%3D%2233.333333333333336%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+              "width": 160,
+              "height": 100,
+              "alt": "Illustrated preview"
+            },
+            "image": null,
+            "initials": null,
+            "color": null,
+            "files": [],
+            "slots": {
+              "sparkline": {
+                "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22120%22%20height%3D%2224%22%3E%3Cpolyline%20points%3D%220%2C20%2020%2C14%2040%2C16%2060%2C8%2080%2C10%20100%2C4%20120%2C6%22%20fill%3D%22none%22%20stroke%3D%22%23438d98%22%20stroke-width%3D%222%22%2F%3E%3C%2Fsvg%3E",
+                "width": 120,
+                "height": 24,
+                "alt": "Orders this week"
+              }
+            }
+          },
+          "data": null,
+          "tombstone": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Image",
+              "$v": 2,
+              "caption": "A v2 row naming no slot shows the preview"
+            }
+          ]
+        },
+        "target": null,
+        "context": null,
+        "glyph": "file-up"
+      },
+      {
+        "kind": "activity",
+        "id": "icon",
+        "verb": "post",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actor posted :object",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "type": "document",
+          "id": "icon-o",
+          "label": "Order #1043",
+          "url": "#icon",
+          "media": {
+            "icon": {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2232.0%22%20cy%3D%2232.0%22%20r%3D%2221.333333333333332%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+              "width": 64,
+              "height": 64
+            },
+            "preview": {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280.0%22%20cy%3D%2250.0%22%20r%3D%2233.333333333333336%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+              "width": 160,
+              "height": 100,
+              "alt": "Illustrated preview"
+            },
+            "image": null,
+            "initials": null,
+            "color": null,
+            "files": [],
+            "slots": {
+              "sparkline": {
+                "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22120%22%20height%3D%2224%22%3E%3Cpolyline%20points%3D%220%2C20%2020%2C14%2040%2C16%2060%2C8%2080%2C10%20100%2C4%20120%2C6%22%20fill%3D%22none%22%20stroke%3D%22%23438d98%22%20stroke-width%3D%222%22%2F%3E%3C%2Fsvg%3E",
+                "width": 120,
+                "height": 24,
+                "alt": "Orders this week"
+              }
+            }
+          },
+          "data": null,
+          "tombstone": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Image",
+              "$v": 3,
+              "image": "icon"
+            },
+            {
+              "$body": "Storyfeed/Body/KeyValue",
+              "items": [
+                {
+                  "key": "Status",
+                  "value": "Ready"
+                }
+              ]
+            }
+          ]
+        },
+        "target": null,
+        "context": null,
+        "glyph": "file-up"
+      },
+      {
+        "kind": "activity",
+        "id": "none",
+        "verb": "post",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actor posted :object",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "type": "document",
+          "id": "none-o",
+          "label": "Order #1044",
+          "url": "#none",
+          "media": {
+            "icon": {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2232.0%22%20cy%3D%2232.0%22%20r%3D%2221.333333333333332%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+              "width": 64,
+              "height": 64
+            },
+            "preview": {
+              "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22160%22%20height%3D%22100%22%3E%3Crect%20width%3D%22160%22%20height%3D%22100%22%20fill%3D%22%236b7785%22%2F%3E%3Ccircle%20cx%3D%2280.0%22%20cy%3D%2250.0%22%20r%3D%2233.333333333333336%22%20fill%3D%22%23e2e5e9%22%2F%3E%3C%2Fsvg%3E",
+              "width": 160,
+              "height": 100,
+              "alt": "Illustrated preview"
+            },
+            "image": null,
+            "initials": null,
+            "color": null,
+            "files": [],
+            "slots": {
+              "sparkline": {
+                "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22120%22%20height%3D%2224%22%3E%3Cpolyline%20points%3D%220%2C20%2020%2C14%2040%2C16%2060%2C8%2080%2C10%20100%2C4%20120%2C6%22%20fill%3D%22none%22%20stroke%3D%22%23438d98%22%20stroke-width%3D%222%22%2F%3E%3C%2Fsvg%3E",
+                "width": 120,
+                "height": 24,
+                "alt": "Orders this week"
+              }
+            }
+          },
+          "data": null,
+          "tombstone": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Image",
+              "$v": 3,
+              "caption": "A v3 body naming nothing draws nothing"
+            }
+          ]
+        },
+        "target": null,
+        "context": null,
+        "glyph": "file-up"
+      }
+    ]
   }
 ]

@@ -13,13 +13,10 @@
         // The featured entities (the objects), never the actor: the strip shows what the row is about.
         foreach (\Storyfeed\Ui\Support\AvatarRow::featured($group) as $entity) {
             foreach ($entity->bodies()->merge(\Storyfeed\Ui\Support\Bodies::in($entity->get('data'))) as $body) {
-                if (($body['$body'] ?? null) !== 'Storyfeed/Body/Image') { continue; }
-                $imageSlot = $body['image'] ?? 'preview';
-                $image = in_array($imageSlot, ['icon', 'preview', 'image'], true) ? $entity->media()?->get($imageSlot) : null;
-                if (! is_array($image) || empty($image['src'])) { continue; }
+                $image = \Storyfeed\Ui\Support\Bodies::picture($body, $entity);
+                if ($image === null) { continue; }
                 if (! isset($seen[$image['src']])) {
                     $seen[$image['src']] = true;
-                    $image['alt'] = $body['alt'] ?? $body['caption'] ?? '';
                     $tiles[] = ['image' => $image, 'href' => \Storyfeed\Ui\Support\Links::entity($entity)['href'] ?? null];
                 }
                 break;

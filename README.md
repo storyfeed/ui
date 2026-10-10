@@ -383,9 +383,13 @@ are left to the app. Empty and unknown forms produce no wrapper.
 
 Standalone activity/group components accept their default body slot, `time`
 and `annotations` slots and a `removed` text prop. A row shows a picture only
-when one of its bodies asks for one: an Image body naming the object's icon
-slot (`Image::make()->withIcon()`) draws as a small thumbnail beside the row's
-other bodies, while Image bodies naming `preview` or `image` keep their size.
+when one of its bodies asks for one. An Image body draws its own picture
+(`Image::make('https://…/day-3.jpg')`, stored as `src`) at its declared size,
+or else the entity's media slot it names, built-in or custom
+(`Image::make($this->getFeedMedia('sparkline'))`, read from
+`media.slots.sparkline`). One naming the icon slot
+(`Image::make($this->feedMediaIcon())`) draws as a small thumbnail beside the
+row's other bodies; the others draw full width.
 The thumbnail keeps the object's URL and scalar link attributes, excluding
 `href`, event handlers and invalid names; it also passes through the `media`
 renderer. A missing URL or tombstone leaves it unlinked, and a `form` renderer

@@ -3,6 +3,7 @@ import {
     fallbackOf,
     formsIn as discover,
     isTruncated,
+    pictureOf,
     resolve as resolveBodies,
 } from '../../shared/body';
 import { fileLabel } from '../../shared/fileLabels';
@@ -113,22 +114,19 @@ export function FileAttachment({ payload }: BodyProps) {
 export function Image({ payload, entityMedia }: BodyProps) {
     const caption =
         typeof payload.caption === 'string' ? payload.caption : null;
-    const slot = payload.image ?? 'preview';
-    const picture = ['icon', 'preview', 'image'].includes(slot)
-        ? entityMedia?.[slot]
-        : null;
-    return picture?.src ? (
+    // Its own `src`, else the entity's slot it names (see `pictureOf()`).
+    const picture = pictureOf(
+        { $body: 'Storyfeed/Body/Image', ...payload },
+        entityMedia,
+    );
+    return picture ? (
         <figure className="sf-image m-0">
             <img
                 className="block max-w-full rounded-lg"
                 src={picture.src}
-                alt={
-                    typeof payload.alt === 'string'
-                        ? payload.alt
-                        : (caption ?? '')
-                }
-                width={payload.width ?? picture.width ?? undefined}
-                height={payload.height ?? picture.height ?? undefined}
+                alt={picture.alt}
+                width={picture.width ?? undefined}
+                height={picture.height ?? undefined}
                 loading="lazy"
             />
             {caption && (
