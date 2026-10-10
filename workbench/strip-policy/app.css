@@ -1,0 +1,49 @@
+@import "tailwindcss" source(none);
+@plugin "@tailwindcss/typography";
+@source "../../resources/js/vue";
+@source "./*.vue";
+@source "./*.ts";
+@custom-variant dark (&:where(.dark, .dark *));
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-border: var(--border);
+    --color-ring: var(--ring);
+}
+:root {
+    --background: #fff;
+    --foreground: #1f2933;
+    --muted-foreground: #6b7785;
+    --muted: #f6f6f7;
+    --card: #fafafa;
+    --primary: #1f2933;
+    --primary-foreground: #fff;
+    --border: #e2e5e9;
+    --ring: #1f2933;
+    --sf-text-color: var(--foreground);
+    --sf-muted-color: var(--muted-foreground);
+    --sf-faint-color: #97a1af;
+    --sf-line-color: var(--border);
+    --sf-hover-color: var(--muted);
+    --sf-ring-color: var(--background);
+    --vp-c-brand-1: #3451b2;
+    --vp-c-text-2: var(--muted-foreground);
+}
+.dark {
+    --background: #1b1b1f;
+    --foreground: #dfdfd6;
+    --muted-foreground: #98989f;
+    --muted: #202127;
+    --card: #26262b;
+    --primary: #dfdfd6;
+    --primary-foreground: #1b1b1f;
+    --border: #3c3f44;
+    --sf-faint-color: #6a6a71;
+}
+/* Comparison framing only. */
+body { margin: 0; font-family: Arial, sans-serif; background: var(--background); color: var(--foreground); }

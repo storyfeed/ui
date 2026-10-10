@@ -1,0 +1,3520 @@
+[
+    {
+        "name": "Erica placed 3 orders (no pictures)",
+        "items": [
+            {
+                "kind": "group",
+                "id": "grp_djIfcmVwZWF0H2IxOmViYmUwNzhlOTM0ZGRhM2FkMzFlNWI4NmM3NWJhOTAzMDc0ZTM3ZjRmZTJjN2NjOTU2MmU4MDkyZDEyZDdhMzc6MDFtNGt3ZjA2c2VocHc3eGZlM24wZDA1ejc",
+                "axis": "repeat",
+                "count": 3,
+                "verb": "place",
+                "published_at": "2026-08-14T12:03:00.000000Z",
+                "headline_template": ":actor placed :count orders with :target",
+                "headline": null,
+                "glyph": "shopping-bag",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "1",
+                    "label": "Erica Sinclair",
+                    "link": {
+                        "href": "/people/1",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "photo": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "ES",
+                        "color": "#4338ca",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": null,
+                "target": {
+                    "type": "thing",
+                    "id": "1",
+                    "label": "Scoops Ahoy",
+                    "link": {
+                        "href": "/things/1",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "photo": null,
+                        "icon": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "SA",
+                        "color": "#1d4ed8",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": null,
+                "sample": {
+                    "actors": [
+                        {
+                            "type": "person",
+                            "id": "1",
+                            "label": "Erica Sinclair",
+                            "link": {
+                                "href": "/people/1",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "ES",
+                                "color": "#4338ca",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        }
+                    ],
+                    "objects": [
+                        {
+                            "type": "thing",
+                            "id": "4",
+                            "label": "Order #2033",
+                            "link": {
+                                "href": "/things/4",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "O2",
+                                "color": "#a21caf",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "3",
+                            "label": "Order #2032",
+                            "link": {
+                                "href": "/things/3",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "O2",
+                                "color": "#1d4ed8",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "2",
+                            "label": "Order #2031",
+                            "link": {
+                                "href": "/things/2",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "O2",
+                                "color": "#c2410c",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        }
+                    ],
+                    "targets": [
+                        {
+                            "type": "thing",
+                            "id": "1",
+                            "label": "Scoops Ahoy",
+                            "link": {
+                                "href": "/things/1",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "SA",
+                                "color": "#1d4ed8",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        }
+                    ],
+                    "contexts": [],
+                    "origins": [],
+                    "results": [],
+                    "instruments": [],
+                    "locations": [],
+                    "generators": [],
+                    "featured": [
+                        {
+                            "type": "thing",
+                            "id": "4",
+                            "label": "Order #2033",
+                            "link": {
+                                "href": "/things/4",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "O2",
+                                "color": "#a21caf",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "3",
+                            "label": "Order #2032",
+                            "link": {
+                                "href": "/things/3",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "O2",
+                                "color": "#1d4ed8",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "2",
+                            "label": "Order #2031",
+                            "link": {
+                                "href": "/things/2",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "O2",
+                                "color": "#c2410c",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        }
+                    ]
+                },
+                "distinct": {
+                    "actors": 1,
+                    "objects": 3,
+                    "targets": 1,
+                    "contexts": 0,
+                    "origins": 0,
+                    "results": 0,
+                    "instruments": 0,
+                    "locations": 0,
+                    "generators": 0,
+                    "featured": 3
+                },
+                "children": [
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf07evkjz345f6eshneyb",
+                        "verb": "place",
+                        "published_at": "2026-08-14T12:03:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor placed :object with :target",
+                        "headline": null,
+                        "glyph": "shopping-bag",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "1",
+                            "label": "Erica Sinclair",
+                            "link": {
+                                "href": "/people/1",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "ES",
+                                "color": "#4338ca",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "4",
+                            "label": "Order #2033",
+                            "link": {
+                                "href": "/things/4",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "O2",
+                                "color": "#a21caf",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "target": {
+                            "type": "thing",
+                            "id": "1",
+                            "label": "Scoops Ahoy",
+                            "link": {
+                                "href": "/things/1",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "SA",
+                                "color": "#1d4ed8",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    },
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf077mkvaksjt7fa9yykp",
+                        "verb": "place",
+                        "published_at": "2026-08-14T12:02:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor placed :object with :target",
+                        "headline": null,
+                        "glyph": "shopping-bag",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "1",
+                            "label": "Erica Sinclair",
+                            "link": {
+                                "href": "/people/1",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "ES",
+                                "color": "#4338ca",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "3",
+                            "label": "Order #2032",
+                            "link": {
+                                "href": "/things/3",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "O2",
+                                "color": "#1d4ed8",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "target": {
+                            "type": "thing",
+                            "id": "1",
+                            "label": "Scoops Ahoy",
+                            "link": {
+                                "href": "/things/1",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "SA",
+                                "color": "#1d4ed8",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    },
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf06sehpw7xfe3n0d05z7",
+                        "verb": "place",
+                        "published_at": "2026-08-14T12:01:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor placed :object with :target",
+                        "headline": null,
+                        "glyph": "shopping-bag",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "1",
+                            "label": "Erica Sinclair",
+                            "link": {
+                                "href": "/people/1",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "ES",
+                                "color": "#4338ca",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "2",
+                            "label": "Order #2031",
+                            "link": {
+                                "href": "/things/2",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "O2",
+                                "color": "#c2410c",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "target": {
+                            "type": "thing",
+                            "id": "1",
+                            "label": "Scoops Ahoy",
+                            "link": {
+                                "href": "/things/1",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "SA",
+                                "color": "#1d4ed8",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    }
+                ],
+                "children_truncated": false,
+                "tombstoned": [],
+                "redundant": false,
+                "distinct_tombstoned": {
+                    "actors": 0,
+                    "objects": 0,
+                    "targets": 0,
+                    "contexts": 0,
+                    "origins": 0,
+                    "results": 0,
+                    "instruments": 0,
+                    "locations": 0,
+                    "generators": 0,
+                    "featured": 0
+                }
+            }
+        ]
+    },
+    {
+        "name": "Several actors checked in at the Fun Fair",
+        "items": [
+            {
+                "kind": "group",
+                "id": "grp_djIfYWN0b3JzH2IxOjk2NWQ2NDg1Mzc5OGFlN2U4NWRhZDk3NWVlYTRlNzQ5YmIwNzQ0MmJiMjliNWZkOWRjNDFhMzY3M2RmYmE2NDY6MDFtNGt3ZjA3bnA5YTdjamdrcWV6N2d3Nzk",
+                "axis": "actors",
+                "count": 5,
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:28:00.000000Z",
+                "headline_template": ":actors checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": null,
+                "object": {
+                    "type": "thing",
+                    "id": "5",
+                    "label": "Fun Fair",
+                    "link": {
+                        "href": "/things/5",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "photo": null,
+                        "icon": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#9f1239",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "sample": {
+                    "actors": [
+                        {
+                            "type": "person",
+                            "id": "6",
+                            "label": "Murray Bauman",
+                            "link": {
+                                "href": "/people/6",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "c"
+                            },
+                            "media": {
+                                "icon": {
+                                    "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23d9f99d%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%23b91c1c%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%238d5a3b%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%238d5a3b%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%231f2937%27%2F%3E%3C%2Fsvg%3E",
+                                    "mediaType": "image/svg+xml",
+                                    "width": 96,
+                                    "height": 96,
+                                    "alt": null
+                                },
+                                "image": null,
+                                "preview": null,
+                                "initials": null,
+                                "color": null,
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        {
+                            "type": "person",
+                            "id": "5",
+                            "label": "Joyce Byers",
+                            "link": {
+                                "href": "/people/5",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "JB",
+                                "color": "#4d7c0f",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        {
+                            "type": "person",
+                            "id": "4",
+                            "label": "Will Byers",
+                            "link": {
+                                "href": "/people/4",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "b"
+                            },
+                            "media": {
+                                "icon": {
+                                    "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23bfdbfe%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%237c3aed%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23e8b896%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23e8b896%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%2378350f%27%2F%3E%3C%2Fsvg%3E",
+                                    "mediaType": "image/svg+xml",
+                                    "width": 96,
+                                    "height": 96,
+                                    "alt": null
+                                },
+                                "image": null,
+                                "preview": null,
+                                "initials": null,
+                                "color": null,
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        }
+                    ],
+                    "objects": [
+                        {
+                            "type": "thing",
+                            "id": "5",
+                            "label": "Fun Fair",
+                            "link": {
+                                "href": "/things/5",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "FF",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        }
+                    ],
+                    "targets": [],
+                    "contexts": [],
+                    "origins": [],
+                    "results": [],
+                    "instruments": [],
+                    "locations": [],
+                    "generators": [],
+                    "featured": [
+                        {
+                            "type": "thing",
+                            "id": "5",
+                            "label": "Fun Fair",
+                            "link": {
+                                "href": "/things/5",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "FF",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "5",
+                            "label": "Fun Fair",
+                            "link": {
+                                "href": "/things/5",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "FF",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "5",
+                            "label": "Fun Fair",
+                            "link": {
+                                "href": "/things/5",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "FF",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        }
+                    ]
+                },
+                "distinct": {
+                    "actors": 5,
+                    "objects": 1,
+                    "targets": 0,
+                    "contexts": 0,
+                    "origins": 0,
+                    "results": 0,
+                    "instruments": 0,
+                    "locations": 0,
+                    "generators": 0,
+                    "featured": 5
+                },
+                "children": [
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf08d20m0gnfnxpdh21hw",
+                        "verb": "check_in",
+                        "published_at": "2026-08-14T12:28:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor checked in at :object",
+                        "headline": null,
+                        "glyph": "map-pin",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "6",
+                            "label": "Murray Bauman",
+                            "link": {
+                                "href": "/people/6",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "c"
+                            },
+                            "media": {
+                                "icon": {
+                                    "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23d9f99d%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%23b91c1c%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%238d5a3b%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%238d5a3b%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%231f2937%27%2F%3E%3C%2Fsvg%3E",
+                                    "mediaType": "image/svg+xml",
+                                    "width": 96,
+                                    "height": 96,
+                                    "alt": null
+                                },
+                                "image": null,
+                                "preview": null,
+                                "initials": null,
+                                "color": null,
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "5",
+                            "label": "Fun Fair",
+                            "link": {
+                                "href": "/things/5",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "FF",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "target": null,
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    },
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf087rxentma043s5gaqt",
+                        "verb": "check_in",
+                        "published_at": "2026-08-14T12:27:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor checked in at :object",
+                        "headline": null,
+                        "glyph": "map-pin",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "5",
+                            "label": "Joyce Byers",
+                            "link": {
+                                "href": "/people/5",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "JB",
+                                "color": "#4d7c0f",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "5",
+                            "label": "Fun Fair",
+                            "link": {
+                                "href": "/things/5",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "FF",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "target": null,
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    },
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf080620tyrgmqyrmy8t3",
+                        "verb": "check_in",
+                        "published_at": "2026-08-14T12:26:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor checked in at :object",
+                        "headline": null,
+                        "glyph": "map-pin",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "4",
+                            "label": "Will Byers",
+                            "link": {
+                                "href": "/people/4",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "b"
+                            },
+                            "media": {
+                                "icon": {
+                                    "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23bfdbfe%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%237c3aed%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23e8b896%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23e8b896%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%2378350f%27%2F%3E%3C%2Fsvg%3E",
+                                    "mediaType": "image/svg+xml",
+                                    "width": 96,
+                                    "height": 96,
+                                    "alt": null
+                                },
+                                "image": null,
+                                "preview": null,
+                                "initials": null,
+                                "color": null,
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "5",
+                            "label": "Fun Fair",
+                            "link": {
+                                "href": "/things/5",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "FF",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "target": null,
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    },
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf07vnwgcjzcd0np8ah7w",
+                        "verb": "check_in",
+                        "published_at": "2026-08-14T12:25:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor checked in at :object",
+                        "headline": null,
+                        "glyph": "map-pin",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "3",
+                            "label": "Lucas Sinclair",
+                            "link": {
+                                "href": "/people/3",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "LS",
+                                "color": "#15803d",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "5",
+                            "label": "Fun Fair",
+                            "link": {
+                                "href": "/things/5",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "FF",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "target": null,
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    },
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf07np9a7cjgkqez7gw79",
+                        "verb": "check_in",
+                        "published_at": "2026-08-14T12:24:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor checked in at :object",
+                        "headline": null,
+                        "glyph": "map-pin",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "2",
+                            "label": "Max Mayfield",
+                            "link": {
+                                "href": "/people/2",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "a"
+                            },
+                            "media": {
+                                "icon": {
+                                    "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23fde68a%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%230f766e%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23f1c7a5%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23f1c7a5%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%23c2410c%27%2F%3E%3C%2Fsvg%3E",
+                                    "mediaType": "image/svg+xml",
+                                    "width": 96,
+                                    "height": 96,
+                                    "alt": null
+                                },
+                                "image": null,
+                                "preview": null,
+                                "initials": null,
+                                "color": null,
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "5",
+                            "label": "Fun Fair",
+                            "link": {
+                                "href": "/things/5",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "FF",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "target": null,
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    }
+                ],
+                "children_truncated": false,
+                "tombstoned": [],
+                "redundant": false,
+                "distinct_tombstoned": {
+                    "actors": 0,
+                    "objects": 0,
+                    "targets": 0,
+                    "contexts": 0,
+                    "origins": 0,
+                    "results": 0,
+                    "instruments": 0,
+                    "locations": 0,
+                    "generators": 0,
+                    "featured": 0
+                }
+            }
+        ]
+    },
+    {
+        "name": "Three menu items with photos",
+        "items": [
+            {
+                "kind": "group",
+                "id": "grp_djIfcmVwZWF0H2IxOmNlMDIzZDgzOWI0MDFjMDBiNDM1ZGVmNjljOWJmZDQzMzUyMjg4ZTg1MzJmNTUzMDFkYTk0YjkyZjQ5ODRiMWM6MDFtNGt3ZjA4cDAxMzI0cjYwZWV0aGJtYmY",
+                "axis": "repeat",
+                "count": 3,
+                "verb": "add",
+                "published_at": "2026-08-14T12:51:00.000000Z",
+                "headline_template": ":actor added :count items to :target",
+                "headline": null,
+                "glyph": "utensils",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "7",
+                    "label": "Steve Harrington",
+                    "link": {
+                        "href": "/people/7",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "photo": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "SH",
+                        "color": "#be123c",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": null,
+                "target": {
+                    "type": "thing",
+                    "id": "6",
+                    "label": "Summer menu",
+                    "link": {
+                        "href": "/things/6",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "photo": null,
+                        "icon": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "SM",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": null,
+                "sample": {
+                    "actors": [
+                        {
+                            "type": "person",
+                            "id": "7",
+                            "label": "Steve Harrington",
+                            "link": {
+                                "href": "/people/7",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "SH",
+                                "color": "#be123c",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        }
+                    ],
+                    "objects": [
+                        {
+                            "type": "thing",
+                            "id": "9",
+                            "label": "Sundae",
+                            "link": {
+                                "href": "/things/9",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "sundae",
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": {
+                                    "src": "/workbench-media/sundae.jpg",
+                                    "mediaType": "image/jpeg",
+                                    "width": 192,
+                                    "height": 144,
+                                    "alt": null
+                                },
+                                "initials": "S",
+                                "color": "#c2410c",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": [
+                                {
+                                    "$body": "Storyfeed/Body/Image",
+                                    "$v": 3,
+                                    "alt": "Sundae",
+                                    "image": "preview"
+                                }
+                            ],
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "8",
+                            "label": "Pretzel",
+                            "link": {
+                                "href": "/things/8",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "pretzel",
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": {
+                                    "src": "/workbench-media/pretzel.jpg",
+                                    "mediaType": "image/jpeg",
+                                    "width": 192,
+                                    "height": 144,
+                                    "alt": null
+                                },
+                                "initials": "P",
+                                "color": "#4d7c0f",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": [
+                                {
+                                    "$body": "Storyfeed/Body/Image",
+                                    "$v": 3,
+                                    "alt": "Pretzel",
+                                    "image": "preview"
+                                }
+                            ],
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "7",
+                            "label": "Hot dog",
+                            "link": {
+                                "href": "/things/7",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "hotdog",
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": {
+                                    "src": "/workbench-media/hotdog.jpg",
+                                    "mediaType": "image/jpeg",
+                                    "width": 192,
+                                    "height": 144,
+                                    "alt": null
+                                },
+                                "initials": "HD",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": [
+                                {
+                                    "$body": "Storyfeed/Body/Image",
+                                    "$v": 3,
+                                    "alt": "Hot dog",
+                                    "image": "preview"
+                                }
+                            ],
+                            "tombstone": null
+                        }
+                    ],
+                    "targets": [
+                        {
+                            "type": "thing",
+                            "id": "6",
+                            "label": "Summer menu",
+                            "link": {
+                                "href": "/things/6",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "SM",
+                                "color": "#a21caf",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        }
+                    ],
+                    "contexts": [],
+                    "origins": [],
+                    "results": [],
+                    "instruments": [],
+                    "locations": [],
+                    "generators": [],
+                    "featured": [
+                        {
+                            "type": "thing",
+                            "id": "9",
+                            "label": "Sundae",
+                            "link": {
+                                "href": "/things/9",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "sundae",
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": {
+                                    "src": "/workbench-media/sundae.jpg",
+                                    "mediaType": "image/jpeg",
+                                    "width": 192,
+                                    "height": 144,
+                                    "alt": null
+                                },
+                                "initials": "S",
+                                "color": "#c2410c",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": [
+                                {
+                                    "$body": "Storyfeed/Body/Image",
+                                    "$v": 3,
+                                    "alt": "Sundae",
+                                    "image": "preview"
+                                }
+                            ],
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "8",
+                            "label": "Pretzel",
+                            "link": {
+                                "href": "/things/8",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "pretzel",
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": {
+                                    "src": "/workbench-media/pretzel.jpg",
+                                    "mediaType": "image/jpeg",
+                                    "width": 192,
+                                    "height": 144,
+                                    "alt": null
+                                },
+                                "initials": "P",
+                                "color": "#4d7c0f",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": [
+                                {
+                                    "$body": "Storyfeed/Body/Image",
+                                    "$v": 3,
+                                    "alt": "Pretzel",
+                                    "image": "preview"
+                                }
+                            ],
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "7",
+                            "label": "Hot dog",
+                            "link": {
+                                "href": "/things/7",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "hotdog",
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": {
+                                    "src": "/workbench-media/hotdog.jpg",
+                                    "mediaType": "image/jpeg",
+                                    "width": 192,
+                                    "height": 144,
+                                    "alt": null
+                                },
+                                "initials": "HD",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": [
+                                {
+                                    "$body": "Storyfeed/Body/Image",
+                                    "$v": 3,
+                                    "alt": "Hot dog",
+                                    "image": "preview"
+                                }
+                            ],
+                            "tombstone": null
+                        }
+                    ]
+                },
+                "distinct": {
+                    "actors": 1,
+                    "objects": 3,
+                    "targets": 1,
+                    "contexts": 0,
+                    "origins": 0,
+                    "results": 0,
+                    "instruments": 0,
+                    "locations": 0,
+                    "generators": 0,
+                    "featured": 3
+                },
+                "children": [
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf0944z16rzywha9ewak6",
+                        "verb": "add",
+                        "published_at": "2026-08-14T12:51:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor added :object to :target",
+                        "headline": null,
+                        "glyph": "utensils",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "7",
+                            "label": "Steve Harrington",
+                            "link": {
+                                "href": "/people/7",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "SH",
+                                "color": "#be123c",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "9",
+                            "label": "Sundae",
+                            "link": {
+                                "href": "/things/9",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "sundae",
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": {
+                                    "src": "/workbench-media/sundae.jpg",
+                                    "mediaType": "image/jpeg",
+                                    "width": 192,
+                                    "height": 144,
+                                    "alt": null
+                                },
+                                "initials": "S",
+                                "color": "#c2410c",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": [
+                                {
+                                    "$body": "Storyfeed/Body/Image",
+                                    "$v": 3,
+                                    "alt": "Sundae",
+                                    "image": "preview"
+                                }
+                            ],
+                            "tombstone": null
+                        },
+                        "target": {
+                            "type": "thing",
+                            "id": "6",
+                            "label": "Summer menu",
+                            "link": {
+                                "href": "/things/6",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "SM",
+                                "color": "#a21caf",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    },
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf08xmsv6pe20013yy5z1",
+                        "verb": "add",
+                        "published_at": "2026-08-14T12:50:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor added :object to :target",
+                        "headline": null,
+                        "glyph": "utensils",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "7",
+                            "label": "Steve Harrington",
+                            "link": {
+                                "href": "/people/7",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "SH",
+                                "color": "#be123c",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "8",
+                            "label": "Pretzel",
+                            "link": {
+                                "href": "/things/8",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "pretzel",
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": {
+                                    "src": "/workbench-media/pretzel.jpg",
+                                    "mediaType": "image/jpeg",
+                                    "width": 192,
+                                    "height": 144,
+                                    "alt": null
+                                },
+                                "initials": "P",
+                                "color": "#4d7c0f",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": [
+                                {
+                                    "$body": "Storyfeed/Body/Image",
+                                    "$v": 3,
+                                    "alt": "Pretzel",
+                                    "image": "preview"
+                                }
+                            ],
+                            "tombstone": null
+                        },
+                        "target": {
+                            "type": "thing",
+                            "id": "6",
+                            "label": "Summer menu",
+                            "link": {
+                                "href": "/things/6",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "SM",
+                                "color": "#a21caf",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    },
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf08p01324r60eethbmbf",
+                        "verb": "add",
+                        "published_at": "2026-08-14T12:49:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor added :object to :target",
+                        "headline": null,
+                        "glyph": "utensils",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "7",
+                            "label": "Steve Harrington",
+                            "link": {
+                                "href": "/people/7",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "SH",
+                                "color": "#be123c",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "7",
+                            "label": "Hot dog",
+                            "link": {
+                                "href": "/things/7",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "hotdog",
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": {
+                                    "src": "/workbench-media/hotdog.jpg",
+                                    "mediaType": "image/jpeg",
+                                    "width": 192,
+                                    "height": 144,
+                                    "alt": null
+                                },
+                                "initials": "HD",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": [
+                                {
+                                    "$body": "Storyfeed/Body/Image",
+                                    "$v": 3,
+                                    "alt": "Hot dog",
+                                    "image": "preview"
+                                }
+                            ],
+                            "tombstone": null
+                        },
+                        "target": {
+                            "type": "thing",
+                            "id": "6",
+                            "label": "Summer menu",
+                            "link": {
+                                "href": "/things/6",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "SM",
+                                "color": "#a21caf",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    }
+                ],
+                "children_truncated": false,
+                "tombstoned": [],
+                "redundant": false,
+                "distinct_tombstoned": {
+                    "actors": 0,
+                    "objects": 0,
+                    "targets": 0,
+                    "contexts": 0,
+                    "origins": 0,
+                    "results": 0,
+                    "instruments": 0,
+                    "locations": 0,
+                    "generators": 0,
+                    "featured": 0
+                }
+            }
+        ]
+    },
+    {
+        "name": "A mixed group",
+        "items": [
+            {
+                "kind": "group",
+                "id": "grp_djIfcmVwZWF0H2IxOmNhYjM4ZTljYjJjYTRlMTI4OWNiODBjYTMyNTAzMDVkNDQ2M2Q1MjA5ZGJiMWE4NjVlMWU4MWE2MGVjNTAxY2Y6MDFtNGt3ZjA5Y3ZoaGtoN2V3ZnE1ZTIyZ3Y",
+                "axis": "repeat",
+                "count": 5,
+                "verb": "post",
+                "published_at": "2026-08-14T13:16:00.000000Z",
+                "headline_template": ":actor posted :count things in :target",
+                "headline": null,
+                "glyph": "file-up",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "8",
+                    "label": "Robin Buckley",
+                    "link": {
+                        "href": "/people/8",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "photo": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "RB",
+                        "color": "#15803d",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": null,
+                "target": {
+                    "type": "thing",
+                    "id": "10",
+                    "label": "Notice board",
+                    "link": {
+                        "href": "/things/10",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "photo": null,
+                        "icon": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "NB",
+                        "color": "#9f1239",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": null,
+                "sample": {
+                    "actors": [
+                        {
+                            "type": "person",
+                            "id": "8",
+                            "label": "Robin Buckley",
+                            "link": {
+                                "href": "/people/8",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "RB",
+                                "color": "#15803d",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        }
+                    ],
+                    "objects": [
+                        {
+                            "type": "thing",
+                            "id": "15",
+                            "label": "Closing checklist",
+                            "link": {
+                                "href": "/things/15",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "CC",
+                                "color": "#0f766e",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "14",
+                            "label": "Ferris wheel hours",
+                            "link": {
+                                "href": "/things/14",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "ferris",
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": {
+                                    "src": "/workbench-media/ferris.jpg",
+                                    "mediaType": "image/jpeg",
+                                    "width": 192,
+                                    "height": 144,
+                                    "alt": null
+                                },
+                                "initials": "FH",
+                                "color": "#4d7c0f",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": [
+                                {
+                                    "$body": "Storyfeed/Body/Image",
+                                    "$v": 3,
+                                    "alt": "Ferris wheel hours",
+                                    "image": "preview"
+                                }
+                            ],
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "13",
+                            "label": "Staff picnic",
+                            "link": {
+                                "href": "/things/13",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "fair",
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": {
+                                    "src": "/workbench-media/fair.jpg",
+                                    "mediaType": "image/jpeg",
+                                    "width": 192,
+                                    "height": 144,
+                                    "alt": null
+                                },
+                                "initials": "SP",
+                                "color": "#a21caf",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": [
+                                {
+                                    "$body": "Storyfeed/Body/Image",
+                                    "$v": 3,
+                                    "alt": "Staff picnic",
+                                    "image": "preview"
+                                }
+                            ],
+                            "tombstone": null
+                        }
+                    ],
+                    "targets": [
+                        {
+                            "type": "thing",
+                            "id": "10",
+                            "label": "Notice board",
+                            "link": {
+                                "href": "/things/10",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "NB",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        }
+                    ],
+                    "contexts": [],
+                    "origins": [],
+                    "results": [],
+                    "instruments": [],
+                    "locations": [],
+                    "generators": [],
+                    "featured": [
+                        {
+                            "type": "thing",
+                            "id": "15",
+                            "label": "Closing checklist",
+                            "link": {
+                                "href": "/things/15",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "CC",
+                                "color": "#0f766e",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "14",
+                            "label": "Ferris wheel hours",
+                            "link": {
+                                "href": "/things/14",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "ferris",
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": {
+                                    "src": "/workbench-media/ferris.jpg",
+                                    "mediaType": "image/jpeg",
+                                    "width": 192,
+                                    "height": 144,
+                                    "alt": null
+                                },
+                                "initials": "FH",
+                                "color": "#4d7c0f",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": [
+                                {
+                                    "$body": "Storyfeed/Body/Image",
+                                    "$v": 3,
+                                    "alt": "Ferris wheel hours",
+                                    "image": "preview"
+                                }
+                            ],
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "13",
+                            "label": "Staff picnic",
+                            "link": {
+                                "href": "/things/13",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "fair",
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": {
+                                    "src": "/workbench-media/fair.jpg",
+                                    "mediaType": "image/jpeg",
+                                    "width": 192,
+                                    "height": 144,
+                                    "alt": null
+                                },
+                                "initials": "SP",
+                                "color": "#a21caf",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": [
+                                {
+                                    "$body": "Storyfeed/Body/Image",
+                                    "$v": 3,
+                                    "alt": "Staff picnic",
+                                    "image": "preview"
+                                }
+                            ],
+                            "tombstone": null
+                        }
+                    ]
+                },
+                "distinct": {
+                    "actors": 1,
+                    "objects": 5,
+                    "targets": 1,
+                    "contexts": 0,
+                    "origins": 0,
+                    "results": 0,
+                    "instruments": 0,
+                    "locations": 0,
+                    "generators": 0,
+                    "featured": 5
+                },
+                "children": [
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf0a6mcqbfz9dgx7d2dtk",
+                        "verb": "post",
+                        "published_at": "2026-08-14T13:16:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor posted :object in :target",
+                        "headline": null,
+                        "glyph": "file-up",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "8",
+                            "label": "Robin Buckley",
+                            "link": {
+                                "href": "/people/8",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "RB",
+                                "color": "#15803d",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "15",
+                            "label": "Closing checklist",
+                            "link": {
+                                "href": "/things/15",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "CC",
+                                "color": "#0f766e",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "target": {
+                            "type": "thing",
+                            "id": "10",
+                            "label": "Notice board",
+                            "link": {
+                                "href": "/things/10",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "NB",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    },
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf0a0kg8tqagcjtztvvxm",
+                        "verb": "post",
+                        "published_at": "2026-08-14T13:15:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor posted :object in :target",
+                        "headline": null,
+                        "glyph": "file-up",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "8",
+                            "label": "Robin Buckley",
+                            "link": {
+                                "href": "/people/8",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "RB",
+                                "color": "#15803d",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "14",
+                            "label": "Ferris wheel hours",
+                            "link": {
+                                "href": "/things/14",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "ferris",
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": {
+                                    "src": "/workbench-media/ferris.jpg",
+                                    "mediaType": "image/jpeg",
+                                    "width": 192,
+                                    "height": 144,
+                                    "alt": null
+                                },
+                                "initials": "FH",
+                                "color": "#4d7c0f",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": [
+                                {
+                                    "$body": "Storyfeed/Body/Image",
+                                    "$v": 3,
+                                    "alt": "Ferris wheel hours",
+                                    "image": "preview"
+                                }
+                            ],
+                            "tombstone": null
+                        },
+                        "target": {
+                            "type": "thing",
+                            "id": "10",
+                            "label": "Notice board",
+                            "link": {
+                                "href": "/things/10",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "NB",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    },
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf09stchptmd46tq1bk1h",
+                        "verb": "post",
+                        "published_at": "2026-08-14T13:14:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor posted :object in :target",
+                        "headline": null,
+                        "glyph": "file-up",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "8",
+                            "label": "Robin Buckley",
+                            "link": {
+                                "href": "/people/8",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "RB",
+                                "color": "#15803d",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "13",
+                            "label": "Staff picnic",
+                            "link": {
+                                "href": "/things/13",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": "fair",
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": {
+                                    "src": "/workbench-media/fair.jpg",
+                                    "mediaType": "image/jpeg",
+                                    "width": 192,
+                                    "height": 144,
+                                    "alt": null
+                                },
+                                "initials": "SP",
+                                "color": "#a21caf",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": [
+                                {
+                                    "$body": "Storyfeed/Body/Image",
+                                    "$v": 3,
+                                    "alt": "Staff picnic",
+                                    "image": "preview"
+                                }
+                            ],
+                            "tombstone": null
+                        },
+                        "target": {
+                            "type": "thing",
+                            "id": "10",
+                            "label": "Notice board",
+                            "link": {
+                                "href": "/things/10",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "NB",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    },
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf09jwxabyzq781ef2xtj",
+                        "verb": "post",
+                        "published_at": "2026-08-14T13:13:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor posted :object in :target",
+                        "headline": null,
+                        "glyph": "file-up",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "8",
+                            "label": "Robin Buckley",
+                            "link": {
+                                "href": "/people/8",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "RB",
+                                "color": "#15803d",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "12",
+                            "label": "Lost and found",
+                            "link": {
+                                "href": "/things/12",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "LF",
+                                "color": "#15803d",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "target": {
+                            "type": "thing",
+                            "id": "10",
+                            "label": "Notice board",
+                            "link": {
+                                "href": "/things/10",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "NB",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    },
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf09cvhhkh7ewfq5e22gv",
+                        "verb": "post",
+                        "published_at": "2026-08-14T13:12:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor posted :object in :target",
+                        "headline": null,
+                        "glyph": "file-up",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "8",
+                            "label": "Robin Buckley",
+                            "link": {
+                                "href": "/people/8",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "RB",
+                                "color": "#15803d",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "11",
+                            "label": "Shift rota",
+                            "link": {
+                                "href": "/things/11",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "SR",
+                                "color": "#b45309",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "target": {
+                            "type": "thing",
+                            "id": "10",
+                            "label": "Notice board",
+                            "link": {
+                                "href": "/things/10",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "NB",
+                                "color": "#9f1239",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    }
+                ],
+                "children_truncated": false,
+                "tombstoned": [],
+                "redundant": false,
+                "distinct_tombstoned": {
+                    "actors": 0,
+                    "objects": 0,
+                    "targets": 0,
+                    "contexts": 0,
+                    "origins": 0,
+                    "results": 0,
+                    "instruments": 0,
+                    "locations": 0,
+                    "generators": 0,
+                    "featured": 0
+                }
+            }
+        ]
+    },
+    {
+        "name": "Products with icons only",
+        "items": [
+            {
+                "kind": "group",
+                "id": "grp_djIfcmVwZWF0H2IxOjQ4YzZhMDhlZTcyN2QwOTIzNTE1YTE0ODVjNGVhNzgwNTUzMzNkYmQ5NTVlZWUwMTg0NWRjYzhkMzFhNTNlMDc6MDFtNGt3ZjBhZDY1cXZ6a2pwemUxcWhiejE",
+                "axis": "repeat",
+                "count": 4,
+                "verb": "restock",
+                "published_at": "2026-08-14T13:40:00.000000Z",
+                "headline_template": ":actor restocked :count products",
+                "headline": null,
+                "glyph": "package",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "9",
+                    "label": "Dustin Henderson",
+                    "link": {
+                        "href": "/people/9",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "photo": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "DH",
+                        "color": "#b45309",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": null,
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": null,
+                "sample": {
+                    "actors": [
+                        {
+                            "type": "person",
+                            "id": "9",
+                            "label": "Dustin Henderson",
+                            "link": {
+                                "href": "/people/9",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "DH",
+                                "color": "#b45309",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        }
+                    ],
+                    "objects": [
+                        {
+                            "type": "thing",
+                            "id": "19",
+                            "label": "Spoons",
+                            "link": {
+                                "href": "/things/19",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": "spoon"
+                            },
+                            "media": {
+                                "icon": {
+                                    "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2764%27%20height%3D%2764%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20fill%3D%27%23e0f2fe%27%2F%3E%3Cellipse%20cx%3D%2732%27%20cy%3D%2722%27%20rx%3D%278%27%20ry%3D%2710%27%20fill%3D%27%2394a3b8%27%2F%3E%3Crect%20x%3D%2730%27%20y%3D%2730%27%20width%3D%274%27%20height%3D%2720%27%20rx%3D%272%27%20fill%3D%27%2394a3b8%27%2F%3E%3C%2Fsvg%3E",
+                                    "mediaType": "image/svg+xml",
+                                    "width": 64,
+                                    "height": 64,
+                                    "alt": "Spoon"
+                                },
+                                "image": null,
+                                "preview": null,
+                                "initials": null,
+                                "color": null,
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "18",
+                            "label": "Napkins",
+                            "link": {
+                                "href": "/things/18",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": "napkin"
+                            },
+                            "media": {
+                                "icon": {
+                                    "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2764%27%20height%3D%2764%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20fill%3D%27%23e0f2fe%27%2F%3E%3Cpath%20d%3D%27M18%2018h28v28H18z%27%20fill%3D%27%23fff%27%20stroke%3D%27%2364748b%27%20stroke-width%3D%272%27%2F%3E%3Cpath%20d%3D%27M18%2018l28%2028%27%20stroke%3D%27%23cbd5e1%27%20stroke-width%3D%272%27%2F%3E%3C%2Fsvg%3E",
+                                    "mediaType": "image/svg+xml",
+                                    "width": 64,
+                                    "height": 64,
+                                    "alt": "Napkin"
+                                },
+                                "image": null,
+                                "preview": null,
+                                "initials": null,
+                                "color": null,
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "17",
+                            "label": "Sprinkles",
+                            "link": {
+                                "href": "/things/17",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": "sprinkles"
+                            },
+                            "media": {
+                                "icon": {
+                                    "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2764%27%20height%3D%2764%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20fill%3D%27%23e0f2fe%27%2F%3E%3Crect%20x%3D%2718%27%20y%3D%2718%27%20width%3D%2728%27%20height%3D%2728%27%20rx%3D%2714%27%20fill%3D%27%23fef3c7%27%2F%3E%3Cpath%20d%3D%27M24%2026l4%202M36%2024l2%204M30%2036l4-1M38%2038l-3%203M24%2038l3%202%27%20stroke%3D%27%23db2777%27%20stroke-width%3D%273%27%20stroke-linecap%3D%27round%27%2F%3E%3C%2Fsvg%3E",
+                                    "mediaType": "image/svg+xml",
+                                    "width": 64,
+                                    "height": 64,
+                                    "alt": "Sprinkles"
+                                },
+                                "image": null,
+                                "preview": null,
+                                "initials": null,
+                                "color": null,
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        }
+                    ],
+                    "targets": [],
+                    "contexts": [],
+                    "origins": [],
+                    "results": [],
+                    "instruments": [],
+                    "locations": [],
+                    "generators": [],
+                    "featured": [
+                        {
+                            "type": "thing",
+                            "id": "19",
+                            "label": "Spoons",
+                            "link": {
+                                "href": "/things/19",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": "spoon"
+                            },
+                            "media": {
+                                "icon": {
+                                    "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2764%27%20height%3D%2764%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20fill%3D%27%23e0f2fe%27%2F%3E%3Cellipse%20cx%3D%2732%27%20cy%3D%2722%27%20rx%3D%278%27%20ry%3D%2710%27%20fill%3D%27%2394a3b8%27%2F%3E%3Crect%20x%3D%2730%27%20y%3D%2730%27%20width%3D%274%27%20height%3D%2720%27%20rx%3D%272%27%20fill%3D%27%2394a3b8%27%2F%3E%3C%2Fsvg%3E",
+                                    "mediaType": "image/svg+xml",
+                                    "width": 64,
+                                    "height": 64,
+                                    "alt": "Spoon"
+                                },
+                                "image": null,
+                                "preview": null,
+                                "initials": null,
+                                "color": null,
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "18",
+                            "label": "Napkins",
+                            "link": {
+                                "href": "/things/18",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": "napkin"
+                            },
+                            "media": {
+                                "icon": {
+                                    "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2764%27%20height%3D%2764%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20fill%3D%27%23e0f2fe%27%2F%3E%3Cpath%20d%3D%27M18%2018h28v28H18z%27%20fill%3D%27%23fff%27%20stroke%3D%27%2364748b%27%20stroke-width%3D%272%27%2F%3E%3Cpath%20d%3D%27M18%2018l28%2028%27%20stroke%3D%27%23cbd5e1%27%20stroke-width%3D%272%27%2F%3E%3C%2Fsvg%3E",
+                                    "mediaType": "image/svg+xml",
+                                    "width": 64,
+                                    "height": 64,
+                                    "alt": "Napkin"
+                                },
+                                "image": null,
+                                "preview": null,
+                                "initials": null,
+                                "color": null,
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        {
+                            "type": "thing",
+                            "id": "17",
+                            "label": "Sprinkles",
+                            "link": {
+                                "href": "/things/17",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": "sprinkles"
+                            },
+                            "media": {
+                                "icon": {
+                                    "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2764%27%20height%3D%2764%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20fill%3D%27%23e0f2fe%27%2F%3E%3Crect%20x%3D%2718%27%20y%3D%2718%27%20width%3D%2728%27%20height%3D%2728%27%20rx%3D%2714%27%20fill%3D%27%23fef3c7%27%2F%3E%3Cpath%20d%3D%27M24%2026l4%202M36%2024l2%204M30%2036l4-1M38%2038l-3%203M24%2038l3%202%27%20stroke%3D%27%23db2777%27%20stroke-width%3D%273%27%20stroke-linecap%3D%27round%27%2F%3E%3C%2Fsvg%3E",
+                                    "mediaType": "image/svg+xml",
+                                    "width": 64,
+                                    "height": 64,
+                                    "alt": "Sprinkles"
+                                },
+                                "image": null,
+                                "preview": null,
+                                "initials": null,
+                                "color": null,
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        }
+                    ]
+                },
+                "distinct": {
+                    "actors": 1,
+                    "objects": 4,
+                    "targets": 0,
+                    "contexts": 0,
+                    "origins": 0,
+                    "results": 0,
+                    "instruments": 0,
+                    "locations": 0,
+                    "generators": 0,
+                    "featured": 4
+                },
+                "children": [
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf0ayzcgmgas127xj43dg",
+                        "verb": "restock",
+                        "published_at": "2026-08-14T13:40:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor restocked :object",
+                        "headline": null,
+                        "glyph": "package",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "9",
+                            "label": "Dustin Henderson",
+                            "link": {
+                                "href": "/people/9",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "DH",
+                                "color": "#b45309",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "19",
+                            "label": "Spoons",
+                            "link": {
+                                "href": "/things/19",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": "spoon"
+                            },
+                            "media": {
+                                "icon": {
+                                    "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2764%27%20height%3D%2764%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20fill%3D%27%23e0f2fe%27%2F%3E%3Cellipse%20cx%3D%2732%27%20cy%3D%2722%27%20rx%3D%278%27%20ry%3D%2710%27%20fill%3D%27%2394a3b8%27%2F%3E%3Crect%20x%3D%2730%27%20y%3D%2730%27%20width%3D%274%27%20height%3D%2720%27%20rx%3D%272%27%20fill%3D%27%2394a3b8%27%2F%3E%3C%2Fsvg%3E",
+                                    "mediaType": "image/svg+xml",
+                                    "width": 64,
+                                    "height": 64,
+                                    "alt": "Spoon"
+                                },
+                                "image": null,
+                                "preview": null,
+                                "initials": null,
+                                "color": null,
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "target": null,
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    },
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf0ar43qshy60fv6nfe6x",
+                        "verb": "restock",
+                        "published_at": "2026-08-14T13:39:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor restocked :object",
+                        "headline": null,
+                        "glyph": "package",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "9",
+                            "label": "Dustin Henderson",
+                            "link": {
+                                "href": "/people/9",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "DH",
+                                "color": "#b45309",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "18",
+                            "label": "Napkins",
+                            "link": {
+                                "href": "/things/18",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": "napkin"
+                            },
+                            "media": {
+                                "icon": {
+                                    "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2764%27%20height%3D%2764%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20fill%3D%27%23e0f2fe%27%2F%3E%3Cpath%20d%3D%27M18%2018h28v28H18z%27%20fill%3D%27%23fff%27%20stroke%3D%27%2364748b%27%20stroke-width%3D%272%27%2F%3E%3Cpath%20d%3D%27M18%2018l28%2028%27%20stroke%3D%27%23cbd5e1%27%20stroke-width%3D%272%27%2F%3E%3C%2Fsvg%3E",
+                                    "mediaType": "image/svg+xml",
+                                    "width": 64,
+                                    "height": 64,
+                                    "alt": "Napkin"
+                                },
+                                "image": null,
+                                "preview": null,
+                                "initials": null,
+                                "color": null,
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "target": null,
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    },
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf0akgaj3wh6ps5ax2bjz",
+                        "verb": "restock",
+                        "published_at": "2026-08-14T13:38:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor restocked :object",
+                        "headline": null,
+                        "glyph": "package",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "9",
+                            "label": "Dustin Henderson",
+                            "link": {
+                                "href": "/people/9",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "DH",
+                                "color": "#b45309",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "17",
+                            "label": "Sprinkles",
+                            "link": {
+                                "href": "/things/17",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": "sprinkles"
+                            },
+                            "media": {
+                                "icon": {
+                                    "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2764%27%20height%3D%2764%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20fill%3D%27%23e0f2fe%27%2F%3E%3Crect%20x%3D%2718%27%20y%3D%2718%27%20width%3D%2728%27%20height%3D%2728%27%20rx%3D%2714%27%20fill%3D%27%23fef3c7%27%2F%3E%3Cpath%20d%3D%27M24%2026l4%202M36%2024l2%204M30%2036l4-1M38%2038l-3%203M24%2038l3%202%27%20stroke%3D%27%23db2777%27%20stroke-width%3D%273%27%20stroke-linecap%3D%27round%27%2F%3E%3C%2Fsvg%3E",
+                                    "mediaType": "image/svg+xml",
+                                    "width": 64,
+                                    "height": 64,
+                                    "alt": "Sprinkles"
+                                },
+                                "image": null,
+                                "preview": null,
+                                "initials": null,
+                                "color": null,
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "target": null,
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    },
+                    {
+                        "kind": "activity",
+                        "id": "01m4kwf0ad65qvzkjpze1qhbz1",
+                        "verb": "restock",
+                        "published_at": "2026-08-14T13:37:00.000000Z",
+                        "starts_at": null,
+                        "ends_at": null,
+                        "headline_template": ":actor restocked :object",
+                        "headline": null,
+                        "glyph": "package",
+                        "glyph_intent": null,
+                        "actor": {
+                            "type": "person",
+                            "id": "9",
+                            "label": "Dustin Henderson",
+                            "link": {
+                                "href": "/people/9",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null
+                            },
+                            "media": {
+                                "icon": null,
+                                "image": null,
+                                "preview": null,
+                                "initials": "DH",
+                                "color": "#b45309",
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "object": {
+                            "type": "thing",
+                            "id": "16",
+                            "label": "Waffle cones",
+                            "link": {
+                                "href": "/things/16",
+                                "modal": false,
+                                "attributes": []
+                            },
+                            "data": {
+                                "photo": null,
+                                "icon": "cone"
+                            },
+                            "media": {
+                                "icon": {
+                                    "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2764%27%20height%3D%2764%27%20viewBox%3D%270%200%2064%2064%27%3E%3Crect%20width%3D%2764%27%20height%3D%2764%27%20fill%3D%27%23e0f2fe%27%2F%3E%3Cpath%20d%3D%27M22%2026h20L32%2054z%27%20fill%3D%27%23d97706%27%2F%3E%3Ccircle%20cx%3D%2732%27%20cy%3D%2722%27%20r%3D%2710%27%20fill%3D%27%23f9a8d4%27%2F%3E%3C%2Fsvg%3E",
+                                    "mediaType": "image/svg+xml",
+                                    "width": 64,
+                                    "height": 64,
+                                    "alt": "Cone"
+                                },
+                                "image": null,
+                                "preview": null,
+                                "initials": null,
+                                "color": null,
+                                "files": [],
+                                "slots": []
+                            },
+                            "body": null,
+                            "tombstone": null
+                        },
+                        "target": null,
+                        "context": null,
+                        "origin": null,
+                        "result": null,
+                        "instrument": null,
+                        "location": null,
+                        "generator": null,
+                        "featured": "object",
+                        "data": null,
+                        "tombstoned": [],
+                        "redundant": false,
+                        "missing_headline_template": null,
+                        "missing_headline": null
+                    }
+                ],
+                "children_truncated": false,
+                "tombstoned": [],
+                "redundant": false,
+                "distinct_tombstoned": {
+                    "actors": 0,
+                    "objects": 0,
+                    "targets": 0,
+                    "contexts": 0,
+                    "origins": 0,
+                    "results": 0,
+                    "instruments": 0,
+                    "locations": 0,
+                    "generators": 0,
+                    "featured": 0
+                }
+            }
+        ]
+    }
+]
