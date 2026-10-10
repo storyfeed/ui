@@ -12,7 +12,8 @@ const props = withDefaults(
          * draws is of a person, not of their spelling. The whole label stays on
          * `aria-label` and `title`, so nothing is lost to a reader who needs it.
          */
-        size?: 'sm' | 'md' | 'badge';
+        /** `pair` is one face of a rail's diagonal pair (ui#25). */
+        size?: 'sm' | 'md' | 'badge' | 'pair';
     }>(),
     { size: 'md' },
 );
@@ -46,7 +47,7 @@ const initials = computed(() => {
     const provided = typeof declared === 'string' && declared.length > 0 ? declared : props.entity?.data?.initials;
 
     if (typeof provided === 'string' && provided.length > 0) {
-        return props.size === 'badge' ? provided.slice(0, 1) : provided;
+        return props.size === 'badge' || props.size === 'pair' ? provided.slice(0, 1) : provided;
     }
 
     const label = props.entity?.label ?? '?';
@@ -55,7 +56,7 @@ const initials = computed(() => {
         label
             .split(/\s+/)
             .filter(Boolean)
-            .slice(0, props.size === 'badge' ? 1 : 2)
+            .slice(0, props.size === 'badge' || props.size === 'pair' ? 1 : 2)
             .map((word) => word[0]!.toUpperCase())
             .join('') || '?'
     );
@@ -108,7 +109,7 @@ const text = computed(() => {
         :aria-label="entity?.label ?? 'Someone'"
         :title="entity?.label ?? 'Someone'"
         class="sf-avatar flex shrink-0 items-center justify-center rounded-full font-semibold select-none ring-2 ring-background"
-        :class="[{ 'sf-avatar--md size-[var(--sf-disc,--spacing(8))] text-xs': size === 'md', 'sf-avatar--sm size-6 text-[length:--spacing(2.5)]': size === 'sm', 'sf-avatar--badge [--sf-badge:var(--sf-badge-face)] absolute top-[calc(var(--sf-disc)-var(--sf-badge)+--spacing(0.5))] left-[calc(50%+var(--sf-disc)/2-var(--sf-badge))] size-(--sf-badge) text-[length:--spacing(2.25)]': size === 'badge' }, entity?.tombstone ? 'bg-muted text-white' : color ? text : 'bg-primary text-primary-foreground']"
+        :class="[{ 'sf-avatar--md size-[var(--sf-disc,--spacing(8))] text-xs': size === 'md', 'sf-avatar--sm size-6 text-[length:--spacing(2.5)]': size === 'sm', 'sf-avatar--pair size-full text-[length:--spacing(2.75)]': size === 'pair', 'sf-avatar--badge [--sf-badge:var(--sf-badge-face)] absolute top-[calc(var(--sf-disc)-var(--sf-badge)+--spacing(0.5))] left-[calc(50%+var(--sf-disc)/2-var(--sf-badge))] size-(--sf-badge) text-[length:--spacing(2.25)]': size === 'badge' }, entity?.tombstone ? 'bg-muted text-white' : color ? text : 'bg-primary text-primary-foreground']"
         :style="color ? { backgroundColor: color } : undefined"
     >
         <img

@@ -26,14 +26,21 @@ export default function Rail({
         glyph: Boolean(glyph),
     });
     const disc =
-        slots.disc === 'actor' ? (
-            faces.map((face, i) => (
-                <EntityAvatar
-                    key={`${face.type}:${face.id}:${i}`}
-                    entity={face}
-                    size="md"
-                />
-            ))
+        slots.disc === 'actor' && faces.length > 1 ? (
+            // A diagonal pair inside one disc's square (ui#25): the first actor in
+            // front at the bottom-right, where the badge sits, the second behind.
+            <div className="sf-avatars @container/pair relative size-(--sf-disc) shrink-0">
+                {faces.slice(0, 2).map((face, i) => (
+                    <span
+                        key={`${face.type}:${face.id}:${i}`}
+                        className={i === 0 ? 'sf-avatars__face absolute right-0 bottom-0 z-10 flex size-[calc(var(--sf-disc)*2/3)] @max-[1.5rem]/pair:size-full' : 'sf-avatars__face absolute top-0 left-0 flex size-[calc(var(--sf-disc)*2/3)] @max-[1.5rem]/pair:hidden'}
+                    >
+                        <EntityAvatar entity={face} size="pair" />
+                    </span>
+                ))}
+            </div>
+        ) : slots.disc === 'actor' ? (
+            <EntityAvatar entity={faces[0] ?? null} size="md" />
         ) : slots.disc === 'activity' ? (
             <FeedIcon icon={glyph} intent={intent} />
         ) : (
@@ -45,11 +52,7 @@ export default function Rail({
     return (
         <div className="sf-rail box-content flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
             <div className="sf-rail__disc relative flex w-(--sf-disc) shrink-0">
-                {slots.disc === 'actor' && faces.length > 1 ? (
-                    <div className="sf-avatars flex flex-col [&>*+*]:-mt-[calc(var(--sf-disc)*3/4)] [&>:first-child:nth-last-child(n+2)]:z-20 [&>:nth-child(2)]:z-10 [&>:nth-child(3)]:z-0">{disc}</div>
-                ) : (
-                    disc
-                )}
+                {disc}
                 {slots.badge === 'activity' ? (
                     <FeedIcon icon={glyph} variant="badge" />
                 ) : slots.badge === 'actor' ? (

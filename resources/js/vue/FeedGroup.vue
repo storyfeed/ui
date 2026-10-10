@@ -34,10 +34,10 @@ const resolved = computed<Rail>(() =>
     parseRail(props.rail === null ? 'actor-only' : props.rail),
 );
 
-// A group's faces come from its sample, capped at three, drawn as a tight stack:
-// the first in full with its glyph badge, the others peeking out a quarter disc
-// below it. A face BADGE never stands for several actors (see `railFor()`).
-const faces = computed(() => (props.item.sample.actors ?? []).slice(0, 3));
+// A group's faces come from its sample, at most two, drawn as a diagonal pair:
+// the first in front at the bottom-right with the glyph badge, the second
+// behind. A face BADGE never stands for several actors (see `railFor()`).
+const faces = computed(() => (props.item.sample.actors ?? []).slice(0, 2));
 
 const slots = computed(() =>
     railFor(resolved.value, {
@@ -111,17 +111,15 @@ const hiddenBeyondChildren = computed(
 
 <template>
     <div class="sf-row relative flex items-start gap-(--sf-gap)">
-        <!-- Several faces stack tightly: the first in full, with its badge, and the others a quarter disc below and behind it, without shifting the text column. -->
+        <!-- Several actors draw as a diagonal pair inside one disc's square (ui#25): the first in front at the bottom-right, where the verb badge sits, the second behind at the top-left. Below a 1.5rem (24px) disc only the front face shows. -->
         <div class="sf-rail box-content flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
             <div class="sf-rail__disc relative flex w-(--sf-disc) shrink-0">
-                <div v-if="slots.disc === 'actor'" class="sf-avatars flex flex-col [&>*+*]:-mt-[calc(var(--sf-disc)*3/4)] [&>:first-child:nth-last-child(n+2)]:z-20 [&>:nth-child(2)]:z-10 [&>:nth-child(3)]:z-0">
-                    <EntityAvatar
-                        v-for="actor in faces"
-                        :key="actor.id"
-                        :entity="actor"
-                        size="md"
-                    />
+                <div v-if="slots.disc === 'actor' && faces.length > 1" class="sf-avatars @container/pair relative size-(--sf-disc) shrink-0">
+                    <span v-for="(actor, index) in faces" :key="actor.id" :class="index === 0 ? 'sf-avatars__face absolute right-0 bottom-0 z-10 flex size-[calc(var(--sf-disc)*2/3)] @max-[1.5rem]/pair:size-full' : 'sf-avatars__face absolute top-0 left-0 flex size-[calc(var(--sf-disc)*2/3)] @max-[1.5rem]/pair:hidden'">
+                        <EntityAvatar :entity="actor" size="pair" />
+                    </span>
                 </div>
+                <EntityAvatar v-else-if="slots.disc === 'actor'" :entity="faces[0] ?? null" />
                 <!--
                     One dividend of the flip: an activity-centric group is a
                     single glyph, so the stacking case simply does not arise.

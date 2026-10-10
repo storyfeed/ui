@@ -318,10 +318,12 @@ utilities to the published `components/glyph.blade.php` view.
 `rail` accepts `actor` (face + glyph badge), `activity` (glyph + face badge),
 `actor-only` and `activity-only`. The default matches Vue: `actor-only`, and
 `activity-only` for group children. A missing primary falls back to the other
-subject, then a blank disc. Several actors draw as a tight stack: the first
-face in full, with its glyph badge, and up to two more peeking out a quarter
-disc (`--sf-disc` / 4) below and behind it, each ringed in the page colour;
-several actors never take a face badge. Avatars draw
+subject, then a blank disc. Several actors draw as a diagonal pair inside one
+disc's square: the first actor in front at the bottom-right, with the glyph
+badge, and the second behind at the top-left, each 2/3 of `--sf-disc` with
+one-letter initials and a ring in the page colour. Below a 1.5rem (24px) disc only the
+front face shows. The count stays in the headline, and several actors never
+take a face badge. Avatars draw
 `media.icon`, else `media.initials` on a `media.color` disc (black or white
 text, whichever contrasts more). The older `data.initials` and
 `data.avatar_color` apply when `media` declares neither, then Vue's

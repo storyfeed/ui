@@ -566,7 +566,7 @@ test('expanding a group keeps its rail faces and sampled media in place', async 
     const head = expanded.split('class="sf-children"')[0];
     assert.match(head, /\/kept/);
     assert.match(head, /sf-media-strip/);
-    assert.equal((head.match(/sf-avatar--md/g) ?? []).length, 2);
+    assert.equal((head.match(/sf-avatar--pair/g) ?? []).length, 2);
 });
 
 test('files retain names, decimal sizes and MIME labels without extension guesses', async () => {
@@ -764,12 +764,16 @@ test('actor rails show glyph badges and childRail independently selects glyph-on
     assert.match(children, /sf-icon/);
     assert.doesNotMatch(children, /sf-avatar|sf-badge/);
     const crowd = await render('/resources/js/vue/FeedGroup.vue', { item: { ...group, sample: { actors: [activity.actor, { ...activity.actor, id: '2' }, { ...activity.actor, id: '3' }] } }, rail: 'actor' });
-    assert.equal((crowd.split('sf-avatars')[1].split('</div>')[0].match(/sf-avatar--md/g) ?? []).length, 3);
+    // At most two faces, the first actor in front at the bottom-right (ui#25).
+    const pairFaces = [...crowd.split('class="sf-avatars"')[1].split('class="sf-badge"')[0].matchAll(/class="sf-avatars__face"><span[^>]*aria-label="([^"]+)"[^>]*class="sf-avatar sf-avatar--pair"/g)];
+    assert.equal(pairFaces.length, 2);
     // The front face keeps its verb badge, exactly once; a face badge never stands for the crowd.
     assert.equal((crowd.match(/sf-badge/g) ?? []).length, 1);
     assert.doesNotMatch(crowd, /sf-avatar--badge|padding-right/);
     const pair = { ...group, sample: { actors: [activity.actor, { ...activity.actor, id: '2' }] } };
-    assert.match(await renderRaw('/resources/js/vue/FeedGroup.vue', { item: pair, rail: 'actor' }), /-mt-\[calc\(var\(--sf-disc\)\*3\/4\)\]/);
+    const front = (await renderRaw('/resources/js/vue/FeedGroup.vue', { item: pair, rail: 'actor' })).split('sf-avatars__face')[1];
+    assert.match(front, /right-0 bottom-0 z-10/);
+    assert.match(front, /size-\[calc\(var\(--sf-disc\)\*2\/3\)\]/);
     assert.doesNotMatch(await renderRaw('/resources/js/vue/FeedGroup.vue', { item: pair, rail: 'activity' }), /sf-avatar--badge/);
 });
 

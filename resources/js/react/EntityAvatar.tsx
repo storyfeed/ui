@@ -14,10 +14,16 @@ const colors = [
 export default function EntityAvatar({
     entity,
     size = 'md',
+    className = '',
 }: {
     entity: FeedEntity | null;
-    size?: 'sm' | 'md' | 'badge';
+    /** `pair` is one face of a rail's diagonal pair (ui#25). */
+    size?: 'sm' | 'md' | 'badge' | 'pair';
+    /** Extra classes, such as a pair face's placement. */
+    className?: string;
 }) {
+    // A badge or a pair face is too small for two letters.
+    const one = size === 'badge' || size === 'pair';
     const icon = entity?.tombstone ? undefined : entity?.media?.icon?.src;
     const [failed, setFailed] = useState<string>();
     useEffect(() => setFailed(undefined), [icon]);
@@ -28,13 +34,13 @@ export default function EntityAvatar({
             : entity?.data?.initials;
     const initials =
         typeof provided === 'string' && provided.length > 0
-            ? size === 'badge'
+            ? one
                 ? provided.slice(0, 1)
                 : provided
             : (entity?.label ?? '?')
                   .split(/\s+/)
                   .filter(Boolean)
-                  .slice(0, size === 'badge' ? 1 : 2)
+                  .slice(0, one ? 1 : 2)
                   .map((word) => word[0]!.toUpperCase())
                   .join('') || '?';
     let hash = 0;
@@ -48,6 +54,7 @@ export default function EntityAvatar({
     const sizes = {
         md: 'sf-avatar--md size-[var(--sf-disc,--spacing(8))] text-xs',
         sm: 'sf-avatar--sm size-6 text-[length:--spacing(2.5)]',
+        pair: 'sf-avatar--pair size-full text-[length:--spacing(2.75)]',
         badge: 'sf-avatar--badge [--sf-badge:var(--sf-badge-face)] absolute top-[calc(var(--sf-disc)-var(--sf-badge)+--spacing(0.5))] left-[calc(50%+var(--sf-disc)/2-var(--sf-badge))] size-(--sf-badge) text-[length:--spacing(2.25)]',
     };
     return (
@@ -55,7 +62,7 @@ export default function EntityAvatar({
             role="img"
             aria-label={entity?.label ?? 'Someone'}
             title={entity?.label ?? 'Someone'}
-            className={`sf-avatar flex shrink-0 items-center justify-center rounded-full font-semibold select-none ring-2 ring-background ${sizes[size]} ${entity?.tombstone ? 'bg-muted text-white' : color ? text : 'bg-primary text-primary-foreground'}`}
+            className={`sf-avatar flex shrink-0 items-center justify-center rounded-full font-semibold select-none ring-2 ring-background ${sizes[size]} ${className} ${entity?.tombstone ? 'bg-muted text-white' : color ? text : 'bg-primary text-primary-foreground'}`}
             style={color ? { backgroundColor: color } : undefined}
         >
             {icon && failed !== icon ? (

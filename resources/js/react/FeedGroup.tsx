@@ -21,7 +21,7 @@ export default function FeedGroup({
     collapsed = null,
 }: NodeProps & { item: GroupNode }) {
     const timestamp = useNodeTime(item, time);
-    const faces = (item.sample.actors ?? []).slice(0, 3);
+    const faces = (item.sample.actors ?? []).slice(0, 2);
     const open =
         item.expanded ||
         (collapsed === null

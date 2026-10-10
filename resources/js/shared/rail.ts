@@ -97,9 +97,9 @@ export function other(slot: RailSlot): RailSlot {
  * fallen-back disc is already holding the secondary's subject, and a badge
  * repeating it would be the same fact twice in 2rem.
  *
- * A STACK KEEPS ITS VERB BADGE. Several actors draw as one front face with
- * the others peeking out a quarter disc below it, so the badge sits on the
- * front face's corner exactly as on a single actor's (ui#25). What more than
+ * A PAIR KEEPS ITS VERB BADGE. Several actors draw as a diagonal pair inside
+ * one disc's square, the first actor in front at the bottom-right, so the
+ * badge sits on the face drawn in full as on a single actor's (ui#25). What more than
  * one face still suppresses is a FACE badge: a single face on a group of
  * several actors is the one-actor lie the sample list exists to refuse.
  */

@@ -328,13 +328,16 @@ it('wraps a long headline inside its column instead of running off a narrow feed
         ->toMatch('/class="sf-headline[^"]*\[overflow-wrap:anywhere\]/');
 })->with(['activity', 'group']);
 
-it('stacks several actors tightly behind the front face, which keeps its verb badge', function () {
+it('draws several actors as a diagonal pair whose front face keeps the verb badge', function () {
     $item = ['kind' => 'group', 'headline' => 'Ana, Ben and Cara posted', 'count' => 3, 'children' => [], 'glyph' => 'file-up',
         'sample' => ['actors' => [['id' => 'a', 'label' => 'Ana'], ['id' => 'b', 'label' => 'Ben'], ['id' => 'c', 'label' => 'Cara'], ['id' => 'd', 'label' => 'Dev']]]];
     $rail = explode('class="sf-body', Blade::render('<x-storyfeed::feed :items="[$item]" rail="actor" />', compact('item')))[0];
-    expect(substr_count($rail, 'sf-avatar--md'))->toBe(3)
+    preg_match_all('/aria-label="([^"]+)"[^>]*sf-avatar--pair[^>]*>\s*([^<\s]*)\s*</', $rail, $faces, PREG_SET_ORDER);
+    // At most two faces, the first actor in front at the bottom-right, one letter each (ui#25).
+    expect(array_map(fn ($face) => [$face[1], $face[2]], $faces))->toBe([['Ana', 'A'], ['Ben', 'B']])
+        ->and(explode('sf-avatars__face', $rail)[1])->toContain('right-0 bottom-0 z-10')
         ->and(substr_count($rail, 'sf-badge absolute'))->toBe(1)
-        ->and($rail)->toContain('-mt-[calc(var(--sf-disc)*3/4)]')->not->toContain('sf-avatar--badge');
+        ->and($rail)->toContain('@container/pair')->not->toContain('sf-avatar--badge');
     // A face badge never stands for several actors.
     $rail = explode('class="sf-body', Blade::render('<x-storyfeed::feed :items="[$item]" rail="activity" />', compact('item')))[0];
     expect($rail)->not->toContain('sf-avatar--badge');
@@ -347,7 +350,7 @@ it('keeps a group\'s rail faces and strip in place when it expands', function (b
         'children' => [['kind' => 'activity', 'headline' => 'Ana uploaded a photo'], ['kind' => 'activity', 'headline' => 'Ben uploaded a photo']]];
     $html = Blade::render('<x-storyfeed::feed :items="[$item]" rail="actor" :interactive="$interactive" :collapsed="false" />', compact('item', 'interactive'));
     $head = explode('class="sf-children', $html)[0];
-    expect(substr_count($head, 'sf-avatar--md'))->toBe(2)
+    expect(substr_count($head, 'sf-avatar--pair'))->toBe(2)
         ->and($head)->toContain('sf-media-strip', 'src="/one.jpg"', 'src="/two.jpg"')
         ->not->toContain(':has(>.sf-disclosure[open])>.sf-media-strip]:hidden');
     expect($html)->toContain('Ana uploaded a photo', 'Ben uploaded a photo');

@@ -84,7 +84,8 @@ try {
                     await frames[0].locator('.sf-toggle').evaluateAll(buttons => buttons.forEach(button => { if (button.getAttribute('aria-expanded') === 'false') button.click(); }));
                     for (const frame of frames.slice(1)) await frame.locator('details').evaluateAll(nodes => nodes.forEach(node => node.open = true));
                 }
-                // A stack starts on the same rail as a single face, with its badge, and each face behind peeks a quarter disc lower.
+                // Several actors draw as a diagonal pair inside the single face's square (ui#25):
+                // the first actor in front at the bottom-right with the badge, the second behind at the top-left.
                 if (text === 'default') for (let i = 0; i < frames.length; i++) {
                     const fixture = frames[i].locator('.example:has(>h2:text-is("Stacked actors and truncated members"))');
                     const joints = await fixture.evaluate(section => {
@@ -93,51 +94,35 @@ try {
                             const rail = row.querySelector(':scope > .sf-rail');
                             const elements = [...rail.querySelectorAll('.sf-avatar')];
                             const faces = elements.map(e => e.getBoundingClientRect());
-                            // A face in front owns each overlap; each face behind owns the strip that peeks out below.
-                            const overlapOwners = faces.slice(1).map((r, i) => {
-                                const owner = elements.indexOf(document.elementFromPoint(r.x + r.width / 2, r.y + 6)?.closest('.sf-avatar'));
-                                const peek = document.elementFromPoint(r.x + r.width / 2, r.bottom - 2)?.closest('.sf-avatar');
-                                return owner >= 0 && owner <= i && peek === elements[i + 1];
-                            });
-                            const before = faces.map(r => [r.x, r.y, r.width, r.height]);
-                            const savedZ = elements.map(e => e.style.zIndex);
-                            elements.forEach(e => { e.style.zIndex = 'auto'; });
-                            const withoutOrder = elements.map(e => {
-                                const r = e.getBoundingClientRect();
-                                return [r.x, r.y, r.width, r.height];
-                            });
-                            elements.forEach((e, i) => { e.style.zIndex = savedZ[i]; });
+                            // Where the two faces overlap, the front one (the first actor) is on top.
+                            const overlap = faces.length === 2 ? document.elementFromPoint((faces[0].x + faces[1].right) / 2, (faces[0].y + faces[1].bottom) / 2)?.closest('.sf-avatar') === elements[0] : true;
+                            const disc = rail.querySelector('.sf-rail__disc').getBoundingClientRect();
                             const line = rail.querySelector('.sf-rail__line')?.getBoundingClientRect();
                             const head = row.querySelector('.sf-head').getBoundingClientRect();
-                            return { faces: faces.map((r, i) => ({ x: r.x, y: r.y, w: r.width, h: r.height, z: getComputedStyle(elements[i]).zIndex })),
-                                line: line ? line.x + line.width / 2 : null, lineY: line?.y, head: head.x,
-                                top: row.getBoundingClientRect().y, bottom: row.getBoundingClientRect().bottom,
-                                left: rail.getBoundingClientRect().x, right: rail.getBoundingClientRect().right,
-                                badge: rail.querySelectorAll('.sf-badge').length, overlapOwners, before, withoutOrder };
+                            return { faces: faces.map(r => ({ x: r.x - disc.x, y: r.y - disc.y, w: r.width, h: r.height })), disc: { x: disc.x, y: disc.y - row.getBoundingClientRect().y, w: disc.width, h: disc.height },
+                                labels: elements.map(e => [e.getAttribute('aria-label'), e.textContent.trim()]),
+                                line: line ? line.x + line.width / 2 : null, lineY: line ? line.y - row.getBoundingClientRect().y : null, head: head.x,
+                                badge: rail.querySelectorAll('.sf-badge').length, overlap };
                         });
                     });
                     assert.equal(joints.length, 4);
-                    const first = joints[0].faces[0];
-                    for (const [index, count] of [[1, 2], [2, 3]]) {
+                    const single = joints[0];
+                    const near = (a, b, label) => assert.ok(Math.abs(a - b) < 0.02, `${renderers[i]}: ${label} (${a} vs ${b})`);
+                    for (const index of [1, 2]) {
                         const joint = joints[index];
-                        assert.equal(joint.faces.length, count);
-                        assert.equal(joint.faces[0].x, first.x, `${renderers[i]}: first stacked face left edge`);
-                        assert.equal(joint.faces[0].w, first.w);
-                        assert.equal(joint.faces[0].y - joint.top, first.y - joints[0].top, 'first face vertical position');
-                        assert.equal(joint.head, joints[0].head, 'headline aligns with single actor');
-                        assert.equal(joint.line, first.x + first.w / 2, `${renderers[i]}: rail through first face`);
-                        assert.equal(joint.badge, joints[0].badge, `${renderers[i]}: a stack keeps the front face's badge`);
-                        assert.deepEqual(joint.before, joint.withoutOrder, 'paint order does not change geometry');
-                        assert.ok(joint.overlapOwners.every(Boolean), 'a face in front owns each overlap and each face behind its peeking strip');
-                        joint.faces.slice(1).forEach((face, j) => {
-                            assert.equal(face.x, first.x, 'faces share the rail centre');
-                            assert.equal(face.y, joint.faces[j].y + face.h / 4, 'each face behind peeks a quarter disc lower');
-                            assert.ok(Number(joint.faces[j].z) > Number(face.z), 'earlier face paints above the next');
-                        });
-                        const last = joint.faces.at(-1);
-                        assert.ok(joint.faces.every(face => face.x >= joint.left && face.x + face.w <= joint.right), 'stack fits gutter');
-                        assert.ok(last.y + last.h <= joint.bottom, 'stack fits row height');
-                        assert.equal(joint.lineY, last.y + last.h + 4, 'line continues below last face');
+                        const d = single.faces[0].w;
+                        assert.equal(joint.faces.length, 2, `${renderers[i]}: at most two faces`);
+                        assert.deepEqual(joint.disc, single.disc, `${renderers[i]}: the pair fills the single face's square`);
+                        const [front, back] = joint.faces;
+                        for (const face of joint.faces) { near(face.w, d * 2 / 3, 'face is 2/3 of the disc'); near(face.h, d * 2 / 3, 'face is square'); }
+                        near(front.x + front.w, d, 'front face at the right'); near(front.y + front.h, d, 'front face at the bottom');
+                        near(back.x, 0, 'back face at the left'); near(back.y, 0, 'back face at the top');
+                        assert.ok(joint.overlap, `${renderers[i]}: the front face paints above the back`);
+                        assert.ok(joint.labels.every(([, text]) => text.length <= 1), `${renderers[i]}: one-letter initials`);
+                        assert.equal(joint.head, single.head, 'headline aligns with single actor');
+                        assert.equal(joint.line, single.line, `${renderers[i]}: the rail runs through the pair's centre`);
+                        assert.equal(joint.lineY, single.lineY, `${renderers[i]}: the line starts where it does under one face`);
+                        assert.equal(joint.badge, single.badge, `${renderers[i]}: the pair keeps the front face's badge`);
                     }
                     assert.ok(joints[0].badge > 0, 'single actor retains activity badge');
                     await fixture.screenshot({ path: `${output}/k2-${renderers[i]}-${state}-${theme}-${width}.png` });
