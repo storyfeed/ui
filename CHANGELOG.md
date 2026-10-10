@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v0.8.0 - 2026-10-10
+
 ### Fixed
 
 - `--sf-gutter`, `--sf-gap`, `--sf-disc`, `--sf-badge` and `--sf-badge-face` set on the feed, a lone row or any element around them now reach the rail, in Blade, Vue and React (ui#36). The feed and every row redeclared them with their own defaults, so a value set higher up never applied: `--sf-gutter: 4rem` on the feed left the rail at 32px. Unset, they still default from `--sf-font-size`.
