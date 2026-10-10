@@ -9,7 +9,6 @@ import FeedHeadline from './FeedHeadline';
 import FeedMeta from './FeedMeta';
 import FeedMediaStrip from './FeedMediaStrip';
 import Rail from './Rail';
-import FeedMedia from './FeedMedia';
 export default function FeedGroup({
     item,
     isLast = false,
@@ -18,7 +17,6 @@ export default function FeedGroup({
     body,
     time,
     annotations,
-    objectIcon,
     interactive = true,
     collapsed = null,
 }: NodeProps & { item: GroupNode }) {
@@ -29,7 +27,6 @@ export default function FeedGroup({
         (collapsed === null
             ? !interactive || (!item.headline_template && !item.headline)
             : !collapsed);
-    const icon = objectIcon?.(item);
     const Disclosure = interactive ? 'details' : 'div';
     const hidden = Math.max(0, item.count - item.children.length);
     const seen = new Set<string>();
@@ -87,25 +84,7 @@ export default function FeedGroup({
                         overflow={row.overflow}
                     />
                 )}
-                <div
-                    className={
-                        icon
-                            ? 'sf-object-media mt-2 flex items-start gap-3'
-                            : 'contents'
-                    }
-                >
-                    {icon && (
-                        <FeedMedia
-                            image={icon}
-                            href={entityLink(item.object)?.href ?? null}
-                            linkAttributes={entityLink(item.object)?.attributes}
-                            className="mt-0! size-10! shrink-0 rounded-md!"
-                        />
-                    )}
-                    <div className={icon ? 'min-w-0 flex-1' : 'contents'}>
-                        {body?.({ node: item })}
-                    </div>
-                </div>
+                {body?.({ node: item })}
                 {annotations?.({ node: item })}
                 {item.children.length > 0 && (
                     <Disclosure
@@ -141,7 +120,6 @@ export default function FeedGroup({
                                         i === item.children.length - 1 &&
                                         hidden === 0
                                     }
-                                    objectIcon={objectIcon}
                                     body={body}
                                     annotations={annotations}
                                     time={time ? time : ({ label }) => label}

@@ -7,7 +7,6 @@ import { useFeedDays } from './useRelativeTime';
 
 const props = withDefaults(
     defineProps<{
-        objectIcon?: (node: FeedNode) => Record<string, any> | null;
         items: FeedNode[];
         /** Null means the end of the feed — never an empty page. */
         nextCursor?: string | null;
@@ -125,7 +124,6 @@ const days = useFeedDays(toRef(() => props.items));
                         :child-rail="childRail"
                         :interactive="interactive"
                         :collapsed="collapsed"
-                        :object-icon="objectIcon"
                     >
                         <template #body="slotProps"
                             ><slot name="body" v-bind="slotProps"

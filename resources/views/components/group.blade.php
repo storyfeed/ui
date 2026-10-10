@@ -1,8 +1,7 @@
-@props(['group', 'last' => false, 'rail' => null, 'childRail' => null, 'interactive' => true, 'collapsed' => null, 'timezone' => null, 'renderers' => [], 'removed' => null, 'objectIcon' => null, 'mediaTiles' => null, 'mediaOverflow' => 0])
+@props(['group', 'last' => false, 'rail' => null, 'childRail' => null, 'interactive' => true, 'collapsed' => null, 'timezone' => null, 'renderers' => [], 'removed' => null, 'mediaTiles' => null, 'mediaOverflow' => 0])
 @php
     $group = \Storyfeed\Support\FeedItem::of($group);
     $removed ??= isset($renderers['removed']) ? $renderers['removed']($group) : null;
-    $objectIcon ??= isset($renderers['objectIcon']) ? $renderers['objectIcon']($group) : null;
     $headline = \Storyfeed\Ui\Support\GroupHeadline::of($group);
     $children = $group->children();
     $hidden = max(0, $group->count() - $children->count());
@@ -38,13 +37,9 @@
         <x-storyfeed::meta :item="$group" :headline="$headline" :timezone="$timezone" :time-renderer="$renderers['time'] ?? null">{{ $time ?? '' }}</x-storyfeed::meta>
 @if ($removed)<p class="sf-removed mt-1 text-sm text-muted-foreground">{{ $removed }}</p>
 @endif
-@if ($objectIcon)<div class="sf-object-media mt-2 flex items-start gap-3"><x-storyfeed::media :image="$objectIcon" :href="\Storyfeed\Ui\Support\Links::entity($group->object())['href'] ?? null" :link-attributes="\Storyfeed\Ui\Support\Links::entity($group->object())['attributes'] ?? []" :renderer="$renderers['media'] ?? null" class="mt-0! size-10! shrink-0 rounded-md!" /><div class="min-w-0 flex-1">
-@endif
 @if (isset($renderers['body'])){!! $renderers['body']($group) !!}
 @endif
         {{ $slot }}
-@if ($objectIcon)</div></div>
-@endif
 @if (isset($renderers['annotations'])){!! $renderers['annotations']($group) !!}
 @endif
         {{ $annotations ?? '' }}

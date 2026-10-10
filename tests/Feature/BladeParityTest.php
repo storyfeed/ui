@@ -217,17 +217,20 @@ it('lets dense child rails answer a different question from the actor-badged par
     expect($children)->toContain('sf-icon')->not->toContain('sf-avatar', 'sf-badge');
 });
 
-it('links object icons to their entity and lets the media host take over', function (string $kind) {
+it('draws an Image body naming the icon slot as the linked thumbnail and lets the media host take over', function () {
     $icon = ['src' => '/dal-icon.jpg', 'width' => 64, 'height' => 64];
-    $item = ['kind' => $kind, 'headline' => 'Dal published', 'object' => [
-        'type' => 'dish', 'id' => '7', 'label' => 'Dal', 'url' => '/dishes/7',
+    $item = ['kind' => 'activity', 'headline' => 'Dal published', 'object' => [
+        'type' => 'dish', 'id' => '7', 'label' => 'Dal', 'url' => '/dishes/7', 'media' => ['icon' => $icon],
         'attributes' => ['target' => '_blank', 'data-route' => 'dish', 'href' => '/wrong', 'onClick' => 'bad()', 'bad name' => 'bad', 'nested' => []],
+        'body' => [['$body' => 'Storyfeed/Body/Image', 'image' => 'icon', 'alt' => 'Dal'], ['$body' => 'Storyfeed/Body/KeyValue', 'items' => [['key' => 'Status', 'value' => 'Ready']]]],
     ]];
-    $renderers = ['objectIcon' => fn ($node) => $icon, 'body' => fn ($node) => '<p>App facts</p>'];
+    $renderers = ['body' => fn ($node) => '<p>App facts</p>'];
     $template = '<x-storyfeed::feed :items="[$item]" :renderers="$renderers" :grouped="false" />';
     $html = Blade::render($template, compact('item', 'renderers'));
-    expect($html)->toContain('sf-object-media', 'href="/dishes/7"', 'target="_blank"', 'data-route="dish"', 'src="/dal-icon.jpg"', 'App facts')
-        ->not->toContain('/wrong', 'onClick', 'bad name', 'nested');
+    $frame = explode('sf-object-media', $html)[1];
+    expect($frame)->toContain('href="/dishes/7"', 'target="_blank"', 'data-route="dish"', 'src="/dal-icon.jpg"', 'alt="Dal"', 'size-10!', 'App facts', 'Status')
+        ->not->toContain('/wrong', 'onClick', 'bad name', 'nested', 'sf-image');
+    expect(strpos($frame, 'dal-icon.jpg'))->toBeLessThan(strpos($frame, 'Status'));
     $received = null;
     $renderers['media'] = function ($tile, $classes) use (&$received) {
         $received = $tile;
@@ -235,12 +238,25 @@ it('links object icons to their entity and lets the media host take over', funct
         return '<button class="'.e($classes).'">Lightbox</button>';
     };
     expect(Blade::render($template, compact('item', 'renderers')))->toContain('Lightbox', 'size-10!')->not->toContain('<img');
-    expect($received)->toBe(['image' => $icon, 'href' => '/dishes/7', 'attributes' => ['target' => '_blank', 'data-route' => 'dish']]);
+    expect($received)->toBe(['image' => [...$icon, 'alt' => 'Dal'], 'href' => '/dishes/7', 'attributes' => ['target' => '_blank', 'data-route' => 'dish']]);
     $item['object']['url'] = null;
     expect(Blade::render($template, compact('item', 'renderers')))->toContain('Lightbox');
     expect($received['href'])->toBeNull()->and($received['attributes'])->toBe([]);
     unset($renderers['media']);
-    expect(Blade::render($template, compact('item', 'renderers')))->not->toContain('<a', 'target="_blank"');
+    expect(explode('sf-object-media', Blade::render($template, compact('item', 'renderers')))[1])->not->toContain('<a', 'target="_blank"');
+    $renderers['form'] = fn ($body) => ($body['$body'] ?? null) === 'Storyfeed/Body/Image' ? '<p>App image</p>' : null;
+    expect(Blade::render($template, compact('item', 'renderers')))->toContain('App image')->not->toContain('sf-object-media');
+});
+
+it('shows no picture a row\'s bodies did not ask for', function (string $kind) {
+    $object = ['type' => 'dish', 'id' => '7', 'label' => 'Dal', 'url' => '/dishes/7',
+        'media' => ['icon' => ['src' => '/dal-icon.jpg', 'width' => 64, 'height' => 64], 'preview' => ['src' => '/dal.jpg']],
+        'body' => [['$body' => 'Storyfeed/Body/KeyValue', 'items' => [['key' => 'Status', 'value' => 'Ready']]]]];
+    $item = ['kind' => $kind, 'headline' => 'Dal published', 'object' => $object, 'children' => [['kind' => 'activity', 'headline' => 'Dal cooked', 'object' => $object]]];
+    $html = Blade::render('<x-storyfeed::feed :items="[$item]" :grouped="false" />', compact('item'));
+    expect($html)->not->toContain('sf-object-media', '<img');
+    $item = ['kind' => 'activity', 'headline' => 'Dal published', 'object' => [...$object, 'body' => [['$body' => 'Storyfeed/Body/Image', 'image' => 'preview']]]];
+    expect(Blade::render('<x-storyfeed::feed :items="[$item]" :grouped="false" />', compact('item')))->toContain('sf-image', 'src="/dal.jpg"')->not->toContain('sf-object-media');
 })->with(['activity', 'group']);
 
 it('retains printable static members and preserves interactive details print rules', function () {

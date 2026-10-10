@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Rows no longer show the object's icon automatically; add `Image::make()->withIcon()` to the rows that should. An Image body naming the icon slot (`image: "icon"`) draws as the small thumbnail beside the row's other bodies, linked to the object, in Blade, Vue and React; Image bodies naming `preview` or `image` keep their size. The kit never adds a picture the payload didn't ask for. The `objectIcon` renderer and `object-icon` prop (Blade) and the `objectIcon` prop (Vue and React) that drew it are removed.
+
 ## v0.6.0 - 2026-10-09
 
 ### Added

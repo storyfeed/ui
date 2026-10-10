@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react';
 import type { ActivityNode, FeedNode } from '../shared/types';
 import type { Rail as RailConfig, RailName } from '../shared/rail';
-import { formsIn, resolve, imageOf } from './body';
+import { formsIn, resolve, imageOf, Image } from './body';
 import FeedHeadline from './FeedHeadline';
 import FeedMeta from './FeedMeta';
 import FeedMedia from './FeedMedia';
@@ -9,10 +9,9 @@ import FeedMediaStrip from './FeedMediaStrip';
 import Rail from './Rail';
 import { useFeedOptions } from './context';
 import { entityLink } from '../shared/link';
-import { bodyFrame } from '../shared/body';
+import { bodyFrame, iconOf } from '../shared/body';
 import { useRelativeTime } from './useRelativeTime';
 export interface FeedRenderProps {
-    objectIcon?: (node: FeedNode) => Record<string, any> | null;
     body?: (props: { node: FeedNode }) => ReactNode;
     annotations?: (props: { node: FeedNode }) => ReactNode;
     time?: (props: { node: FeedNode; label: string }) => ReactNode;
@@ -46,7 +45,6 @@ export default function FeedItem({
     time,
     body,
     annotations,
-    objectIcon,
 }: NodeProps & { item: ActivityNode; dense?: boolean }) {
     const timestamp = useNodeTime(item, time);
     const { FEED_BODIES: bodies = {} } = useFeedOptions();
@@ -63,8 +61,7 @@ export default function FeedItem({
               };
     const object = item.object;
     const link = entityLink(object);
-    const icon = objectIcon?.(item);
-    const forms = [
+    const found = [
         ...formsIn(item.data, 4, bodies),
         ...[...resolve(object?.body, bodies), ...formsIn(object?.data, 4, bodies)].map(
             (found) => ({
@@ -76,6 +73,14 @@ export default function FeedItem({
             }),
         ),
     ];
+    // A row shows a picture only when a body asks: an Image naming the icon slot
+    // draws as the small thumbnail beside the other bodies, unless the app
+    // draws Image bodies itself.
+    const lead = found.findIndex(
+        (form) => form.component === Image && iconOf(form.payload, (form as any).entityMedia) !== null,
+    );
+    const icon = lead === -1 ? null : iconOf(found[lead].payload, (found[lead] as any).entityMedia);
+    const forms = found.filter((_, index) => index !== lead);
     const sample = (item as any).sample?.objects ?? [];
     const tiles = sample
         .map((entity: any) => ({

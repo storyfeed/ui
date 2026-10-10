@@ -3,6 +3,7 @@
 namespace Storyfeed\Ui\Support;
 
 use Illuminate\Support\Facades\Blade;
+use Storyfeed\Body\Image;
 use Storyfeed\Support\Entity;
 
 final class Bodies
@@ -48,6 +49,32 @@ final class Bodies
             },
             'capped' => $height !== null && $height !== 'none',
         ];
+    }
+
+    /**
+     * The thumbnail an Image body draws when it names the entity's `icon`
+     * slot, or null. A row shows it small beside its other bodies, the way it
+     * once drew the object's icon unasked; now only the body asks. Mirrors
+     * `iconOf()` in `shared/body.ts`.
+     *
+     * @return array<array-key, mixed>|null
+     */
+    public static function icon(mixed $body, ?Entity $entity): ?array
+    {
+        // Read as `Image::upgrade()` reads it: no slot means `preview`.
+        if (! is_array($body) || ($body['$body'] ?? null) !== Image::bodyType() || ($body['image'] ?? 'preview') !== 'icon') {
+            return null;
+        }
+
+        $icon = $entity?->media()?->get('icon');
+
+        if (! is_array($icon) || empty($icon['src'])) {
+            return null;
+        }
+
+        $size = fn (string $key): mixed => is_int($body[$key] ?? null) && $body[$key] > 0 ? $body[$key] : ($icon[$key] ?? null);
+
+        return [...$icon, 'alt' => is_string($body['alt'] ?? null) ? $body['alt'] : (is_string($body['caption'] ?? null) ? $body['caption'] : ''), 'width' => $size('width'), 'height' => $size('height')];
     }
 
     /** Find forms in app-chosen data keys; stop walking once a body is found.

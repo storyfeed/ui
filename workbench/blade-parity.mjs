@@ -253,15 +253,16 @@ try {
                     ], `${renderers[i]}: featured avatar rows`);
                 }
                 if (renderers.length === 3 && text === 'default') for (let i = 0; i < frames.length; i++) {
-                    const icons = frames[i].locator('.example:has(>h2:text-is("Linked object icon frames")) .sf-object-media > a');
-                    assert.equal(await icons.count(), 2, `${renderers[i]}: linked object icon frames`);
+                    const icons = frames[i].locator('.example:has(>h2:text-is("Icon Image bodies")) .sf-object-media > a');
+                    assert.equal(await icons.count(), 1, `${renderers[i]}: icon Image bodies draw the thumbnail`);
+                    assert.equal(await frames[i].locator('.example:has(>h2:text-is("Icon Image bodies")) img').count(), 1, `${renderers[i]}: an icon without an Image body draws no picture`);
                     assert.equal(await icons.first().getAttribute('href'), '#ada');
                     assert.equal(await icons.first().getAttribute('data-route'), 'dish');
                     const history = frames[i].locator('.example:has(>h2:text-is("Static collapsed print history"))');
                     assert.equal(await history.locator('.sf-children').count(), 1);
                     assert.equal(await history.locator('.sf-children').isVisible(), false);
                     assert.equal(await history.locator('.sf-toggle').count(), 0);
-                    for (const [label, name] of [['Linked object icon frames', 'icons'], ['Static collapsed print history', 'static']]) {
+                    for (const [label, name] of [['Icon Image bodies', 'icons'], ['Static collapsed print history', 'static']]) {
                         await frames[i].locator(`.example:has(>h2:text-is("${label}"))`).screenshot({ path: `${output}/b2-${renderers[i]}-${name}-${state}-${theme}-${width}.png` });
                     }
                 }

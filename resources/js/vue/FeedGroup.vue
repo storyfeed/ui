@@ -8,17 +8,15 @@ import FeedIcon from './FeedIcon.vue';
 import FeedItem from './FeedItem.vue';
 import FeedMediaStrip from './FeedMediaStrip.vue';
 import FeedMeta from './FeedMeta.vue';
-import FeedMedia from './FeedMedia.vue';
 import { entityLink } from '../shared/link';
 import { avatarRow, featured } from '../shared/avatarRow';
 import { rail as parseRail, railFor } from '../shared/rail';
 import type { Rail, RailName } from '../shared/rail';
-import type { FeedNode, GroupNode, FeedSingularRole } from '../shared/types';
+import type { GroupNode, FeedSingularRole } from '../shared/types';
 import { useRelativeTime } from './useRelativeTime';
 
 const props = withDefaults(
     defineProps<{
-        objectIcon?: (node: FeedNode) => Record<string, any> | null;
         item: GroupNode;
         isLast?: boolean;
         /** Which fact the rail answers first. Null keeps this kit's default. */
@@ -55,8 +53,6 @@ const slots = computed(() =>
 const unnamed = computed(() => !props.item.headline_template && !props.item.headline);
 
 const expanded = ref(props.item.expanded || (props.collapsed === null ? (!props.interactive || unnamed.value) : !props.collapsed));
-
-const icon = computed(() => props.objectIcon?.(props.item));
 
 const time = useRelativeTime(toRef(() => props.item.published_at));
 
@@ -208,18 +204,7 @@ const hiddenBeyondChildren = computed(
             />
             <FeedAvatarRow v-else-if="row" :entities="row.entities" :overflow="row.overflow" />
 
-            <div :class="icon ? 'sf-object-media mt-2 flex items-start gap-3' : 'contents'">
-                <FeedMedia
-                    v-if="icon"
-                    :image="icon"
-                    :href="entityLink(item.object)?.href ?? null"
-                    :link-attributes="entityLink(item.object)?.attributes"
-                    class="mt-0! size-10! shrink-0 rounded-md!"
-                />
-                <div :class="icon ? 'min-w-0 flex-1' : 'contents'">
-                    <slot name="body" :node="item" />
-                </div>
-            </div>
+            <slot name="body" :node="item" />
 
             <slot name="annotations" :node="item" />
 
@@ -240,7 +225,6 @@ const hiddenBeyondChildren = computed(
                     :item="child"
                     dense
                     :rail="childRail ?? rail"
-                    :object-icon="objectIcon"
                     :is-last="
                         index === item.children.length - 1 &&
                         hiddenBeyondChildren === 0

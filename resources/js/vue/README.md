@@ -115,11 +115,14 @@ Prose, ItemList, Image and MediaObject. Rich Markdown/HTML is sanitized;
 verbatim and plain text are escaped and preserve whitespace. Published
 historical `$v` forms continue to render.
 
-Object icon frames are opt-in: pass `objectIcon(node)` to `FeedStream`,
-`FeedNode`, `FeedItem` or `FeedGroup`, returning an image or null. The icon links
-to the object's link (`node.object.link.href`, or `url` before core 0.17) through `FEED_LINK` and forwards scalar entity attributes,
+A row shows a picture only when one of its bodies asks for one. An Image body
+naming the object's icon slot (`image: "icon"`) draws as a small thumbnail
+beside the row's other bodies rather than full width; Image bodies naming
+`preview` or `image` keep their size. The thumbnail links to the object's link
+(`node.object.link.href`, or `url` before core 0.17) through `FEED_LINK` and forwards scalar entity attributes,
 excluding `href`, event handlers and invalid names. A missing URL or tombstone
-renders an unlinked image. Provide `FEED_MEDIA` with a component receiving
+renders an unlinked image. An app that registers its own Image renderer through
+`FEED_BODIES` draws icon Image bodies in place instead. Provide `FEED_MEDIA` with a component receiving
 `image`, `href`, `linkAttributes` and the kit classes to render media yourself
 (for example, a lightbox button).
 

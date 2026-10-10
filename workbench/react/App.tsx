@@ -71,7 +71,6 @@ export default function App() {
                                 grouped: example.grouped ?? false,
                                 interactive: example.interactive ?? true,
                                 collapsed: example.collapsed ?? null,
-                                objectIcon: example.objectIcon ? (node: FeedNode) => node.object?.media?.icon ?? null : undefined,
                             })}
                         </section>
                     ))}

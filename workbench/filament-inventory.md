@@ -9,7 +9,7 @@ kit and retains the Filament integration. No Filament files were edited.
 | `node`, `avatar`: four rail postures, fallback disc, stacked samples, badges, intent hook, names/initials/colours and tombstones | `rail`, `avatar`, `glyph`; same Vue geometry and data palette; avatar/glyph renderer hooks |
 | `node`: authored/fallback/missing headline, redundant history and removal note | core headline reader, `removed` prop/callback |
 | `node`, `FeedRendering`: leftover roles, tight meta, relative/calendar ladder and full hover | `meta`, `time`, timezone/label/title props; `time` slot/callback for the plugin's formatter and attributes |
-| `node`, `object-icon`: object identity framing the whole content region | `objectIcon` prop/callback and the body slot |
+| `node`, `object-icon`: object identity framing the whole content region | an Image body naming the icon slot (the `objectIcon` prop/callback was removed in 0.18) and the body slot |
 | `node`, `media`: sampled picture grid and overflow tile, hidden when children show | `media-strip` tiles/overflow/renderer; Image-body samples in `group` |
 | `detail/{excerpt,prose,image,key-value,item-list,file-attachment,media-object}` and `components/facts` | corresponding `body/*` components and body slot; escaped/sanitized text, booleans/placeholders/verbatim, safe links, named picture slots, list totals/files/footnotes; old version upgrades |
 | `detail/note`: app-specific Component called Note | allowlist registry maps Note to an app Blade component; no package-specific convention added |

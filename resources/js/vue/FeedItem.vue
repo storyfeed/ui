@@ -3,7 +3,8 @@ import { computed, inject, toRef } from 'vue';
 import { imageOf } from './body';
 import { formsIn, resolve } from './body';
 import { FEED_BODIES } from './keys';
-import { bodyFrame } from '../shared/body';
+import { bodyFrame, iconOf } from '../shared/body';
+import ImageBody from './body/Image.vue';
 import EntityAvatar from './EntityAvatar.vue';
 import FeedHeadline from './FeedHeadline.vue';
 import FeedIcon from './FeedIcon.vue';
@@ -13,12 +14,11 @@ import FeedMedia from './FeedMedia.vue';
 import { entityLink } from '../shared/link';
 import { rail as parseRail, railFor, withoutSecondary } from '../shared/rail';
 import type { Rail, RailName } from '../shared/rail';
-import type { ActivityNode, FeedNode } from '../shared/types';
+import type { ActivityNode } from '../shared/types';
 import { useRelativeTime } from './useRelativeTime';
 
 const props = withDefaults(
     defineProps<{
-        objectIcon?: (node: FeedNode) => Record<string, any> | null;
         item: ActivityNode;
         /** Compact rendering for group children: tighter spacing, no badge. */
         dense?: boolean;
@@ -32,8 +32,6 @@ const props = withDefaults(
     }>(),
     { dense: false, isLast: false, rail: null },
 );
-
-const icon = computed(() => props.objectIcon?.(props.item));
 
 const bodies = inject(FEED_BODIES, {});
 
@@ -105,7 +103,7 @@ const strip = computed(() => {
  * and fifty rows is the same card fifty times. The object is what a row is
  * about, so its detail is the one that belongs beneath the sentence.
  */
-const forms = computed(() => {
+const found = computed(() => {
     const object = (props.item as any).object;
 
     const link = entityLink(object);
@@ -127,6 +125,19 @@ const forms = computed(() => {
         ...formsIn(object?.data, 4, bodies).map(attributed),
     ];
 });
+
+/**
+ * A row shows a picture only when a body asks: an Image naming the icon slot
+ * draws as the small thumbnail beside the other bodies, unless the app draws
+ * Image bodies itself.
+ */
+const lead = computed(() => {
+    const index = found.value.findIndex((form: any) => form.component === ImageBody && iconOf(form.payload, form.entityMedia) !== null);
+
+    return index === -1 ? null : { index, icon: iconOf(found.value[index].payload, (found.value[index] as any).entityMedia)! };
+});
+const icon = computed(() => lead.value?.icon ?? null);
+const forms = computed(() => found.value.filter((_, index) => index !== lead.value?.index));
 
 /** The body's own maximum height, if it sets one (see `bodyFrame()`). */
 function frameAttributes(payload: Record<string, any>) {

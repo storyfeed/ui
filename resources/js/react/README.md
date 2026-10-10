@@ -140,11 +140,14 @@ object's body/data supply automatic previews; other roles are not previewed.
 Published historical `$v` forms still render. Rich Markdown/HTML goes through
 the same sanitizer as Vue; plain/verbatim source is escaped.
 
-Object icon frames are opt-in: pass `objectIcon(node)` to `FeedStream`,
-`FeedNodeView`, `FeedItem` or `FeedGroup`, returning an image or null. The icon
+A row shows a picture only when one of its bodies asks for one. An Image body
+naming the object's icon slot (`image: "icon"`) draws as a small thumbnail
+beside the row's other bodies rather than full width; Image bodies naming
+`preview` or `image` keep their size. The thumbnail
 links to the object's link (`node.object.link.href`, or `url` before core 0.17) through `FEED_LINK`, with scalar entity attributes
 except `href`, event handlers and invalid names. Missing URLs and tombstones
-produce unlinked images. `FeedProvider` accepts `FEED_MEDIA`, a component
+produce unlinked images. An app that registers its own Image renderer through
+`FEED_BODIES` draws icon Image bodies in place instead. `FeedProvider` accepts `FEED_MEDIA`, a component
 receiving `image`, `href`, `linkAttributes` and `className`, for a host media
 renderer such as a lightbox.
 

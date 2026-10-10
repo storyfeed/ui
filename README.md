@@ -382,11 +382,14 @@ Forms are read from activity `data`, the object's `body` slot and object
 are left to the app. Empty and unknown forms produce no wrapper.
 
 Standalone activity/group components accept their default body slot, `time`
-and `annotations` slots, a `removed` text prop, and an `object-icon` image prop
-that frames the content stack. Object icons keep the object's URL and scalar
-link attributes, excluding `href`, event handlers and invalid names; they also
-pass through the `media` renderer. A missing URL or tombstone leaves the icon
-unlinked. Static groups (`interactive=false`) retain collapsed members with
+and `annotations` slots and a `removed` text prop. A row shows a picture only
+when one of its bodies asks for one: an Image body naming the object's icon
+slot (`Image::make()->withIcon()`) draws as a small thumbnail beside the row's
+other bodies, while Image bodies naming `preview` or `image` keep their size.
+The thumbnail keeps the object's URL and scalar link attributes, excluding
+`href`, event handlers and invalid names; it also passes through the `media`
+renderer. A missing URL or tombstone leaves it unlinked, and a `form` renderer
+that draws the body itself keeps it in place. Static groups (`interactive=false`) retain collapsed members with
 `hidden print:block`, while interactive groups keep native details print rules.
 For a whole feed, `renderers` propagates trusted
 application callbacks to every row and group child:
@@ -398,7 +401,6 @@ application callbacks to every row and group child:
 | `avatar` | `Entity`, `md`, `sm` or `badge` | complete avatar HTML |
 | `body`, `annotations` | `FeedItem` | app content HTML |
 | `removed` | `FeedItem` | optional escaped removal text |
-| `objectIcon` | `FeedItem` | optional image array for the content frame |
 | `fileLabel` | `{name, mediaType}` array | optional file-kind label; null uses the built-in MIME map |
 | `form` | body array, owning `Entity` or null | body HTML; null uses the built-in renderer |
 | `mediaTiles`, `mediaOverflow` | group `FeedItem` | replacement sample tiles or overflow count |

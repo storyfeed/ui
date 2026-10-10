@@ -828,25 +828,43 @@ test('time render props preserve zero and suppress whitespace/empty fragments', 
     assert.doesNotMatch(render('FeedItem', { item: activity, time: () => '   ' }), /sf-meta/);
 });
 
-test('object icons retain entity URLs and filtered attributes through host link and media seams', () => {
+test('an Image body naming the icon slot draws as the linked thumbnail through host link and media seams', () => {
+    const object = { ...entity, url: '/dishes/7', media: { icon: { src: '/dal-icon.jpg', width: 64, height: 64 } }, attributes: { target: '_blank', 'data-route': 'dish', href: '/wrong', onClick: 'bad()', 'bad name': 'bad', nested: {} }, body: [{ $body: 'Storyfeed/Body/Image', image: 'icon', alt: 'Dal' }, { $body: 'Storyfeed/Body/KeyValue', items: [{ key: 'Status', value: 'Ready' }] }] };
+    const item = { ...activity, object };
+    const props = { items: [item], grouped: false };
+    const html = raw('FeedStream', props, { FEED_LINK: props => h('a', { ...props, 'data-router': 'host' }) });
+    const frame = html.split('sf-object-media')[1];
+    assert.match(frame, /href="\/dishes\/7"/);
+    assert.match(frame, /target="_blank"/);
+    assert.match(frame, /data-route="dish"/);
+    assert.match(frame, /data-router="host"/);
+    assert.match(frame, /alt="Dal"/);
+    assert.ok(frame.indexOf('dal-icon.jpg') < frame.indexOf('Status'), 'the other bodies sit beside the thumbnail');
+    assert.doesNotMatch(frame, /\/wrong|onClick|bad name|nested|sf-image/);
+    let received;
+    assert.match(raw('FeedStream', props, { FEED_MEDIA: props => { received = props; return h('button', { className: props.className }, 'Lightbox'); } }), /Lightbox/);
+    assert.equal(received.href, '/dishes/7');
+    assert.equal(received.image.src, '/dal-icon.jpg');
+    assert.deepEqual(received.linkAttributes, { target: '_blank', 'data-route': 'dish' });
+    assert.match(received.className, /size-10!/);
+    const unlinked = raw('FeedItem', { item: { ...item, object: { ...object, url: null } } });
+    assert.doesNotMatch(unlinked.split('sf-object-media')[1], /<a|target="_blank"/);
+});
+
+test('a row shows no picture its bodies did not ask for', () => {
+    const icon = { src: '/dal-icon.jpg', width: 64, height: 64 };
+    const object = { ...entity, url: '/dishes/7', media: { icon, preview: { src: '/dal.jpg' } }, body: [{ $body: 'Storyfeed/Body/KeyValue', items: [{ key: 'Status', value: 'Ready' }] }] };
     for (const node of [activity, group]) {
-        const item = { ...node, object: { ...entity, url: '/dishes/7', attributes: { target: '_blank', 'data-route': 'dish', href: '/wrong', onClick: 'bad()', 'bad name': 'bad', nested: {} } } };
-        const props = { items: [item], grouped: false, objectIcon: node => node.object ? ({ src: '/dal-icon.jpg', width: 64, height: 64 }) : null };
-        const html = raw('FeedStream', props, { FEED_LINK: props => h('a', { ...props, 'data-router': 'host' }) });
-        const frame = html.split('sf-object-media')[1];
-        assert.match(frame, /href="\/dishes\/7"/);
-        assert.match(frame, /target="_blank"/);
-        assert.match(frame, /data-route="dish"/);
-        assert.match(frame, /data-router="host"/);
-        assert.doesNotMatch(frame, /\/wrong|onClick|bad name|nested/);
-        let received;
-        assert.match(raw('FeedStream', props, { FEED_MEDIA: props => { received = props; return h('button', { className: props.className }, 'Lightbox'); } }), /Lightbox/);
-        assert.equal(received.href, '/dishes/7');
-        assert.deepEqual(received.linkAttributes, { target: '_blank', 'data-route': 'dish' });
-        assert.match(received.className, /size-10!/);
-        const unlinked = raw('FeedItem', { item: { ...activity, object: { ...item.object, url: null } }, objectIcon: props.objectIcon });
-        assert.doesNotMatch(unlinked.split('sf-object-media')[1], /<a|target="_blank"/);
+        const html = raw('FeedStream', { items: [{ ...node, object }], grouped: false });
+        assert.doesNotMatch(html, /sf-object-media|<img/);
+        if (node === activity) assert.match(html, /Status/);
     }
+    const preview = raw('FeedItem', { item: { ...activity, object: { ...object, body: [{ $body: 'Storyfeed/Body/Image', image: 'preview' }] } } });
+    assert.match(preview, /sf-image/);
+    assert.doesNotMatch(preview, /sf-object-media/);
+    const own = raw('FeedItem', { item: { ...activity, object: { ...object, body: [{ $body: 'Storyfeed/Body/Image', image: 'icon' }] } } }, { FEED_BODIES: { 'Storyfeed/Body/Image': () => h('p', null, 'App image') } });
+    assert.match(own, /App image/);
+    assert.doesNotMatch(own, /sf-object-media/);
 });
 
 test('feed retains static collapsed members for print and preserves native interactive print rules', () => {

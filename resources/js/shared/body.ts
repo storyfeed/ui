@@ -103,3 +103,21 @@ export function imageOf(entity: any): any {
     }
     return null;
 }
+
+/**
+ * The thumbnail an Image body draws when it names the entity's `icon` slot, or
+ * null. A row shows it small beside its other bodies, the way it once drew the
+ * object's icon unasked; now only the body asks. Mirrors `Bodies::icon()`.
+ */
+export function iconOf(payload: Record<string, any>, media: Record<string, any> | null | undefined): Record<string, any> | null {
+    if (payload?.$body !== 'Storyfeed/Body/Image' || (payload.image ?? 'preview') !== 'icon') return null;
+    const icon = media?.icon;
+    if (!icon?.src) return null;
+
+    return {
+        ...icon,
+        alt: typeof payload.alt === 'string' ? payload.alt : typeof payload.caption === 'string' ? payload.caption : '',
+        width: payload.width ?? icon.width ?? null,
+        height: payload.height ?? icon.height ?? null,
+    };
+}

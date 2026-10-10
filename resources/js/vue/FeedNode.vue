@@ -6,7 +6,6 @@ import type { FeedNode } from '../shared/types';
 
 withDefaults(
     defineProps<{
-        objectIcon?: (node: FeedNode) => Record<string, any> | null;
         item: FeedNode;
         isLast?: boolean;
         /** Which fact the rail answers first. Null keeps this kit's default. */
@@ -31,7 +30,6 @@ withDefaults(
         :item="item"
         :is-last="isLast"
         :rail="rail"
-        :object-icon="objectIcon"
     >
         <template #body="slotProps"
             ><slot name="body" v-bind="slotProps"
@@ -55,7 +53,6 @@ withDefaults(
         :item="item"
         :is-last="isLast"
         :rail="rail"
-        :object-icon="objectIcon"
     >
         <template #body="slotProps"
             ><slot name="body" v-bind="slotProps"

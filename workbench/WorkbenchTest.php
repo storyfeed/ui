@@ -89,7 +89,7 @@ final class WorkbenchTest extends TestCase
         }
         $cases = json_decode(file_get_contents(__DIR__.'/vue/cases.json'), true, flags: JSON_THROW_ON_ERROR);
         foreach ($cases as $case) {
-            $examples[$case['name']] = $render($case['items'], ['grouped' => $case['grouped'] ?? false, 'rail' => $case['rail'] ?? null, 'childRail' => $case['childRail'] ?? null, 'interactive' => $case['interactive'] ?? true, 'collapsed' => $case['collapsed'] ?? null, 'renderers' => [...$renderers, ...(! empty($case['objectIcon']) ? ['objectIcon' => fn ($node) => $node->object()?->media()?->get('icon')] : [])]]);
+            $examples[$case['name']] = $render($case['items'], ['grouped' => $case['grouped'] ?? false, 'rail' => $case['rail'] ?? null, 'childRail' => $case['childRail'] ?? null, 'interactive' => $case['interactive'] ?? true, 'collapsed' => $case['collapsed'] ?? null, 'renderers' => $renderers]);
         }
         $post = collect($bodies)->first(fn ($item) => ($item['object']['body'][0]['$body'] ?? null) === 'Storyfeed/Body/MediaObject')['object'];
         $postEntity = Entity::of($post);
