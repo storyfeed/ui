@@ -100,7 +100,7 @@ const actorOverflow = computed(() => overflow('actors'));
 </script>
 
 <template>
-    <span class="sf-headline leading-[1.6] text-muted-foreground">
+    <span class="sf-headline leading-[1.6] text-muted-foreground [overflow-wrap:anywhere]">
         <template v-if="parts.length > 0">
             <template v-for="(part, index) in parts" :key="index">
                 <template v-if="part.type === 'text'">{{ part.text }}</template>

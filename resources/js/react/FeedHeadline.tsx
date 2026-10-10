@@ -116,7 +116,7 @@ export default function FeedHeadline({
                 </>
             ));
     return (
-        <span className="sf-headline leading-[1.6] text-muted-foreground">
+        <span className="sf-headline leading-[1.6] text-muted-foreground [overflow-wrap:anywhere]">
             {content}
         </span>
     );

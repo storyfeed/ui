@@ -872,3 +872,8 @@ test('MediaObject footnotes stand alone, resolve links and keep strings unlinked
     assert.match(html, /sf-media-object__content[^>]*>Discussion summary/);
     assert.match(html, /sf-media-object__footnote[^>]*><a href="\/discussion">Read more<\/a><\/p>/);
 });
+
+test('a long headline wraps inside its column instead of running off a narrow feed', async () => {
+    const html = await renderRaw('/resources/js/vue/FeedItem.vue', { item: { ...activity, headline_template: null, headline: 'IMG_20260814_120000_HDR_PANORAMA_KITCHEN.jpg' } });
+    assert.match(html, /class="sf-headline[^"]*\[overflow-wrap:anywhere\]/);
+});

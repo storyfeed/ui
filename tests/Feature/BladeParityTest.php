@@ -319,3 +319,9 @@ it('sizes all three kits on the rem scale, with no pixel arbitrary values', func
 
     expect(file_get_contents(dirname(__DIR__, 2).'/resources/views/components/feed.blade.php'))->toContain('[--spacing:calc(var(--sf-font-size,1rem)/4)]', '[--text-base:var(--sf-font-size,1rem)]', 'text-base leading-[1.6]');
 });
+
+it('wraps a long headline inside its column instead of running off a narrow feed', function (string $kind) {
+    $item = ['kind' => $kind, 'headline' => 'IMG_20260814_120000_HDR_PANORAMA_KITCHEN.jpg'];
+    expect(Blade::render('<x-storyfeed::feed :items="[$item]" :grouped="false" />', compact('item')))
+        ->toMatch('/class="sf-headline[^"]*\[overflow-wrap:anywhere\]/');
+})->with(['activity', 'group']);

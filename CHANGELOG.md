@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- A long headline wraps inside its column on a narrow feed instead of running past the edge, in Blade, Vue and React: a word too long for the line (a file name, a long name in a nested row at 200% text) breaks where it must. Nothing changes where the words fit, and apps no longer need their own `overflow-wrap` rule.
+
 ### Changed
 
 - Rows no longer show the object's icon automatically; add `Image::make()->withIcon()` to the rows that should. An Image body naming the icon slot (`image: "icon"`) draws as the small thumbnail beside the row's other bodies, linked to the object, in Blade, Vue and React; Image bodies naming `preview` or `image` keep their size. The kit never adds a picture the payload didn't ask for. The `objectIcon` renderer and `object-icon` prop (Blade) and the `objectIcon` prop (Vue and React) that drew it are removed.

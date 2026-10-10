@@ -3784,5 +3784,212 @@
         }
       }
     ]
+  },
+  {
+    "name": "Long headlines",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "long-1",
+        "verb": "upload",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actor uploaded :object to :target",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "type": "document",
+          "id": "spec",
+          "label": "kitchen-remodel-phase-two-electrical-final-revised-v3.pdf",
+          "url": "#spec",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "target": {
+          "type": "document",
+          "id": "proj",
+          "label": "Kitchen remodel at 12 Harbour Street, Wellington",
+          "url": "#proj",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "context": null,
+        "glyph": "file-up"
+      },
+      {
+        "kind": "activity",
+        "id": "long-2",
+        "verb": "upload",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actor uploaded :object to :target, replacing the earlier draft that the electrician and the council inspector both reviewed last week",
+        "actor": {
+          "type": "person",
+          "id": "ada",
+          "label": "Ada Lovelace",
+          "url": "#ada",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "type": "document",
+          "id": "photo",
+          "label": "IMG_20260814_120000_HDR_PANORAMA_KITCHEN.jpg",
+          "url": "#photo",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "target": {
+          "type": "document",
+          "id": "proj",
+          "label": "Kitchen remodel at 12 Harbour Street, Wellington",
+          "url": "#proj",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "context": null,
+        "glyph": "file-up"
+      },
+      {
+        "kind": "group",
+        "id": "long-group",
+        "axis": "repeat",
+        "count": 2,
+        "verb": "upload",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actors uploaded :object to :target",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "ada",
+              "label": "Ada Lovelace",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "grace",
+              "label": "Grace Brewster Murray Hopper",
+              "url": "#grace",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            }
+          ],
+          "objects": []
+        },
+        "distinct": {
+          "actors": 2,
+          "objects": 1
+        },
+        "glyph": "file-up",
+        "object": {
+          "type": "document",
+          "id": "spec",
+          "label": "kitchen-remodel-phase-two-electrical-final-revised-v3.pdf",
+          "url": "#spec",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "target": {
+          "type": "document",
+          "id": "proj",
+          "label": "Kitchen remodel at 12 Harbour Street, Wellington",
+          "url": "#proj",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "expanded": true,
+        "children": [
+          {
+            "kind": "activity",
+            "id": "long-child-1",
+            "verb": "upload",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline_template": ":actor uploaded :object to :target",
+            "actor": {
+              "type": "person",
+              "id": "grace",
+              "label": "Grace Brewster Murray Hopper",
+              "url": "#grace",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "document",
+              "id": "spec",
+              "label": "kitchen-remodel-phase-two-electrical-final-revised-v3.pdf",
+              "url": "#spec",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "target": {
+              "type": "document",
+              "id": "proj",
+              "label": "Kitchen remodel at 12 Harbour Street, Wellington",
+              "url": "#proj",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "context": null,
+            "glyph": "file-up"
+          },
+          {
+            "kind": "activity",
+            "id": "long-child-2",
+            "verb": "upload",
+            "published_at": "2026-08-14T12:00:00Z",
+            "headline_template": ":actor uploaded :object to :target",
+            "actor": {
+              "type": "person",
+              "id": "ada",
+              "label": "Ada Lovelace",
+              "url": "#ada",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "document",
+              "id": "spec",
+              "label": "kitchen-remodel-phase-two-electrical-final-revised-v3.pdf",
+              "url": "#spec",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "target": {
+              "type": "document",
+              "id": "proj",
+              "label": "Kitchen remodel at 12 Harbour Street, Wellington",
+              "url": "#proj",
+              "media": null,
+              "data": null,
+              "tombstone": null
+            },
+            "context": null,
+            "glyph": "file-up"
+          }
+        ]
+      }
+    ]
   }
 ]
