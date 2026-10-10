@@ -159,6 +159,43 @@ try {
                         await session.detach();
                     }
                 }
+                // Jasper (ui#34): a branch divider grows out of the rail. Its curve shares the line's x, width and colour, the line
+                // above runs into it unbroken (the first divider has nothing above, so its line starts where the curve ends), and
+                // the curve meets the label at the middle of its cap height.
+                if (state === 'collapsed') for (let i = 0; i < frames.length; i++) {
+                    const joints = await frames[i].locator('.example:has(>h2:text-is("Day dividers and a group")), .example:has(>h2:text-is("Per-item divider"))').evaluateAll(sections => sections.flatMap(section => [...section.querySelectorAll('.sf-divider')].map(divider => {
+                        const row = divider.getBoundingClientRect();
+                        const curve = divider.querySelector('.sf-rail__branch');
+                        const stem = curve.getBoundingClientRect(), style = getComputedStyle(curve);
+                        const line = divider.querySelector('.sf-rail__line').getBoundingClientRect();
+                        const above = [...section.querySelectorAll('.sf-rail__line')].map(l => l.getBoundingClientRect()).filter(l => l.height > 0 && l.bottom <= row.top + 0.01).sort((a, b) => b.bottom - a.bottom)[0];
+                        const label = divider.querySelector('.sf-day'), font = getComputedStyle(label);
+                        const probe = document.createElement('span'); probe.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+                        label.append(probe); const baseline = probe.getBoundingClientRect().top; probe.remove();
+                        const context = document.createElement('canvas').getContext('2d'); context.font = `${font.fontWeight} ${font.fontSize} ${font.fontFamily}`;
+                        return {
+                            label: label.textContent.trim(), stemX: stem.x, lineX: line.x, stemWidth: parseFloat(style.borderLeftWidth), lineWidth: line.width,
+                            stemColour: style.borderLeftColor, arcColour: style.borderTopColor, lineColour: getComputedStyle(divider.querySelector('.sf-rail__line')).backgroundColor,
+                            lineTop: line.top - row.top, curveEnd: stem.bottom - row.top, above: above && { x: above.x, w: above.width, gap: row.top - above.bottom },
+                            stroke: stem.top + parseFloat(style.borderTopWidth) / 2, capMiddle: baseline - context.measureText('H').actualBoundingBoxAscent / 2,
+                        };
+                    })));
+                    assert.equal(joints.length, 4, `${renderers[i]}: branch dividers measured`);
+                    for (const joint of joints) {
+                        const where = `${renderers[i]} ${width} ${theme} ${text} ${joint.label}`;
+                        assert.equal(joint.stemX, joint.lineX, `${where}: the curve's stem shares the rail line's x`);
+                        assert.equal(joint.stemWidth, joint.lineWidth, `${where}: the curve's stem is as wide as the rail line`);
+                        assert.equal(joint.stemColour, joint.lineColour, `${where}: the curve is the rail line's colour`);
+                        assert.equal(joint.arcColour, joint.lineColour, `${where}: the curve is the rail line's colour`);
+                        assert.ok(Math.abs(joint.stroke - joint.capMiddle) <= 0.5, `${where}: the curve meets the label's cap middle (${joint.stroke} vs ${joint.capMiddle})`);
+                        if (joint.above) {
+                            assert.deepEqual([joint.above.x, joint.above.w, joint.above.gap, joint.lineTop], [joint.lineX, joint.lineWidth, 0, 0], `${where}: the rail runs unbroken through the divider`);
+                        } else {
+                            assert.equal(joint.lineTop, joint.curveEnd, `${where}: the first divider's line starts where its curve ends`);
+                        }
+                    }
+                    assert.deepEqual(joints.map(joint => joint.above !== undefined), [false, false, true, true], `${renderers[i]}: only the first divider of a feed has nothing above`);
+                }
                 const geometry = await Promise.all(frames.map(frame => frame.evaluate(() => {
                     const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media', '.sf-facts', '.sf-facts__row', '.sf-facts__label', '.sf-facts__value', '.sf-facts__value > span', '.sf-rich-text', '.sf-rich-text *', '.sf-list-block', '.sf-list__prose *', '.sf-media-strip > *', '.sf-avatar--tile', '.sf-table-block', '.sf-table__prose *', '.sf-media-object__image img', '.sf-cta', '.sf-cta > *', '.sf-cta__action'];
                     return Object.fromEntries(selectors.map(selector => [selector, [...document.querySelectorAll(selector)].filter(e => !e.closest('details:not([open]) .sf-children') && e.getClientRects().length && e.getBoundingClientRect().height > 0).map(e => {

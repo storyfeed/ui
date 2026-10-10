@@ -18,31 +18,35 @@ export interface FeedStreamProps extends NodeProps {
     onLoadMore?: () => void;
     empty?: ReactNode;
 }
-function Divider({ label, style }: { label: string; style: 'dot' | 'branch' }) {
+function Divider({
+    label,
+    style,
+    first,
+}: {
+    label: string;
+    style: 'dot' | 'branch';
+    first: boolean;
+}) {
     return (
         <div
-            className={`sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail>div:last-child]:mt-1.25 ${style === 'dot' ? 'sf-divider--dot' : 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-5.5'}`}
+            className={`sf-row sf-divider relative flex items-start gap-(--sf-gap) ${style === 'dot' ? 'sf-divider--dot [&_.sf-rail>div:last-child]:mt-1.25' : 'sf-divider--branch'}`}
         >
-            <div className="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
-                {style !== 'dot' ? (
-                    <svg
-                        aria-hidden="true"
-                        className="sf-rail__branch absolute top-0.75 left-[calc(50%-var(--spacing)*0.1875)] h-5.5 w-4 overflow-visible fill-none stroke-muted-foreground stroke-[1.5] [stroke-linecap:round]"
-                        width="16"
-                        height="22"
-                        viewBox="0 0 16 22"
-                    >
-                        <path d="M0.75 22 V14 Q0.75 6 8.75 6 H15" />
-                    </svg>
-                ) : (
+            <div className="sf-rail relative flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
+                {style === 'dot' ? (
                     <div
                         aria-hidden="true"
                         className="sf-rail__node mt-1.25 size-2.25 shrink-0 rounded-full bg-muted-foreground ring-3 ring-background"
                     />
+                ) : (
+                    // The curve shares the rail line's 1px column and colour; the line runs through it unless nothing is above.
+                    <div
+                        aria-hidden="true"
+                        className="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap)-var(--spacing)*1.5)] rounded-tl-[calc(var(--spacing)*2)] border-t border-l border-border"
+                    />
                 )}
                 <div
                     aria-hidden="true"
-                    className="sf-rail__line mt-1 w-px flex-1 bg-border"
+                    className={`sf-rail__line w-px flex-1 bg-border${style === 'dot' ? ' mt-1' : first ? ' mt-[calc(0.5625em-0.5px+var(--spacing)*2)]' : ''}`}
                 />
             </div>
             <h2 className="sf-day m-0 border-0 pt-0 pb-5 text-xs leading-[1.6] font-semibold tracking-[0.05em] text-muted-foreground uppercase">
@@ -88,6 +92,7 @@ export default function FeedStream({
                                 <Divider
                                     label={day.label}
                                     style={dividerStyle}
+                                    first={dayIndex === 0}
                                 />
                             )}
                             {day.items.map((item, i) => (
@@ -96,6 +101,11 @@ export default function FeedStream({
                                         <Divider
                                             label={dividers[item.id]}
                                             style={dividerStyle}
+                                            first={
+                                                !grouped &&
+                                                dayIndex === 0 &&
+                                                i === 0
+                                            }
                                         />
                                     )}
                                     <FeedNodeView

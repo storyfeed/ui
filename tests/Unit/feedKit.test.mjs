@@ -441,7 +441,6 @@ test('dividers branch off the rail by default, for days and per-item labels; dot
         items: [item], dividers: { first: 'History' },
     });
     assert.equal(html.match(/class="sf-rail__branch"/g).length, 2);
-    assert.match(html, /d="M0.75 22 V14 Q0.75 6 8.75 6 H15"/);
     assert.doesNotMatch(html, /sf-rail__node/);
     assert.ok(html.indexOf('History') < html.indexOf('Ada Lovelace'));
     const dot = await render('/resources/js/vue/FeedStream.vue', {

@@ -24,12 +24,13 @@
                         default => $at?->isoFormat('MMM D, YYYY'),
                     };
                 @endphp
-@if ($grouped && $day !== null && $day !== $previousDay)
-                    <x-storyfeed::divider :label="$label" :divider-style="$dividerStyle" />
+                @php($dayDivider = $grouped && $day !== null && $day !== $previousDay)
+@if ($dayDivider)
+                    <x-storyfeed::divider :label="$label" :divider-style="$dividerStyle" :first="$loop->first" />
 @endif
                 @php($previousDay = $day)
 @if (isset($dividers[$item->id()]))
-                    <x-storyfeed::divider :label="$dividers[$item->id()]" :divider-style="$dividerStyle" />
+                    <x-storyfeed::divider :label="$dividers[$item->id()]" :divider-style="$dividerStyle" :first="$loop->first && ! $dayDivider" />
 @endif
                 <x-storyfeed::item :item="$item" :last="$loop->last && $cursor === null" :rail="$rail" :child-rail="$childRail" :interactive="$interactive" :collapsed="$collapsed" :timezone="$timezone" :renderers="$renderers" />
 @endforeach

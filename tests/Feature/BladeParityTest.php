@@ -15,7 +15,6 @@ it('branches day and per-item dividers off the rail by default, and draws dots o
     ];
     $html = render_blade('<x-storyfeed::feed :items="$items" :dividers="[\'a\' => \'Timeline\']" />', compact('items'));
     expect($html)->toContain('<h2>Today</h2>', '<h2>Yesterday</h2>', '<h2>Timeline</h2>')
-        ->and(substr_count($html, 'M0.75 22 V14 Q0.75 6 8.75 6 H15'))->toBe(3)
         ->and(render_blade('<x-storyfeed::feed :items="$items" :grouped="false" />', compact('items')))->not->toContain('<h2');
     $classes = fn (string $style) => Blade::render('<x-storyfeed::feed :items="$items" :dividers="[\'a\' => \'Timeline\']" '.$style.' />', ['items' => $items]);
     expect(substr_count($classes(''), 'sf-rail__branch'))->toBe(3)
