@@ -72,10 +72,9 @@ const entities = computed(() => ({
 }));
 
 /**
- * The group's strip: one tile per member activity, the picture of what it
- * features, else that entity's avatar (see `strip()`). Expanding adds, it never
- * takes away: the strip stays in place while the members show below it
- * (ui#26).
+ * The group's strip: one tile per member activity, the picture its row draws,
+ * else its featured entity's name (see `strip()`). It previews the members, so
+ * expanding hides it while they show below; the head row stays put (ui#47).
  */
 const strip = computed(() => stripOf(props.item) ?? { tiles: [], overflow: 0 });
 
@@ -169,7 +168,7 @@ const hiddenBeyondChildren = computed(
                 every kind of node except the interesting one.
             -->
             <FeedMediaStrip
-                v-if="strip.tiles.length"
+                v-if="strip.tiles.length && !expanded"
                 :tiles="strip.tiles"
                 :overflow="strip.overflow"
                 :toggle="interactive && item.children.length > 0 ? { expanded, controls: membersId, label: `Show all ${item.count}` } : null"

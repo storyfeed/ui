@@ -7,7 +7,7 @@
     $hidden = max(0, $group->count() - $children->count());
     $tiles = $mediaTiles ?? (isset($renderers['mediaTiles']) ? $renderers['mediaTiles']($group) : null);
     $mediaOverflow = isset($renderers['mediaOverflow']) ? $renderers['mediaOverflow']($group) : $mediaOverflow;
-    // One tile per member activity: the picture of what it features, else that entity's avatar (ui#27).
+    // One tile per member activity: the picture its row draws, else its featured entity's name (ui#47).
     if ($tiles === null) {
         $strip = \Storyfeed\Ui\Support\Strip::of($group);
         $tiles = $strip['tiles'] ?? [];
@@ -21,7 +21,7 @@
 @endphp
 <article {{ $attributes->class(['sf-row relative flex items-start gap-(--sf-gap-v) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]', '[&:not(:has(>.sf-body>.sf-disclosure[open]))>.sf-rail>[aria-hidden]]:hidden' => $last && $interactive]) }}>
     <x-storyfeed::rail :item="$group" :rail="$rail" :last="$last && ! $interactive && ! $open" :renderers="$renderers" />
-    <div @class(['sf-body min-w-0 flex-1 pt-1.5', 'sf-body--spaced pb-5' => ! $last || (! $interactive && $open), '[&:has(>.sf-disclosure[open])]:pb-5' => $last])>
+    <div @class(['sf-body min-w-0 flex-1 pt-1.5 [&:has(>.sf-disclosure[open])>.sf-media-strip]:hidden', 'sf-body--spaced pb-5' => ! $last || (! $interactive && $open), '[&:has(>.sf-disclosure[open])]:pb-5' => $last])>
         <div class="sf-head flex items-baseline gap-3"><x-storyfeed::headline :headline="$headline" /></div>
         <x-storyfeed::meta :item="$group" :headline="$headline" :timezone="$timezone" :time-renderer="$renderers['time'] ?? null">{{ $time ?? '' }}</x-storyfeed::meta>
 @if ($removed)<p class="sf-removed mt-1 text-sm text-muted-foreground">{{ $removed }}</p>
@@ -32,8 +32,8 @@
 @if (isset($renderers['annotations'])){!! $renderers['annotations']($group) !!}
 @endif
         {{ $annotations ?? '' }}
-        {{-- Expanding adds, it never takes away: the strip stays in place while members show (ui#26). --}}
-        <x-storyfeed::media-strip :tiles="$tiles" :overflow="$mediaOverflow" :renderer="$renderers['media'] ?? null" :toggle="$toggle" />
+        {{-- The strip previews the members, so expanding hides it; the head row stays put (ui#47). --}}
+        <x-storyfeed::media-strip :tiles="! $interactive && $open ? [] : $tiles" :overflow="$mediaOverflow" :renderer="$renderers['media'] ?? null" :toggle="$toggle" />
         @if ($children->isNotEmpty())
             @if ($interactive)
                 <details class="group/disclosure sf-disclosure print:[&::details-content]:block print:[&::details-content]:[content-visibility:visible]" @if ($open) open @endif ontoggle="var b=this.closest('.sf-row').querySelector('.sf-media-strip__more[aria-expanded]');if(b)b.setAttribute('aria-expanded',this.open)">

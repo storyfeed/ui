@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { inject } from 'vue'
-import EntityAvatar from './EntityAvatar.vue'
 import FeedMedia from './FeedMedia.vue'
 import { FEED_LINK } from './keys'
 import { linkProps } from '../shared/link'
 
 /**
  * A group's strip: one rounded-square tile per member activity, all the same
- * size and spaced, never overlapped (ui#27). A tile is the picture of what the
- * member features, else that entity's avatar, its initials on its colour; the
- * "+N" tile counts the members not shown. Each tile links to its entity.
+ * size and spaced, never overlapped (ui#27). A tile is the picture the
+ * member's row draws, else a quiet name tile with its featured entity's label
+ * (ui#47); the "+N" tile counts the members not shown. Each tile links to its
+ * entity.
  *
  * Build the tiles with `strip()` in `shared/strip.ts`. A tile without an
  * `entity` (an app's own `{ image, href }`) is drawn as a picture.
@@ -35,8 +35,8 @@ const tileClass = 'mt-0! aspect-square! size-full! max-w-none! rounded-lg!'
                 v-else-if="tile.link"
                 v-bind="linkProps(tile.link, linkComponent)"
                 class="sf-media-strip__link flex rounded-lg focus-visible:outline-2 focus-visible:outline-ring"
-            ><EntityAvatar :entity="tile.entity" size="tile" /></component>
-            <EntityAvatar v-else :entity="tile.entity" size="tile" />
+            ><span class="sf-media-strip__name flex aspect-square min-w-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-background p-1 text-center size-full"><span class="line-clamp-3 text-[length:--spacing(2.75)] leading-[1.3] break-words text-muted-foreground [hyphens:auto]">{{ tile.label }}</span></span></component>
+            <span v-else class="sf-media-strip__name flex aspect-square min-w-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-background p-1 text-center"><span class="line-clamp-3 text-[length:--spacing(2.75)] leading-[1.3] break-words text-muted-foreground [hyphens:auto]">{{ tile.label }}</span></span>
         </template>
         <button
             v-if="overflow && toggle"

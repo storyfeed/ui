@@ -377,13 +377,14 @@ state opens unnamed groups, or all groups when `interactive` is false.
 group. With `:interactive="false"`, no toggle is rendered and only the chosen
 server state is drawn. Groups show honest truncated-member counts and up to
 three sampled faces. Below the headline, a group draws a strip: one tile per member activity, newest first, each the
-thumbnail of what that activity features: its picture (an Image body, else
-its icon), else that entity's avatar, its initials on its colour. Every tile
-is the same rounded square, spaced, never overlapped, and links to its entity;
-a deleted entity is a muted, unlinked tile. Up to four tiles; past that, three
+preview of what that member's row shows: the picture it draws (its featured
+entity's Image body), else a quiet name tile with that entity's label, which
+the member's headline names. Never initials, and a declared icon counts only
+when an Image body draws it. Every tile is the same rounded square, spaced,
+never overlapped, and links to its entity; a deleted entity is unlinked. Up to four tiles; past that, three
 and a "+N" tile counting the members not shown. On a group that can open, the "+N" tile opens and
 closes it like "Show all N". A strip of identical tiles is
-skipped. It stays in place when the group expands.
+skipped. Expanding the group hides it; the head row stays put.
 
 `page` takes whatever core's reads return: core 0.13–0.18's `FeedPage`, or
 from storyfeed/storyfeed#95 the collection from `get()` and the paginators

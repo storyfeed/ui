@@ -112,14 +112,15 @@ face shows. A face badge never stands for several actors. Explicit singular payl
 Groups use native `<details>` with keyboard disclosure and no JavaScript state.
 Unnamed groups start open. True member totals and truncation remain visible.
 Below the headline, a group draws a strip: one tile per member activity, newest first, each the
-thumbnail of what that activity features: its picture (an Image body, else
-its icon), else that entity's avatar, its initials on its colour. Every tile
-is the same rounded square, spaced, never overlapped, and links to its entity;
-a deleted entity is a muted, unlinked tile. Up to four tiles; past that, three
+preview of what that member's row shows: the picture it draws (its featured
+entity's Image body), else a quiet name tile with that entity's label, which
+the member's headline names. Never initials, and a declared icon counts only
+when an Image body draws it. Every tile is the same rounded square, spaced,
+never overlapped, and links to its entity; a deleted entity is unlinked. Up to four tiles; past that, three
 and a "+N" tile counting the members not shown. On a group that can open, the "+N" tile opens and
 closes it like "Show all N". A strip of identical tiles is
-skipped. Expanding a group adds its members below and keeps the strip and the
-rail faces in place. `FeedMediaStrip` draws tiles built with `strip()`.
+skipped. Expanding a group hides the strip while its members show below, and
+keeps the rail faces in place. `FeedMediaStrip` draws tiles built with `strip()`.
 Summary rendering has been removed from all kits, mirroring core. Unknown extra
 payload keys are ignored.
 

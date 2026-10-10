@@ -378,18 +378,18 @@ try {
                     }));
                     assert.deepEqual(cards, [[1.9, 'cover'], [1, 'cover'], [1, 'cover'], [1.9, 'contain'], [1, 'cover']].map(([ratio, fit]) => ({ ratio, fit, readable: true })), `${renderers[i]} ${width} ${text}: card pictures`);
                 }
-                // A group's strip: one uniform square tile per member activity, a picture or the entity's avatar, then "+N" (ui#27).
+                // A group's strip: one uniform square tile per member activity, the picture its row draws or its featured entity's name, then "+N" (ui#27, ui#47).
                 if (text === 'default' && state === 'collapsed') for (let i = 0; i < frames.length; i++) {
                     const strips = await frames[i].locator('.example:has(>h2:text-matches("^Strip: ")) .sf-row:not(.sf-children .sf-row) .sf-media-strip').evaluateAll(strips => strips.map(strip => [...strip.children].map(tile => {
                         const box = tile.getBoundingClientRect();
                         const href = tile.getAttribute('href');
-                        const kind = tile.classList.contains('sf-media-strip__more') ? tile.textContent.trim() : tile.querySelector('img') ? 'picture' : `avatar:${tile.querySelector('.sf-avatar')?.textContent.trim() ?? tile.textContent.trim()}`;
+                        const kind = tile.classList.contains('sf-media-strip__more') ? tile.textContent.trim() : tile.querySelector('img') ? 'picture' : tile.querySelector('.sf-avatar') ? `avatar:${tile.querySelector('.sf-avatar').textContent.trim()}` : `name:${tile.textContent.trim()}`;
                         return { kind, href, w: Math.round(box.width * 100) / 100, h: Math.round(box.height * 100) / 100 };
                     })));
                     assert.deepEqual(strips.map(tiles => tiles.map(tile => tile.kind)), [
-                        ['picture', 'avatar:IN', 'picture', '+3'],
+                        ['name:Gia Romano', 'name:Iris Novak', 'name:Eli Brooks', '+3'],
                         ['picture', 'picture', 'picture', '+6'],
-                        ['avatar:M', 'picture', 'picture'],
+                        ['name:Measurements', 'name:Quote from the electrician.pdf', 'picture'],
                         ['picture', 'picture'],
                     ], `${renderers[i]} ${width}: strip tiles`);
                     const sizes = strips.flat().map(tile => [tile.w, tile.h]);
@@ -401,24 +401,29 @@ try {
                     assert.equal(await more.evaluate(button => button.tagName), 'BUTTON', `${renderers[i]}: the +N tile is a button`);
                     assert.equal(await more.getAttribute('aria-label'), 'Show all 9', `${renderers[i]}: the +N tile's name`);
                     assert.equal(await more.getAttribute('aria-controls'), await album.locator('.sf-children').getAttribute('id'), `${renderers[i]}: the +N tile controls the members`);
-                    const read = async () => ({ open: await album.locator('.sf-children').isVisible(), expanded: await more.getAttribute('aria-expanded') });
+                    // Expanding hides the strip (ui#47), so "+N" opens the group and "Show less" closes it.
+                    const read = async () => ({ open: await album.locator('.sf-children').isVisible(), strip: await album.locator('.sf-media-strip').isVisible() });
                     // A details element announces its toggle a task later, so wait for the state rather than reading it once.
-                    const settle = async (want) => { for (let t = 0; t < 40; t++) { const now = await read(); if (now.open === want.open && now.expanded === want.expanded) return now; await new Promise(r => setTimeout(r, 50)); } return read(); };
-                    assert.deepEqual(await settle({ open: false, expanded: 'false' }), { open: false, expanded: 'false' }, `${renderers[i]}: collapsed to start`);
+                    const settle = async (want) => { for (let t = 0; t < 40; t++) { const now = await read(); if (now.open === want.open && now.strip === want.strip) return now; await new Promise(r => setTimeout(r, 50)); } return read(); };
+                    const closed = { open: false, strip: true }, opened = { open: true, strip: false };
+                    assert.deepEqual(await settle(closed), closed, `${renderers[i]}: collapsed to start`);
+                    assert.equal(await more.getAttribute('aria-expanded'), 'false', `${renderers[i]}: the +N tile says the group is closed`);
                     await more.click();
-                    assert.deepEqual(await settle({ open: true, expanded: 'true' }), { open: true, expanded: 'true' }, `${renderers[i]}: clicking +N opens the group`);
+                    assert.deepEqual(await settle(opened), opened, `${renderers[i]}: clicking +N opens the group and hides the strip`);
                     assert.match(await album.locator('.sf-toggle').innerText(), /Show less/, `${renderers[i]}: the toggle follows`);
-                    await more.click();
-                    assert.deepEqual(await settle({ open: false, expanded: 'false' }), { open: false, expanded: 'false' }, `${renderers[i]}: clicking +N again closes it`);
+                    await album.locator('.sf-toggle').click();
+                    assert.deepEqual(await settle(closed), closed, `${renderers[i]}: Show less closes it and the strip returns`);
+                    assert.equal(await more.getAttribute('aria-expanded'), 'false', `${renderers[i]}: the returning +N tile says closed`);
                     await more.focus();
                     await more.press('Enter');
-                    assert.deepEqual(await settle({ open: true, expanded: 'true' }), { open: true, expanded: 'true' }, `${renderers[i]}: Enter opens the group`);
+                    assert.deepEqual(await settle(opened), opened, `${renderers[i]}: Enter opens the group`);
+                    await album.locator('.sf-toggle').click();
+                    assert.deepEqual(await settle(closed), closed, `${renderers[i]}: and Show less closes it`);
+                    await more.focus();
                     await more.press(' ');
-                    assert.deepEqual(await settle({ open: false, expanded: 'false' }), { open: false, expanded: 'false' }, `${renderers[i]}: Space closes it`);
+                    assert.deepEqual(await settle(opened), opened, `${renderers[i]}: Space opens the group`);
                     await album.locator('.sf-toggle').click();
-                    assert.deepEqual(await settle({ open: true, expanded: 'true' }), { open: true, expanded: 'true' }, `${renderers[i]}: the +N tile follows the toggle`);
-                    await album.locator('.sf-toggle').click();
-                    assert.deepEqual(await settle({ open: false, expanded: 'false' }), { open: false, expanded: 'false' }, `${renderers[i]}: and closes with it`);
+                    assert.deepEqual(await settle(closed), closed, `${renderers[i]}: and Show less closes it again`);
                 }
                 if (renderers.length === 3 && text === 'default') for (let i = 0; i < frames.length; i++) {
                     const icons = frames[i].locator('.example:has(>h2:text-is("Icon Image bodies")) .sf-object-media > a');

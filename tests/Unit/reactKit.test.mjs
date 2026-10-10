@@ -519,29 +519,42 @@ const stripAna = { type: 'person', id: 'ana', label: 'Ana Silva', url: '/people/
 const stripBen = { type: 'person', id: 'ben', label: 'Ben Okafor', url: '/people/ben', media: { icon: null, initials: 'BO', color: '#438d98' } };
 const stripGone = { type: 'person', id: 'cara', label: null, url: null, media: { icon: null, initials: '?', color: '#6b7280' }, tombstone: { formerType: 'person' } };
 const stripDee = { type: 'person', id: 'dee', label: 'Dee Ford', url: '/people/dee', media: null };
-/** A group's strip in order (a src, `tile:<initials>` or `+N`) and its links, or null when there is none. */
+/** A group's strip in order (a src, `name:<label>`, `tile:<initials>` or `+N`) and its links, or null when there is none. */
 const stripTiles = (html) => {
     const section = html.replace(/<!--.*?-->/g, '').split('sf-media-strip ')[1]?.split(/sf-toggle|sf-children/)[0];
     if (section === undefined) return null;
-    const tiles = [...section.matchAll(/<img[^>]+src="([^"]+)"|class="[^"]*sf-avatar--tile[^"]*"[^>]*>([^<]*)<|sf-media-strip__more[^>]*>\+(\d+)</g)]
-        .map((m) => m[1] ?? (m[2] !== undefined ? `tile:${m[2].trim()}` : `+${m[3]}`));
+    const tiles = [...section.matchAll(/<img[^>]+src="([^"]+)"|class="[^"]*sf-avatar--tile[^"]*"[^>]*>([^<]*)<|class="[^"]*sf-media-strip__name[^"]*"[^>]*><span[^>]*>([^<]*)<|sf-media-strip__more[^>]*>\+(\d+)</g)]
+        .map((m) => m[1] ?? (m[2] !== undefined ? `tile:${m[2].trim()}` : m[3] !== undefined ? `name:${m[3].trim()}` : `+${m[4]}`));
     return { tiles, hrefs: [...section.matchAll(/href="([^"]+)"/g)].map((m) => m[1]) };
 };
-test('a group strip draws one tile per member activity, never a blank', () => {
+test('a group strip previews what its members\' rows show: a picture they draw, else a name tile (ui#47)', () => {
     const draw = (objects, count = objects.length) => stripTiles(raw('FeedGroup', { item: { ...group, count, children: objects.map((object, n) => stripMember(n, object)), children_truncated: false, sample: { actors: group.sample.actors } } }));
-    // Pictures (an Image body, else the icon), else the avatar; past four tiles, three and "+N" from the count.
+    // A picture only from an Image body the row draws; a declared icon alone is a name tile. Past four tiles, three and "+N" from the count.
     assert.deepEqual(draw([stripPhoto(1), stripAna, stripBen, stripPhoto(2), stripPhoto(3), stripPhoto(4)]),
-        { tiles: ['/p1.jpg', '/ana.jpg', 'tile:BO', '+3'], hrefs: ['/photos/1', '/people/ana', '/people/ben'] });
-    assert.deepEqual(draw([stripPhoto(1), stripAna, stripBen, stripPhoto(2)]).tiles, ['/p1.jpg', '/ana.jpg', 'tile:BO', '/p2.jpg']);
+        { tiles: ['/p1.jpg', 'name:Ana Silva', 'name:Ben Okafor', '+3'], hrefs: ['/photos/1', '/people/ana', '/people/ben'] });
+    assert.deepEqual((draw([stripPhoto(1), stripAna, stripBen, stripPhoto(2)])).tiles, ['/p1.jpg', 'name:Ana Silva', 'name:Ben Okafor', '/p2.jpg']);
     // Members the server didn't ship still count.
-    assert.deepEqual(draw([stripPhoto(1), stripBen], 9).tiles, ['/p1.jpg', 'tile:BO', '+7']);
-    // A deleted entity is a muted, unlinked tile; an entity without declared media still gets its initials.
-    assert.deepEqual(draw([stripBen, stripGone, stripDee]), { tiles: ['tile:BO', 'tile:?', 'tile:DF'], hrefs: ['/people/ben', '/people/dee'] });
+    assert.deepEqual((draw([stripPhoto(1), stripBen], 9)).tiles, ['/p1.jpg', 'name:Ben Okafor', '+7']);
+    // Jasper: Erica's orders read "Order #2033 / #2032 / #2031", never three "O2" initials.
+    const order = (n) => ({ type: 'order', id: String(n), label: `Order #${n}`, url: `/orders/${n}`, media: { icon: null, initials: 'O2', color: '#438d98' } });
+    const orders = draw([order(2033), order(2032), order(2031)]);
+    assert.deepEqual(orders, { tiles: ['name:Order #2033', 'name:Order #2032', 'name:Order #2031'], hrefs: ['/orders/2033', '/orders/2032', '/orders/2031'] });
+    assert.doesNotMatch(raw('FeedGroup', { item: { ...group, count: 3, children: [order(2033), order(2032), order(2031)].map((object, n) => stripMember(n, object)), sample: { actors: group.sample.actors } } }).split('sf-children')[0], /sf-avatar--tile/);
+    // An Image body naming the icon slot is drawn by the row, so its icon is a picture tile.
+    const iconed = (id) => ({ type: 'product', id, label: id, url: `/products/${id}`, body: [{ $body: 'Storyfeed/Body/Image', image: 'icon' }], media: { icon: { src: `/${id}.svg` } } });
+    assert.deepEqual((draw([iconed('mug'), iconed('tote')])).tiles, ['/mug.svg', '/tote.svg']);
+    // A deleted entity keeps its label, unlinked; one with no label has nothing to preview, so "+N" counts it.
+    const removed = { ...stripGone, label: 'Cara Diaz' };
+    assert.deepEqual(draw([stripBen, removed, stripDee]), { tiles: ['name:Ben Okafor', 'name:Cara Diaz', 'name:Dee Ford'], hrefs: ['/people/ben', '/people/dee'] });
+    assert.deepEqual(draw([stripBen, stripGone, stripDee]), { tiles: ['name:Ben Okafor', 'name:Dee Ford', '+1'], hrefs: ['/people/ben', '/people/dee'] });
     // A member that features nothing has no tile, but is counted.
-    assert.deepEqual(draw([stripBen, stripPhoto(1), null]).tiles, ['tile:BO', '/p1.jpg', '+1']);
+    assert.deepEqual((draw([stripBen, stripPhoto(1), null])).tiles, ['name:Ben Okafor', '/p1.jpg', '+1']);
     // Identical tiles, or nothing featured (never the actor), draw no strip.
     assert.equal(draw([stripBen, stripBen, stripBen]), null);
     assert.equal(draw([null, null]), null);
+    // Several actors featuring one entity draw no strip: the headline names them and the rail shows them.
+    const fair = { type: 'place', id: 'fair', label: 'Fun Fair', url: '/fair' };
+    assert.equal(stripTiles(raw('FeedGroup', { item: { ...group, count: 3, children: [0, 1, 2].map((n) => ({ ...stripMember(n, fair), actor: { ...activity.actor, id: `a${n}` } })), sample: { actors: [stripAna, stripBen, stripDee], featured: [fair, fair, fair] }, distinct: { actors: 3, featured: 3 } } })), null);
     // Jasper (ui#27): "+N" opens the group like "Show all N"; a static group keeps a plain tile.
     const six = { ...group, count: 6, children: [stripPhoto(1), stripAna, stripBen, stripPhoto(2), stripPhoto(3), stripPhoto(4)].map((object, n) => stripMember(n, object)), children_truncated: false, sample: { actors: group.sample.actors } };
     const live = raw('FeedGroup', { item: six });
@@ -964,13 +977,16 @@ test("a stored or custom-slot Image stands for its entity in a group's strip", (
     assert.match(html, /src="\/chart\.svg"/);
 });
 
-test('expanding a group keeps its rail faces and strip in place', () => {
+test('expanding a group hides its strip and keeps its rail faces in place (ui#47)', () => {
     const item = { ...group, count: 2, headline_template: null, children: [stripMember(1, stripPhoto(1)), stripMember(2, stripPhoto(2))], sample: { actors: [person('A'), person('B')] } };
-    const head = raw('FeedGroup', { item, rail: 'actor', collapsed: false }).split('sf-children')[0];
-    assert.match(head, /src="\/p1\.jpg"/);
-    assert.match(head, /sf-media-strip /);
-    assert.equal((head.match(/sf-avatar--pair/g) ?? []).length, 2);
-    assert.doesNotMatch(head, /:has\(&gt;\.sf-disclosure\[open\]\)&gt;\.sf-media-strip\]:hidden/);
+    for (const interactive of [true, false]) {
+        const html = raw('FeedGroup', { item, rail: 'actor', collapsed: false, interactive });
+        const head = html.split('sf-children')[0];
+        assert.doesNotMatch(head, /sf-media-strip /);
+        assert.equal((head.match(/sf-avatar--pair/g) ?? []).length, 2);
+        assert.match(html, /src="\/p1\.jpg"/, 'the members still draw their pictures');
+    }
+    assert.match(raw('FeedGroup', { item, rail: 'actor', collapsed: true }), /sf-media-strip /);
 });
 
 test('FeedStream reads a whole page: core #95 JSON under data, the older items envelope, or a plain list', () => {
@@ -990,10 +1006,10 @@ test('a group strip reads core #93\'s sample.featured, else each member\'s featu
     const draw = (item) => stripTiles(raw('FeedGroup', { item }));
     const members = [stripPhoto(1), stripPhoto(2), stripPhoto(3), stripPhoto(4), stripPhoto(5)].map((object, n) => stripMember(n, object));
     // sample.featured wins over the members' objects, and distinct.featured counts the +N.
-    assert.deepEqual((draw({ ...group, count: 9, children: members, sample: { actors: group.sample.actors, featured: [stripAna, stripBen, stripPhoto(7)] }, distinct: { actors: 1, featured: 7 } })).tiles, ['/ana.jpg', 'tile:BO', '/p7.jpg', '+4']);
+    assert.deepEqual((draw({ ...group, count: 9, children: members, sample: { actors: group.sample.actors, featured: [stripAna, stripBen, stripPhoto(7)] }, distinct: { actors: 1, featured: 7 } })).tiles, ['name:Ana Silva', 'name:Ben Okafor', '/p7.jpg', '+4']);
     // Without it, each member's featured role (storyfeed/storyfeed#76): its target here, nothing when null.
     const featuring = [{ ...stripMember(0, stripPhoto(1)), featured: 'target', target: stripBen }, { ...stripMember(1, stripPhoto(2)), featured: null }, stripMember(2, stripPhoto(3))];
-    assert.deepEqual((draw({ ...group, count: 3, children: featuring, sample: { actors: group.sample.actors } })).tiles, ['tile:BO', '/p3.jpg', '+1']);
+    assert.deepEqual((draw({ ...group, count: 3, children: featuring, sample: { actors: group.sample.actors } })).tiles, ['name:Ben Okafor', '/p3.jpg', '+1']);
 });
 
 test('rail size variables set around a feed or a lone row reach the rail', () => {

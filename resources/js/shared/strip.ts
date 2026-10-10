@@ -3,21 +3,25 @@ import { entityLink, type ResolvedLink } from './link';
 import type { ActivityNode, FeedEntity, GroupNode } from './types';
 
 /**
- * A group's strip: one tile per member activity, each the thumbnail of what
- * that activity features (ui#27). Mirrors `Strip::of()`.
+ * A group's strip: one tile per member activity, previewing what that member's
+ * expanded row shows (ui#47). Mirrors `Strip::of()`.
  *
- * A tile is the featured entity's picture (its Image body, else its icon),
- * else its avatar: the initials on the colour core derives for every entity.
- * So a member never leaves a blank. Every tile is the same rounded square,
- * whether it stands for a person or a thing.
+ * A tile only shows what the row below draws. A member whose row draws a
+ * picture (its featured entity's Image body) gets that picture; every other
+ * member gets a quiet name tile, its featured entity's label, which the
+ * member's headline names. Never initials, and an icon the entity declares
+ * counts only when an Image body draws it. Every tile is the same rounded
+ * square.
  */
 export type StripTile = {
     entity: FeedEntity;
-    /** The picture, or null for an avatar tile (initials on the entity's colour). */
+    /** The picture, or null for a name tile (the entity's label). */
     image: Record<string, any> | null;
+    /** What a name tile reads. */
+    label: string | null;
     href: string | null;
     linkAttributes?: Record<string, unknown>;
-    /** The entity's whole link (modal included), for an avatar tile's anchor. */
+    /** The entity's whole link (modal included), for a name tile's anchor. */
     link?: ResolvedLink | null;
 };
 
@@ -61,10 +65,9 @@ export function stripEntities(group: GroupNode): { entities: FeedEntity[]; total
 
 function tileOf(entity: FeedEntity): StripTile {
     const link = entityLink(entity);
-    const icon = entity.tombstone ? null : entity.media?.icon;
-    const image = imageOf(entity) ?? (icon?.src ? { ...icon, alt: icon.alt ?? entity.label ?? '' } : null);
+    const label = typeof entity.label === 'string' && entity.label.trim() !== '' ? entity.label : null;
 
-    return { entity, image, href: link?.href ?? null, linkAttributes: link?.attributes, link };
+    return { entity, image: imageOf(entity), label, href: link?.href ?? null, linkAttributes: link?.attributes, link };
 }
 
 /** What makes two tiles the same picture: its src, else the entity it stands for. */
@@ -74,12 +77,13 @@ function sameness(tile: StripTile): string {
 
 /**
  * The tiles and the "+N" count, or null when the strip would show nothing new:
- * no featured entity, or every tile the same picture. Up to four tiles; past
- * that, three and a "+N" tile counting the members not shown.
+ * no featured entity, or every tile the same. Up to four tiles; past that,
+ * three and a "+N" tile counting the members not shown. A member with neither
+ * a picture nor a label has nothing to preview, so the "+N" counts it.
  */
 export function strip(group: GroupNode): { tiles: StripTile[]; overflow: number } | null {
     const { entities, total } = stripEntities(group);
-    const all = entities.map(tileOf);
+    const all = entities.map(tileOf).filter((tile) => tile.image || tile.label);
     if (new Set(all.map(sameness)).size < 2) return null;
 
     const tiles = all.slice(0, total > STRIP_SLOTS ? STRIP_SLOTS - 1 : STRIP_SLOTS);
