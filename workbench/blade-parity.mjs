@@ -308,8 +308,8 @@ try {
                         const selectors = {
                             badge: '.example:has(>h2:text-is("actor")) .sf-row',
                             child: '.example:has(>h2:text-is("Actor parent with glyph-only children")) .sf-row',
-                            dot: '.example:has(>h2:text-is("Per-item divider")) .sf-divider',
-                            branch: '.example:has(>h2:text-is("Branch divider (extension)")) .sf-divider',
+                            branch: '.example:has(>h2:text-is("Per-item divider")) .sf-divider',
+                            dot: '.example:has(>h2:text-is("Dot divider (option)")) .sf-divider',
                         };
                         for (const [joint, selector] of Object.entries(selectors)) {
                             const target = frames[i].locator(selector).first();

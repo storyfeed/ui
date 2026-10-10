@@ -21,10 +21,10 @@ export interface FeedStreamProps extends NodeProps {
 function Divider({ label, style }: { label: string; style: 'dot' | 'branch' }) {
     return (
         <div
-            className={`sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail>div:last-child]:mt-1.25 ${style === 'branch' ? 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-5.5' : 'sf-divider--dot'}`}
+            className={`sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail>div:last-child]:mt-1.25 ${style === 'dot' ? 'sf-divider--dot' : 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-5.5'}`}
         >
             <div className="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
-                {style === 'branch' ? (
+                {style !== 'dot' ? (
                     <svg
                         aria-hidden="true"
                         className="sf-rail__branch absolute top-0.75 left-[calc(50%-var(--spacing)*0.1875)] h-5.5 w-4 overflow-visible fill-none stroke-muted-foreground stroke-[1.5] [stroke-linecap:round]"
@@ -62,7 +62,7 @@ export default function FeedStream({
     rail,
     childRail,
     dividers = {},
-    dividerStyle = 'dot',
+    dividerStyle = 'branch',
     onLoadMore,
     empty = 'No activity yet.',
     ...renderers

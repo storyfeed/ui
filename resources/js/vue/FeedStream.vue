@@ -32,7 +32,7 @@ const props = withDefaults(
          * as a node on the rail rather than a heading above it.
          */
         dividers?: Record<string, string>;
-        /** How a divider meets the rail: a `dot` on it, or a `branch` off it. */
+        /** How a divider meets the rail: a `branch` off it (the default), or a `dot` on it. */
         dividerStyle?: 'dot' | 'branch';
     }>(),
     {
@@ -45,7 +45,7 @@ const props = withDefaults(
         collapsed: null,
         rail: null,
         dividers: () => ({}),
-        dividerStyle: 'dot',
+        dividerStyle: 'branch',
     },
 );
 
@@ -70,12 +70,12 @@ const days = useFeedDays(toRef(() => nodes.value));
                     v-if="grouped"
                     :class="[
                         'sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail>div:last-child]:mt-1.25',
-                        dividerStyle === 'branch' ? 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-5.5' : 'sf-divider--dot',
+                        dividerStyle === 'dot' ? 'sf-divider--dot' : 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-5.5',
                     ]"
                 >
                     <div class="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
                         <svg
-                            v-if="dividerStyle === 'branch'"
+                            v-if="dividerStyle !== 'dot'"
                             aria-hidden="true"
                             class="sf-rail__branch absolute top-0.75 left-[calc(50%-var(--spacing)*0.1875)] h-5.5 w-4 overflow-visible fill-none stroke-muted-foreground stroke-[1.5] [stroke-linecap:round]"
                             width="16"
@@ -99,12 +99,12 @@ const days = useFeedDays(toRef(() => nodes.value));
                         v-if="dividers[item.id]"
                         :class="[
                             'sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail>div:last-child]:mt-1.25',
-                            dividerStyle === 'branch' ? 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-5.5' : 'sf-divider--dot',
+                            dividerStyle === 'dot' ? 'sf-divider--dot' : 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-5.5',
                         ]"
                     >
                         <div class="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
                             <svg
-                                v-if="dividerStyle === 'branch'"
+                                v-if="dividerStyle !== 'dot'"
                                 aria-hidden="true"
                                 class="sf-rail__branch absolute top-0.75 left-[calc(50%-var(--spacing)*0.1875)] h-5.5 w-4 overflow-visible fill-none stroke-muted-foreground stroke-[1.5] [stroke-linecap:round]"
                                 width="16"

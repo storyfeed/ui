@@ -14,7 +14,7 @@ light/dark themes and collapsed/expanded groups are exercised with a pinned
 clock. All shared row/head/meta/body/disc rectangles must agree within 0.05px;
 keyboard disclosure and horizontal overflow are checked. Shared live avatar
 background and text colours are compared against the reference in both themes.
-`geometry.json` records measurements. The extra branch section appears only in the new kit.
+`geometry.json` records measurements. The extra dot divider section appears only in the new kit.
 
 The sample payload is the docs kit's production example, copied unchanged.
 Additional fixtures cover generic bodies, the four rails and per-item dividers.
@@ -36,7 +36,8 @@ Intentional differences from the legacy reference:
   The old stylesheet relies on its host to restore markers.
 - Focus rings use the ring token. Intent strings remain inert until the app
   adds its own mapping; the source's site-specific intent palettes are excluded.
-- Branch dividers are an additive extension taken from the website kit.
+- Dividers branch off the rail by default, the curve taken from the website kit;
+  the reference's dot remains as `divider-style="dot"`.
 
 There are no residual kit CSS rules. The CSS here contains only token definitions
 and workbench framing; all distributed kit presentation is in Tailwind utilities.

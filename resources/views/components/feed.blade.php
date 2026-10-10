@@ -1,4 +1,4 @@
-@props(['page' => null, 'items' => null, 'nextCursor' => null, 'cursorName' => 'cursor', 'grouped' => true, 'rail' => null, 'childRail' => null, 'dividers' => [], 'dividerStyle' => 'dot', 'interactive' => true, 'collapsed' => null, 'timezone' => null, 'renderers' => []])
+@props(['page' => null, 'items' => null, 'nextCursor' => null, 'cursorName' => 'cursor', 'grouped' => true, 'rail' => null, 'childRail' => null, 'dividers' => [], 'dividerStyle' => 'branch', 'interactive' => true, 'collapsed' => null, 'timezone' => null, 'renderers' => []])
 @php
     // Any page core reads: a FeedPage (core <=0.18), a collection or paginator (storyfeed/storyfeed#95), or its JSON.
     $read = \Storyfeed\Ui\Support\Page::read($page);

@@ -38,7 +38,7 @@ try {
                 return { reference: measure('reference'), converted: measure('converted') };
             });
             measurements.push({ width, theme, ...geometry });
-            // The final branch example is the only additional section in the new pane.
+            // The dot divider example is the only additional section in the new pane.
             const common = geometry.converted.slice(0, geometry.reference.length);
             for (let i = 0; i < common.length; i++) {
                 assert.equal(common[i].hook, geometry.reference[i].hook);

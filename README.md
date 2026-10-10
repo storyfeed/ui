@@ -333,7 +333,7 @@ utilities to the published `components/glyph.blade.php` view.
 
 ```blade
 <x-storyfeed::feed :page="$page" rail="actor"
-    :dividers="[$timelineId => 'Timeline']" divider-style="branch" />
+    :dividers="[$timelineId => 'Timeline']" />
 ```
 
 `rail` accepts `actor` (face + glyph badge), `activity` (glyph + face badge),
@@ -356,7 +356,8 @@ strict script CSP can supply an avatar renderer with their own fallback.
 
 Day dividers are on by default; `:grouped="false"` hides them. Per-item
 `dividers` are keyed by public item id and work in either mode.
-`divider-style="dot|branch"` applies to both. `timezone` controls the display
+Both draw as a branch: a curve off the rail into the label.
+`divider-style="dot"` draws a dot on the rail instead, for either. `timezone` controls the display
 zone for days, the timestamp ladder, its absolute hover title and time ranges.
 Timestamps are rendered on the server; the host owns any live refresh.
 

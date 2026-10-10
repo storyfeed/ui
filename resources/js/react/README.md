@@ -123,8 +123,9 @@ rail faces in place. `FeedMediaStrip` draws tiles built with `strip()`.
 Summary rendering has been removed from all kits, mirroring core. Unknown extra
 payload keys are ignored.
 
-`dividers={{ [itemId]: 'History' }}` draws labels before items;
-`dividerStyle="dot"` or `"branch"` selects the joint. Root utility properties
+`dividers={{ [itemId]: 'History' }}` draws labels before items. Day headings
+and these labels branch off the rail by default; `dividerStyle="dot"` draws a
+dot on the rail instead. Root utility properties
 `--sf-font-size`, `--sf-prose-max-h`, `--sf-gutter`, `--sf-gap`, `--sf-disc`, `--sf-badge` and `--sf-badge-face` match Vue.
 Glyph intent stays an app-owned `data-sf-intent`; edit `FeedIcon.tsx` to change
 icon mapping. Avatars read `media.initials` and `media.color` first, then the

@@ -92,8 +92,8 @@ closes it like "Show all N". A strip of identical tiles is
 skipped. It stays in place when the group expands.
 
 `grouped=false` hides day headings. `dividers` maps item IDs to labels to render
-before those items. `divider-style="dot"` is the default;
-`divider-style="branch"` draws a curve off the rail. `isLast` suppresses the
+before those items. Dividers branch off the rail by default, a curve into the
+label; `divider-style="dot"` draws a dot on the rail instead. `isLast` suppresses the
 trailing rail; a next cursor keeps it connected to the pager.
 
 `--sf-font-size` (default `1rem`) scales the whole feed, and every row sizes

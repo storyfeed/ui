@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- The branch divider is now the default, in Blade, Vue and React (ui#34): day headings (Today, Yesterday, dates) and per-item `dividers` draw as a curve off the rail into the label, the joint storyfeed.dev uses, instead of a dot on the rail. Pass `divider-style="dot"` (Blade, Vue) or `dividerStyle="dot"` (React) for the old look.
+
 ## v0.7.0 - 2026-10-10
 
 ### Added
