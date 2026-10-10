@@ -34,7 +34,7 @@ const tileClass = 'mt-0! aspect-square! size-full! max-w-none! rounded-lg!'
                 :is="linkComponent"
                 v-else-if="tile.link"
                 v-bind="linkProps(tile.link, linkComponent)"
-                class="sf-media-strip__link flex rounded-lg focus-visible:outline-2 focus-visible:outline-ring"
+                class="sf-media-strip__link flex rounded-lg no-underline focus-visible:outline-2 focus-visible:outline-ring"
             ><span class="sf-media-strip__name flex aspect-square min-w-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-background p-1 text-center size-full"><span class="line-clamp-3 text-[length:--spacing(2.75)] leading-[1.3] break-words text-muted-foreground [hyphens:auto]">{{ tile.label }}</span></span></component>
             <span v-else class="sf-media-strip__name flex aspect-square min-w-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-background p-1 text-center"><span class="line-clamp-3 text-[length:--spacing(2.75)] leading-[1.3] break-words text-muted-foreground [hyphens:auto]">{{ tile.label }}</span></span>
         </template>

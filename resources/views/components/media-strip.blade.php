@@ -18,7 +18,7 @@
 @else<x-storyfeed::media :image="$tile['image']" :href="$tile['href'] ?? null" :link-attributes="$tile['attributes'] ?? []" :class="$classes" />
 @endif
 @elseif (! empty($tile['href']))
-        <a href="{{ $tile['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag(\Storyfeed\Ui\Support\LinkAttributes::filter($tile['attributes'] ?? [])))->class('sf-media-strip__link flex rounded-lg focus-visible:outline-2 focus-visible:outline-ring') }}><span class="sf-media-strip__name flex aspect-square min-w-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-background p-1 text-center size-full"><span class="line-clamp-3 text-[length:--spacing(2.75)] leading-[1.3] break-words text-muted-foreground [hyphens:auto]">{{ $tile['label'] ?? '' }}</span></span></a>
+        <a href="{{ $tile['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag(\Storyfeed\Ui\Support\LinkAttributes::filter($tile['attributes'] ?? [])))->class('sf-media-strip__link flex rounded-lg no-underline focus-visible:outline-2 focus-visible:outline-ring') }}><span class="sf-media-strip__name flex aspect-square min-w-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-background p-1 text-center size-full"><span class="line-clamp-3 text-[length:--spacing(2.75)] leading-[1.3] break-words text-muted-foreground [hyphens:auto]">{{ $tile['label'] ?? '' }}</span></span></a>
 @else<span class="sf-media-strip__name flex aspect-square min-w-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-background p-1 text-center"><span class="line-clamp-3 text-[length:--spacing(2.75)] leading-[1.3] break-words text-muted-foreground [hyphens:auto]">{{ $tile['label'] ?? '' }}</span></span>
 @endif
 @endforeach
