@@ -113,6 +113,49 @@ try {
                 assert.deepEqual(rails.defaults, { rail: rails.em * 2, gap: rails.em * 0.75, disc: rails.em * 2, badge: rails.em * 0.875, face: rails.em * 1.125 }, `${renderers[i]} ${text}: rail sizes default from --sf-font-size`);
                 assert.deepEqual(rails.fed, { rail: rails.rem * 4, gap: rails.rem * 2, disc: rails.rem * 3, badge: rails.rem * 1.25, face: rails.rem * 1.5 }, `${renderers[i]} ${text}: rail sizes set on the feed reach its rows`);
                 assert.deepEqual({ ...rails.hosted, badge: undefined, face: undefined }, { rail: rails.rem * 4, gap: rails.rem * 2, disc: rails.rem * 3, badge: undefined, face: undefined }, `${renderers[i]} ${text}: rail sizes set around a row outside a feed reach it`);
+                // ui#41: initials and icons are a fraction of their own circle, and a badge's centre stays where its default size puts it, so a larger one grows outward.
+                const glyphs = await frames[i].evaluate(() => {
+                    const vars = { '--sf-disc': '3rem', '--sf-badge': '1.25rem', '--sf-badge-face': '1.5rem' };
+                    const measure = () => {
+                        const box = element => element.getBoundingClientRect();
+                        // The first one drawn: collapsed members and dense rows hide some.
+                        const first = selector => [...document.querySelectorAll(selector)].find(element => box(element).width > 0 && (!element.querySelector('svg') || element.querySelector('svg').getBoundingClientRect().width > 0));
+                        const badge = selector => {
+                            const element = first(selector), disc = box(element.closest('.sf-rail__disc')), own = box(element);
+                            // The centre's distance in from the disc's bottom-right corner.
+                            return { size: own.width, svg: element.querySelector('svg')?.getBoundingClientRect().width, font: parseFloat(getComputedStyle(element).fontSize), x: disc.right - (own.left + own.width / 2), y: disc.top + disc.width - (own.top + own.height / 2) };
+                        };
+                        const initials = first('.sf-rail__disc > .sf-avatar--md'), icon = first('.sf-rail__disc > .sf-icon:not(.sf-icon--blank)');
+                        return {
+                            disc: box(initials).width, initials: parseFloat(getComputedStyle(initials).fontSize), icon: box(icon.querySelector('svg')).width,
+                            badge: badge('.sf-rail__disc:not(:has(>.sf-avatars)):has(>.sf-avatar--md) > .sf-badge'), face: badge('.sf-avatar--badge'), pair: badge('.sf-rail__disc:has(>.sf-avatars) > .sf-badge'),
+                        };
+                    };
+                    const feeds = [...document.querySelectorAll('.sf-feed')];
+                    const defaults = measure();
+                    feeds.forEach(feed => Object.entries(vars).forEach(([name, value]) => feed.style.setProperty(name, value)));
+                    const fed = measure();
+                    feeds.forEach(feed => Object.keys(vars).forEach(name => feed.style.removeProperty(name)));
+                    return { defaults, fed, rem: parseFloat(getComputedStyle(document.documentElement).fontSize), em: parseFloat(getComputedStyle(document.querySelector('.sf-feed')).fontSize) };
+                });
+                const near = (actual, expected, message) => assert.ok(Math.abs(actual - expected) < 0.05, `${renderers[i]} ${text}: ${message} (${actual} ≠ ${expected})`);
+                for (const [state, disc, badge, face] of [['defaults', glyphs.em * 2, glyphs.em * 0.875, glyphs.em * 1.125], ['fed', glyphs.rem * 3, glyphs.rem * 1.25, glyphs.rem * 1.5]]) {
+                    const m = glyphs[state], pair = badge * 11 / 14;
+                    near(m.disc, disc, `${state}: disc`);
+                    near(m.initials, disc * 3 / 8, `${state}: a disc's initials are 3/8 of it`);
+                    near(m.icon, disc * 7 / 16, `${state}: a disc's icon is 7/16 of it`);
+                    near(m.badge.size, badge, `${state}: badge`);
+                    near(m.badge.svg, badge * 5 / 7, `${state}: a badge's icon is 5/7 of it`);
+                    near(m.face.size, face, `${state}: face badge`);
+                    near(m.face.font, face / 2, `${state}: a face badge's initials are half of it`);
+                    near(m.pair.size, pair, `${state}: a pair's badge is 11/14 of --sf-badge`);
+                    near(m.pair.svg, pair * 8 / 11, `${state}: a pair's badge icon is 8/11 of it`);
+                    // Each badge's centre sits as far in from the disc's corner as its default size puts it, whatever its size.
+                    for (const [name, x, y] of [['badge', 0.4375, 0.3125], ['face', 0.5625, 0.4375], ['pair', 0.34375, 0.21875]]) {
+                        near(m[name].x, glyphs.em * x, `${state}: the ${name}'s centre is anchored left of the disc's right edge`);
+                        near(m[name].y, glyphs.em * y, `${state}: the ${name}'s centre is anchored above the disc's bottom edge`);
+                    }
+                }
             }
             // These fixtures assert pixel geometry at the default text size.
             if (text === 'default') {

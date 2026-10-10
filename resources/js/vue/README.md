@@ -108,6 +108,9 @@ either, for example `style="--sf-gutter: 2.5rem"`; unset, they scale with
 `--sf-font-size`. The primary avatar/icon
 size follows `--sf-disc`; stacked faces share that size and overlap downward
 along the rail, keeping the headline aligned with single-actor rows.
+Initials and icons scale with the disc or badge they sit in, and a badge
+keeps its centre where its default size puts it, so a larger one grows
+outward from the disc's corner.
 The `sf-*` classes remain semantic hooks; styling lives in utilities.
 
 Metadata follows the headline: date, then unused instrument/origin/result/

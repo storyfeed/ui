@@ -343,8 +343,8 @@ subject, then a blank disc. Several actors draw as a diagonal pair inside one
 disc's square: the first actor in front at the bottom-right, with the glyph
 badge, and the second behind at the top-left, each 2/3 of `--sf-disc` with
 one-letter initials and a ring in the page colour; the glyph badge on a pair
-is smaller (11/32 of the disc) to balance the smaller faces, in the same
-place as on every other row. Below a 1.5rem (24px) disc only the
+is smaller (11/14 of `--sf-badge`, 11/32 of the default disc) to balance
+the smaller faces, centred where it sits by default like every other badge. Below a 1.5rem (24px) disc only the
 front face shows. The count stays in the headline, and several actors never
 take a face badge. Avatars draw
 `media.icon`, else `media.initials` on a `media.color` disc (black or white

@@ -782,7 +782,7 @@ test('actor rails show glyph badges and childRail independently selects glyph-on
     assert.match(front, /right-0 bottom-0 z-10/);
     assert.match(front, /size-\[calc\(var\(--sf-disc-v\)\*2\/3\)\]/);
     // A pair's verb badge is smaller, in the same place (ui#25 (a)).
-    assert.match(await renderRaw('/resources/js/vue/FeedGroup.vue', { item: pair, rail: 'actor' }), /\[&amp;:has\(&gt;\.sf-avatars\)&gt;\.sf-badge\]:\[--sf-badge-v:--spacing\(2\.75\)\]/);
+    assert.match(await renderRaw('/resources/js/vue/FeedGroup.vue', { item: pair, rail: 'actor' }), /\[&amp;:has\(&gt;\.sf-avatars\)&gt;\.sf-badge\]:\[--sf-badge-v:calc\(var\(--sf-badge,--spacing\(3\.5\)\)\*11\/14\)\] \[&amp;:has\(&gt;\.sf-avatars\)&gt;\.sf-badge\]:\[--sf-badge-anchor-v:--spacing\(2\.75\)\]/);
     assert.doesNotMatch(await renderRaw('/resources/js/vue/FeedGroup.vue', { item: pair, rail: 'activity' }), /sf-avatar--badge/);
 });
 
@@ -961,5 +961,21 @@ test('rail size variables set around a feed or a lone row reach the rail', async
             assert.ok(root.includes(`[--sf-${name}-v:var(--sf-${name},--spacing(${size}))]`), `${path}: --sf-${name} falls back to ${size} steps`);
         }
         assert.doesNotMatch(await renderRaw(path, props), /\[--sf-(gutter|gap|disc|badge|badge-face):/, `${path}: no element redeclares a public size variable`);
+    }
+});
+
+test('initials and icons size from their own circle, and a badge grows outward from its corner', async () => {
+    const attr = text => text.replaceAll('&', '&amp;').replaceAll('>', '&gt;');
+    const actor = await renderRaw('/resources/js/vue/FeedItem.vue', { item: activity, rail: 'actor' });
+    const disc = await renderRaw('/resources/js/vue/FeedItem.vue', { item: activity, rail: 'activity' });
+    // ui#41: each glyph is a fraction of the circle it sits in, matching the default sizes exactly (3/8 of a 2rem disc is text-xs).
+    for (const [html, classes] of [
+        [actor, ['sf-avatar--md size-[var(--sf-disc,--spacing(8))] text-[length:calc(var(--sf-disc,--spacing(8))*3/8)] leading-(--text-xs--line-height)', '[&_svg]:size-[calc(var(--sf-badge-v)*5/7)]', 'sf-badge absolute z-30 [--sf-badge-anchor-v:--spacing(3.5)] ']],
+        [disc, ['[&_svg]:size-[calc(var(--sf-disc,--spacing(8))*7/16)]', 'text-[length:calc(var(--sf-badge-v)/2)]', '[--sf-badge-v:var(--sf-badge-face-v)] [--sf-badge-anchor-v:--spacing(4.5)] absolute ']],
+    ]) {
+        for (const name of classes) assert.ok(html.includes(attr(name)), name);
+        // A badge's centre stays where its default size puts it, so a larger badge grows outward instead of over the face.
+        assert.ok(html.includes(attr('top-[calc(var(--sf-disc-v)+--spacing(0.5)-(var(--sf-badge-anchor-v)+var(--sf-badge-v))/2)] left-[calc(50%+var(--sf-disc-v)/2-(var(--sf-badge-anchor-v)+var(--sf-badge-v))/2)]')));
+        for (const fixed of ['[&_svg]:size-3.5', '[&_svg]:size-2.5', 'text-[length:--spacing(2.25)]']) assert.ok(!html.includes(attr(fixed)), fixed);
     }
 });

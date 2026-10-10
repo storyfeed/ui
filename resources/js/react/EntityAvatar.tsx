@@ -52,11 +52,11 @@ export default function EntityAvatar({
         : declared || entity?.data?.avatar_color || colors[Math.abs(hash) % colors.length];
     const text = declared && darkText(declared) ? 'text-black' : 'text-white';
     const sizes = {
-        md: 'sf-avatar--md size-[var(--sf-disc,--spacing(8))] text-xs',
+        md: 'sf-avatar--md size-[var(--sf-disc,--spacing(8))] text-[length:calc(var(--sf-disc,--spacing(8))*3/8)] leading-(--text-xs--line-height)',
         sm: 'sf-avatar--sm size-6 text-[length:--spacing(2.5)]',
-        pair: 'sf-avatar--pair size-full text-[length:--spacing(2.75)]',
+        pair: 'sf-avatar--pair size-full text-[length:calc(var(--sf-disc-v)*11/32)] @max-[1.5rem]/pair:text-[length:calc(var(--sf-disc-v)*33/64)]',
         tile: 'sf-avatar--tile aspect-square size-full rounded-lg! ring-0! text-[length:--spacing(5)]',
-        badge: 'sf-avatar--badge [--sf-badge-v:var(--sf-badge-face-v)] absolute top-[calc(var(--sf-disc-v)-var(--sf-badge-v)+--spacing(0.5))] left-[calc(50%+var(--sf-disc-v)/2-var(--sf-badge-v))] size-(--sf-badge-v) text-[length:--spacing(2.25)]',
+        badge: 'sf-avatar--badge [--sf-badge-v:var(--sf-badge-face-v)] [--sf-badge-anchor-v:--spacing(4.5)] absolute top-[calc(var(--sf-disc-v)+--spacing(0.5)-(var(--sf-badge-anchor-v)+var(--sf-badge-v))/2)] left-[calc(50%+var(--sf-disc-v)/2-(var(--sf-badge-anchor-v)+var(--sf-badge-v))/2)] size-(--sf-badge-v) text-[length:calc(var(--sf-badge-v)/2)]',
     };
     return (
         <span

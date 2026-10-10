@@ -367,7 +367,7 @@ it('draws several actors as a diagonal pair whose front face keeps the verb badg
     expect(array_map(fn ($face) => [$face[1], $face[2]], $faces))->toBe([['Ana', 'A'], ['Ben', 'B']])
         ->and(explode('sf-avatars__face', $rail)[1])->toContain('right-0 bottom-0 z-10')
         ->and(substr_count($rail, 'sf-badge absolute'))->toBe(1)
-        ->and($rail)->toContain('@container/pair', '[&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-v:--spacing(2.75)]')->not->toContain('sf-avatar--badge');
+        ->and($rail)->toContain('@container/pair', '[&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-v:calc(var(--sf-badge,--spacing(3.5))*11/14)]', '[&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-anchor-v:--spacing(2.75)]')->not->toContain('sf-avatar--badge');
     // A face badge never stands for several actors.
     $rail = explode('class="sf-body', Blade::render('<x-storyfeed::feed :items="[$item]" rail="activity" />', compact('item')))[0];
     expect($rail)->not->toContain('sf-avatar--badge');
@@ -400,3 +400,18 @@ it('lets rail size variables set around a feed or a lone row reach the rail', fu
     'group' => '<x-storyfeed::group :group="$item" />',
     'activity' => '<x-storyfeed::activity :activity="$child" />',
 ]);
+
+it('sizes initials and icons from their own circle and grows a badge outward from its corner', function () {
+    $item = ['kind' => 'activity', 'headline' => 'Ana posted', 'glyph' => 'file-up', 'actor' => ['id' => 'a', 'label' => 'Ana Lima']];
+    $actor = html_entity_decode(explode('class="sf-body', Blade::render('<x-storyfeed::feed :items="[$item]" rail="actor" />', compact('item')))[0]);
+    $activity = html_entity_decode(explode('class="sf-body', Blade::render('<x-storyfeed::feed :items="[$item]" rail="activity" />', compact('item')))[0]);
+
+    // ui#41: each glyph is a fraction of the circle it sits in, matching the default sizes exactly (3/8 of a 2rem disc is text-xs).
+    expect($actor)->toContain('sf-avatar--md size-[var(--sf-disc,--spacing(8))] text-[length:calc(var(--sf-disc,--spacing(8))*3/8)] leading-(--text-xs--line-height)', '[&_svg]:size-[calc(var(--sf-badge-v)*5/7)]')
+        ->and($activity)->toContain('[&_svg]:size-[calc(var(--sf-disc,--spacing(8))*7/16)]', 'text-[length:calc(var(--sf-badge-v)/2)]')
+        ->and($actor.$activity)->not->toContain('[&_svg]:size-3.5', '[&_svg]:size-2.5', 'text-[length:--spacing(2.25)]');
+    // A badge's centre stays where its default size puts it, so a larger badge grows outward instead of over the face.
+    $anchor = 'top-[calc(var(--sf-disc-v)+--spacing(0.5)-(var(--sf-badge-anchor-v)+var(--sf-badge-v))/2)] left-[calc(50%+var(--sf-disc-v)/2-(var(--sf-badge-anchor-v)+var(--sf-badge-v))/2)]';
+    expect($actor)->toContain('sf-badge absolute z-30 [--sf-badge-anchor-v:--spacing(3.5)] '.$anchor)
+        ->and($activity)->toContain('[--sf-badge-v:var(--sf-badge-face-v)] [--sf-badge-anchor-v:--spacing(4.5)] absolute '.$anchor);
+});

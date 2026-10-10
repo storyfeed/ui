@@ -45,13 +45,13 @@ export default function Rail({
             <FeedIcon icon={glyph} intent={intent} />
         ) : (
             <span
-                className="sf-icon flex size-[var(--sf-disc,--spacing(8))] shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted-foreground [&_svg]:size-3.5 sf-icon--blank border-dashed"
+                className="sf-icon flex size-[var(--sf-disc,--spacing(8))] shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted-foreground [&_svg]:size-[calc(var(--sf-disc,--spacing(8))*7/16)] sf-icon--blank border-dashed"
                 aria-hidden="true"
             />
         );
     return (
         <div className="sf-rail box-content flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
-            <div className="sf-rail__disc relative flex w-(--sf-disc-v) shrink-0 [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-v:--spacing(2.75)] [&:has(>.sf-avatars)>.sf-badge_svg]:size-2">
+            <div className="sf-rail__disc relative flex w-(--sf-disc-v) shrink-0 [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-v:calc(var(--sf-badge,--spacing(3.5))*11/14)] [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-anchor-v:--spacing(2.75)] [&:has(>.sf-avatars)>.sf-badge_svg]:size-[calc(var(--sf-badge-v)*8/11)]">
                 {disc}
                 {slots.badge === 'activity' ? (
                     <FeedIcon icon={glyph} variant="badge" />

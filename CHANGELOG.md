@@ -5,6 +5,7 @@
 ### Fixed
 
 - `--sf-gutter`, `--sf-gap`, `--sf-disc`, `--sf-badge` and `--sf-badge-face` set on the feed, a lone row or any element around them now reach the rail, in Blade, Vue and React (ui#36). The feed and every row redeclared them with their own defaults, so a value set higher up never applied: `--sf-gutter: 4rem` on the feed left the rail at 32px. Unset, they still default from `--sf-font-size`.
+- Initials and icons scale with `--sf-disc`, `--sf-badge` and `--sf-badge-face`, in Blade, Vue and React (ui#41). They kept a fixed size, so a smaller disc clipped its initials, and a badge, anchored by its bottom-right corner, grew inward over the disc: at `--sf-badge: 1.25rem` it cut the avatar into a crescent. Each glyph is now a fraction of its own circle, and each badge keeps its centre where its default size puts it, so a larger one grows outward from the disc's corner; a pair's badge is 11/14 of `--sf-badge`. At the default sizes nothing moves.
 
 ### Changed
 

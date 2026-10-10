@@ -16,8 +16,8 @@
 @endphp
 <span {{ $attributes->class([
     'sf-icon-slot',
-    'sf-icon flex size-[var(--sf-disc,--spacing(8))] shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted-foreground [&_svg]:size-3.5' => $variant !== 'badge',
-    'sf-badge absolute z-30 top-[calc(var(--sf-disc-v)-var(--sf-badge-v)+--spacing(0.5))] left-[calc(50%+var(--sf-disc-v)/2-var(--sf-badge-v))] flex size-(--sf-badge-v) items-center justify-center rounded-full bg-background text-muted-foreground ring-[length:--spacing(0.375)] ring-background [&_svg]:size-2.5' => $variant === 'badge',
+    'sf-icon flex size-[var(--sf-disc,--spacing(8))] shrink-0 items-center justify-center rounded-full border border-border bg-background text-muted-foreground [&_svg]:size-[calc(var(--sf-disc,--spacing(8))*7/16)]' => $variant !== 'badge',
+    'sf-badge absolute z-30 [--sf-badge-anchor-v:--spacing(3.5)] top-[calc(var(--sf-disc-v)+--spacing(0.5)-(var(--sf-badge-anchor-v)+var(--sf-badge-v))/2)] left-[calc(50%+var(--sf-disc-v)/2-(var(--sf-badge-anchor-v)+var(--sf-badge-v))/2)] flex size-(--sf-badge-v) items-center justify-center rounded-full bg-background text-muted-foreground ring-[length:--spacing(0.375)] ring-background [&_svg]:size-[calc(var(--sf-badge-v)*5/7)]' => $variant === 'badge',
     'sf-icon--blank border-dashed' => $glyph === null,
 ])->merge(['data-sf-intent' => $variant === 'disc' ? $intent : null, 'data-sf-glyph' => $glyph]) }} aria-hidden="true">
 @if ($glyph !== null)
