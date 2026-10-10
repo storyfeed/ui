@@ -168,3 +168,16 @@ export interface FeedPayload {
      */
     sync_token: string | null;
 }
+
+/**
+ * A page as core reads it from storyfeed/storyfeed#95: Laravel's cursor
+ * paginator JSON, the nodes under `data`, with `payload_version` and
+ * `sync_token` beside Laravel's keys. Read either shape with `readPage()`.
+ */
+export interface FeedPagePayload {
+    data: FeedNode[];
+    next_cursor: string | null;
+    payload_version?: number;
+    sync_token?: string | null;
+    [key: string]: unknown;
+}

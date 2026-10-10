@@ -1,13 +1,16 @@
 import type { CSSProperties, ReactNode } from 'react';
 import type { FeedNode } from '../shared/types';
+import { readPage, type FeedPageLike } from '../shared/page';
 import FeedNodeView from './FeedNode';
 import type { NodeProps } from './FeedItem';
 import { useFeedDays } from './useRelativeTime';
 export interface FeedStreamProps extends NodeProps {
     className?: string;
     style?: CSSProperties & Record<`--${string}`, string | number>;
-    items: FeedNode[];
+    items?: FeedNode[];
     nextCursor?: string | null;
+    /** A whole page in place of `items` and `nextCursor`: core's JSON, with the nodes under `data` (#95) or `items`. */
+    page?: FeedPageLike;
     loadingMore?: boolean;
     grouped?: boolean;
     dividers?: Record<string, string>;
@@ -49,10 +52,11 @@ function Divider({ label, style }: { label: string; style: 'dot' | 'branch' }) {
     );
 }
 export default function FeedStream({
-    items,
+    items: given,
+    page,
     className = '',
     style,
-    nextCursor = null,
+    nextCursor: givenCursor,
     loadingMore = false,
     grouped = true,
     rail,
@@ -63,6 +67,9 @@ export default function FeedStream({
     empty = 'No activity yet.',
     ...renderers
 }: FeedStreamProps) {
+    const read = readPage(page);
+    const items = given ?? read.items;
+    const nextCursor = givenCursor ?? read.nextCursor;
     const days = useFeedDays(items);
     return (
         <div

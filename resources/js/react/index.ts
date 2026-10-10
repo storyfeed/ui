@@ -16,3 +16,5 @@ export type { FeedRenderProps, NodeProps } from './FeedItem';
 export type { BodyProps } from './body';
 export type * from '../shared/types';
 export * from '../shared/rail';
+export { readPage } from '../shared/page';
+export type { FeedPageLike } from '../shared/page';

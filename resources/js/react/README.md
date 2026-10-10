@@ -34,14 +34,14 @@ starter-kit tokens. The `sf-*` classes remain semantic hooks.
 ```tsx
 import { Link, router } from '@inertiajs/react';
 import { FeedProvider, FeedStream } from '@/components/storyfeed';
-import type { FeedPayload } from '@/components/storyfeed';
+import type { FeedPagePayload, FeedPayload } from '@/components/storyfeed';
 
-export default function History({ feed }: { feed: FeedPayload }) {
+// `feed` is core's page JSON: nodes under `data` from storyfeed/storyfeed#95, under `items` before it.
+export default function History({ feed }: { feed: FeedPagePayload | FeedPayload }) {
     return (
         <FeedProvider FEED_LINK={Link}>
             <FeedStream
-                items={feed.items}
-                nextCursor={feed.next_cursor}
+                page={feed}
                 onLoadMore={() =>
                     router.get('/history', { cursor: feed.next_cursor })
                 }

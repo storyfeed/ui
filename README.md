@@ -121,11 +121,11 @@ React uses the same Tailwind v4 starter-kit tokens and Typography plugin as Vue 
 ```tsx
 import { Link } from '@inertiajs/react';
 import { FeedProvider, FeedStream } from '@/components/storyfeed';
-import type { FeedPayload } from '@/components/storyfeed';
+import type { FeedPagePayload, FeedPayload } from '@/components/storyfeed';
 
-export default function History({ feed }: { feed: FeedPayload }) {
+export default function History({ feed }: { feed: FeedPagePayload | FeedPayload }) {
     return <FeedProvider FEED_LINK={Link}>
-        <FeedStream items={feed.items} nextCursor={feed.next_cursor}
+        <FeedStream page={feed}
             onLoadMore={() => { /* load and append the next page in your app */ }} />
     </FeedProvider>;
 }
@@ -384,8 +384,11 @@ and a "+N" tile counting the members not shown. On a group that can open, the "+
 closes it like "Show all N". A strip of identical tiles is
 skipped. It stays in place when the group expands.
 
-A raw JSON feed can also be rendered with `:items="$payload['items']"` and
-`:next-cursor="$payload['next_cursor']"`; `page` is optional on that path.
+`page` takes whatever core's reads return: core 0.13–0.18's `FeedPage`, or
+from storyfeed/storyfeed#95 the collection from `get()` and the paginators
+from `cursorPaginate()`, `simplePaginate()` and `members()`. A raw JSON page
+works too, with the nodes under `data` (#95) or `items` (before it):
+`:page="$payload"`, or `:items="$nodes"` and `:next-cursor="$cursor"`.
 The `footer` slot replaces the pager (for example, with a Livewire load-more
 control). `divider`, `avatar`, `rail` and `media-strip` are standalone
 components; `media-strip` accepts `tiles` (from `Strip::of()`, or your own

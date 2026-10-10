@@ -12,6 +12,7 @@ use Storyfeed\FeedContext;
 use Storyfeed\FeedEntity;
 use Storyfeed\FeedImage;
 use Storyfeed\FeedMedia;
+use Storyfeed\Ui\Support\Page;
 use Storyfeed\Ui\Tests\TestCase;
 
 /**
@@ -86,7 +87,8 @@ final class StripCasesTest extends TestCase
             Storyfeed::activity('upload', StripFile::create(['name' => "IMG_51{$i}0.jpg", 'kind' => 'photo', 'photo' => $photo]))->by($dev)->to($launch)->publish();
         }
 
-        $items = Storyfeed::feed()->live()->get()->toArray()['items'];
+        // The page's nodes as JSON, whichever shape this core reads (storyfeed/storyfeed#95).
+        $items = json_decode((string) json_encode(Page::read(Storyfeed::feed()->live()->get())['items']), true, flags: JSON_THROW_ON_ERROR);
         $groups = array_values(array_filter($items, fn (array $item) => $item['kind'] === 'group'));
         $this->assertCount(4, $groups, 'every scene is one group');
 

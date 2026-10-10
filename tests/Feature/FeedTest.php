@@ -1,8 +1,11 @@
 <?php
 
+use Illuminate\Pagination\Cursor;
+use Illuminate\Pagination\CursorPaginator;
 use Illuminate\Support\Facades\Blade;
 use Storyfeed\Facades\Story;
 use Storyfeed\Facades\Storyfeed;
+use Storyfeed\Ui\Support\Page;
 use Storyfeed\Ui\Tests\Fixtures\Order;
 use Storyfeed\Ui\Tests\Fixtures\User;
 
@@ -80,7 +83,7 @@ it('draws a repeat group with its members behind a disclosure', function () {
     }
 
     $page = Storyfeed::feed()->live()->get();
-    $group = $page->collect()->sole();
+    $group = page_items($page)->sole();
 
     expect($group->isGroup())->toBeTrue();
 
@@ -99,7 +102,7 @@ it('opens a group with no headline on its members', function () {
     }
 
     $page = Storyfeed::feed()->live()->get();
-    $group = $page->collect()->sole();
+    $group = page_items($page)->sole();
 
     expect($group->headline()->isFallback())->toBeTrue()
         ->and(render_feed($page))
@@ -111,15 +114,17 @@ it('links to older activity with the next cursor, and not from the last page', f
     Storyfeed::activity('place', Order::create(['number' => 'A']))->by($this->dana)->publishedAt(now()->subHour())->publish();
     Storyfeed::activity('ship', Order::create(['number' => 'B']))->by($this->dana)->publish();
 
-    $first = Storyfeed::feed()->limit(1)->get();
+    // Laravel's cursor paginator, on every core; its cursor is an object the kit encodes.
+    $first = Storyfeed::feed()->cursorPaginate(1);
+    $cursor = $first->nextCursor()?->encode();
     $html = render_feed($first);
 
-    expect($first->nextCursor())->not->toBeNull()
+    expect($cursor)->not->toBeNull()
         ->and($html)->toContain('<nav aria-label="Pagination Navigation"> <div> <div aria-hidden="true"></div> </div> '
-            .'<a href="http://localhost/?cursor='.urlencode($first->nextCursor()).'" rel="next">Older activity</a> </nav>')
+            .'<a href="http://localhost/?cursor='.urlencode($cursor).'" rel="next">Older activity</a> </nav>')
         // More pages follow, so the row keeps its rail.
         ->toContain('<div aria-hidden="true"></div>')
-        ->and(render_feed(Storyfeed::feed()->limit(1)->cursor($first->nextCursor())->get()))
+        ->and(render_feed(Storyfeed::feed()->limit(1)->cursor($cursor)->get()))
         ->not->toContain('<nav');
 });
 
@@ -150,4 +155,26 @@ it('merges caller classes and attributes without depending on kit utilities', fu
 
     expect($root)->not->toBeNull()
         ->and(explode(' ', $root->getAttribute('class')))->toContain('my-feed');
+});
+
+it('reads every page shape core returns, and its JSON with the nodes under data or items', function () {
+    Storyfeed::activity('place', Order::create(['number' => 'A']))->by($this->dana)->publishedAt(now()->subHour())->publish();
+    Storyfeed::activity('ship', Order::create(['number' => 'B']))->by($this->dana)->publish();
+
+    $rows = fn (string $html) => substr_count($html, '<article>');
+    $paginator = Storyfeed::feed()->cursorPaginate(1);
+    $cursor = $paginator->nextCursor()?->encode();
+    $nodes = json_decode((string) json_encode(Page::read(Storyfeed::feed()->get())['items']), true);
+
+    // What get() returns: a FeedPage before storyfeed/storyfeed#95, a collection after; then the paginator.
+    expect($rows(render_feed(Storyfeed::feed()->get())))->toBe(2)
+        ->and($rows($html = render_feed($paginator)))->toBe(1)->and($html)->toContain('cursor='.urlencode((string) $cursor))
+        // Decoded JSON: Laravel's paginator (`data`, #95), the old envelope (`items`), and get()'s plain list.
+        ->and($rows($html = render_feed(['data' => array_slice($nodes, 0, 1), 'next_cursor' => 'next-page'])))->toBe(1)->and($html)->toContain('cursor=next-page')
+        ->and($rows($html = render_feed(['items' => $nodes, 'next_cursor' => null])))->toBe(2)->and($html)->not->toContain('<nav')
+        ->and($rows(render_feed($nodes)))->toBe(2)
+        // A Laravel paginator built by hand, and a Cursor passed to next-cursor, read the same way.
+        ->and($rows(render_feed(new CursorPaginator($nodes, 5))))->toBe(2)
+        ->and(render_blade('<x-storyfeed::feed :items="$items" :next-cursor="$cursor" />', ['items' => $nodes, 'cursor' => new Cursor(['id' => 7])]))
+        ->toContain('cursor='.urlencode((new Cursor(['id' => 7]))->encode()));
 });

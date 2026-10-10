@@ -924,3 +924,17 @@ test("a stored or custom-slot Image stands for its entity in a group's strip", a
     assert.match(html, /src="\/own\.jpg"/);
     assert.match(html, /src="\/chart\.svg"/);
 });
+
+test('FeedStream reads a whole page: core #95 JSON under data, the older items envelope, or a plain list', async () => {
+    const { readPage } = await server.ssrLoadModule('/resources/js/shared/page.ts');
+    const nodes = [activity, { ...activity, id: 'second' }];
+    assert.deepEqual(readPage({ data: nodes, next_cursor: 'next' }), { items: nodes, nextCursor: 'next' });
+    assert.deepEqual(readPage({ payload_version: 1, items: nodes, next_cursor: null, sync_token: null }), { items: nodes, nextCursor: null });
+    assert.deepEqual(readPage(nodes), { items: nodes, nextCursor: null });
+    assert.deepEqual(readPage(null), { items: [], nextCursor: null });
+    const html = await renderRaw('/resources/js/vue/FeedStream.vue', { page: { data: nodes, next_cursor: 'next' } });
+    assert.equal((html.match(/role="listitem"/g) ?? []).length, 2, 'both nodes from data');
+    assert.match(html, /sf-more/, 'the next cursor offers more');
+    assert.doesNotMatch(await renderRaw('/resources/js/vue/FeedStream.vue', { page: { items: nodes, next_cursor: null } }), /sf-more/, 'no cursor, no more');
+    assert.match(await renderRaw('/resources/js/vue/FeedStream.vue', { page: { items: nodes, next_cursor: null } }), /Ada Lovelace/);
+});
