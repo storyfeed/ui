@@ -64,7 +64,7 @@ try {
             // Stacked cards can extend beyond the initial iframe height.
             const fixtureHeights = await Promise.all(frames.map(frame => frame.evaluate(() => document.body.scrollHeight)));
             await page.locator('iframe').evaluateAll((nodes, height) => nodes.forEach(node => node.style.height = `${height + 2000}px`), Math.max(...fixtureHeights));
-            // Text-shaped bodies inherit the feed's size: Typography sizes a table at 0.875em and a list at 1em of it.
+            // ui#23's type scale: every body draws one step below the headline (0.875em), tables and lists included, whatever the host's base size.
             for (let i = 0; i < frames.length; i++) {
                 const sizes = await frames[i].evaluate(() => {
                     const size = selector => parseFloat(getComputedStyle(document.querySelector(selector)).fontSize);
@@ -72,7 +72,21 @@ try {
                 });
                 assert.equal(sizes.table / sizes.head, 0.875, `${renderers[i]} ${text}: Prose table scales with the headline`);
                 assert.equal(sizes.body / sizes.head, 0.875, `${renderers[i]} ${text}: Table body scales with the headline`);
-                assert.equal(sizes.list / sizes.head, 1, `${renderers[i]} ${text}: ItemList scales with the headline`);
+                assert.equal(sizes.list / sizes.head, 0.875, `${renderers[i]} ${text}: ItemList scales with the headline`);
+                // ui#23's root cause: a row drawn outside a feed, in a host whose base is 14px (a Filament panel), still sizes from --sf-font-size: headline 1em, KeyValue one step below.
+                const hosted = await frames[i].evaluate(() => {
+                    const host = document.createElement('div');
+                    host.style.fontSize = '14px';
+                    host.append([...document.querySelectorAll('.example')].find(example => example.querySelector(':scope > h2')?.textContent === 'Type scale').querySelector('.sf-row').cloneNode(true));
+                    document.body.append(host);
+                    const size = selector => parseFloat(getComputedStyle(host.querySelector(selector)).fontSize);
+                    const sizes = { headline: size('.sf-headline'), facts: size('.sf-facts'), meta: size('.sf-meta'), feed: parseFloat(getComputedStyle(document.querySelector('.sf-feed')).fontSize) };
+                    host.remove();
+                    return sizes;
+                });
+                assert.equal(hosted.headline, hosted.feed, `${renderers[i]} ${text}: a hosted row's headline ignores the host's base size`);
+                assert.equal(hosted.facts / hosted.headline, 0.875, `${renderers[i]} ${text}: a hosted row's KeyValue sits one step below its headline`);
+                assert.equal(hosted.meta / hosted.headline, 0.875, `${renderers[i]} ${text}: a hosted row's meta line sits one step below its headline`);
             }
             // These fixtures assert pixel geometry at the default text size.
             if (text === 'default') {

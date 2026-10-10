@@ -193,20 +193,20 @@ it('draws a group\'s featured objects as an avatar row, only from declared avata
 it('supports file MIME labels and host labellers through the feed without changing the body', function () {
     $body = ['$body' => 'Storyfeed/Body/FileAttachment', 'name' => 'report.csv', 'size' => 21_000_000, 'mediaType' => 'text/csv'];
     $item = ['kind' => 'activity', 'object' => ['label' => 'report.csv', 'body' => [$body]]];
-    expect(render_blade('<x-storyfeed::feed :items="[$item]" />', compact('item')))->toContain('report.csv Spreadsheet (CSV) · 21 MB');
+    expect(render_blade('<x-storyfeed::feed :items="[$item]" />', compact('item')))->toContain('report.csv<span> Spreadsheet (CSV) · 21 MB</span>');
     $received = null;
     $renderers = ['fileLabel' => function ($file) use (&$received) {
         $received = $file;
 
         return '<Host label>';
     }];
-    expect(render_blade('<x-storyfeed::feed :items="[$item]" :renderers="$renderers" />', compact('item', 'renderers')))->toContain('report.csv &lt;Host label&gt; · 21 MB');
+    expect(render_blade('<x-storyfeed::feed :items="[$item]" :renderers="$renderers" />', compact('item', 'renderers')))->toContain('report.csv<span> &lt;Host label&gt; · 21 MB</span>');
     expect($received)->toBe(['name' => 'report.csv', 'mediaType' => 'text/csv'])->and($item['object']['body'][0])->toBe($body);
     $renderers = ['fileLabel' => fn ($file) => null];
     expect(render_blade('<x-storyfeed::feed :items="[$item]" :renderers="$renderers" />', compact('item', 'renderers')))->toContain('Spreadsheet (CSV)');
     foreach ([[76_000, '76 KB'], [2_516_582, '2.5 MB']] as [$size, $label]) {
         $body = ['name' => 'design.fig', 'size' => $size];
-        expect(render_blade('<x-storyfeed::body.file-attachment :body="$body" />', compact('body')))->toContain('design.fig '.$label)->not->toContain('Figma');
+        expect(render_blade('<x-storyfeed::body.file-attachment :body="$body" />', compact('body')))->toContain('design.fig<span> '.$label.'</span>')->not->toContain('Figma');
     }
 });
 
@@ -291,7 +291,7 @@ it('renders a footnote-only media object as a line', function ($footnote, $entit
     $entity = Entity::of(['label' => 'Discussion', 'url' => $entityUrl]);
     $html = Blade::render('<x-storyfeed::body.media-object :body="$body" :entity="$entity" />', compact('body', 'entity'));
 
-    expect($html)->toContain('sf-media-object__footnote mt-0.5 mb-0 text-sm leading-[1.6] text-muted-foreground', 'See full discussion')
+    expect($html)->toContain('sf-media-object__footnote mt-0.5 mb-0 text-xs leading-[1.6] text-muted-foreground', 'See full discussion')
         ->not->toContain('<div', 'border-border', 'bg-muted', 'p-3');
     if ($href) {
         expect($html)->toContain('href="'.$href.'"');
@@ -320,6 +320,13 @@ it('sizes all three kits on the rem scale, with no pixel arbitrary values', func
         ->and($files->filter(fn (SplFileInfo $file) => preg_match('/[a-z:-]+-\[[0-9.]+px\]/', (string) file_get_contents($file->getPathname())) === 1)->keys()->all())->toBe([]);
 
     expect(file_get_contents(dirname(__DIR__, 2).'/resources/views/components/feed.blade.php'))->toContain('[--spacing:calc(var(--sf-font-size,1rem)/4)]', '[--text-base:var(--sf-font-size,1rem)]', 'text-base leading-[1.6]');
+
+    // ui#23: every row sets its own size from --sf-font-size, so nothing inherits the host page's base, and no body draws at the headline's size.
+    foreach (['resources/views/components/activity.blade.php', 'resources/views/components/group.blade.php', 'resources/js/vue/FeedItem.vue', 'resources/js/vue/FeedGroup.vue', 'resources/js/react/FeedItem.tsx', 'resources/js/react/FeedGroup.tsx'] as $row) {
+        expect(file_get_contents(dirname(__DIR__, 2).'/'.$row))->toContain('[--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)]', '[--sf-badge-face:--spacing(4.5)] text-base leading-[1.6]');
+    }
+    $bodies = collect([...glob(dirname(__DIR__, 2).'/resources/views/components/body/*.blade.php'), ...glob(dirname(__DIR__, 2).'/resources/js/vue/body/*.vue'), dirname(__DIR__, 2).'/resources/js/react/body/index.tsx']);
+    expect($bodies->filter(fn (string $file) => preg_match('/\btext-base\b/', (string) file_get_contents($file)) === 1)->map(fn ($file) => basename($file))->values()->all())->toBe([]);
 });
 
 it('wraps a long headline inside its column instead of running off a narrow feed', function (string $kind) {

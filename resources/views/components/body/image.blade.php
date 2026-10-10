@@ -13,7 +13,7 @@
         <img src="{{ $picture['src'] }}" alt="{{ $picture['alt'] }}" width="{{ $picture['width'] ?? '' }}" height="{{ $picture['height'] ?? '' }}" loading="lazy" class="block max-w-full rounded-lg" />
         @endif
 @if ($caption !== null && $caption !== '')
-            <figcaption class="mt-2 text-sm leading-[1.6] text-muted-foreground">{{ $caption }}</figcaption>
+            <figcaption class="mt-2 text-xs leading-[1.6] text-muted-foreground">{{ $caption }}</figcaption>
 @endif
     </figure>
 @endif

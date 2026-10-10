@@ -590,9 +590,9 @@ test('host file labeller overrides MIME labels, null falls back, and its text is
         app.provide(FEED_FILE_LABELLER, file => { received = file; return label; });
         return renderToString(app);
     };
-    assert.match(await renderLabel('<Figma file>'), /design.fig &lt;Figma file&gt;/);
+    assert.match(textOf(await renderLabel('<Figma file>')), /design.fig &lt;Figma file&gt;/);
     assert.deepEqual(received, { name: 'design.fig', mediaType: 'application/pdf' });
-    assert.match(await renderLabel(null), /design.fig PDF/);
+    assert.match(textOf(await renderLabel(null)), /design.fig PDF/);
 });
 
 test('rich prose and ItemList render inside Typography prose at the feed size', async () => {
@@ -601,7 +601,7 @@ test('rich prose and ItemList render inside Typography prose at the feed size', 
         ['/resources/js/vue/body/ItemList.vue', { items: ['One'] }],
     ]) {
         const html = await renderRaw(path, { payload });
-        assert.match(html, /class="[^"]*\bprose max-w-none text-\[length:inherit\][^"]*"/);
+        assert.match(html, /class="[^"]*\bprose max-w-none text-\[length:var\(--text-sm\)\][^"]*"/);
         assert.doesNotMatch(html, /\bprose-(sm|base|lg|xl|2xl)\b/);
     }
 });
@@ -620,7 +620,7 @@ test('Table draws inside prose with a tfoot, escaped cells that keep line breaks
         rows: [['Delivery to\n12 Harbour Street', '<b>$0</b>'], [{ label: 'Seats', href: '/seats' }, null], [{ label: 'Owned', href: null }], 'not a row'],
         footer: [['Total', 49.5]] };
     const raw = await renderRaw(path, { payload, entityUrl: '/orders/1' });
-    assert.match(raw, /class="sf-table__prose [^"]*\bprose max-w-none text-\[length:inherit\][^"]*\[&amp;_:is\(th,td\)\]:whitespace-pre-line/);
+    assert.match(raw, /class="sf-table__prose [^"]*\bprose [^"]*max-w-none text-\[length:var\(--text-sm\)\][^"]*\[&amp;_:is\(th,td\)\]:whitespace-pre-line/);
     const html = (await render(path, { payload, entityUrl: '/orders/1' })).replace(/<!--[\s\S]*?-->/g, '');
     for (const expected of [
         '<figcaption class="sf-table__title">Order &lt;1042&gt;</figcaption>',
@@ -873,7 +873,7 @@ test('MediaObject footnotes stand alone, resolve links and keep strings unlinked
         ['See full discussion', '/current', null],
     ]) {
         const html = await renderRaw(path, { payload: { footnote }, entityUrl });
-        assert.match(html, /<p class="sf-media-object__footnote mt-0.5 mb-0 text-sm leading-\[1.6\] text-muted-foreground">/);
+        assert.match(html, /<p class="sf-media-object__footnote mt-0.5 mb-0 text-xs leading-\[1.6\] text-muted-foreground">/);
         assert.match(html, /See full discussion/);
         assert.doesNotMatch(html, /<div|border-border|bg-muted|p-3/);
         if (href) assert.ok(html.includes(`href="${href}"`));

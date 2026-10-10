@@ -132,7 +132,7 @@ it('escapes excerpt text and source and only marks truncated passages', function
 
 it('draws file metadata including its owning entity label', function () {
     expect(render_bodies([FileAttachment::make(2_516_582, 'application/pdf', 'invoice.pdf'), FileAttachment::make(512, name: 'Order #1042')]))
-        ->toContain('<p>invoice.pdf PDF · 2.5 MB</p>', '<p>Order #1042 512 bytes</p>');
+        ->toContain('<p>invoice.pdf<span> PDF · 2.5 MB</span></p>', '<p>Order #1042<span> 512 bytes</span></p>');
 });
 
 it('escapes file names and ignores stored URLs', function () {
@@ -143,7 +143,7 @@ it('escapes file names and ignores stored URLs', function () {
 
 it('shows zero-byte files and omits an empty file form', function () {
     expect(render_blade('<x-storyfeed::body.file-attachment :body="$body" />', ['body' => ['size' => 0]]))
-        ->toContain('<p>0 bytes</p>')
+        ->toContain('<p><span>0 bytes</span></p>')
         ->and(render_blade('<x-storyfeed::body.file-attachment :body="[]" />'))->toBe('');
 });
 
@@ -160,7 +160,7 @@ it('draws an item list, numbered when ordered, with what was not sent', function
 it('draws rich prose and lists inside Typography prose at the feed\'s size', function () {
     foreach (['prose' => ['content' => '- One', 'mediaType' => 'text/markdown'], 'item-list' => ['items' => ['One']]] as $component => $body) {
         expect(Blade::render("<x-storyfeed::body.{$component} :body=\"\$body\" />", ['body' => $body]))
-            ->toMatch('/class="[^"]*\bprose max-w-none text-\[length:inherit\][^"]*"/')
+            ->toMatch('/class="[^"]*\bprose max-w-none text-\[length:var\(--text-sm\)\][^"]*"/')
             ->not->toMatch('/\bprose-(sm|base|lg|xl|2xl)\b/');
     }
 });
@@ -267,7 +267,7 @@ it('draws a table inside Typography prose, with footer rows in a tfoot and plain
         'footer' => [['Total', 49.5]]];
     $html = Blade::render('<x-storyfeed::body.table :body="$body" :entity="$entity" />', ['body' => $body, 'entity' => Entity::of(['label' => 'Order', 'url' => '/orders/1', 'link' => ['href' => '/orders/1']])]);
 
-    expect($html)->toMatch('/class="sf-table__prose [^"]*\bprose max-w-none text-\[length:inherit\][^"]*\[&_:is\(th,td\)\]:whitespace-pre-line/')
+    expect($html)->toMatch('/class="sf-table__prose [^"]*\bprose [^"]*max-w-none text-\[length:var\(--text-sm\)\][^"]*\[&_:is\(th,td\)\]:whitespace-pre-line/')
         ->and(structural_html($html))->toContain(
             '<figcaption>Order &lt;1042&gt;</figcaption>',
             '<thead><tr><th>Item</th><th>Price</th></tr></thead>',

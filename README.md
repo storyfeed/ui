@@ -288,7 +288,28 @@ the rail together:
 
 Give it in `rem` or `px`. Inside the feed, Tailwind's `--spacing`, `--text-xs`,
 `--text-sm` and `--text-base` derive from it, so your own slot content on those
-utilities scales with the feed too.
+utilities scales with the feed too. Every row sets its own size from it, so a
+row drawn outside a feed (in a Filament panel, say) never inherits the host
+page's base size.
+
+A row has one type scale, every step relative to `--sf-font-size`:
+
+| Element | Size | Weight / colour |
+|---|---|---|
+| headline | 1em | normal; entity names medium |
+| meta line | 0.875em | muted |
+| body content: Prose, KeyValue values, Table cells, MediaObject text, Excerpt | 0.875em | normal |
+| body labels: KeyValue keys, Table headers | 0.875em | muted |
+| body titles: KeyValue, Table and ItemList titles, MediaObject and CallToAction subjects | 0.875em | semibold |
+| footnotes, captions, file kinds and sizes | 0.75em | muted |
+
+Headings inside a body never outgrow it: `h1`–`h6` in rich Prose draw at the
+body size, semibold (`h1`, `h2`) or medium (`h3` and below). KeyValue rows share
+one key column, at most 40% of the card, so values form one left edge; on a
+narrow card each key sits over its value. Verbatim Prose is a dark block with
+light text in every theme, from `--sf-code-bg` and `--sf-code-fg` (set them to
+match your brand); inline and fenced code inside rich Prose draw on the muted
+colour.
 
 Flowing text is never capped: rich and plain Prose, lists, tables and
 key-value facts show in full and flow with the page. Only contained blocks,

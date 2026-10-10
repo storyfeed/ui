@@ -28,5 +28,6 @@ const description = computed(() => [kind.value, human(props.payload.size)].filte
 </script>
 
 <template>
-    <p v-if="payload.name || description" class="sf-file m-0 text-base text-muted-foreground">{{ [payload.name, description].filter(Boolean).join(' ') }}</p>
+    <!-- The name at body size; its kind and size one step smaller (ui#23). -->
+    <p v-if="payload.name || description" class="sf-file m-0 text-sm text-muted-foreground">{{ payload.name ?? '' }}<span v-if="description" class="sf-file__meta text-xs">{{ payload.name ? ' ' : '' }}{{ description }}</span></p>
 </template>

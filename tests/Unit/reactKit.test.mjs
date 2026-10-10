@@ -635,7 +635,7 @@ test('rich prose and ItemList render inside Typography prose at the feed size', 
         ['ItemList', { items: ['One'] }],
     ]) {
         const html = raw(name, { payload });
-        assert.match(html, /class="[^"]*\bprose max-w-none text-\[length:inherit\][^"]*"/);
+        assert.match(html, /class="[^"]*\bprose max-w-none text-\[length:var\(--text-sm\)\][^"]*"/);
         assert.doesNotMatch(html, /\bprose-(sm|base|lg|xl|2xl)\b/);
     }
 });
@@ -649,7 +649,7 @@ test('Table draws inside prose with a tfoot, escaped cells that keep line breaks
     const payload = { $body: 'Storyfeed/Body/Table', title: 'Order <1042>', headers: ['Item', 'Price'],
         rows: [['Delivery to\n12 Harbour Street', '<b>$0</b>'], [{ label: 'Seats', href: '/seats' }, null], [{ label: 'Owned', href: null }], 'not a row'],
         footer: [['Total', 49.5]] };
-    assert.match(raw('Table', { payload, entityUrl: '/orders/1' }), /class="sf-table__prose [^"]*\bprose max-w-none text-\[length:inherit\][^"]*\[&amp;_:is\(th,td\)\]:whitespace-pre-line/);
+    assert.match(raw('Table', { payload, entityUrl: '/orders/1' }), /class="sf-table__prose [^"]*\bprose [^"]*max-w-none text-\[length:var\(--text-sm\)\][^"]*\[&amp;_:is\(th,td\)\]:whitespace-pre-line/);
     const html = render('Table', { payload, entityUrl: '/orders/1' });
     for (const expected of [
         '<figcaption class="sf-table__title">Order &lt;1042&gt;</figcaption>',
@@ -910,7 +910,7 @@ test('MediaObject footnotes stand alone, resolve links and keep strings unlinked
         ['See full discussion', '/current', null],
     ]) {
         const html = raw('MediaObject', { payload: { footnote }, entityUrl });
-        assert.match(html, /<p class="sf-media-object__footnote mt-0.5 mb-0 text-sm leading-\[1.6\] text-muted-foreground">/);
+        assert.match(html, /<p class="sf-media-object__footnote mt-0.5 mb-0 text-xs leading-\[1.6\] text-muted-foreground">/);
         assert.match(html, /See full discussion/);
         assert.doesNotMatch(html, /<div|border-border|bg-muted|p-3/);
         if (href) assert.ok(html.includes(`href="${href}"`));

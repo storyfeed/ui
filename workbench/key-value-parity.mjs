@@ -12,39 +12,33 @@ async function measure(card) {
         const contentWidth = figure.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
         return {
             card: { width: figure.getBoundingClientRect().width, height: figure.getBoundingClientRect().height },
+            contentWidth,
             narrow: contentWidth < 28 * parseFloat(getComputedStyle(document.documentElement).fontSize),
             rows: [...figure.querySelectorAll('.sf-facts__row')].map(row => {
                 const label = row.querySelector('dt');
                 const value = row.querySelector('dd');
-                const span = value.querySelector('span') ?? value;
-                const range = document.createRange();
-                range.selectNodeContents(span);
-                return {
-                    label: rect(label), value: rect(value), row: rect(row),
-                    minValueWidth: 16 * parseFloat(getComputedStyle(value).fontSize),
-                    align: getComputedStyle(value).textAlign,
-                    lines: [...range.getClientRects()].map(r => ({ x: r.x - figure.getBoundingClientRect().x, right: r.right - figure.getBoundingClientRect().x })),
-                };
+                return { label: rect(label), value: rect(value), row: rect(row), align: getComputedStyle(value).textAlign };
             }),
         };
     });
 }
 
+// ui#23: one key column shared by every row, at most 40% of the card, and values on one left edge; on a narrow card each key sits over its value.
 function checkLayout(geometry, context) {
     assert.equal(geometry.rows.length, 2, context);
-    for (const { label, value, row, minValueWidth, align, lines } of geometry.rows) {
-        const stacked = value.y >= label.y + label.height;
+    const [first] = geometry.rows;
+    for (const { label, value, row, align } of geometry.rows) {
+        const stacked = value.y >= label.y + label.height - 0.02;
         assert.equal(stacked, geometry.narrow, `${context}: layout follows card width`);
-        assert.ok(stacked || value.width >= minValueWidth, `${context}: value has at least 16em or stacks`);
+        assert.equal(align, 'left', `${context}: values align left`);
+        assert.ok(Math.abs(label.x - first.label.x) < 0.02, `${context}: keys share one left edge`);
+        assert.ok(Math.abs(value.x - first.value.x) < 0.02, `${context}: values share one left edge`);
         if (stacked) {
-            assert.equal(value.x, label.x, `${context}: value starts below its label`);
-            assert.equal(value.width, row.width, `${context}: value uses the full row`);
-            assert.equal(align, 'left', `${context}: stacked value aligns left`);
-            assert.ok(lines.every(line => Math.abs(line.x - value.x) < 0.02), `${context}: stacked text starts at the left`);
+            assert.ok(Math.abs(value.x - label.x) < 0.02, `${context}: value starts below its key`);
+            assert.ok(Math.abs(value.width - row.width) < 0.02, `${context}: value uses the full row`);
         } else {
-            assert.equal(label.y, value.y, `${context}: label aligns with the first value line`);
-            if (lines.length === 1) assert.ok(Math.abs(lines[0].right - value.x - value.width) < 0.02, `${context}: short value aligns right`);
-            else assert.ok(lines.every(line => Math.abs(line.x - value.x) < 0.02), `${context}: paragraph aligns left`);
+            assert.ok(Math.abs(label.y - value.y) < 0.02, `${context}: key aligns with the first value line`);
+            assert.ok(label.width <= geometry.contentWidth * 0.4 + 0.02, `${context}: key column is at most 40% of the card`);
         }
     }
 }
@@ -83,19 +77,6 @@ export async function checkKeyValue({ frames, renderers, width, theme, output })
                     if (width === 1512 && [280, 360, 520, 720].includes(cardWidth)) {
                         const capture = await card.screenshot();
                         await writeFile(`${output}/k4-${renderers[i]}-${kind}-${theme}-${cardWidth}.png`, capture);
-                    }
-                    if (!measured.narrow && width === 1512) {
-                        // Removing only the new container utilities reconstructs
-                        // the v0.4.2 card, preserving its original class tokens.
-                        const current = await card.screenshot();
-                        const classes = await card.evaluate(figure => [figure, ...figure.querySelectorAll('*')].map(element => {
-                            const saved = element.getAttribute('class');
-                            element.setAttribute('class', [...element.classList].filter(token => !token.startsWith('@')).join(' '));
-                            return saved;
-                        }));
-                        const original = await card.screenshot();
-                        await card.evaluate((figure, classes) => [figure, ...figure.querySelectorAll('*')].forEach((element, i) => element.setAttribute('class', classes[i])), classes);
-                        assert.ok(current.equals(original), `${renderers[i]} ${kind} ${cardWidth}: v0.4.2 wide PNG unchanged`);
                     }
                 }
                 for (let i = 1; i < geometry.length; i++) assert.deepEqual(geometry[i], geometry[0], `KeyValue ${kind} ${cardWidth}: 0px ${renderers[0]}/${renderers[i]} parity`);

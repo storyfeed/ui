@@ -96,7 +96,10 @@ before those items. `divider-style="dot"` is the default;
 `divider-style="branch"` draws a curve off the rail. `isLast` suppresses the
 trailing rail; a next cursor keeps it connected to the pager.
 
-`--sf-font-size` (default `1rem`) scales the whole feed. Flowing text is never
+`--sf-font-size` (default `1rem`) scales the whole feed, and every row sizes
+from it, never from the host page: headline 1em, meta and bodies 0.875em,
+footnotes and captions 0.75em (see the root README's type scale). Verbatim
+Prose uses `--sf-code-bg`/`--sf-code-fg`. Flowing text is never
 capped; code and verbatim blocks scroll past `--sf-prose-max-h` (default `24rem`),
 and a body's own `$meta.maxHeight` overrides either; see the root README.
 The root's Tailwind arbitrary properties also expose `--sf-gutter`, `--sf-gap`,

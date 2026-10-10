@@ -158,7 +158,7 @@ const slots = computed(() =>
 </script>
 
 <template>
-    <div class="sf-row relative flex items-start gap-(--sf-gap)">
+    <div class="sf-row relative flex items-start gap-(--sf-gap) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter:--spacing(8)] [--sf-gap:--spacing(3)] [--sf-disc:--spacing(8)] [--sf-badge:--spacing(3.5)] [--sf-badge-face:--spacing(4.5)] text-base leading-[1.6]">
         <div class="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
             <!--
                 THE DISC. One of three things: the face, the verb, or the blank

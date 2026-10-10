@@ -40,5 +40,5 @@
         <div data-storyfeed-body {{ $attributes }}> {!! $rendered !!} </div>
 @endif
 @elseif ($fallback !== null)
-    <div data-storyfeed-body {{ $attributes }}> <p class="sf-body-fallback m-0 text-base text-muted-foreground [overflow-wrap:anywhere]">{{ $fallback }}</p> </div>
+    <div data-storyfeed-body {{ $attributes }}> <p class="sf-body-fallback m-0 text-sm text-muted-foreground [overflow-wrap:anywhere]">{{ $fallback }}</p> </div>
 @endif

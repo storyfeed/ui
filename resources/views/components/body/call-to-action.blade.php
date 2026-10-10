@@ -19,10 +19,10 @@
 @if ($subject || $content)
     <div {{ $attributes }}>
 @if ($subject)
-        <p class="sf-cta__subject m-0 text-base font-medium text-foreground">{{ $subject }}</p>
+        <p class="sf-cta__subject m-0 text-sm font-semibold text-foreground">{{ $subject }}</p>
 @endif
 @if ($content)
-        <p class="sf-cta__content m-0 text-base leading-[1.6] whitespace-pre-line text-muted-foreground">{{ $content }}</p>
+        <p class="sf-cta__content m-0 text-sm leading-[1.6] whitespace-pre-line text-muted-foreground">{{ $content }}</p>
 @endif
 @if ($label && $href)
         <a href="{{ $href }}" {{ (new \Illuminate\View\ComponentAttributeBag($linkAttributes))->class('sf-cta__action inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground no-underline hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring mt-1.5') }}>{{ $label }}<span aria-hidden="true">→</span></a>

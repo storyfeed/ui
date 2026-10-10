@@ -89,7 +89,7 @@ export default function FeedItem({
         }))
         .filter((tile: any) => tile.image !== null);
     return (
-        <div className="sf-row relative flex items-start gap-(--sf-gap)">
+        <div className="sf-row relative flex items-start gap-(--sf-gap) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter:--spacing(8)] [--sf-gap:--spacing(3)] [--sf-disc:--spacing(8)] [--sf-badge:--spacing(3.5)] [--sf-badge-face:--spacing(4.5)] text-base leading-[1.6]">
             <Rail
                 faces={item.actor ? [item.actor] : []}
                 glyph={item.glyph}

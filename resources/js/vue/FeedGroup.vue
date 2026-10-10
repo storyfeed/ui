@@ -110,7 +110,7 @@ const hiddenBeyondChildren = computed(
 </script>
 
 <template>
-    <div class="sf-row relative flex items-start gap-(--sf-gap)">
+    <div class="sf-row relative flex items-start gap-(--sf-gap) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter:--spacing(8)] [--sf-gap:--spacing(3)] [--sf-disc:--spacing(8)] [--sf-badge:--spacing(3.5)] [--sf-badge-face:--spacing(4.5)] text-base leading-[1.6]">
         <!-- Several actors draw as a diagonal pair inside one disc's square (ui#25): the first in front at the bottom-right, where the verb badge sits, the second behind at the top-left. Below a 1.5rem (24px) disc only the front face shows. -->
         <div class="sf-rail box-content flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
             <div class="sf-rail__disc relative flex w-(--sf-disc) shrink-0">

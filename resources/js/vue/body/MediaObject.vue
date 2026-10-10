@@ -65,7 +65,7 @@ const footnote = computed(() => {
 </script>
 
 <template>
-    <p v-if="!subject && !payload.content && !picture && !files.length && footnote" class="sf-media-object__footnote mt-0.5 mb-0 text-sm leading-[1.6] text-muted-foreground">
+    <p v-if="!subject && !payload.content && !picture && !files.length && footnote" class="sf-media-object__footnote mt-0.5 mb-0 text-xs leading-[1.6] text-muted-foreground">
         <component :is="linkComponent" v-if="footnote.link" v-bind="linkProps(footnote.link, linkComponent)" class="font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring">{{ footnote.label }}</component>
         <template v-else>{{ footnote.label }}</template>
     </p>
@@ -74,23 +74,23 @@ const footnote = computed(() => {
             <FeedMedia :image="picture" :class="frame.media" />
         </div>
         <div class="sf-media-object__body flex min-w-0 flex-[1_1_--spacing(48)] flex-col gap-1 [overflow-wrap:anywhere]">
-            <p v-if="subject" class="sf-media-object__subject m-0 text-base font-medium text-foreground">
+            <p v-if="subject" class="sf-media-object__subject m-0 text-sm font-semibold text-foreground">
                 <component :is="linkComponent" v-if="subject.link" v-bind="linkProps(subject.link, linkComponent)">{{ subject.label }}</component>
                 <template v-else>{{ subject.label }}</template>
             </p>
 
-            <p v-if="payload.content" class="sf-prose m-0 text-base leading-[1.6] whitespace-pre-wrap sf-media-object__content line-clamp-3 text-muted-foreground">{{ payload.content }}</p>
+            <p v-if="payload.content" class="sf-prose m-0 text-sm leading-[1.6] whitespace-pre-wrap sf-media-object__content line-clamp-3 text-muted-foreground">{{ payload.content }}</p>
 
             <FeedMedia v-if="picture && placement === 'below'" :image="picture" />
 
             <ul v-if="files.length" class="sf-media-object__attachments mt-0.5 mb-0 flex list-none flex-col gap-0.5 p-0">
-            <li v-for="(file, i) in files ?? []" :key="i" class="sf-file m-0 text-base text-muted-foreground">
+            <li v-for="(file, i) in files ?? []" :key="i" class="sf-file m-0 text-sm text-muted-foreground">
                 <component :is="linkComponent" :href="file.href">{{ file.name ?? file.href }}</component>
                 <span v-if="file.mediaType"> · {{ file.mediaType }}</span>
             </li>
             </ul>
 
-            <p v-if="footnote" class="sf-media-object__footnote mt-0.5 mb-0 text-sm leading-[1.6] text-muted-foreground">
+            <p v-if="footnote" class="sf-media-object__footnote mt-0.5 mb-0 text-xs leading-[1.6] text-muted-foreground">
                 <component :is="linkComponent" v-if="footnote.link" v-bind="linkProps(footnote.link, linkComponent)">{{ footnote.label }}</component>
                 <template v-else>{{ footnote.label }}</template>
             </p>

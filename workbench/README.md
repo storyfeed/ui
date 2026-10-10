@@ -44,7 +44,9 @@ report use the `r1-` prefix; set `STORYFEED_SCREENSHOTS` to override the output.
 
 KeyValue short/paragraph fixtures check container-driven stacking at exact card
 widths 280/360/520/720px and the 28rem content-width boundary, independently of
-1512px/390px viewports. Values must have at least 16em of width or stack below
-their labels at full row width. Wide cards retain the v0.4.2 PNGs byte for byte;
-all three kits require 0px geometry parity. Light/dark card captures
+1512px/390px viewports. Rows share one key column, at most 40% of the card, with
+values on one left edge; below the boundary each key sits over its value at
+full row width (ui#23). All three kits require 0px geometry parity. The "Type
+scale" case also re-renders a row inside a 14px host to check it keeps its own
+sizes. Light/dark card captures
 and measurements use `k4-`.

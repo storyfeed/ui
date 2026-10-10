@@ -5836,5 +5836,103 @@
         "children_truncated": true
       }
     ]
+  },
+  {
+    "name": "Type scale",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "delivery",
+        "verb": "update",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actor updated the delivery for :object",
+        "actor": {
+          "type": "person",
+          "id": "dana",
+          "label": "Dana Whitfield",
+          "url": "#dana",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "type": "order",
+          "id": "1042",
+          "label": "Order #1042",
+          "url": "#order-1042",
+          "media": null,
+          "data": null,
+          "tombstone": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/KeyValue",
+              "$v": 2,
+              "title": "Delivery",
+              "items": [
+                {
+                  "key": "Address",
+                  "value": "Flat 3, 12 Harbour Street, Te Aro, Wellington 6011, New Zealand"
+                },
+                {
+                  "key": "Instructions",
+                  "value": "Leave the parcel with reception if no one answers; the side gate is locked after 6 pm."
+                },
+                {
+                  "key": "Window",
+                  "value": "Tuesday 14 October, between 12:10 pm and 2:30 pm, signature required"
+                }
+              ]
+            }
+          ]
+        },
+        "target": null,
+        "context": null,
+        "glyph": "file-up"
+      },
+      {
+        "kind": "activity",
+        "id": "gate",
+        "verb": "post",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actor posted :object",
+        "actor": {
+          "type": "person",
+          "id": "dana",
+          "label": "Dana Whitfield",
+          "url": "#dana",
+          "media": null,
+          "data": null,
+          "tombstone": null
+        },
+        "object": {
+          "type": "note",
+          "id": "n1",
+          "label": "Site notes",
+          "url": "#notes",
+          "media": null,
+          "data": null,
+          "tombstone": null,
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Prose",
+              "$v": 2,
+              "title": "Murray's gate investigation",
+              "content": "# What we found\n\nThe side gate's latch is **misaligned** by about 4 mm, so it only catches when pushed hard.\n\n## Next steps\n\n- Replace the strike plate\n- Re-hang the gate on `hinge-b`\n\n### Notes\n\nRun `npm run check` after the change.\n\n```\ngate: latch=misaligned offset=4mm\n```",
+              "mediaType": "text/markdown"
+            },
+            {
+              "$body": "Storyfeed/Body/Prose",
+              "$v": 2,
+              "verbatim": true,
+              "title": "Latch log",
+              "content": "12:01 latch open\n12:02 latch closed (forced)\n12:05 latch open"
+            }
+          ]
+        },
+        "target": null,
+        "context": null,
+        "glyph": "file-up"
+      }
+    ]
   }
 ]

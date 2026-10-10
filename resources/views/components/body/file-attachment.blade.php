@@ -24,5 +24,6 @@
     $parts = collect([\Storyfeed\Ui\Support\FileLabels::label($body, $labeller), is_string($size) ? $size : null])->filter();
 @endphp
 @if ($name || $parts->isNotEmpty())
-    <p {{ $attributes->class('sf-file m-0 text-base text-muted-foreground') }}>{{ collect([$name, $parts->implode(' · ')])->filter()->implode(' ') }}</p>
+    {{-- The name at body size; its kind and size one step smaller (ui#23). --}}
+    <p {{ $attributes->class('sf-file m-0 text-sm text-muted-foreground') }}>{{ $name }}@if ($parts->isNotEmpty())<span class="sf-file__meta text-xs">{{ $name ? ' ' : '' }}{{ $parts->implode(' · ') }}</span>@endif</p>
 @endif

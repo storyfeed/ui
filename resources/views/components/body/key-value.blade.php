@@ -10,24 +10,24 @@
         && (! (($row['value'] ?? null) === null || ($row['value'] ?? null) === '') || ($row['placeholder'] ?? null) !== null));
 @endphp
 @if ($rows->isNotEmpty())
-    <figure {{ $attributes->class('sf-facts @container/facts m-0 flex max-w-128 flex-col rounded-lg border border-border px-3 py-1.5 text-base leading-[1.5]') }}>
+    <figure {{ $attributes->class('sf-facts @container/facts m-0 flex max-w-128 flex-col rounded-lg border border-border px-3 py-1.5 text-sm leading-[1.5]') }}>
 @if (filled($body['title'] ?? null))
             <figcaption class="border-b border-border pt-0.75 pb-1.25 font-semibold text-foreground">{{ $body['title'] }}</figcaption>
 @endif
-        <dl class="sf-facts__rows m-0 flex flex-col">
+        <dl class="sf-facts__rows m-0 grid grid-cols-[fit-content(40%)_minmax(0,1fr)] @max-[28rem]/facts:grid-cols-1">
 @foreach ($rows as $row)
                 @php($value = $row['value'] ?? null)
-                <div class="sf-facts__row grid grid-cols-[max-content_minmax(0,1fr)] @max-[28rem]/facts:grid-cols-1 items-baseline gap-x-4 gap-y-1 border-b border-border py-0.75 last:border-b-0">
-                    <dt class="sf-facts__label whitespace-nowrap @max-[28rem]/facts:whitespace-normal @max-[28rem]/facts:[overflow-wrap:anywhere] text-foreground">{{ $row['key'] }}</dt>
+                <div class="sf-facts__row col-span-full grid grid-cols-subgrid items-baseline gap-x-4 gap-y-1 border-b border-border py-0.75 last:border-b-0">
+                    <dt class="sf-facts__label [overflow-wrap:anywhere] text-muted-foreground">{{ $row['key'] }}</dt>
 @if ($value === null || $value === '')
-                        <dd class="sf-facts__value m-0 min-w-0 text-right @max-[28rem]/facts:text-left tabular-nums [overflow-wrap:anywhere] text-muted-foreground"><span class="ml-auto @max-[28rem]/facts:ml-0 block w-fit max-w-full text-left italic">{{ $row['placeholder'] }}</span></dd>
+                        <dd class="sf-facts__value m-0 min-w-0 text-left tabular-nums [overflow-wrap:anywhere] text-foreground"><span class="block max-w-full text-muted-foreground italic">{{ $row['placeholder'] }}</span></dd>
 @else
                         @php($text = is_bool($value) ? ($value ? __('Yes') : __('No')) : $value)
 @if ($row['verbatim'] ?? false)
                             {{-- Compared, not read: one line, with the whole value on hover. --}}
-                            <dd class="sf-facts__value m-0 min-w-0 text-right @max-[28rem]/facts:text-left tabular-nums [overflow-wrap:anywhere] text-muted-foreground truncate font-mono text-sm" title="{{ $text }}">{{ $text }}</dd>
+                            <dd class="sf-facts__value m-0 min-w-0 text-left tabular-nums [overflow-wrap:anywhere] text-foreground truncate font-mono text-sm" title="{{ $text }}">{{ $text }}</dd>
 @else
-                            <dd class="sf-facts__value m-0 min-w-0 text-right @max-[28rem]/facts:text-left tabular-nums [overflow-wrap:anywhere] text-muted-foreground"><span class="ml-auto @max-[28rem]/facts:ml-0 block w-fit max-w-full text-left">{{ $text }}</span></dd>
+                            <dd class="sf-facts__value m-0 min-w-0 text-left tabular-nums [overflow-wrap:anywhere] text-foreground"><span class="block max-w-full">{{ $text }}</span></dd>
 @endif
 @endif
                 </div>

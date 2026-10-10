@@ -15,10 +15,10 @@
 @if ($items->isNotEmpty())
     <figure {{ $attributes->class('sf-list-block m-0 min-w-0 max-w-144 rounded-lg bg-card px-4 py-3') }}>
 @if (filled($body['title'] ?? null))
-            <figcaption class="sf-list__title mb-1 text-sm text-foreground">{{ $body['title'] }}</figcaption>
+            <figcaption class="sf-list__title mb-1 text-sm font-semibold text-foreground">{{ $body['title'] }}</figcaption>
 @endif
 
-        <div class="sf-list__prose prose max-w-none text-[length:inherit] [overflow-wrap:anywhere] [--tw-prose-body:var(--color-muted-foreground)] [--tw-prose-headings:var(--color-foreground)] [--tw-prose-lead:var(--color-muted-foreground)] [--tw-prose-links:var(--color-primary)] [--tw-prose-bold:var(--color-foreground)] [--tw-prose-counters:var(--color-muted-foreground)] [--tw-prose-bullets:var(--color-muted-foreground)] [--tw-prose-hr:var(--color-border)] [--tw-prose-quotes:var(--color-foreground)] [--tw-prose-quote-borders:var(--color-border)] [--tw-prose-captions:var(--color-muted-foreground)] [--tw-prose-kbd:var(--color-foreground)] [--tw-prose-code:var(--color-foreground)] [--tw-prose-pre-code:var(--color-foreground)] [--tw-prose-pre-bg:var(--color-border)] [--tw-prose-th-borders:var(--color-border)] [--tw-prose-td-borders:var(--color-border)]">
+        <div class="sf-list__prose prose max-w-none text-[length:var(--text-sm)] [overflow-wrap:anywhere] [--tw-prose-body:var(--color-muted-foreground)] [--tw-prose-headings:var(--color-foreground)] [--tw-prose-lead:var(--color-muted-foreground)] [--tw-prose-links:var(--color-primary)] [--tw-prose-bold:var(--color-foreground)] [--tw-prose-counters:var(--color-muted-foreground)] [--tw-prose-bullets:var(--color-muted-foreground)] [--tw-prose-hr:var(--color-border)] [--tw-prose-quotes:var(--color-foreground)] [--tw-prose-quote-borders:var(--color-border)] [--tw-prose-captions:var(--color-muted-foreground)] [--tw-prose-kbd:var(--color-foreground)] [--tw-prose-code:var(--color-foreground)] [--tw-prose-pre-code:var(--color-foreground)] [--tw-prose-pre-bg:var(--color-muted)] [--tw-prose-th-borders:var(--color-border)] [--tw-prose-td-borders:var(--color-border)] [&_table]:text-[length:1em] prose-headings:mt-[1.25em] prose-headings:mb-[0.5em] prose-headings:text-[length:1em] prose-headings:leading-[1.5] prose-h1:font-semibold prose-h2:font-semibold prose-h3:font-medium prose-h4:font-medium [&_h5]:font-medium [&_h6]:font-medium [&_:not(pre)>code]:rounded [&_:not(pre)>code]:bg-muted [&_:not(pre)>code]:px-[0.3em] [&_:not(pre)>code]:py-[0.1em] [&_:not(pre)>code]:font-normal [&_:not(pre)>code]:before:content-none [&_:not(pre)>code]:after:content-none">
             <{{ $tag }} class="sf-list">
 @foreach ($items as $item)
                     <li class="sf-list__item">
@@ -34,7 +34,7 @@
         </div>
 
 @if ($remaining > 0 || $more !== null)
-            <figcaption class="sf-list__more mt-1 flex gap-2 text-sm text-muted-foreground">
+            <figcaption class="sf-list__more mt-1 flex gap-2 text-xs text-muted-foreground">
 @if ($remaining > 0)
                     <span>{{ __('and :count more', ['count' => $remaining]) }}</span>
 @endif

@@ -14,6 +14,6 @@ const picture = computed(() => pictureOf({ $body: 'Storyfeed/Body/Image', ...pro
 <template>
     <figure v-if="picture" class="sf-image m-0">
         <img class="block max-w-full rounded-lg" :src="picture.src" :alt="picture.alt" :width="picture.width ?? undefined" :height="picture.height ?? undefined" loading="lazy" />
-        <figcaption class="mt-2 text-sm leading-[1.6] text-muted-foreground" v-if="caption">{{ caption }}</figcaption>
+        <figcaption class="mt-2 text-xs leading-[1.6] text-muted-foreground" v-if="caption">{{ caption }}</figcaption>
     </figure>
 </template>

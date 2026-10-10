@@ -7,5 +7,5 @@ defineProps<{ payload: Record<string, any> }>()
 </script>
 
 <template>
-    <p class="sf-body-fallback m-0 text-base text-muted-foreground [overflow-wrap:anywhere]">{{ fallbackOf(payload) }}</p>
+    <p class="sf-body-fallback m-0 text-sm text-muted-foreground [overflow-wrap:anywhere]">{{ fallbackOf(payload) }}</p>
 </template>

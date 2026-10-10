@@ -46,10 +46,10 @@ export function CallToAction({ payload, entityUrl, entityLink }: BodyProps) {
     return (
         <div className="sf-cta mt-1.5 flex min-w-0 max-w-128 flex-col items-start gap-1 rounded-lg border border-border bg-card p-3 [overflow-wrap:anywhere]">
             {cta.subject && (
-                <p className="sf-cta__subject m-0 text-base font-medium text-foreground">{cta.subject}</p>
+                <p className="sf-cta__subject m-0 text-sm font-semibold text-foreground">{cta.subject}</p>
             )}
             {cta.content && (
-                <p className="sf-cta__content m-0 text-base leading-[1.6] whitespace-pre-line text-muted-foreground">{cta.content}</p>
+                <p className="sf-cta__content m-0 text-sm leading-[1.6] whitespace-pre-line text-muted-foreground">{cta.content}</p>
             )}
             {action('sf-cta__action inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground no-underline hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring mt-1.5')}
         </div>
@@ -67,12 +67,12 @@ export function ComponentBody({ payload }: BodyProps) {
 export function Excerpt({ payload }: BodyProps) {
     return payload.text ? (
         <figure className="sf-excerpt-block m-0">
-            <blockquote className="sf-excerpt m-0 border-l-2 border-border pl-3 text-base whitespace-pre-wrap text-muted-foreground italic">
+            <blockquote className="sf-excerpt m-0 border-l-2 border-border pl-3 text-sm whitespace-pre-wrap text-muted-foreground italic">
                 {payload.text}
                 {isTruncated(payload) && <span aria-hidden="true">…</span>}
             </blockquote>
             {payload.from && (
-                <figcaption className="sf-excerpt__from mt-0.5 text-sm text-muted-foreground">
+                <figcaption className="sf-excerpt__from mt-0.5 text-xs text-muted-foreground">
                     {payload.from}
                 </figcaption>
             )}
@@ -82,7 +82,7 @@ export function Excerpt({ payload }: BodyProps) {
 /** A body whose type has no renderer: its `$fallback` line, as plain text. */
 export function Fallback({ payload }: BodyProps) {
     return (
-        <p className="sf-body-fallback m-0 text-base text-muted-foreground [overflow-wrap:anywhere]">
+        <p className="sf-body-fallback m-0 text-sm text-muted-foreground [overflow-wrap:anywhere]">
             {fallbackOf(payload)}
         </p>
     );
@@ -106,8 +106,15 @@ export function FileAttachment({ payload }: BodyProps) {
     }
     const description = [kind, human].filter(Boolean).join(' · ');
     return payload.name || description ? (
-        <p className="sf-file m-0 text-base text-muted-foreground">
-            {[payload.name, description].filter(Boolean).join(' ')}
+        // The name at body size; its kind and size one step smaller (ui#23).
+        <p className="sf-file m-0 text-sm text-muted-foreground">
+            {payload.name ?? ''}
+            {description && (
+                <span className="sf-file__meta text-xs">
+                    {payload.name ? ' ' : ''}
+                    {description}
+                </span>
+            )}
         </p>
     ) : null;
 }
@@ -130,7 +137,7 @@ export function Image({ payload, entityMedia }: BodyProps) {
                 loading="lazy"
             />
             {caption && (
-                <figcaption className="mt-2 text-sm leading-[1.6] text-muted-foreground">
+                <figcaption className="mt-2 text-xs leading-[1.6] text-muted-foreground">
                     {caption}
                 </figcaption>
             )}
@@ -155,11 +162,11 @@ export function ItemList({ payload, entityUrl, entityLink }: BodyProps) {
     return (
         <figure className="sf-list-block m-0 min-w-0 max-w-144 rounded-lg bg-card px-4 py-3">
             {payload.title && (
-                <figcaption className="sf-list__title mb-1 text-sm text-foreground">
+                <figcaption className="sf-list__title mb-1 text-sm font-semibold text-foreground">
                     {payload.title}
                 </figcaption>
             )}
-            <div className="sf-list__prose prose max-w-none text-[length:inherit] [overflow-wrap:anywhere] [--tw-prose-body:var(--color-muted-foreground)] [--tw-prose-headings:var(--color-foreground)] [--tw-prose-lead:var(--color-muted-foreground)] [--tw-prose-links:var(--color-primary)] [--tw-prose-bold:var(--color-foreground)] [--tw-prose-counters:var(--color-muted-foreground)] [--tw-prose-bullets:var(--color-muted-foreground)] [--tw-prose-hr:var(--color-border)] [--tw-prose-quotes:var(--color-foreground)] [--tw-prose-quote-borders:var(--color-border)] [--tw-prose-captions:var(--color-muted-foreground)] [--tw-prose-kbd:var(--color-foreground)] [--tw-prose-code:var(--color-foreground)] [--tw-prose-pre-code:var(--color-foreground)] [--tw-prose-pre-bg:var(--color-border)] [--tw-prose-th-borders:var(--color-border)] [--tw-prose-td-borders:var(--color-border)]">
+            <div className="sf-list__prose prose max-w-none text-[length:var(--text-sm)] [overflow-wrap:anywhere] [--tw-prose-body:var(--color-muted-foreground)] [--tw-prose-headings:var(--color-foreground)] [--tw-prose-lead:var(--color-muted-foreground)] [--tw-prose-links:var(--color-primary)] [--tw-prose-bold:var(--color-foreground)] [--tw-prose-counters:var(--color-muted-foreground)] [--tw-prose-bullets:var(--color-muted-foreground)] [--tw-prose-hr:var(--color-border)] [--tw-prose-quotes:var(--color-foreground)] [--tw-prose-quote-borders:var(--color-border)] [--tw-prose-captions:var(--color-muted-foreground)] [--tw-prose-kbd:var(--color-foreground)] [--tw-prose-code:var(--color-foreground)] [--tw-prose-pre-code:var(--color-foreground)] [--tw-prose-pre-bg:var(--color-muted)] [--tw-prose-th-borders:var(--color-border)] [--tw-prose-td-borders:var(--color-border)] [&_table]:text-[length:1em] prose-headings:mt-[1.25em] prose-headings:mb-[0.5em] prose-headings:text-[length:1em] prose-headings:leading-[1.5] prose-h1:font-semibold prose-h2:font-semibold prose-h3:font-medium prose-h4:font-medium [&_h5]:font-medium [&_h6]:font-medium [&_:not(pre)>code]:rounded [&_:not(pre)>code]:bg-muted [&_:not(pre)>code]:px-[0.3em] [&_:not(pre)>code]:py-[0.1em] [&_:not(pre)>code]:font-normal [&_:not(pre)>code]:before:content-none [&_:not(pre)>code]:after:content-none">
                 <Tag className="sf-list">
                     {items.map((item: any, i: number) => (
                         <li key={i} className="sf-list__item">
@@ -178,7 +185,7 @@ export function ItemList({ payload, entityUrl, entityLink }: BodyProps) {
                 </Tag>
             </div>
             {!!(remaining || more) && (
-                <figcaption className="sf-list__more mt-1 flex gap-2 text-sm text-muted-foreground">
+                <figcaption className="sf-list__more mt-1 flex gap-2 text-xs text-muted-foreground">
                     {!!remaining && <span>and {remaining} more</span>}
                     {more?.href ? (
                         <Link
@@ -230,11 +237,11 @@ export function Table({ payload, entityUrl, entityLink }: BodyProps) {
     return (
         <figure className="sf-table-block m-0 min-w-0 max-w-144 rounded-lg bg-card px-4 py-3">
             {table.title && (
-                <figcaption className="sf-table__title mb-1 text-sm text-foreground">
+                <figcaption className="sf-table__title mb-1 text-sm font-semibold text-foreground">
                     {table.title}
                 </figcaption>
             )}
-            <div className="sf-table__prose overflow-x-auto prose max-w-none text-[length:inherit] [overflow-wrap:anywhere] [--tw-prose-body:var(--color-muted-foreground)] [--tw-prose-headings:var(--color-foreground)] [--tw-prose-lead:var(--color-muted-foreground)] [--tw-prose-links:var(--color-primary)] [--tw-prose-bold:var(--color-foreground)] [--tw-prose-counters:var(--color-muted-foreground)] [--tw-prose-bullets:var(--color-muted-foreground)] [--tw-prose-hr:var(--color-border)] [--tw-prose-quotes:var(--color-foreground)] [--tw-prose-quote-borders:var(--color-border)] [--tw-prose-captions:var(--color-muted-foreground)] [--tw-prose-kbd:var(--color-foreground)] [--tw-prose-code:var(--color-foreground)] [--tw-prose-pre-code:var(--color-foreground)] [--tw-prose-pre-bg:var(--color-border)] [--tw-prose-th-borders:var(--color-border)] [--tw-prose-td-borders:var(--color-border)] [&_table]:my-0 [&_table]:w-full [&_:is(th,td)]:whitespace-pre-line [&_tfoot_td]:font-semibold [&_tfoot_td]:text-foreground" tabIndex={0}>
+            <div className="sf-table__prose overflow-x-auto prose [&_th]:font-medium [&_th]:text-muted-foreground [&_td]:text-foreground max-w-none text-[length:var(--text-sm)] [overflow-wrap:anywhere] [--tw-prose-body:var(--color-muted-foreground)] [--tw-prose-headings:var(--color-foreground)] [--tw-prose-lead:var(--color-muted-foreground)] [--tw-prose-links:var(--color-primary)] [--tw-prose-bold:var(--color-foreground)] [--tw-prose-counters:var(--color-muted-foreground)] [--tw-prose-bullets:var(--color-muted-foreground)] [--tw-prose-hr:var(--color-border)] [--tw-prose-quotes:var(--color-foreground)] [--tw-prose-quote-borders:var(--color-border)] [--tw-prose-captions:var(--color-muted-foreground)] [--tw-prose-kbd:var(--color-foreground)] [--tw-prose-code:var(--color-foreground)] [--tw-prose-pre-code:var(--color-foreground)] [--tw-prose-pre-bg:var(--color-muted)] [--tw-prose-th-borders:var(--color-border)] [--tw-prose-td-borders:var(--color-border)] [&_table]:text-[length:1em] prose-headings:mt-[1.25em] prose-headings:mb-[0.5em] prose-headings:text-[length:1em] prose-headings:leading-[1.5] prose-h1:font-semibold prose-h2:font-semibold prose-h3:font-medium prose-h4:font-medium [&_h5]:font-medium [&_h6]:font-medium [&_:not(pre)>code]:rounded [&_:not(pre)>code]:bg-muted [&_:not(pre)>code]:px-[0.3em] [&_:not(pre)>code]:py-[0.1em] [&_:not(pre)>code]:font-normal [&_:not(pre)>code]:before:content-none [&_:not(pre)>code]:after:content-none [&_table]:my-0 [&_table]:w-full [&_:is(th,td)]:whitespace-pre-line [&_tfoot_td]:font-semibold [&_tfoot_td]:text-foreground" tabIndex={0}>
                 <table className="sf-table">
                     {table.headers.length > 0 && (
                         <thead>
@@ -285,23 +292,23 @@ export function KeyValue({ payload }: BodyProps) {
         typeof value === 'boolean' ? (value ? 'Yes' : 'No') : String(value);
     if (!rows.length) return null;
     return (
-        <figure className="sf-facts @container/facts m-0 flex max-w-128 flex-col rounded-lg border border-border px-3 py-1.5 text-base leading-[1.5]">
+        <figure className="sf-facts @container/facts m-0 flex max-w-128 flex-col rounded-lg border border-border px-3 py-1.5 text-sm leading-[1.5]">
             {payload.title && (
                 <figcaption className="sf-facts__title border-b border-border pt-0.75 pb-1.25 font-semibold text-foreground">
                     {payload.title}
                 </figcaption>
             )}
-            <dl className="sf-facts__rows m-0 flex flex-col">
+            <dl className="sf-facts__rows m-0 grid grid-cols-[fit-content(40%)_minmax(0,1fr)] @max-[28rem]/facts:grid-cols-1">
                 {rows.map((row: any, i: number) => (
                     <div
                         key={i}
-                        className="sf-facts__row grid grid-cols-[max-content_minmax(0,1fr)] @max-[28rem]/facts:grid-cols-1 items-baseline gap-x-4 gap-y-1 border-b border-border py-0.75 last:border-b-0"
+                        className="sf-facts__row col-span-full grid grid-cols-subgrid items-baseline gap-x-4 gap-y-1 border-b border-border py-0.75 last:border-b-0"
                     >
-                        <dt className="sf-facts__label whitespace-nowrap @max-[28rem]/facts:whitespace-normal @max-[28rem]/facts:[overflow-wrap:anywhere] text-foreground">
+                        <dt className="sf-facts__label [overflow-wrap:anywhere] text-muted-foreground">
                             {row.key}
                         </dt>
                         <dd
-                            className={`sf-facts__value m-0 min-w-0 text-right @max-[28rem]/facts:text-left text-muted-foreground tabular-nums [overflow-wrap:anywhere]${row.verbatim ? ' sf-facts__value--verbatim truncate font-mono text-sm' : ''}`}
+                            className={`sf-facts__value m-0 min-w-0 text-left text-foreground tabular-nums [overflow-wrap:anywhere]${row.verbatim ? ' sf-facts__value--verbatim truncate font-mono text-sm' : ''}`}
                             title={
                                 row.verbatim && typeof row.value === 'string'
                                     ? row.value
@@ -309,13 +316,13 @@ export function KeyValue({ payload }: BodyProps) {
                             }
                         >
                             {row.value === null || row.value === '' ? (
-                                <span className="sf-facts__value--absent ml-auto @max-[28rem]/facts:ml-0 block w-fit max-w-full text-left text-muted-foreground italic">
+                                <span className="sf-facts__value--absent block max-w-full text-muted-foreground italic">
                                     {row.placeholder}
                                 </span>
                             ) : row.verbatim ? (
                                 text(row.value)
                             ) : (
-                                <span className="ml-auto @max-[28rem]/facts:ml-0 block w-fit max-w-full text-left">
+                                <span className="block max-w-full">
                                     {text(row.value)}
                                 </span>
                             )}
@@ -365,7 +372,7 @@ export function MediaObject({
     }[shape.shape];
     if (!subject?.label && !payload.content && !picture && !files.length) {
         return footnote ? (
-            <p className="sf-media-object__footnote mt-0.5 mb-0 text-sm leading-[1.6] text-muted-foreground">
+            <p className="sf-media-object__footnote mt-0.5 mb-0 text-xs leading-[1.6] text-muted-foreground">
                 {footnote.href ? (
                     <Link
                         {...footnote.props}
@@ -395,7 +402,7 @@ export function MediaObject({
             )}
             <div className="sf-media-object__body flex min-w-0 flex-[1_1_--spacing(48)] flex-col gap-1 [overflow-wrap:anywhere]">
                 {subject?.label && (
-                    <p className="sf-media-object__subject m-0 text-base font-medium text-foreground">
+                    <p className="sf-media-object__subject m-0 text-sm font-semibold text-foreground">
                         {subject.href ? (
                             <Link {...subject.props}>{subject.label}</Link>
                         ) : (
@@ -404,7 +411,7 @@ export function MediaObject({
                     </p>
                 )}
                 {payload.content && (
-                    <p className="sf-prose m-0 text-base leading-[1.6] whitespace-pre-wrap sf-media-object__content line-clamp-3 text-muted-foreground">
+                    <p className="sf-prose m-0 text-sm leading-[1.6] whitespace-pre-wrap sf-media-object__content line-clamp-3 text-muted-foreground">
                         {payload.content}
                     </p>
                 )}
@@ -416,7 +423,7 @@ export function MediaObject({
                         {files.map((file: any, i: number) => (
                             <li
                                 key={i}
-                                className="sf-file m-0 text-base text-muted-foreground"
+                                className="sf-file m-0 text-sm text-muted-foreground"
                             >
                                 <Link href={file.href}>
                                     {file.name ?? file.href}
@@ -429,7 +436,7 @@ export function MediaObject({
                     </ul>
                 )}
                 {footnote && (
-                    <p className="sf-media-object__footnote mt-0.5 mb-0 text-sm leading-[1.6] text-muted-foreground">
+                    <p className="sf-media-object__footnote mt-0.5 mb-0 text-xs leading-[1.6] text-muted-foreground">
                         {footnote.href ? (
                             <Link {...footnote.props}>{footnote.label}</Link>
                         ) : (
@@ -448,25 +455,25 @@ export function Prose({ payload }: BodyProps) {
             className={`sf-prose-block m-0 min-w-0 max-w-144 ${payload.verbatim ? 'sf-prose-block--verbatim' : 'rounded-lg bg-card px-4 py-3'}`}
         >
             {payload.title && (
-                <figcaption className="sf-prose__title mb-2 text-sm font-medium text-foreground">
+                <figcaption className="sf-prose__title mb-2 text-sm font-semibold text-foreground">
                     {payload.title}
                 </figcaption>
             )}
             {payload.verbatim ? (
                 <pre
-                    className="sf-verbatim m-0 max-h-[var(--sf-prose-max-h,--spacing(96))] overflow-auto rounded-lg bg-foreground px-4 py-3 font-mono text-sm leading-[1.55] whitespace-pre-wrap text-background dark:bg-background dark:text-foreground [overflow-wrap:anywhere] [&_code]:bg-transparent [&_code]:p-0 [&_code]:font-[inherit] [&_code]:text-inherit"
+                    className="sf-verbatim m-0 max-h-[var(--sf-prose-max-h,--spacing(96))] overflow-auto rounded-lg bg-[var(--sf-code-bg,#18181b)] px-4 py-3 font-mono text-sm leading-[1.55] whitespace-pre-wrap text-[var(--sf-code-fg,#f4f4f5)] dark:bg-[var(--sf-code-bg,#27272a)] [overflow-wrap:anywhere] [&_code]:bg-transparent [&_code]:p-0 [&_code]:font-[inherit] [&_code]:text-inherit"
                     tabIndex={0}
                 >
                     <code>{payload.content}</code>
                 </pre>
             ) : isRich(payload) ? (
                 <div
-                    className="sf-rich-text prose max-w-none text-[length:inherit] [overflow-wrap:anywhere] [--tw-prose-body:var(--color-muted-foreground)] [--tw-prose-headings:var(--color-foreground)] [--tw-prose-lead:var(--color-muted-foreground)] [--tw-prose-links:var(--color-primary)] [--tw-prose-bold:var(--color-foreground)] [--tw-prose-counters:var(--color-muted-foreground)] [--tw-prose-bullets:var(--color-muted-foreground)] [--tw-prose-hr:var(--color-border)] [--tw-prose-quotes:var(--color-foreground)] [--tw-prose-quote-borders:var(--color-border)] [--tw-prose-captions:var(--color-muted-foreground)] [--tw-prose-kbd:var(--color-foreground)] [--tw-prose-code:var(--color-foreground)] [--tw-prose-pre-code:var(--color-foreground)] [--tw-prose-pre-bg:var(--color-border)] [--tw-prose-th-borders:var(--color-border)] [--tw-prose-td-borders:var(--color-border)] [&_li:has(>input)]:list-none [&_li>input]:my-0 [&_li>input]:-ms-[1.5em] [&_li>input]:me-[0.5em] [&_[align=center]]:text-center [&_[align=right]]:text-right [&_pre]:max-h-[var(--sf-prose-max-h,--spacing(96))] [&_pre]:overflow-auto"
+                    className="sf-rich-text prose max-w-none text-[length:var(--text-sm)] [overflow-wrap:anywhere] [--tw-prose-body:var(--color-muted-foreground)] [--tw-prose-headings:var(--color-foreground)] [--tw-prose-lead:var(--color-muted-foreground)] [--tw-prose-links:var(--color-primary)] [--tw-prose-bold:var(--color-foreground)] [--tw-prose-counters:var(--color-muted-foreground)] [--tw-prose-bullets:var(--color-muted-foreground)] [--tw-prose-hr:var(--color-border)] [--tw-prose-quotes:var(--color-foreground)] [--tw-prose-quote-borders:var(--color-border)] [--tw-prose-captions:var(--color-muted-foreground)] [--tw-prose-kbd:var(--color-foreground)] [--tw-prose-code:var(--color-foreground)] [--tw-prose-pre-code:var(--color-foreground)] [--tw-prose-pre-bg:var(--color-muted)] [--tw-prose-th-borders:var(--color-border)] [--tw-prose-td-borders:var(--color-border)] [&_table]:text-[length:1em] prose-headings:mt-[1.25em] prose-headings:mb-[0.5em] prose-headings:text-[length:1em] prose-headings:leading-[1.5] prose-h1:font-semibold prose-h2:font-semibold prose-h3:font-medium prose-h4:font-medium [&_h5]:font-medium [&_h6]:font-medium [&_:not(pre)>code]:rounded [&_:not(pre)>code]:bg-muted [&_:not(pre)>code]:px-[0.3em] [&_:not(pre)>code]:py-[0.1em] [&_:not(pre)>code]:font-normal [&_:not(pre)>code]:before:content-none [&_:not(pre)>code]:after:content-none [&_li:has(>input)]:list-none [&_li>input]:my-0 [&_li>input]:-ms-[1.5em] [&_li>input]:me-[0.5em] [&_[align=center]]:text-center [&_[align=right]]:text-right [&_pre]:max-h-[var(--sf-prose-max-h,--spacing(96))] [&_pre]:overflow-auto"
                     dangerouslySetInnerHTML={{ __html: renderProse(payload) }}
                 />
             ) : (
                 <p
-                    className="sf-prose m-0 text-base leading-[1.6] whitespace-pre-wrap [overflow-wrap:anywhere]">
+                    className="sf-prose m-0 text-sm leading-[1.6] whitespace-pre-wrap [overflow-wrap:anywhere]">
                     {payload.content}
                 </p>
             )}

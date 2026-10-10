@@ -49,15 +49,15 @@
 @endif
     <div class="sf-media-object__body flex min-w-0 flex-[1_1_--spacing(48)] flex-col gap-1 [overflow-wrap:anywhere]">
 @if ($subject)
-            <p class="sf-media-object__subject m-0 text-base font-medium text-foreground">
-@if ($subject['href'])<a href="{{ $subject['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag($subject['attributes']))->class('font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring') }}>{{ $subject['label'] }}</a>
+            <p class="sf-media-object__subject m-0 text-sm font-semibold text-foreground">
+@if ($subject['href'])<a href="{{ $subject['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag($subject['attributes']))->class('text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring') }}>{{ $subject['label'] }}</a>
 @else{{ $subject['label'] }}
 @endif
             </p>
 @endif
 
 @if (filled($body['content'] ?? null))
-            <p class="sf-prose m-0 text-base leading-[1.6] whitespace-pre-wrap sf-media-object__content line-clamp-3 text-muted-foreground">{{ $body['content'] }}</p>
+            <p class="sf-prose m-0 text-sm leading-[1.6] whitespace-pre-wrap sf-media-object__content line-clamp-3 text-muted-foreground">{{ $body['content'] }}</p>
 @endif
 
 @if (is_array($picture) && $imagePlacement === 'below')
@@ -66,7 +66,7 @@
 @if ($files->isNotEmpty())
         <ul class="sf-media-object__attachments mt-0.5 mb-0 flex list-none flex-col gap-0.5 p-0">
 @foreach ($files as $file)
-            <li class="sf-file m-0 text-base text-muted-foreground"><a class="font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring" href="{{ $file['href'] }}">{{ $file['name'] ?? $file['href'] }}</a>
+            <li class="sf-file m-0 text-sm text-muted-foreground"><a class="font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring" href="{{ $file['href'] }}">{{ $file['name'] ?? $file['href'] }}</a>
 @if (filled($file['mediaType'] ?? null)) · {{ $file['mediaType'] }}
 @endif</li>
 @endforeach
@@ -74,7 +74,7 @@
 @endif
 
 @if ($footnote)
-            <p class="sf-media-object__footnote mt-0.5 mb-0 text-sm leading-[1.6] text-muted-foreground">
+            <p class="sf-media-object__footnote mt-0.5 mb-0 text-xs leading-[1.6] text-muted-foreground">
 @if ($footnote['href'])<a href="{{ $footnote['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag($footnote['attributes']))->class('font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring') }}>{{ $footnote['label'] }}</a>
 @else{{ $footnote['label'] }}
 @endif
@@ -83,7 +83,7 @@
     </div>
 </div>
 @elseif ($footnote)
-<p {{ $attributes->class('sf-media-object__footnote mt-0.5 mb-0 text-sm leading-[1.6] text-muted-foreground') }}>
+<p {{ $attributes->class('sf-media-object__footnote mt-0.5 mb-0 text-xs leading-[1.6] text-muted-foreground') }}>
 @if ($footnote['href'])<a href="{{ $footnote['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag($footnote['attributes']))->class('font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring') }}>{{ $footnote['label'] }}</a>
 @else{{ $footnote['label'] }}
 @endif
