@@ -41,6 +41,7 @@ const server = createServer(async (req, res) => {
 await new Promise(r => server.listen(0, '127.0.0.1', r));
 const browser = await chromium.launch();
 const report = [];
+const gaps = {};
 try {
     for (const renderers of [['vue', 'blade', 'react']]) {
         // Text sizes: the default, the browser's text at 200%, and the feed's own `--sf-font-size`.
@@ -158,6 +159,47 @@ try {
                         await writeFile(`${output}/k2-zoom-${renderers[i]}-${theme}-${width}.png`, Buffer.from(capture.data, 'base64'));
                         await session.detach();
                     }
+                }
+                // Jasper (ui#34): a branch divider's curve shares the rail line's x and width, darkens from the line's colour to the
+                // label's through a gradient with a page-unique id, and meets the label at the middle of its cap height. The line above stops at the divider, leaving the same gap before the curve in every
+                // kit, and the line below continues from the curve's end.
+                if (state === 'collapsed') for (let i = 0; i < frames.length; i++) {
+                    const joints = await frames[i].locator('.example:has(>h2:text-is("Day dividers and a group")), .example:has(>h2:text-is("Per-item divider"))').evaluateAll(sections => sections.flatMap(section => [...section.querySelectorAll('.sf-divider')].map(divider => {
+                        const row = divider.getBoundingClientRect();
+                        const curve = divider.querySelector('.sf-rail__branch');
+                        const stem = curve.getBoundingClientRect(), rect = curve.querySelector('rect'), stroke = parseFloat(getComputedStyle(rect).strokeWidth);
+                        const gradient = curve.querySelector('linearGradient'), stops = [...gradient.querySelectorAll('stop')].map(stop => getComputedStyle(stop).stopColor);
+                        const line = divider.querySelector('.sf-rail__line').getBoundingClientRect();
+                        const above = [...section.querySelectorAll('.sf-rail__line')].map(l => l.getBoundingClientRect()).filter(l => l.height > 0 && l.bottom <= row.top + 0.01).sort((a, b) => b.bottom - a.bottom)[0];
+                        const label = divider.querySelector('.sf-day'), font = getComputedStyle(label);
+                        const probe = document.createElement('span'); probe.style.cssText = 'display:inline-block;width:0;height:0;vertical-align:baseline';
+                        label.append(probe); const baseline = probe.getBoundingClientRect().top; probe.remove();
+                        const context = document.createElement('canvas').getContext('2d'); context.font = `${font.fontWeight} ${font.fontSize} ${font.fontFamily}`;
+                        return {
+                            label: label.textContent.trim(), stemX: stem.x + rect.x.baseVal.value - stroke / 2, lineX: line.x, stemWidth: stroke, lineWidth: line.width,
+                            stops, lineColour: getComputedStyle(divider.querySelector('.sf-rail__line')).backgroundColor, labelColour: font.color,
+                            gradient: { id: gradient.id, used: rect.getAttribute('stroke') === `url(#${gradient.id})`, unique: document.querySelectorAll(`[id="${gradient.id}"]`).length === 1 },
+                            lineTop: line.top - row.top, curveTop: stem.top - row.top, curveEnd: stem.bottom - row.top, above: above && { x: above.x, w: above.width, gap: row.top - above.bottom },
+                            stroke: stem.top + rect.y.baseVal.value, labelSize: parseFloat(font.fontSize), capMiddle: baseline - context.measureText('H').actualBoundingBoxAscent / 2,
+                        };
+                    })));
+                    assert.equal(joints.length, 4, `${renderers[i]}: branch dividers measured`);
+                    for (const joint of joints) {
+                        const where = `${renderers[i]} ${width} ${theme} ${text} ${joint.label}`;
+                        assert.equal(joint.stemX, joint.lineX, `${where}: the curve's stem shares the rail line's x`);
+                        assert.equal(joint.stemWidth, joint.lineWidth, `${where}: the curve's stem is as wide as the rail line`);
+                        assert.deepEqual(joint.stops, [joint.lineColour, joint.labelColour], `${where}: the curve darkens from the rail line's colour to the label's`);
+                        assert.ok(joint.gradient.used && joint.gradient.unique && joint.gradient.id.startsWith('sf-branch-'), `${where}: the curve strokes with its own gradient (${joint.gradient.id})`);
+                        // The join is a fixed 0.5625em, so how closely it meets the cap middle depends on the font's metrics (Arial here, Liberation Sans on CI): within 0.075em of the label.
+                        assert.ok(Math.abs(joint.stroke - joint.capMiddle) <= joint.labelSize * 0.075, `${where}: the curve meets the label's cap middle (${joint.stroke} vs ${joint.capMiddle})`);
+                        assert.equal(joint.lineTop, joint.curveEnd, `${where}: the line below continues from the curve's end`);
+                        if (joint.above) assert.deepEqual([joint.above.x, joint.above.w, joint.above.gap], [joint.lineX, joint.lineWidth, 0], `${where}: the line above stops at the divider, on the same column`);
+                    }
+                    assert.deepEqual(joints.map(joint => joint.above !== undefined), [false, false, true, true], `${renderers[i]}: only the first divider of a feed has nothing above`);
+                    // The gap from the line above to the curve is one size (0.5625em of the feed's text, less half the stroke) for every divider.
+                    const unit = await frames[i].evaluate(() => parseFloat(getComputedStyle(document.querySelector('.sf-divider .sf-rail')).fontSize));
+                    for (const joint of joints) assert.equal(joint.curveTop, unit * 0.5625 - 0.5, `${renderers[i]} ${width} ${text} ${joint.label}: the gap above the curve`);
+                    gaps[renderers[i]] = [...(gaps[renderers[i]] ?? []), ...joints.map(joint => joint.curveTop)];
                 }
                 const geometry = await Promise.all(frames.map(frame => frame.evaluate(() => {
                     const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media', '.sf-facts', '.sf-facts__row', '.sf-facts__label', '.sf-facts__value', '.sf-facts__value > span', '.sf-rich-text', '.sf-rich-text *', '.sf-list-block', '.sf-list__prose *', '.sf-media-strip > *', '.sf-avatar--tile', '.sf-table-block', '.sf-table__prose *', '.sf-media-object__image img', '.sf-cta', '.sf-cta > *', '.sf-cta__action'];
@@ -308,8 +350,8 @@ try {
                         const selectors = {
                             badge: '.example:has(>h2:text-is("actor")) .sf-row',
                             child: '.example:has(>h2:text-is("Actor parent with glyph-only children")) .sf-row',
-                            dot: '.example:has(>h2:text-is("Per-item divider")) .sf-divider',
-                            branch: '.example:has(>h2:text-is("Branch divider (extension)")) .sf-divider',
+                            branch: '.example:has(>h2:text-is("Per-item divider")) .sf-divider',
+                            dot: '.example:has(>h2:text-is("Dot divider (option)")) .sf-divider',
                         };
                         for (const [joint, selector] of Object.entries(selectors)) {
                             const target = frames[i].locator(selector).first();
@@ -358,6 +400,7 @@ try {
             await page.close();
         }
     }
+    for (const kit of Object.keys(gaps)) assert.deepEqual(gaps[kit], gaps.vue, `${kit}: the branch gap matches Vue's everywhere`);
     await writeFile(`${output}/r1-geometry.json`, JSON.stringify(report, null, 2));
     console.log(report.map(({ differences, ...entry }) => ({ ...entry, differences: differences.length })));
     if (process.env.STORYFEED_STRICT_PARITY) assert.ok(report.every(entry => entry.differences.length === 0 && entry.max === 0), 'Vue/Blade/React geometry must match at 0px; see r1-geometry.json');

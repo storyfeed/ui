@@ -55,11 +55,11 @@ export default function App() {
                         })}
                     </section>
                     <section className="example">
-                        <h2>Branch divider (extension)</h2>
+                        <h2>Dot divider (option)</h2>
                         {feed(bodyItems.slice(0, 1), {
                             grouped: false,
                             dividers: { 'body-0': 'Timeline' },
-                            dividerStyle: 'branch',
+                            dividerStyle: 'dot',
                         })}
                     </section>
                     {cases.map((example) => (

@@ -430,20 +430,24 @@ test('dividers draw a labelled node on the rail before the named item', async ()
     });
     const at = html.indexOf('sf-divider');
     assert.ok(at > 0, 'divider rendered');
-    assert.match(html.slice(at), /sf-rail__node[\s\S]*?>Timeline</);
+    assert.match(html.slice(at), /sf-rail__branch[\s\S]*?>Timeline</);
     assert.ok(at > html.indexOf('data-node-id') || html.indexOf('Ada') < at);
     assert.equal(html.match(/sf-divider /g).length, 1);
 });
 
-test('branch dividers use the rail curve for days and per-item labels', async () => {
+test('dividers branch off the rail by default, for days and per-item labels; dot on request', async () => {
     const item = { kind: 'activity', id: 'first', verb: 'posted', published_at: '2026-10-07T12:00:00Z', headline_template: ':actor posted', actor: entity, object: null, target: null, context: null };
     const html = await render('/resources/js/vue/FeedStream.vue', {
-        items: [item], dividers: { first: 'History' }, dividerStyle: 'branch',
+        items: [item], dividers: { first: 'History' },
     });
     assert.equal(html.match(/class="sf-rail__branch"/g).length, 2);
-    assert.match(html, /d="M0.75 22 V14 Q0.75 6 8.75 6 H15"/);
     assert.doesNotMatch(html, /sf-rail__node/);
     assert.ok(html.indexOf('History') < html.indexOf('Ada Lovelace'));
+    const dot = await render('/resources/js/vue/FeedStream.vue', {
+        items: [item], dividers: { first: 'History' }, dividerStyle: 'dot',
+    });
+    assert.equal(dot.match(/sf-rail__node/g).length, 2);
+    assert.doesNotMatch(dot, /sf-rail__branch/);
 });
 
 test('empty state, loading pager and future node kinds remain safe', async () => {

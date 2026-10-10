@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, toRef } from 'vue';
+import { computed, toRef, useId } from 'vue';
 import FeedNodeView from './FeedNode.vue';
 import type { Rail, RailName } from '../shared/rail';
 import type { FeedNode } from '../shared/types';
@@ -32,7 +32,7 @@ const props = withDefaults(
          * as a node on the rail rather than a heading above it.
          */
         dividers?: Record<string, string>;
-        /** How a divider meets the rail: a `dot` on it, or a `branch` off it. */
+        /** How a divider meets the rail: a `branch` off it (the default), or a `dot` on it. */
         dividerStyle?: 'dot' | 'branch';
     }>(),
     {
@@ -45,7 +45,7 @@ const props = withDefaults(
         collapsed: null,
         rail: null,
         dividers: () => ({}),
-        dividerStyle: 'dot',
+        dividerStyle: 'branch',
     },
 );
 
@@ -56,6 +56,8 @@ const nodes = computed(() => props.items ?? read.value.items);
 const cursor = computed(() => props.nextCursor ?? read.value.nextCursor);
 
 const days = useFeedDays(toRef(() => nodes.value));
+// Each branch divider's stroke gradient needs an id unique on the page.
+const gradientId = `sf-branch-${useId()}`;
 </script>
 
 <template>
@@ -69,23 +71,25 @@ const days = useFeedDays(toRef(() => nodes.value));
                 <div
                     v-if="grouped"
                     :class="[
-                        'sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail>div:last-child]:mt-1.25',
-                        dividerStyle === 'branch' ? 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-5.5' : 'sf-divider--dot',
+                        'sf-row sf-divider relative flex items-start gap-(--sf-gap)',
+                        dividerStyle === 'dot' ? 'sf-divider--dot [&_.sf-rail>div:last-child]:mt-1.25' : 'sf-divider--branch',
                     ]"
                 >
-                    <div class="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
-                        <svg
-                            v-if="dividerStyle === 'branch'"
-                            aria-hidden="true"
-                            class="sf-rail__branch absolute top-0.75 left-[calc(50%-var(--spacing)*0.1875)] h-5.5 w-4 overflow-visible fill-none stroke-muted-foreground stroke-[1.5] [stroke-linecap:round]"
-                            width="16"
-                            height="22"
-                            viewBox="0 0 16 22"
-                        >
-                            <path d="M0.75 22 V14 Q0.75 6 8.75 6 H15" />
+                    <div class="sf-rail relative flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
+                        <div v-if="dividerStyle === 'dot'" aria-hidden="true" class="sf-rail__node mt-1.25 size-2.25 shrink-0 rounded-full bg-muted-foreground ring-3 ring-background" />
+                        <svg v-else aria-hidden="true" class="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap)-var(--spacing)*1.5)] overflow-hidden">
+                            <defs>
+                                <linearGradient :id="`${gradientId}-day-${dayIndex}`" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100%" y2="0">
+                                    <stop offset="0" class="[stop-color:var(--color-border)]" />
+                                    <stop offset="1" class="[stop-color:var(--color-muted-foreground)]" />
+                                </linearGradient>
+                            </defs>
+                            <rect x="0.5" y="0.5" width="200%" height="200%" rx="0.5em" class="fill-none stroke-1" :stroke="`url(#${gradientId}-day-${dayIndex})`" />
                         </svg>
-                        <div v-else aria-hidden="true" class="sf-rail__node mt-1.25 size-2.25 shrink-0 rounded-full bg-muted-foreground ring-3 ring-background" />
-                        <div aria-hidden="true" class="sf-rail__line mt-1 w-px flex-1 bg-border" />
+                        <div
+                            aria-hidden="true"
+                            :class="['sf-rail__line w-px flex-1 bg-border', dividerStyle === 'dot' ? 'mt-1' : 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]']"
+                        />
                     </div>
                     <h2 class="sf-day m-0 border-0 pt-0 pb-5 text-xs leading-[1.6] font-semibold tracking-[0.05em] text-muted-foreground uppercase">{{ day.label }}</h2>
                 </div>
@@ -98,27 +102,25 @@ const days = useFeedDays(toRef(() => nodes.value));
                     <div
                         v-if="dividers[item.id]"
                         :class="[
-                            'sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail>div:last-child]:mt-1.25',
-                            dividerStyle === 'branch' ? 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-5.5' : 'sf-divider--dot',
+                            'sf-row sf-divider relative flex items-start gap-(--sf-gap)',
+                            dividerStyle === 'dot' ? 'sf-divider--dot [&_.sf-rail>div:last-child]:mt-1.25' : 'sf-divider--branch',
                         ]"
                     >
-                        <div class="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
-                            <svg
-                                v-if="dividerStyle === 'branch'"
-                                aria-hidden="true"
-                                class="sf-rail__branch absolute top-0.75 left-[calc(50%-var(--spacing)*0.1875)] h-5.5 w-4 overflow-visible fill-none stroke-muted-foreground stroke-[1.5] [stroke-linecap:round]"
-                                width="16"
-                                height="22"
-                                viewBox="0 0 16 22"
-                            >
-                                <path d="M0.75 22 V14 Q0.75 6 8.75 6 H15" />
+                        <div class="sf-rail relative flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
+                            <div v-if="dividerStyle === 'dot'" aria-hidden="true" class="sf-rail__node mt-1.25 size-2.25 shrink-0 rounded-full bg-muted-foreground ring-3 ring-background" />
+                            <svg v-else aria-hidden="true" class="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap)-var(--spacing)*1.5)] overflow-hidden">
+                                <defs>
+                                    <linearGradient :id="`${gradientId}-item-${dayIndex}-${index}`" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100%" y2="0">
+                                        <stop offset="0" class="[stop-color:var(--color-border)]" />
+                                        <stop offset="1" class="[stop-color:var(--color-muted-foreground)]" />
+                                    </linearGradient>
+                                </defs>
+                                <rect x="0.5" y="0.5" width="200%" height="200%" rx="0.5em" class="fill-none stroke-1" :stroke="`url(#${gradientId}-item-${dayIndex}-${index})`" />
                             </svg>
                             <div
-                                v-else
                                 aria-hidden="true"
-                                class="sf-rail__node mt-1.25 size-2.25 shrink-0 rounded-full bg-muted-foreground ring-3 ring-background"
+                                :class="['sf-rail__line w-px flex-1 bg-border', dividerStyle === 'dot' ? 'mt-1' : 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]']"
                             />
-                            <div aria-hidden="true" class="sf-rail__line mt-1 w-px flex-1 bg-border" />
                         </div>
                         <h2 class="sf-day m-0 border-0 pt-0 pb-5 text-xs leading-[1.6] font-semibold tracking-[0.05em] text-muted-foreground uppercase">{{ dividers[item.id] }}</h2>
                     </div>

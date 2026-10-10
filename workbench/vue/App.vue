@@ -32,7 +32,7 @@ const rails = ['actor', 'activity', 'actor-only', 'activity-only'] as const;
             <section class="example"><h2>Generic body forms</h2><component :is="pane.component" :items="bodyItems" :grouped="false" /></section>
             <section v-for="rail in rails" :key="rail" class="example"><h2>{{ rail }}</h2><component :is="pane.component" :items="bodyItems.slice(0, 1)" :grouped="false" :rail="rail" /></section>
             <section class="example"><h2>Per-item divider</h2><component :is="pane.component" :items="bodyItems.slice(0, 1)" :grouped="false" :dividers="{ 'body-0': 'Timeline' }" /></section>
-            <section v-if="pane.name === 'Tailwind'" class="example"><h2>Branch divider (extension)</h2><FeedStream :items="bodyItems.slice(0, 1)" :grouped="false" :dividers="{ 'body-0': 'Timeline' }" divider-style="branch" /></section>
+            <section v-if="pane.name === 'Tailwind'" class="example"><h2>Dot divider (option)</h2><FeedStream :items="bodyItems.slice(0, 1)" :grouped="false" :dividers="{ 'body-0': 'Timeline' }" divider-style="dot" /></section>
             <section v-for="example in cases" :key="example.name" class="example"><h2>{{ example.name }}</h2><component :is="pane.component" :items="(example.items as FeedNode[])" :rail="(example.rail as any) ?? null" :child-rail="(example.childRail as any) ?? null" :grouped="example.grouped ?? false" :interactive="example.interactive ?? true" :collapsed="example.collapsed ?? null" /></section>
             <section class="example"><h2>MediaObject below</h2><div class="sf-feed text-sm leading-[1.6] text-muted-foreground"><MediaObject :payload="postBody" :entity-media="post.media" :entity-url="post.url" image-placement="below" /></div></section>
         </article>

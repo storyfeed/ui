@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { useId, type CSSProperties, type ReactNode } from 'react';
 import type { FeedNode } from '../shared/types';
 import { readPage, type FeedPageLike } from '../shared/page';
 import FeedNodeView from './FeedNode';
@@ -18,31 +18,59 @@ export interface FeedStreamProps extends NodeProps {
     onLoadMore?: () => void;
     empty?: ReactNode;
 }
-function Divider({ label, style }: { label: string; style: 'dot' | 'branch' }) {
+function Divider({
+    label,
+    style,
+}: {
+    label: string;
+    style: 'dot' | 'branch';
+}) {
+    // The stroke gradient needs an id unique on the page; React's ids may hold characters a url() reference shouldn't.
+    const gradient = `sf-branch-${useId().replace(/[^\w-]/g, '')}`;
     return (
         <div
-            className={`sf-row sf-divider relative flex items-start gap-(--sf-gap) [&_.sf-rail>div:last-child]:mt-1.25 ${style === 'branch' ? 'sf-divider--branch [&_.sf-rail]:relative [&_.sf-rail>div:last-child]:mt-5.5' : 'sf-divider--dot'}`}
+            className={`sf-row sf-divider relative flex items-start gap-(--sf-gap) ${style === 'dot' ? 'sf-divider--dot [&_.sf-rail>div:last-child]:mt-1.25' : 'sf-divider--branch'}`}
         >
-            <div className="sf-rail flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
-                {style === 'branch' ? (
-                    <svg
-                        aria-hidden="true"
-                        className="sf-rail__branch absolute top-0.75 left-[calc(50%-var(--spacing)*0.1875)] h-5.5 w-4 overflow-visible fill-none stroke-muted-foreground stroke-[1.5] [stroke-linecap:round]"
-                        width="16"
-                        height="22"
-                        viewBox="0 0 16 22"
-                    >
-                        <path d="M0.75 22 V14 Q0.75 6 8.75 6 H15" />
-                    </svg>
-                ) : (
+            <div className="sf-rail relative flex w-(--sf-gutter) shrink-0 flex-col items-center self-stretch">
+                {style === 'dot' ? (
                     <div
                         aria-hidden="true"
                         className="sf-rail__node mt-1.25 size-2.25 shrink-0 rounded-full bg-muted-foreground ring-3 ring-background"
                     />
+                ) : (
+                    // The curve is the corner of a 1px rect on the rail line's column, darkening from the rail's colour to the label's;
+                    // the line continues from its end, leaving a gap above it.
+                    <svg
+                        aria-hidden="true"
+                        className="sf-rail__branch absolute top-[calc(0.5625em-0.5px)] left-[calc(50%-0.5px)] h-2 w-[calc(50%+0.5px+var(--sf-gap)-var(--spacing)*1.5)] overflow-hidden"
+                    >
+                        <defs>
+                            <linearGradient
+                                id={gradient}
+                                gradientUnits="userSpaceOnUse"
+                                x1="0"
+                                y1="0"
+                                x2="100%"
+                                y2="0"
+                            >
+                                <stop offset="0" className="[stop-color:var(--color-border)]" />
+                                <stop offset="1" className="[stop-color:var(--color-muted-foreground)]" />
+                            </linearGradient>
+                        </defs>
+                        <rect
+                            x="0.5"
+                            y="0.5"
+                            width="200%"
+                            height="200%"
+                            rx="0.5em"
+                            className="fill-none stroke-1"
+                            stroke={`url(#${gradient})`}
+                        />
+                    </svg>
                 )}
                 <div
                     aria-hidden="true"
-                    className="sf-rail__line mt-1 w-px flex-1 bg-border"
+                    className={`sf-rail__line w-px flex-1 bg-border ${style === 'dot' ? 'mt-1' : 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]'}`}
                 />
             </div>
             <h2 className="sf-day m-0 border-0 pt-0 pb-5 text-xs leading-[1.6] font-semibold tracking-[0.05em] text-muted-foreground uppercase">
@@ -62,7 +90,7 @@ export default function FeedStream({
     rail,
     childRail,
     dividers = {},
-    dividerStyle = 'dot',
+    dividerStyle = 'branch',
     onLoadMore,
     empty = 'No activity yet.',
     ...renderers

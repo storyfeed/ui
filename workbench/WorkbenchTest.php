@@ -78,15 +78,15 @@ final class WorkbenchTest extends TestCase
         $icons = json_decode(file_get_contents(dirname(__DIR__).'/build/workbench-icons.json'), true, flags: JSON_THROW_ON_ERROR);
         $renderers = ['glyph' => fn ($token, $variant) => $icons[$token] ?? $icons['activity']];
         $render = fn ($items, $options = []) => Blade::render('<x-storyfeed::feed :items="$items" :grouped="$grouped" :rail="$rail" :child-rail="$childRail" :dividers="$dividers" :divider-style="$dividerStyle" :renderers="$renderers" :interactive="$interactive" :collapsed="$collapsed" />', [
-            'renderers' => $renderers, 'items' => $items, 'interactive' => true, 'collapsed' => null, 'grouped' => true, 'rail' => null, 'childRail' => null, 'dividers' => [], 'dividerStyle' => 'dot', ...$options,
+            'renderers' => $renderers, 'items' => $items, 'interactive' => true, 'collapsed' => null, 'grouped' => true, 'rail' => null, 'childRail' => null, 'dividers' => [], 'dividerStyle' => 'branch', ...$options,
         ]);
         $main = $render($payload['items']);
         $examples = ['Generic body forms' => $render($bodies, ['grouped' => false])];
         foreach (['actor', 'activity', 'actor-only', 'activity-only'] as $rail) {
             $examples[$rail] = $render([$bodies[0]], ['grouped' => false, 'rail' => $rail]);
         }
-        foreach (['dot', 'branch'] as $style) {
-            $examples[$style === 'dot' ? 'Per-item divider' : 'Branch divider (extension)'] = $render([$bodies[0]], ['grouped' => false, 'dividers' => ['body-0' => 'Timeline'], 'dividerStyle' => $style]);
+        foreach (['branch', 'dot'] as $style) {
+            $examples[$style === 'branch' ? 'Per-item divider' : 'Dot divider (option)'] = $render([$bodies[0]], ['grouped' => false, 'dividers' => ['body-0' => 'Timeline'], 'dividerStyle' => $style]);
         }
         $cases = json_decode(file_get_contents(__DIR__.'/vue/cases.json'), true, flags: JSON_THROW_ON_ERROR);
         foreach ($cases as $case) {

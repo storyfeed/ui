@@ -398,14 +398,15 @@ test('custom link component receives href, modal and attributes', () => {
     assert.equal(received.modal, true);
     assert.equal(received['data-owner'], 'app');
 });
-test('dot and branch dividers render before the named row', () => {
+test('branch dividers by default, dots on request, before the named row', () => {
     const props = { items: [activity], dividers: { child: 'History' } };
-    const dot = raw('FeedStream', props);
-    assert.equal((dot.match(/sf-rail__node/g) ?? []).length, 2);
-    const branch = raw('FeedStream', { ...props, dividerStyle: 'branch' });
+    const branch = raw('FeedStream', props);
     assert.equal((branch.match(/sf-rail__branch/g) ?? []).length, 2);
     assert.doesNotMatch(branch, /sf-rail__node/);
     assert.ok(branch.indexOf('History') < branch.indexOf('Ada Lovelace'));
+    const dot = raw('FeedStream', { ...props, dividerStyle: 'dot' });
+    assert.equal((dot.match(/sf-rail__node/g) ?? []).length, 2);
+    assert.doesNotMatch(dot, /sf-rail__branch/);
 });
 test('empty state, loading pager and unknown node kinds remain safe', () => {
     assert.match(raw('FeedStream', { items: [] }), /No activity yet/);
