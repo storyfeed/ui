@@ -173,7 +173,7 @@ export function ItemList({ payload, entityUrl, entityLink }: BodyProps) {
                             {item.href ? (
                                 <Link
                                     {...item.props}
-                                    className="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
+                                    className="sf-entity relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))] font-medium text-foreground no-underline underline-offset-2 hover:underline"
                                 >
                                     {item.label}
                                 </Link>
@@ -190,7 +190,7 @@ export function ItemList({ payload, entityUrl, entityLink }: BodyProps) {
                     {more?.href ? (
                         <Link
                             {...more.props}
-                            className="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
+                            className="sf-entity relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))] font-medium text-foreground no-underline underline-offset-2 hover:underline"
                         >
                             {more.label}
                         </Link>
@@ -220,7 +220,7 @@ export function Table({ payload, entityUrl, entityLink }: BodyProps) {
         return to ? (
             <Link
                 {...linkProps(to, Link)}
-                className="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
+                className="sf-entity relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))] font-medium text-foreground no-underline underline-offset-2 hover:underline"
             >
                 {cell.label}
             </Link>
@@ -374,7 +374,7 @@ export function MediaObject({
                 {footnote.href ? (
                     <Link
                         {...footnote.props}
-                        className="font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring"
+                        className="relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))] font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring"
                     >
                         {footnote.label}
                     </Link>
@@ -402,7 +402,7 @@ export function MediaObject({
                 {subject?.label && (
                     <p className="sf-media-object__subject m-0 text-sm font-semibold text-foreground">
                         {subject.href ? (
-                            <Link {...subject.props}>{subject.label}</Link>
+                            <Link {...subject.props} className="relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))]">{subject.label}</Link>
                         ) : (
                             subject.label
                         )}
@@ -417,13 +417,13 @@ export function MediaObject({
                     <FeedMedia image={picture} />
                 )}
                 {!!files.length && (
-                    <ul className="sf-media-object__attachments mt-0.5 mb-0 flex list-none flex-col gap-0.5 p-0">
+                    <ul className="sf-media-object__attachments mt-0.5 mb-0 flex list-none flex-col gap-[max(--spacing(0.5),calc(25px-1lh))] p-0 text-sm">
                         {files.map((file: any, i: number) => (
                             <li
                                 key={i}
                                 className="sf-file m-0 text-sm text-muted-foreground"
                             >
-                                <Link href={file.href}>
+                                <Link href={file.href} className="relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))]">
                                     {file.name ?? file.href}
                                 </Link>
                                 {file.mediaType && (
@@ -436,7 +436,7 @@ export function MediaObject({
                 {footnote && (
                     <p className="sf-media-object__footnote mt-0.5 mb-0 text-xs leading-[1.6] text-muted-foreground">
                         {footnote.href ? (
-                            <Link {...footnote.props}>{footnote.label}</Link>
+                            <Link {...footnote.props} className="relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))]">{footnote.label}</Link>
                         ) : (
                             footnote.label
                         )}

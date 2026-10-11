@@ -58,6 +58,7 @@ jobs:
           STORYFEED_SCREENSHOTS: ${{ runner.temp }}/kit-parity
       - run: npm run test:alignment
       - run: npm run test:wells
+      - run: npm run test:targets
       - uses: actions/upload-artifact@v6
         if: always()
         with:

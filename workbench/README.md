@@ -57,6 +57,16 @@ groups and their members, single-line and wrapped headlines) at 1512px and
 at the defaults and with `--sf-disc: 2.5rem` at 0.875rem and 1.125rem text,
 and a disc smaller than the line clamps the body's top padding at 0 (ui#58).
 
+`npm run test:targets` checks every link that stands alone in a body (a
+MediaObject's subject, files and footnote, an ItemList's items and "more" link,
+a Table's link cells) and the call-to-action button in all three kits at 1512px
+and 390px, at the defaults and at 0.875rem and 1.125rem text. Every point 12px
+either side of a link's centre, across and down, must hit that link (WCAG
+2.5.8, ui#29). It then turns the reach off on the same page and requires every
+box and every line of link text to sit where it was. With
+`STORYFEED_SCREENSHOTS` set, it saves each kit's cards with the hit areas
+outlined.
+
 ## Group strip samples
 
 The "Strip: …" cases in `vue/cases.json` are real core output, not hand-built

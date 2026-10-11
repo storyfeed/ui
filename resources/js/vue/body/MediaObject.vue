@@ -65,7 +65,7 @@ const footnote = computed(() => {
 
 <template>
     <p v-if="!subject && !payload.content && !picture && !files.length && footnote" class="sf-media-object__footnote mt-0.5 mb-0 text-xs leading-[1.6] text-muted-foreground">
-        <component :is="linkComponent" v-if="footnote.link" v-bind="linkProps(footnote.link, linkComponent)" class="font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring">{{ footnote.label }}</component>
+        <component :is="linkComponent" v-if="footnote.link" v-bind="linkProps(footnote.link, linkComponent)" class="relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))] font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring">{{ footnote.label }}</component>
         <template v-else>{{ footnote.label }}</template>
     </p>
     <div v-else-if="subject || payload.content || picture || files.length" class="sf-media-object mt-1.5 flex min-w-0 max-w-128 flex-wrap items-start gap-3 rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] p-3">
@@ -74,7 +74,7 @@ const footnote = computed(() => {
         </div>
         <div class="sf-media-object__body flex min-w-0 flex-[1_1_--spacing(48)] flex-col gap-1 [overflow-wrap:anywhere]">
             <p v-if="subject" class="sf-media-object__subject m-0 text-sm font-semibold text-foreground">
-                <component :is="linkComponent" v-if="subject.link" v-bind="linkProps(subject.link, linkComponent)">{{ subject.label }}</component>
+                <component :is="linkComponent" v-if="subject.link" v-bind="linkProps(subject.link, linkComponent)" class="relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))]">{{ subject.label }}</component>
                 <template v-else>{{ subject.label }}</template>
             </p>
 
@@ -82,15 +82,15 @@ const footnote = computed(() => {
 
             <FeedMedia v-if="picture && placement === 'below'" :image="picture" />
 
-            <ul v-if="files.length" class="sf-media-object__attachments mt-0.5 mb-0 flex list-none flex-col gap-0.5 p-0">
+            <ul v-if="files.length" class="sf-media-object__attachments mt-0.5 mb-0 flex list-none flex-col gap-[max(--spacing(0.5),calc(25px-1lh))] p-0 text-sm">
             <li v-for="(file, i) in files ?? []" :key="i" class="sf-file m-0 text-sm text-muted-foreground">
-                <component :is="linkComponent" :href="file.href">{{ file.name ?? file.href }}</component>
+                <component :is="linkComponent" :href="file.href" class="relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))]">{{ file.name ?? file.href }}</component>
                 <span v-if="file.mediaType"> · {{ file.mediaType }}</span>
             </li>
             </ul>
 
             <p v-if="footnote" class="sf-media-object__footnote mt-0.5 mb-0 text-xs leading-[1.6] text-muted-foreground">
-                <component :is="linkComponent" v-if="footnote.link" v-bind="linkProps(footnote.link, linkComponent)">{{ footnote.label }}</component>
+                <component :is="linkComponent" v-if="footnote.link" v-bind="linkProps(footnote.link, linkComponent)" class="relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))]">{{ footnote.label }}</component>
                 <template v-else>{{ footnote.label }}</template>
             </p>
         </div>

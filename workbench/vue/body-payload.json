@@ -629,6 +629,11 @@
               "name": "menu.pdf",
               "href": "#menu",
               "mediaType": "application/pdf"
+            },
+            {
+              "name": "allergens.pdf",
+              "href": "#allergens",
+              "mediaType": "application/pdf"
             }
           ],
           "footnote": "Small print"

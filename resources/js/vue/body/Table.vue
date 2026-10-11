@@ -30,7 +30,7 @@ const link = (cell: any) => bodyLink(cell, ownLink(props.entityLink, props.entit
                             :is="linkComponent"
                             v-if="cell !== null && typeof cell === 'object' && link(cell)"
                             v-bind="linkProps(link(cell)!, linkComponent)"
-                            class="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
+                            class="sf-entity relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))] font-medium text-foreground no-underline underline-offset-2 hover:underline"
                         >{{ cell.label }}</component><template v-else-if="cell !== null && typeof cell === 'object'">{{ cell.label }}</template><span v-else-if="cell === null" class="sf-table__empty text-muted-foreground">—</span><template v-else>{{ cell }}</template></td>
                     </tr>
                 </component>
