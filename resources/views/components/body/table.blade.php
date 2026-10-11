@@ -20,7 +20,7 @@
 @if ($rows !== [])
                 <{{ $section }}>
 @foreach ($rows as $row)
-                    <tr>@foreach ($row as $cell)<td>@php($link = is_array($cell) ? \Storyfeed\Ui\Support\Links::body($cell, $entity) : null)@if ($link !== null)<a href="{{ $link['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag($link['attributes']))->class('sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline') }}>{{ $cell['label'] }}</a>@elseif (is_array($cell)){{ $cell['label'] }}@elseif ($cell === null)<span class="sf-table__empty text-muted-foreground">—</span>@else{{ $cell }}@endif</td>@endforeach</tr>
+                    <tr>@foreach ($row as $cell)<td>@php($link = is_array($cell) ? \Storyfeed\Ui\Support\Links::body($cell, $entity) : null)@if ($link !== null)<a href="{{ $link['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag($link['attributes']))->class('sf-entity relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))] font-medium text-foreground no-underline underline-offset-2 hover:underline') }}>{{ $cell['label'] }}</a>@elseif (is_array($cell)){{ $cell['label'] }}@elseif ($cell === null)<span class="sf-table__empty text-muted-foreground">—</span>@else{{ $cell }}@endif</td>@endforeach</tr>
 @endforeach
                 </{{ $section }}>
 @endif

@@ -958,7 +958,7 @@ test('MediaObject footnotes stand alone, resolve links and keep strings unlinked
     const html = raw('MediaObject', { payload: { content: 'Discussion summary', footnote: { label: 'Read more', href: '/discussion' } } });
     assert.ok(html.includes('<div class="sf-media-object mt-1.5 flex min-w-0 max-w-128 flex-wrap items-start gap-3 rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] p-3">'));
     assert.match(html, /sf-media-object__content[^>]*>Discussion summary/);
-    assert.match(html, /sf-media-object__footnote[^>]*><a href="\/discussion">Read more<\/a><\/p>/);
+    assert.match(html, /sf-media-object__footnote[^>]*><a href="\/discussion"[^>]*>Read more<\/a><\/p>/);
 });
 
 test('a long headline wraps inside its column instead of running off a narrow feed', () => {

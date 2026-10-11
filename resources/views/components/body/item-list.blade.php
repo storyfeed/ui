@@ -24,7 +24,7 @@
                     <li class="sf-list__item">
 @php($link = \Storyfeed\Ui\Support\Links::body($item, $entity))
 @if ($link !== null)
-                            <a href="{{ $link['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag($link['attributes']))->class('sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline') }}>{{ $item['label'] }}</a>
+                            <a href="{{ $link['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag($link['attributes']))->class('sf-entity relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))] font-medium text-foreground no-underline underline-offset-2 hover:underline') }}>{{ $item['label'] }}</a>
 @else
                             {{ is_string($item) ? $item : $item['label'] }}
 @endif
@@ -40,7 +40,7 @@
 @endif
 @php($moreLink = \Storyfeed\Ui\Support\Links::body($more, $entity))
 @if ($moreLink !== null)
-                    <a href="{{ $moreLink['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag($moreLink['attributes']))->class('sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline') }}>{{ $more['label'] ?? $moreLink['href'] }}</a>
+                    <a href="{{ $moreLink['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag($moreLink['attributes']))->class('sf-entity relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))] font-medium text-foreground no-underline underline-offset-2 hover:underline') }}>{{ $more['label'] ?? $moreLink['href'] }}</a>
 @elseif ($more !== null)<span>{{ is_array($more) ? ($more['label'] ?? '') : $more }}</span>
 @endif
             </figcaption>

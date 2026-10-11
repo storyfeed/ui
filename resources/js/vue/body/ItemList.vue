@@ -46,7 +46,7 @@ const remaining = computed(() => {
                         :is="linkComponent"
                         v-if="item.link"
                         v-bind="linkProps(item.link, linkComponent)"
-                        class="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
+                        class="sf-entity relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))] font-medium text-foreground no-underline underline-offset-2 hover:underline"
                     >{{ item.label }}</component>
                     <template v-else>{{ item.label }}</template>
                 </li>
@@ -59,7 +59,7 @@ const remaining = computed(() => {
                 :is="linkComponent"
                 v-if="more?.link"
                 v-bind="linkProps(more.link, linkComponent)"
-                class="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
+                class="sf-entity relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))] font-medium text-foreground no-underline underline-offset-2 hover:underline"
             >{{ more.label }}</component>
             <span v-else-if="more">{{ more.label }}</span>
         </figcaption>
