@@ -67,6 +67,20 @@ box and every line of link text to sit where it was. With
 `STORYFEED_SCREENSHOTS` set, it saves each kit's cards with the hit areas
 outlined.
 
+`npm run test:alignment` also checks, at the defaults, that every text-shaped
+body keeps its measure (the body 44rem, Prose, ItemList and Table 36rem,
+MediaObject, KeyValue and CallToAction 32rem, never `none`), that every row has
+the 2rem rail, its body 0.75rem off it and 1.25rem below it, and that the
+headline and meta line are 1rem and 0.875rem. `npm run test:wells` also
+requires every card's edge to stand off the page under it (1.1:1 at least).
+
+`npm run test:bare` runs all three in a bare host (ui#28): the same pages,
+with each kit's stylesheet swapped for `workbench/bare/<kit>.css`, which holds
+only what the README asks of an app (Tailwind, Typography and the Laravel
+starter kit's colour tokens, as the starter kit ships them) and no `--sf-*`
+token, variant or framing. It runs at the default size only. With
+`STORYFEED_SCREENSHOTS` set, it saves each kit's bare page in light and dark.
+
 ## Group strip samples
 
 The "Strip: …" cases in `vue/cases.json` are real core output, not hand-built

@@ -106,7 +106,7 @@ const component = computed<Component>(
  * string exactly as the token is, and it is inert until a stylesheet claims it.
  * An app that wants intent colours supplies its own token utilities.
  *
- * Only the disc carries it. A 0.75rem badge is a silhouette, and colouring one
+ * Only the disc carries it. A 0.875rem badge is a silhouette, and colouring one
  * says less than it costs; the plugin makes the same call in `node.blade.php`.
  */
 const intent = computed(() =>
