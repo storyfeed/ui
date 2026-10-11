@@ -64,7 +64,7 @@ it('draws a key-value body as labelled rows', function () {
 });
 
 it('draws an excerpt with where it came from', function () {
-    expect(render_bodies(Excerpt::make('Please leave it at the door', from: 'Delivery note')))->toContain(
+    expect(render_bodies(Excerpt::make('Please leave it at the door', from: 'Delivery note', truncated: true)))->toContain(
         '<figure> <blockquote>Please leave it at the door<span aria-hidden="true">…</span></blockquote> '
         .'<figcaption>Delivery note</figcaption> </figure>'
     );
@@ -114,12 +114,14 @@ it('keeps long rich text instead of silently truncating it', function () {
     expect(render_bodies(Prose::html($source)))->toContain('The end.</p>');
 });
 
-it('reads a slim excerpt: from v2 an absent truncated flag means truncated', function () {
+it('reads a slim excerpt: only a v2 row without the truncated flag is truncated', function () {
     $render = fn (array $body) => render_blade('<x-storyfeed::body.excerpt :body="$body" />', ['body' => $body]);
 
     expect($render(['$v' => 2, 'text' => 'Part']))->toContain('<blockquote>Part<span aria-hidden="true">…</span></blockquote>')
         ->and($render(['$v' => 2, 'text' => 'Whole', 'truncated' => false]))->toContain('<blockquote>Whole</blockquote>')
         ->and($render(['$v' => 1, 'text' => 'Hand-written']))->toContain('<blockquote>Hand-written</blockquote>')
+        ->and($render(['$v' => 3, 'text' => 'Whole']))->toContain('<blockquote>Whole</blockquote>')
+        ->and($render(['$v' => 3, 'text' => 'Part', 'truncated' => true]))->toContain('<blockquote>Part<span aria-hidden="true">…</span></blockquote>')
         ->and($render(['text' => 'Unversioned']))->toContain('<blockquote>Unversioned</blockquote>');
 });
 

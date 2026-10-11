@@ -628,11 +628,13 @@ test('rich prose and ItemList render inside Typography prose at the feed size', 
     }
 });
 
-test('a slim Excerpt v2 without truncated is truncated; v1 without it is whole', async () => {
+test('only a slim Excerpt v2 without truncated is truncated; v1 and v3 without it are whole', async () => {
     const path = '/resources/js/vue/body/Excerpt.vue';
     assert.match(await render(path, { payload: { $v: 2, text: 'Part' } }), /aria-hidden="true">…/);
     assert.doesNotMatch(await render(path, { payload: { $v: 2, text: 'Whole', truncated: false } }), /…/);
     assert.doesNotMatch(await render(path, { payload: { $v: 1, text: 'Hand-written' } }), /…/);
+    assert.doesNotMatch(await render(path, { payload: { $v: 3, text: 'Whole' } }), /…/);
+    assert.match(await render(path, { payload: { $v: 3, text: 'Part', truncated: true } }), /aria-hidden="true">…/);
     assert.doesNotMatch(await render(path, { payload: { text: 'Unversioned' } }), /…/);
 });
 

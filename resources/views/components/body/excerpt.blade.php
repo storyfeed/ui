@@ -1,7 +1,7 @@
 @props(['body', 'entity' => null])
 @php
-    // From v2 core writes `truncated` only when false, so an absent flag is true.
-    $truncated = array_key_exists('truncated', $body) ? (bool) $body['truncated'] : (is_int($body['$v'] ?? null) ? $body['$v'] : 1) >= 2;
+    // Core writes `truncated` only when it differs from the default, which was true in v2 only.
+    $truncated = array_key_exists('truncated', $body) ? (bool) $body['truncated'] : ($body['$v'] ?? null) === 2;
 @endphp
 @if (filled($body['text'] ?? null))
     <figure {{ $attributes->class('sf-excerpt-block m-0') }}>

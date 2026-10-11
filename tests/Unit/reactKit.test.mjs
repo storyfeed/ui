@@ -659,10 +659,12 @@ test('rich prose and ItemList render inside Typography prose at the feed size', 
         assert.doesNotMatch(html, /\bprose-(sm|base|lg|xl|2xl)\b/);
     }
 });
-test('a slim Excerpt v2 without truncated is truncated; v1 without it is whole', () => {
+test('only a slim Excerpt v2 without truncated is truncated; v1 and v3 without it are whole', () => {
     assert.match(raw('Excerpt', { payload: { $v: 2, text: 'Part' } }), /aria-hidden="true">…/);
     assert.doesNotMatch(raw('Excerpt', { payload: { $v: 2, text: 'Whole', truncated: false } }), /…/);
     assert.doesNotMatch(raw('Excerpt', { payload: { $v: 1, text: 'Hand-written' } }), /…/);
+    assert.doesNotMatch(raw('Excerpt', { payload: { $v: 3, text: 'Whole' } }), /…/);
+    assert.match(raw('Excerpt', { payload: { $v: 3, text: 'Part', truncated: true } }), /aria-hidden="true">…/);
     assert.doesNotMatch(raw('Excerpt', { payload: { text: 'Unversioned' } }), /…/);
 });
 test('Table draws inside prose with a tfoot, escaped cells that keep line breaks, links and an empty mark', () => {
