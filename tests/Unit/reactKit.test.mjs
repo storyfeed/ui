@@ -1007,6 +1007,55 @@ test('expanding a group hides its strip and keeps its rail faces in place (ui#47
     assert.match(raw('FeedGroup', { item, rail: 'actor', collapsed: true }), /sf-media-strip /);
 });
 
+/** A crowd group: `members` rows, each a different person, from a group of `total` actors. */
+const crowd = (total, members = Math.min(total, 25)) => ({
+    ...group, id: `crowd-${total}`, count: total, headline_template: ':actors checked in', verb: 'check-in',
+    children: Array.from({ length: members }, (_, n) => ({ ...activity, id: `visit-${n}`, actor: { type: 'person', id: `p${n}`, label: `Person ${n}`, url: `/people/${n}`, media: null } })),
+    children_truncated: total > members, sample: { actors: [] }, distinct: { actors: total },
+});
+/** A group's actor strip as face labels then `+N`, or null when there is none. */
+const actorFaces = (html) => {
+    const section = html.replace(/<!--.*?-->/g, '').split('sf-actor-strip ')[1]?.split('</div>')[0];
+    if (!section) return null;
+    return [...section.matchAll(/aria-label="([^"]+)"[^>]*class="sf-avatar |>\+(\d+)</g)].map((m) => m[1] ?? `+${m[2]}`);
+};
+
+test('a group with several actors draws every face, newest first, eight before "+N" (ui#48)', () => {
+    const draw = (item, props = {}) => actorFaces(raw('FeedGroup', { item, ...props }));
+    // Jasper: "always, 8 faces, 24px". 35 actors, 25 members shipped: eight faces and "+27" from the true count.
+    assert.deepEqual(draw(crowd(35)), [...Array.from({ length: 8 }, (_, n) => `Person ${n}`), '+27']);
+    // Eight actors or fewer: every one shows, no chip.
+    assert.deepEqual(draw(crowd(5)), ['Person 0', 'Person 1', 'Person 2', 'Person 3', 'Person 4']);
+    assert.deepEqual(draw(crowd(8)), Array.from({ length: 8 }, (_, n) => `Person ${n}`));
+    // One actor draws no strip, however many members.
+    assert.equal(draw({ ...crowd(4), children: crowd(4).children.map((child) => ({ ...child, actor: activity.actor })), distinct: { actors: 1 } }), null);
+    // A repeat actor shows once, and an anonymous member adds no face.
+    const repeat = crowd(3);
+    repeat.children = [repeat.children[0], { ...repeat.children[1], actor: repeat.children[0].actor }, { ...repeat.children[2], actor: null }, ...crowd(3).children.slice(1)];
+    assert.deepEqual(draw(repeat), ['Person 0', 'Person 1', 'Person 2']);
+    // Faces are 24px avatars.
+    assert.match(raw('FeedGroup', { item: crowd(5) }).split('sf-actor-strip ')[1], /sf-avatar--sm size-6/);
+    // "+N" opens the group like "Show all N"; a static group keeps a plain chip.
+    const live = raw('FeedGroup', { item: crowd(35) });
+    const button = live.match(/<button[^>]*sf-actor-strip__more[^>]*>/)[0];
+    assert.match(button, /aria-label="Show all 35"/);
+    assert.match(button, /aria-expanded="false"/);
+    assert.ok(live.includes(`id="${button.match(/aria-controls="([^"]+)"/)[1]}"`), 'the +N chip controls the members');
+    assert.doesNotMatch(raw('FeedGroup', { item: crowd(35), interactive: false, collapsed: true }), /<button[^>]*sf-actor-strip__more/);
+});
+
+test('expanding a group hides its actor strip, and every face is a member row\'s face (ui#48)', () => {
+    const collapsed = raw('FeedGroup', { item: crowd(35), rail: 'actor' });
+    const members = collapsed.split('sf-children')[1];
+    for (const face of actorFaces(collapsed).filter((face) => !face.startsWith('+'))) {
+        assert.match(members, new RegExp(`aria-label="${face}"[^>]*class="sf-avatar `), `${face} is a member row's face`);
+    }
+    for (const interactive of [true, false]) {
+        const head = raw('FeedGroup', { item: crowd(35), rail: 'actor', interactive, collapsed: false }).split('sf-children')[0];
+        assert.doesNotMatch(head, /sf-actor-strip/);
+    }
+});
+
 test('FeedStream reads a whole page: core #95 JSON under data, the older items envelope, or a plain list', () => {
     const nodes = [activity, { ...activity, id: 'second' }];
     assert.deepEqual(kit.readPage({ data: nodes, next_cursor: 'next' }), { items: nodes, nextCursor: 'next' });

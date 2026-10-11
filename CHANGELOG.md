@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- An actor strip for groups with several actors, in Blade, Vue and React (ui#48). Below the headline, a group draws every actor's face, newest first, including the ones the headline names, as one row of overlapping 24px avatars: eight faces, then a "+N" chip counting the actors not shown, from core's true `distinct.actors`. With eight actors or fewer, all of them show and there's no chip; a group with one actor draws none. The faces come from the group's members, so each one is a member row's face once the group opens. As with the feature strip, the chip opens the group like "Show all N", and expanding hides the strip. It's a separate component from the feature strip (`FeedActorStrip`, `<x-storyfeed::actor-strip>`, built with `actorStrip()` / `ActorStrip::of()`); a group with several actors and varied features draws both, actors first. Closes #48.
+
 ## v0.9.4 - 2026-10-11
 
 ### Fixed

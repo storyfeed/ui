@@ -13,6 +13,8 @@
         $tiles = $strip['tiles'] ?? [];
         $mediaOverflow = isset($renderers['mediaOverflow']) ? $mediaOverflow : ($strip['overflow'] ?? 0);
     }
+    // Every actor's face, newest first, up to eight, then "+N" (ui#48).
+    $actors = \Storyfeed\Ui\Support\ActorStrip::of($group);
     $open = ($group->get('expanded') ?? false) || ($collapsed === null ? (! $interactive || $headline->isFallback()) : ! $collapsed);
     // The "+N" tile opens and closes the members like the toggle does (ui#27).
     // Stable across renders: the group's id, else what it shows.
@@ -21,7 +23,7 @@
 @endphp
 <article {{ $attributes->class(['sf-row relative flex items-start gap-(--sf-gap-v) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]', '[&:not(:has(>.sf-body>.sf-disclosure[open]))>.sf-rail>[aria-hidden]]:hidden' => $last && $interactive]) }}>
     <x-storyfeed::rail :item="$group" :rail="$rail" :last="$last && ! $interactive && ! $open" :renderers="$renderers" />
-    <div @class(['sf-body min-w-0 flex-1 pt-[max(0px,calc((var(--sf-disc-v)-1lh)/2))] [&:has(>.sf-disclosure[open])>.sf-media-strip]:hidden', 'sf-body--spaced pb-5' => ! $last || (! $interactive && $open), '[&:has(>.sf-disclosure[open])]:pb-5' => $last])>
+    <div @class(['sf-body min-w-0 flex-1 pt-[max(0px,calc((var(--sf-disc-v)-1lh)/2))] [&:has(>.sf-disclosure[open])>.sf-media-strip]:hidden [&:has(>.sf-disclosure[open])>.sf-actor-strip]:hidden', 'sf-body--spaced pb-5' => ! $last || (! $interactive && $open), '[&:has(>.sf-disclosure[open])]:pb-5' => $last])>
         <div class="sf-head flex items-baseline gap-3"><x-storyfeed::headline :headline="$headline" /></div>
         <x-storyfeed::meta :item="$group" :headline="$headline" :timezone="$timezone" :time-renderer="$renderers['time'] ?? null">{{ $time ?? '' }}</x-storyfeed::meta>
 @if ($removed)<p class="sf-removed mt-1 text-sm text-muted-foreground">{{ $removed }}</p>
@@ -32,11 +34,12 @@
 @if (isset($renderers['annotations'])){!! $renderers['annotations']($group) !!}
 @endif
         {{ $annotations ?? '' }}
-        {{-- The strip previews the members, so expanding hides it; the head row stays put (ui#47). --}}
+        {{-- The strips preview the members, so expanding hides them; the head row stays put (ui#47, ui#48). --}}
+        <x-storyfeed::actor-strip :faces="! $interactive && $open ? [] : ($actors['faces'] ?? [])" :overflow="$actors['overflow'] ?? 0" :toggle="$toggle" />
         <x-storyfeed::media-strip :tiles="! $interactive && $open ? [] : $tiles" :overflow="$mediaOverflow" :renderer="$renderers['media'] ?? null" :toggle="$toggle" />
         @if ($children->isNotEmpty())
             @if ($interactive)
-                <details class="group/disclosure sf-disclosure print:[&::details-content]:block print:[&::details-content]:[content-visibility:visible]" @if ($open) open @endif ontoggle="var b=this.closest('.sf-row').querySelector('.sf-media-strip__more[aria-expanded]');if(b)b.setAttribute('aria-expanded',this.open)">
+                <details class="group/disclosure sf-disclosure print:[&::details-content]:block print:[&::details-content]:[content-visibility:visible]" @if ($open) open @endif ontoggle="var o=this.open;this.closest('.sf-row').querySelectorAll('.sf-media-strip__more[aria-expanded],.sf-actor-strip__more[aria-expanded]').forEach(function(b){b.setAttribute('aria-expanded',o)})">
                     <summary class="sf-toggle mt-1 inline-flex min-h-6 items-center cursor-pointer list-none rounded-sm border-0 bg-transparent p-0 text-sm leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden print:hidden">
                         <span class="group-open/disclosure:hidden">{{ __('Show all :count', ['count' => $group->count()]) }}</span><span class="hidden group-open/disclosure:inline">{{ __('Show less') }}</span>
                     </summary>

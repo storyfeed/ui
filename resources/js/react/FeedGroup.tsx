@@ -1,10 +1,12 @@
 import { useId, useState, type SyntheticEvent } from 'react';
 import type { GroupNode } from '../shared/types';
+import { actorStrip } from '../shared/actors';
 import { strip as stripOf } from '../shared/strip';
 import FeedItem, { useNodeTime } from './FeedItem';
 import type { NodeProps } from './FeedItem';
 import FeedHeadline from './FeedHeadline';
 import FeedMeta from './FeedMeta';
+import FeedActorStrip from './FeedActorStrip';
 import FeedMediaStrip from './FeedMediaStrip';
 import Rail from './Rail';
 export default function FeedGroup({
@@ -34,6 +36,12 @@ export default function FeedGroup({
     const hidden = Math.max(0, item.count - item.children.length);
     // One tile per member activity, previewing the members, so expanding hides it (ui#47).
     const strip = stripOf(item);
+    // Every actor's face, newest first, up to eight, then "+N"; hidden when expanded too (ui#48).
+    const actors = actorStrip(item);
+    const toggle =
+        interactive && item.children.length > 0
+            ? { expanded: isOpen, controls: membersId, label: `Show all ${item.count}`, onToggle: () => setOpen((value) => !value) }
+            : null;
     return (
         <div
             className={`sf-row relative flex items-start gap-(--sf-gap-v) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]${
@@ -71,15 +79,8 @@ export default function FeedGroup({
                 <FeedMeta node={item} templates={[item.headline_template]}>
                     {timestamp}
                 </FeedMeta>
-                <FeedMediaStrip
-                    tiles={isOpen ? [] : strip?.tiles ?? []}
-                    overflow={strip?.overflow}
-                    toggle={
-                        interactive && item.children.length > 0
-                            ? { expanded: isOpen, controls: membersId, label: `Show all ${item.count}`, onToggle: () => setOpen((value) => !value) }
-                            : null
-                    }
-                />
+                <FeedActorStrip faces={isOpen ? [] : actors?.faces ?? []} overflow={actors?.overflow} toggle={toggle} />
+                <FeedMediaStrip tiles={isOpen ? [] : strip?.tiles ?? []} overflow={strip?.overflow} toggle={toggle} />
                 {body?.({ node: item })}
                 {annotations?.({ node: item })}
                 {item.children.length > 0 && (

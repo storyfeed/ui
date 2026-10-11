@@ -9529,6 +9529,2071 @@
     ]
   },
   {
+    "name": "Strip: a crowd checked in",
+    "rail": "actor",
+    "collapsed": true,
+    "items": [
+      {
+        "kind": "group",
+        "id": "grp_djIfYWN0b3JzH2IxOjZjM2JiYmFkNTZlZGQwMzQ0MDJmOTMyMzMxYTIzNWJiMDA4N2I3YzdlNGJhOGUxYjQxZTllZTBiYmM3MDcyOTA6MDFtNG1ueWJmbTNxNzQ1cG5qN3BrcGh5cXk",
+        "axis": "actors",
+        "count": 35,
+        "verb": "check_in",
+        "published_at": "2026-08-14T14:15:00.000000Z",
+        "headline_template": ":actors checked in at :object",
+        "headline": null,
+        "glyph": "map-pin",
+        "glyph_intent": null,
+        "actor": null,
+        "object": {
+          "type": "project",
+          "id": "2",
+          "label": "Summer fair",
+          "link": {
+            "href": "/projects/2",
+            "modal": false,
+            "attributes": []
+          },
+          "data": [],
+          "media": {
+            "icon": null,
+            "image": null,
+            "preview": null,
+            "initials": "SF",
+            "color": "#be123c",
+            "files": [],
+            "slots": []
+          },
+          "body": null,
+          "tombstone": null
+        },
+        "target": null,
+        "context": null,
+        "origin": null,
+        "result": null,
+        "instrument": null,
+        "location": null,
+        "generator": null,
+        "featured": "object",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "45",
+              "label": "Murray Bauman",
+              "link": {
+                "href": "/people/45",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "MB",
+                "color": "#0e7490",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "44",
+              "label": "Joyce Byers",
+              "link": {
+                "href": "/people/44",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "carousel"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/carousel.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            {
+              "type": "person",
+              "id": "43",
+              "label": "Jim Hopper",
+              "link": {
+                "href": "/people/43",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "JH",
+                "color": "#0f766e",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            }
+          ],
+          "objects": [
+            {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            }
+          ],
+          "targets": [],
+          "contexts": [],
+          "origins": [],
+          "results": [],
+          "instruments": [],
+          "locations": [],
+          "generators": [],
+          "featured": [
+            {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            }
+          ]
+        },
+        "distinct": {
+          "actors": 35,
+          "objects": 1,
+          "targets": 0,
+          "contexts": 0,
+          "origins": 0,
+          "results": 0,
+          "instruments": 0,
+          "locations": 0,
+          "generators": 0,
+          "featured": 35
+        },
+        "children": [
+          {
+            "kind": "activity",
+            "id": "01m4mnybpa14ead1hjza70kwgf",
+            "verb": "check_in",
+            "published_at": "2026-08-14T14:15:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "45",
+              "label": "Murray Bauman",
+              "link": {
+                "href": "/people/45",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "MB",
+                "color": "#0e7490",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybp4a27y86wwhtfknxkb",
+            "verb": "check_in",
+            "published_at": "2026-08-14T14:14:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "44",
+              "label": "Joyce Byers",
+              "link": {
+                "href": "/people/44",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "carousel"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/carousel.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybny2pp2qd2vsvnb1265",
+            "verb": "check_in",
+            "published_at": "2026-08-14T14:13:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "43",
+              "label": "Jim Hopper",
+              "link": {
+                "href": "/people/43",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "JH",
+                "color": "#0f766e",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybnrfcdsppqtvbhfxpf2",
+            "verb": "check_in",
+            "published_at": "2026-08-14T14:12:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "42",
+              "label": "Nancy Wheeler",
+              "link": {
+                "href": "/people/42",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "NW",
+                "color": "#1d4ed8",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybnk09qwgrftj629e7c2",
+            "verb": "check_in",
+            "published_at": "2026-08-14T14:11:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "41",
+              "label": "Jonathan Byers",
+              "link": {
+                "href": "/people/41",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "ferris"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/ferris.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybncv5gbfd9gbjk491qk",
+            "verb": "check_in",
+            "published_at": "2026-08-14T14:10:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "40",
+              "label": "Steve Harrington",
+              "link": {
+                "href": "/people/40",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SH",
+                "color": "#4d7c0f",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybn61xcgrpk04xea51w1",
+            "verb": "check_in",
+            "published_at": "2026-08-14T14:09:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "39",
+              "label": "Robin Buckley",
+              "link": {
+                "href": "/people/39",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "arcade"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/arcade.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybn1w4r68j7r814dr1zg",
+            "verb": "check_in",
+            "published_at": "2026-08-14T14:08:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "38",
+              "label": "Dustin Henderson",
+              "link": {
+                "href": "/people/38",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "DH",
+                "color": "#9f1239",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybmtq8vp96jmzknfwt2b",
+            "verb": "check_in",
+            "published_at": "2026-08-14T14:07:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "37",
+              "label": "Lucas Sinclair",
+              "link": {
+                "href": "/people/37",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "LS",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybmmxztgmvw7v4m9v5rk",
+            "verb": "check_in",
+            "published_at": "2026-08-14T14:06:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "36",
+              "label": "Erica Sinclair",
+              "link": {
+                "href": "/people/36",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "parlour"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/parlour.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybmed894wj3592gn470m",
+            "verb": "check_in",
+            "published_at": "2026-08-14T14:05:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "35",
+              "label": "Max Mayfield",
+              "link": {
+                "href": "/people/35",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "MM",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybm8f64cjc80e2k85cv8",
+            "verb": "check_in",
+            "published_at": "2026-08-14T14:04:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "34",
+              "label": "Will Byers",
+              "link": {
+                "href": "/people/34",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "WB",
+                "color": "#7e22ce",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybkzk1evckjw83a8k2bz",
+            "verb": "check_in",
+            "published_at": "2026-08-14T14:03:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "33",
+              "label": "Mike Wheeler",
+              "link": {
+                "href": "/people/33",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "MW",
+                "color": "#9f1239",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybkk4k9rbwt35trns2jk",
+            "verb": "check_in",
+            "published_at": "2026-08-14T14:02:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "32",
+              "label": "Karen Wheeler",
+              "link": {
+                "href": "/people/32",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": "fireworks"
+              },
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/fireworks.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybkccsvxjzy0xnndp240",
+            "verb": "check_in",
+            "published_at": "2026-08-14T14:01:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "31",
+              "label": "Ted Wheeler",
+              "link": {
+                "href": "/people/31",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "TW",
+                "color": "#15803d",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybk6jfw1r8eyjedsftyd",
+            "verb": "check_in",
+            "published_at": "2026-08-14T14:00:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "30",
+              "label": "Holly Wheeler",
+              "link": {
+                "href": "/people/30",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "HW",
+                "color": "#a21caf",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybk02a4z38c7r6acezrn",
+            "verb": "check_in",
+            "published_at": "2026-08-14T13:59:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "29",
+              "label": "Claudia Henderson",
+              "link": {
+                "href": "/people/29",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "CH",
+                "color": "#0f766e",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybjvdcsfb4hezzm0k6yh",
+            "verb": "check_in",
+            "published_at": "2026-08-14T13:58:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "28",
+              "label": "Billy Hargrove",
+              "link": {
+                "href": "/people/28",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "BH",
+                "color": "#4d7c0f",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybjnw955ysff6z7nnms8",
+            "verb": "check_in",
+            "published_at": "2026-08-14T13:57:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "27",
+              "label": "Heather Holloway",
+              "link": {
+                "href": "/people/27",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "HH",
+                "color": "#4338ca",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybjf214pdgyvnh2y254b",
+            "verb": "check_in",
+            "published_at": "2026-08-14T13:56:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "26",
+              "label": "Bob Newby",
+              "link": {
+                "href": "/people/26",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "BN",
+                "color": "#b45309",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybj960amydayvk1aqmpq",
+            "verb": "check_in",
+            "published_at": "2026-08-14T13:55:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "25",
+              "label": "Barb Holland",
+              "link": {
+                "href": "/people/25",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "BH",
+                "color": "#15803d",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybj3scdy3yndraf33man",
+            "verb": "check_in",
+            "published_at": "2026-08-14T13:54:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "24",
+              "label": "Eddie Munson",
+              "link": {
+                "href": "/people/24",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "EM",
+                "color": "#b45309",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybhx7kgc0137182hapeb",
+            "verb": "check_in",
+            "published_at": "2026-08-14T13:53:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "23",
+              "label": "Argyle",
+              "link": {
+                "href": "/people/23",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "A",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybhr678s882b8wpvfqh4",
+            "verb": "check_in",
+            "published_at": "2026-08-14T13:52:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "22",
+              "label": "Suzie Bingham",
+              "link": {
+                "href": "/people/22",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SB",
+                "color": "#c2410c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          },
+          {
+            "kind": "activity",
+            "id": "01m4mnybhj9ktx7r62e499w313",
+            "verb": "check_in",
+            "published_at": "2026-08-14T13:51:00.000000Z",
+            "starts_at": null,
+            "ends_at": null,
+            "headline_template": ":actor checked in at :object",
+            "headline": null,
+            "glyph": "map-pin",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "21",
+              "label": "Vickie Dunne",
+              "link": {
+                "href": "/people/21",
+                "modal": false,
+                "attributes": []
+              },
+              "data": {
+                "photo": null
+              },
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "VD",
+                "color": "#4d7c0f",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "project",
+              "id": "2",
+              "label": "Summer fair",
+              "link": {
+                "href": "/projects/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "SF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": null,
+            "generator": null,
+            "featured": "object",
+            "data": null,
+            "tombstoned": [],
+            "redundant": false,
+            "missing_headline_template": null,
+            "missing_headline": null
+          }
+        ],
+        "children_truncated": true,
+        "tombstoned": [],
+        "redundant": false,
+        "distinct_tombstoned": {
+          "actors": 0,
+          "objects": 0,
+          "targets": 0,
+          "contexts": 0,
+          "origins": 0,
+          "results": 0,
+          "instruments": 0,
+          "locations": 0,
+          "generators": 0,
+          "featured": 0
+        }
+      }
+    ]
+  },
+  {
     "name": "Featured roles",
     "items": [
       {

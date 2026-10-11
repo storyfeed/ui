@@ -404,6 +404,15 @@ and a "+N" tile counting the members not shown. On a group that can open, the "+
 closes it like "Show all N". A strip of identical tiles is
 skipped. Expanding the group hides it; the head row stays put.
 
+A group with several actors also draws an actor strip: every actor's face,
+newest first, including the ones the headline names, as one row of
+overlapping 24px avatars. Eight faces, then a "+N" chip counting the actors
+not shown (core's `distinct.actors`); with eight or fewer, all of them and no
+chip. The faces come from the members, so each is a member row's face once
+the group opens. Like the feature strip, the chip opens the group and
+expanding hides the strip. `actor-strip` is standalone too, with `faces` from
+`ActorStrip::of()`.
+
 `page` takes whatever core's reads return: core 0.13–0.18's `FeedPage`, or
 from storyfeed/storyfeed#95 the collection from `get()` and the paginators
 from `cursorPaginate()`, `simplePaginate()` and `members()`. A raw JSON page

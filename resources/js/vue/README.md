@@ -92,6 +92,14 @@ and a "+N" tile counting the members not shown. On a group that can open, the "+
 closes it like "Show all N". A strip of identical tiles is
 skipped. Expanding the group hides it; the head row stays put.
 
+A group with several actors also draws an actor strip: every actor's face,
+newest first, including the ones the headline names, as one row of
+overlapping 24px avatars. Eight faces, then a "+N" chip counting the actors
+not shown (core's `distinct.actors`); with eight or fewer, all of them and no
+chip. The faces come from the members, so each is a member row's face once
+the group opens. Like the feature strip, the chip opens the group and
+expanding hides the strip. `FeedActorStrip` draws faces built with `actorStrip()`.
+
 `grouped=false` hides day headings. `dividers` maps item IDs to labels to render
 before those items. Dividers branch off the rail by default, a curve into the
 label; `divider-style="dot"` draws a dot on the rail instead. `isLast` suppresses the
