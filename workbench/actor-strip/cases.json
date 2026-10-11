@@ -1,0 +1,2598 @@
+{
+    "small": {
+        "kind": "group",
+        "id": "grp_djIfYWN0b3JzH2IxOmRmMGYxOWJiMzFkZGE3NGVjMzFkOGVkYzFmMDNkNTVlZTA1OWVmYzFhY2E5NDZkZGZkODY4YWZkNTUyOGY3M2M6MDFtNG04MnJ5c2JjaGVjZjhrZHAxM2o2N3Q",
+        "axis": "actors",
+        "count": 5,
+        "verb": "check_in",
+        "published_at": "2026-08-14T13:10:00.000000Z",
+        "headline_template": ":actors checked in at :object",
+        "headline": null,
+        "glyph": "map-pin",
+        "glyph_intent": null,
+        "actor": null,
+        "object": {
+            "type": "place",
+            "id": "2",
+            "label": "Palace Arcade",
+            "link": null,
+            "data": [],
+            "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "PA",
+                "color": "#9f1239",
+                "files": [],
+                "slots": []
+            },
+            "body": null,
+            "tombstone": null
+        },
+        "target": null,
+        "context": null,
+        "origin": null,
+        "result": null,
+        "instrument": null,
+        "location": null,
+        "generator": null,
+        "featured": "object",
+        "sample": {
+            "actors": [
+                {
+                    "type": "person",
+                    "id": "40",
+                    "label": "Kali Prasad",
+                    "link": {
+                        "href": "/people/40",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "KP",
+                        "color": "#4d7c0f",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                {
+                    "type": "person",
+                    "id": "39",
+                    "label": "Phil Kowalski",
+                    "link": {
+                        "href": "/people/39",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "11"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23fecdd3%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%23b91c1c%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23e8b896%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23e8b896%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%23111827%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                {
+                    "type": "person",
+                    "id": "38",
+                    "label": "Dart Ortega",
+                    "link": {
+                        "href": "/people/38",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "8"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23fde68a%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%231d4ed8%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23f5d0b5%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23f5d0b5%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%23eab308%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                }
+            ],
+            "objects": [
+                {
+                    "type": "place",
+                    "id": "2",
+                    "label": "Palace Arcade",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "PA",
+                        "color": "#9f1239",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                }
+            ],
+            "targets": [],
+            "contexts": [],
+            "origins": [],
+            "results": [],
+            "instruments": [],
+            "locations": [],
+            "generators": [],
+            "featured": [
+                {
+                    "type": "place",
+                    "id": "2",
+                    "label": "Palace Arcade",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "PA",
+                        "color": "#9f1239",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                {
+                    "type": "place",
+                    "id": "2",
+                    "label": "Palace Arcade",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "PA",
+                        "color": "#9f1239",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                {
+                    "type": "place",
+                    "id": "2",
+                    "label": "Palace Arcade",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "PA",
+                        "color": "#9f1239",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                }
+            ]
+        },
+        "distinct": {
+            "actors": 5,
+            "objects": 1,
+            "targets": 0,
+            "contexts": 0,
+            "origins": 0,
+            "results": 0,
+            "instruments": 0,
+            "locations": 0,
+            "generators": 0,
+            "featured": 5
+        },
+        "children": [
+            {
+                "kind": "activity",
+                "id": "01m4m82s12v434wqcz9t7yv4v1",
+                "verb": "check_in",
+                "published_at": "2026-08-14T13:10:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "40",
+                    "label": "Kali Prasad",
+                    "link": {
+                        "href": "/people/40",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "KP",
+                        "color": "#4d7c0f",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "2",
+                    "label": "Palace Arcade",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "PA",
+                        "color": "#9f1239",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82s07hz3wgjaetk3sbmd4",
+                "verb": "check_in",
+                "published_at": "2026-08-14T13:09:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "39",
+                    "label": "Phil Kowalski",
+                    "link": {
+                        "href": "/people/39",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "11"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23fecdd3%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%23b91c1c%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23e8b896%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23e8b896%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%23111827%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "2",
+                    "label": "Palace Arcade",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "PA",
+                        "color": "#9f1239",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rznhjjje77kv6c1154j",
+                "verb": "check_in",
+                "published_at": "2026-08-14T13:08:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "38",
+                    "label": "Dart Ortega",
+                    "link": {
+                        "href": "/people/38",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "8"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23fde68a%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%231d4ed8%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23f5d0b5%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23f5d0b5%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%23eab308%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "2",
+                    "label": "Palace Arcade",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "PA",
+                        "color": "#9f1239",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rzf72fx3ts56h695nzm",
+                "verb": "check_in",
+                "published_at": "2026-08-14T13:07:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "37",
+                    "label": "Will Cole",
+                    "link": {
+                        "href": "/people/37",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "WC",
+                        "color": "#be123c",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "2",
+                    "label": "Palace Arcade",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "PA",
+                        "color": "#9f1239",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rysbchecf8kdp13j67t",
+                "verb": "check_in",
+                "published_at": "2026-08-14T13:06:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "36",
+                    "label": "Keith Hogan",
+                    "link": {
+                        "href": "/people/36",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "3"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23fecdd3%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%230f766e%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23c68c63%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23c68c63%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%231f2937%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "2",
+                    "label": "Palace Arcade",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "PA",
+                        "color": "#9f1239",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            }
+        ],
+        "children_truncated": false,
+        "tombstoned": [],
+        "redundant": false,
+        "distinct_tombstoned": {
+            "actors": 0,
+            "objects": 0,
+            "targets": 0,
+            "contexts": 0,
+            "origins": 0,
+            "results": 0,
+            "instruments": 0,
+            "locations": 0,
+            "generators": 0,
+            "featured": 0
+        }
+    },
+    "crowd": {
+        "kind": "group",
+        "id": "grp_djIfYWN0b3JzH2IxOjdjNWY5OTc2ODczNTliYTBlODRkMTRkNzVkODc3MjNjMGMyZjc3YmM1OWQzYWUwNjFkM2VmOThkYzZjMmE1M2E6MDFtNG04MnJoMTcyeTJ3emFqaGh6ZHI0a2U",
+        "axis": "actors",
+        "count": 35,
+        "verb": "check_in",
+        "published_at": "2026-08-14T12:35:00.000000Z",
+        "headline_template": ":actors checked in at :object",
+        "headline": null,
+        "glyph": "map-pin",
+        "glyph_intent": null,
+        "actor": null,
+        "object": {
+            "type": "place",
+            "id": "1",
+            "label": "Fun Fair",
+            "link": null,
+            "data": [],
+            "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "FF",
+                "color": "#a21caf",
+                "files": [],
+                "slots": []
+            },
+            "body": null,
+            "tombstone": null
+        },
+        "target": null,
+        "context": null,
+        "origin": null,
+        "result": null,
+        "instrument": null,
+        "location": null,
+        "generator": null,
+        "featured": "object",
+        "sample": {
+            "actors": [
+                {
+                    "type": "person",
+                    "id": "35",
+                    "label": "Murray Bauman",
+                    "link": {
+                        "href": "/people/35",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "34"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23d9f99d%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%23334155%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%238d5a3b%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%238d5a3b%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%2357534e%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                {
+                    "type": "person",
+                    "id": "34",
+                    "label": "Joyce Byers",
+                    "link": {
+                        "href": "/people/34",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "JB",
+                        "color": "#7e22ce",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                {
+                    "type": "person",
+                    "id": "33",
+                    "label": "Jim Hopper",
+                    "link": {
+                        "href": "/people/33",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "32"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23fde68a%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%23b91c1c%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23f5d0b5%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23f5d0b5%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%23111827%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                }
+            ],
+            "objects": [
+                {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                }
+            ],
+            "targets": [],
+            "contexts": [],
+            "origins": [],
+            "results": [],
+            "instruments": [],
+            "locations": [],
+            "generators": [],
+            "featured": [
+                {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                }
+            ]
+        },
+        "distinct": {
+            "actors": 35,
+            "objects": 1,
+            "targets": 0,
+            "contexts": 0,
+            "origins": 0,
+            "results": 0,
+            "instruments": 0,
+            "locations": 0,
+            "generators": 0,
+            "featured": 35
+        },
+        "children": [
+            {
+                "kind": "activity",
+                "id": "01m4m82ryhpskaaryjghfrxj71",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:35:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "35",
+                    "label": "Murray Bauman",
+                    "link": {
+                        "href": "/people/35",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "34"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23d9f99d%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%23334155%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%238d5a3b%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%238d5a3b%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%2357534e%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rx0jqf201wp6jp799r3",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:34:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "34",
+                    "label": "Joyce Byers",
+                    "link": {
+                        "href": "/people/34",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "JB",
+                        "color": "#7e22ce",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rwkpbse8tysgfk46xy8",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:33:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "33",
+                    "label": "Jim Hopper",
+                    "link": {
+                        "href": "/people/33",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "32"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23fde68a%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%23b91c1c%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23f5d0b5%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23f5d0b5%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%23111827%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rv5ck5qep2ntt3qkk5v",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:32:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "32",
+                    "label": "Nancy Wheeler",
+                    "link": {
+                        "href": "/people/32",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "31"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23e2e8f0%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%230f766e%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%235c3a24%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%235c3a24%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%231f2937%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rv0vst3e7q71hw6q71y",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:31:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "31",
+                    "label": "Jonathan Byers",
+                    "link": {
+                        "href": "/people/31",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "30"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23fed7aa%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%234d7c0f%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23f1c7a5%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23f1c7a5%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%239a3412%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rttbrs40r3j3e3raz8n",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:30:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "30",
+                    "label": "Steve Harrington",
+                    "link": {
+                        "href": "/people/30",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "SH",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rsmngx8mdmmg67cb7cn",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:29:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "29",
+                    "label": "Robin Buckley",
+                    "link": {
+                        "href": "/people/29",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "28"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23ddd6fe%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%237c3aed%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%238d5a3b%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%238d5a3b%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%23c2410c%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rscsdysasxwmyedpwhw",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:28:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "28",
+                    "label": "Dustin Henderson",
+                    "link": {
+                        "href": "/people/28",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "DH",
+                        "color": "#4d7c0f",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rs3c9rnvmnk35e985s8",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:27:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "27",
+                    "label": "Lucas Sinclair",
+                    "link": {
+                        "href": "/people/27",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "26"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23d9f99d%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%23be185d%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23f5d0b5%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23f5d0b5%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%2378350f%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rrt9v6edyx4t52h87pq",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:26:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "26",
+                    "label": "Erica Sinclair",
+                    "link": {
+                        "href": "/people/26",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "ES",
+                        "color": "#b45309",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rrmfrs6vsecjgeszfct",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:25:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "25",
+                    "label": "Max Mayfield",
+                    "link": {
+                        "href": "/people/25",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "24"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23fde68a%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%230f766e%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23f1c7a5%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23f1c7a5%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%231f2937%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rrf3gynvyc395v8rfka",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:24:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "24",
+                    "label": "Will Byers",
+                    "link": {
+                        "href": "/people/24",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "WB",
+                        "color": "#b45309",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rr9n2t23xk4ajwep4bz",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:23:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "23",
+                    "label": "Mike Wheeler",
+                    "link": {
+                        "href": "/people/23",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "22"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23fed7aa%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%231d4ed8%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%238d5a3b%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%238d5a3b%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%23eab308%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rr4s2k55s8wwhekemqv",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:22:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "22",
+                    "label": "Karen Wheeler",
+                    "link": {
+                        "href": "/people/22",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "KW",
+                        "color": "#c2410c",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rq6qj088m2e4mzy4p7a",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:21:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "21",
+                    "label": "Ted Wheeler",
+                    "link": {
+                        "href": "/people/21",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "20"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23ddd6fe%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%23334155%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23f5d0b5%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23f5d0b5%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%2357534e%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rq0m7af3gvc38c246g8",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:20:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "20",
+                    "label": "Holly Wheeler",
+                    "link": {
+                        "href": "/people/20",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "HW",
+                        "color": "#7e22ce",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rprg7kfshehm3c0p5s4",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:19:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "19",
+                    "label": "Claudia Henderson",
+                    "link": {
+                        "href": "/people/19",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "18"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23d9f99d%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%23b91c1c%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23f1c7a5%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23f1c7a5%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%23111827%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rpf8hj4wmq9qhypvp1x",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:18:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "18",
+                    "label": "Billy Hargrove",
+                    "link": {
+                        "href": "/people/18",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "17"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23bfdbfe%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%230f766e%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23e8b896%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23e8b896%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%231f2937%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rp8h1n1hpkk9j76w3r1",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:17:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "17",
+                    "label": "Heather Holloway",
+                    "link": {
+                        "href": "/people/17",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "16"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23fde68a%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%234d7c0f%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%238d5a3b%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%238d5a3b%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%239a3412%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rp3htf1nh6hwx8n1zv7",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:16:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "16",
+                    "label": "Bob Newby",
+                    "link": {
+                        "href": "/people/16",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "BN",
+                        "color": "#4d7c0f",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rnxdj49rzr5000fa2cg",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:15:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "15",
+                    "label": "Barb Holland",
+                    "link": {
+                        "href": "/people/15",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "14"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23fed7aa%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%237c3aed%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23f5d0b5%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23f5d0b5%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%23c2410c%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rne8523t9cfdq7eqwpv",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:14:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "14",
+                    "label": "Eddie Munson",
+                    "link": {
+                        "href": "/people/14",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "EM",
+                        "color": "#1d4ed8",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rn4va50dk51nq138vwz",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:13:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "13",
+                    "label": "Argyle",
+                    "link": {
+                        "href": "/people/13",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "12"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23ddd6fe%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%23be185d%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%23f1c7a5%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%23f1c7a5%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%2378350f%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rmx0rzxww9n5tfebcr5",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:12:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "12",
+                    "label": "Suzie Bingham",
+                    "link": {
+                        "href": "/people/12",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": null
+                    },
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "SB",
+                        "color": "#4338ca",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            },
+            {
+                "kind": "activity",
+                "id": "01m4m82rmqmahxh2dsagwnwep7",
+                "verb": "check_in",
+                "published_at": "2026-08-14T12:11:00.000000Z",
+                "starts_at": null,
+                "ends_at": null,
+                "headline_template": ":actor checked in at :object",
+                "headline": null,
+                "glyph": "map-pin",
+                "glyph_intent": null,
+                "actor": {
+                    "type": "person",
+                    "id": "11",
+                    "label": "Vickie Dunne",
+                    "link": {
+                        "href": "/people/11",
+                        "modal": false,
+                        "attributes": []
+                    },
+                    "data": {
+                        "portrait": "10"
+                    },
+                    "media": {
+                        "icon": {
+                            "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2796%27%20height%3D%2796%27%20viewBox%3D%270%200%2096%2096%27%3E%3Crect%20width%3D%2796%27%20height%3D%2796%27%20fill%3D%27%23d9f99d%27%2F%3E%3Cpath%20d%3D%27M14%2096c2-20%2016-30%2034-30s32%2010%2034%2030z%27%20fill%3D%27%230f766e%27%2F%3E%3Crect%20x%3D%2740%27%20y%3D%2754%27%20width%3D%2716%27%20height%3D%2716%27%20rx%3D%276%27%20fill%3D%27%238d5a3b%27%2F%3E%3Ccircle%20cx%3D%2748%27%20cy%3D%2740%27%20r%3D%2718%27%20fill%3D%27%238d5a3b%27%2F%3E%3Cpath%20d%3D%27M29%2040c0-14%208-22%2019-22s19%208%2019%2022c-4-8-10-11-19-11s-15%203-19%2011z%27%20fill%3D%27%231f2937%27%2F%3E%3C%2Fsvg%3E",
+                            "mediaType": "image/svg+xml",
+                            "width": 96,
+                            "height": 96,
+                            "alt": null
+                        },
+                        "image": null,
+                        "preview": null,
+                        "initials": null,
+                        "color": null,
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "object": {
+                    "type": "place",
+                    "id": "1",
+                    "label": "Fun Fair",
+                    "link": null,
+                    "data": [],
+                    "media": {
+                        "icon": null,
+                        "image": null,
+                        "preview": null,
+                        "initials": "FF",
+                        "color": "#a21caf",
+                        "files": [],
+                        "slots": []
+                    },
+                    "body": null,
+                    "tombstone": null
+                },
+                "target": null,
+                "context": null,
+                "origin": null,
+                "result": null,
+                "instrument": null,
+                "location": null,
+                "generator": null,
+                "featured": "object",
+                "data": null,
+                "tombstoned": [],
+                "redundant": false,
+                "missing_headline_template": null,
+                "missing_headline": null
+            }
+        ],
+        "children_truncated": true,
+        "tombstoned": [],
+        "redundant": false,
+        "distinct_tombstoned": {
+            "actors": 0,
+            "objects": 0,
+            "targets": 0,
+            "contexts": 0,
+            "origins": 0,
+            "results": 0,
+            "instruments": 0,
+            "locations": 0,
+            "generators": 0,
+            "featured": 0
+        }
+    }
+}
