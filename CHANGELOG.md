@@ -9,6 +9,7 @@
 
 ### Fixed
 
+- A row's headline centres its first line on the rail's disc, in Blade, Vue and React (ui#58). The body's top padding was a fixed `pt-1.5` (`pt-1` on a group's member rows), right for no combination of disc and type size: at the defaults (a 32px disc and a 25.6px line) the headline sat 2.8px low, and 5.3px low with `--sf-disc: 2.5rem` and `--sf-font-size: 0.875rem`. It is now `(disc − 1lh) / 2`, clamped at 0 for a disc smaller than the line, so it follows `--sf-disc` and `--sf-font-size`. A headline that wraps aligns its first line. The badge and the stacked pair are placed against the disc, so they don't move. Closes #58.
 - Blade keeps drawing an empty role as bare words, as Vue and React do, once core passes it to `Headline::toHtml()`'s closure (storyfeed/storyfeed#98). It would otherwise have wrapped an anonymous actor's "Someone" in the entity's span.
 
 ## v0.9.1 - 2026-10-11

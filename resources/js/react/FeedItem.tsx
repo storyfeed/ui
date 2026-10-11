@@ -102,9 +102,9 @@ export default function FeedItem({
                 line={!isLast}
             />
             <div
-                className={`sf-body min-w-0 flex-1 ${
+                className={`sf-body min-w-0 flex-1 pt-[max(0px,calc((var(--sf-disc-v)-1lh)/2))] ${
                     isLast ? '' : 'sf-body--spaced pb-5'
-                } ${dense ? 'sf-body--dense pt-1' : 'pt-1.5'}`}
+                } ${dense ? 'sf-body--dense' : ''}`}
             >
                 <div className="sf-head flex items-baseline gap-3">
                     <FeedHeadline
