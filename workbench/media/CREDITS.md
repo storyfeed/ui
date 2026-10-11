@@ -20,3 +20,6 @@ recognisable faces.
 | darkroom.jpg | [Vladimir Fedotov](https://unsplash.com/@fedotov_vs) | https://unsplash.com/photos/RSN0hnHOclQ |
 | newspapers.jpg | [Jonathan Gong](https://unsplash.com/@jonathangongphotography) | https://unsplash.com/photos/izRQ870yJO8 |
 | street.jpg | [Nils Huenerfuerst](https://unsplash.com/@nhuenerfuerst) | https://unsplash.com/photos/pBmOfkly5eg |
+
+`../readme/media/fireworks.jpg` is the fireworks photo above at 480×360, for the
+README showcase's Image body, which draws it larger than the strip tiles.

@@ -91,3 +91,22 @@ need core 0.18 (every entity has an avatar); install core main and run
 `npm run workbench:strip-cases` to regenerate them. The photographs are the
 docs world's Unsplash set, reduced in `media/` (credits in `media/CREDITS.md`);
 `npm run workbench` copies them to `build/workbench-media/`.
+
+## The core README's showcase
+
+`npm run readme:showcase` regenerates the animated showcase in
+storyfeed/storyfeed's README (`art/samples/showcase-{light,dark}.{svg,png}`).
+
+- `workbench/readme/ReadmeTest.php` records two made-up worlds through core
+  and renders them with the Blade kit: the street fair whose feed grows inside
+  the picture, state by state, and the feed of looks at Storyfeed's README
+  that the camera pulls back to, with the page's viewer drawn as "You".
+- `workbench/readme/showcase.mjs` stacks the states in one page, styles them
+  with the Tailwind classes they use, measures their rows where the SVG draws
+  them, and writes one SVG per theme, animated with CSS keyframes only, plus
+  a PNG still of the closing frame for reduced motion (256 colours when
+  `ffmpeg` is on the path). The typing bubble and the camera are the page's
+  own markup; every row is kit output.
+
+Output goes to `../storyfeed/art/samples`; set `STORYFEED_README_OUT` for
+another core checkout. It needs Chromium through Playwright.
