@@ -85,9 +85,9 @@ export function bodyFrame(payload: Record<string, any>): { style: Record<string,
     return { style: { '--sf-prose-max-h': 'none', '--sf-body-max-h': height }, capped: true };
 }
 
-/** Whether an Excerpt is a fragment. From v2 core writes `truncated` only when false. */
+/** Whether an Excerpt was cut. Core writes `truncated` only when it differs from the default, which was true in v2 only. */
 export function isTruncated(payload: Record<string, any>): boolean {
-    return 'truncated' in payload ? Boolean(payload.truncated) : (typeof payload.$v === 'number' ? payload.$v : 1) >= 2;
+    return 'truncated' in payload ? Boolean(payload.truncated) : payload.$v === 2;
 }
 
 /**

@@ -4,6 +4,7 @@
 
 ### Changed
 
+- Excerpt reads core's v3 body, which is complete by default (storyfeed/storyfeed#152): an Excerpt without `truncated` shows its ellipsis only when it is v2, in Blade, Vue and React. v1 and v3 bodies without the flag read as whole, as core's `Excerpt::upgrade()` reads them. Tagged core writes v2, which draws as before.
 - A row draws its featured role's body, in Blade, Vue and React (ui#13). Core's `featured` (storyfeed/storyfeed#76) names the role a row is about: the kits now draw `item[item.featured].body` and that entity's detail forms, where they always drew the object's. With no `featured` field, or `"featured": "object"`, a row draws the object's body as before. `"featured": null` (`withoutFeature()`) draws no entity body; the activity's own body and the meta line still render. A featured role the payload left empty draws no entity body, and the row stays. An Image body naming the icon slot links its thumbnail to the featured entity. A group's strip already read each member's featured role, so its tiles now match the pictures the expanded rows draw.
 
 ### Fixed

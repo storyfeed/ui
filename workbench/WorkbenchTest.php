@@ -48,7 +48,7 @@ final class WorkbenchTest extends TestCase
             'Prose Markdown' => Prose::markdown("**Ready for pickup**\n\nPlease bring your [order confirmation](/orders/1042).\n\n- Two pizzas\n- One dessert", title: 'Pickup note'),
             'Prose HTML' => Prose::html('<p><strong>Order confirmed.</strong> Your pickup is at <em>12:10 pm</em>.</p><p><a href="/orders/1042">View order</a></p>', title: 'Confirmation'),
             'Prose verbatim' => Prose::verbatim("Order #1042\n  status: ready\n  pickup: 12:10 pm\n  result: <confirmed>", title: 'Kitchen output'),
-            'Excerpt' => Excerpt::make('The pizza was still warm when we got home. We will be back', from: 'Customer review'),
+            'Excerpt' => Excerpt::make('The pizza was still warm when we got home. We will be back', from: 'Customer review', truncated: true),
         ];
 
         foreach ($bodies as $label => $body) {
