@@ -97,11 +97,9 @@ docs world's Unsplash set, reduced in `media/` (credits in `media/CREDITS.md`);
 `npm run readme:showcase` regenerates the animated showcase in
 storyfeed/storyfeed's README (`art/samples/`). `workbench/readme/ReadmeTest.php`
 records a made-up street fair through core and renders each state of the arc
-with the Blade kit; `workbench/readme/kits/` and `kits.mjs` render the closing
-feed with the Vue and React kits from the payload core serialized.
-`workbench/readme/showcase.mjs` stacks the states in one page, styles them with
-the Tailwind classes they use, measures their rows and writes one SVG per
-theme, animated with CSS keyframes only, plus a PNG still of the closing frame
-(256 colours when `ffmpeg` is on the path). Output goes to
-`../storyfeed/art/samples`; set `STORYFEED_README_OUT` for another core
+with the Blade kit. `workbench/readme/showcase.mjs` stacks the states in one
+page, styles them with the Tailwind classes they use, measures their rows and
+writes one SVG per theme, animated with CSS keyframes only, plus a PNG still
+of the richest frame (256 colours when `ffmpeg` is on the path). Output goes
+to `../storyfeed/art/samples`; set `STORYFEED_README_OUT` for another core
 checkout.

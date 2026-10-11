@@ -1,4 +1,4 @@
-// The glyphs the README world maps its verbs to, from Lucide, as the Vue and React kits draw them.
+// The glyphs the README world maps its verbs to, from Lucide, the set the Vue and React kits draw.
 import { createSSRApp, h } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import { Activity, FileCheck, Image, Ticket, UserPlus } from 'lucide-vue-next';

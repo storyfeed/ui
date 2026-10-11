@@ -6,7 +6,7 @@
     "workbench": "npm run workbench:blade && npm run workbench:vue && npm run workbench:react",
     "workbench:bare": "tailwindcss -i workbench/bare/blade.css -o build/bare/blade.css && tailwindcss -i workbench/bare/vue.css -o build/bare/vue.css && tailwindcss -i workbench/bare/react.css -o build/bare/react.css",
     "screenshots": "node workbench/screenshots.mjs",
-    "readme:showcase": "node workbench/readme/icons.mjs && vendor/bin/phpunit --no-configuration --bootstrap vendor/autoload.php workbench/readme/ReadmeTest.php && vite build --config workbench/readme/kits/vite.config.mjs --logLevel warn && node workbench/readme/kits.mjs && tailwindcss -i workbench/readme/readme.css -o build/readme/readme.css --minify && node workbench/readme/showcase.mjs",
+    "readme:showcase": "node workbench/readme/icons.mjs && vendor/bin/phpunit --no-configuration --bootstrap vendor/autoload.php workbench/readme/ReadmeTest.php && tailwindcss -i workbench/readme/readme.css -o build/readme/readme.css --minify && node workbench/readme/showcase.mjs",
     "test:vue": "node --test tests/Unit/feedKit.test.mjs",
     "workbench:blade": "mkdir -p build/workbench-media && cp workbench/media/*.jpg build/workbench-media/ && node workbench/icons.mjs && vendor/bin/phpunit --no-configuration --bootstrap vendor/autoload.php workbench/WorkbenchTest.php && tailwindcss -i workbench/app.css -o build/workbench/app.css --minify",
     "workbench:vue": "tailwindcss -i workbench/vue/app.css -o build/vue-tokens.css --minify && vite build --config workbench/vue/vite.config.mjs",

@@ -8,7 +8,6 @@ use Storyfeed\Facades\Story;
 use Storyfeed\Facades\Storyfeed;
 use Storyfeed\Grouping\Group;
 use Storyfeed\MediaSlot;
-use Storyfeed\Ui\Support\Page;
 use Storyfeed\Ui\Tests\TestCase;
 use Workbench\Readme\Booking;
 use Workbench\Readme\Fair;
@@ -21,10 +20,8 @@ require_once __DIR__.'/World.php';
 /*
  * Records the README showcase's world through core and renders each state of
  * its arc with the Blade kit: build/readme/states.json holds every state's
- * markup, which showcase.mjs styles, measures and animates. payload.json is
- * the final feed as core serializes it, which kits.mjs renders with the Vue
- * and React kits for the closing frame. Nothing here is drawn by hand; the
- * rows are what an app with these models gets.
+ * markup, which showcase.mjs styles, measures and animates. Nothing here is
+ * drawn by hand; the rows are what an app with these models gets.
  */
 final class ReadmeTest extends TestCase
 {
@@ -88,15 +85,16 @@ final class ReadmeTest extends TestCase
         // 5. Everything one volunteer touched.
         $states['scoped'] = $render(Storyfeed::feed()->involving($members['sam'])->live()->limit(3)->get());
 
-        // 6. The richest feed, for all three kits.
-        $final = Storyfeed::feed()->live()->limit(3)->get();
-        $states['final'] = $render($final);
+        // 6. The richest state: the whole feed, then one more arrival on top.
+        $states['richest'] = $render(Storyfeed::feed()->live()->limit(5)->get());
+        $this->travel(2)->minutes();
+        Storyfeed::activity('confirm', Booking::create(['number' => '1043']))->by($members['ines'])->target($fair)->publish();
+        $states['payoff'] = $render(Storyfeed::feed()->live()->limit(5)->get());
 
         $output = dirname(__DIR__, 2).'/build/readme';
         file_put_contents($output.'/states.json', json_encode($states, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
         // Tailwind scans the class names as the kit writes them, unescaped.
         file_put_contents($output.'/classes.txt', html_entity_decode(implode("\n", $states)));
-        file_put_contents($output.'/payload.json', json_encode(['now' => now()->getTimestampMs(), 'items' => Page::read($final)['items']], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR));
-        $this->assertCount(11, $states);
+        $this->assertCount(12, $states);
     }
 }

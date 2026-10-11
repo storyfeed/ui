@@ -1,16 +1,16 @@
-// Builds the core README's showcase from the kits' real output.
+// Builds the core README's showcase from the Blade kit's real output.
 //
 // ReadmeTest.php records a small made-up world through core and writes each
-// state of the arc as Blade markup (build/readme/states.json); kits.mjs adds
-// the closing feed as the Vue and React kits render it. This script stacks the
-// states as layers in one page, styles them with the Tailwind classes they
-// use, measures their rows, and writes one SVG per theme whose CSS keyframes
-// play the arc: rows gain their people and bodies, a run of rows collapses
-// into a group, photos arrive and regroup, the feed narrows to one person,
-// and the three kits hold side by side before dissolving back into the
-// opening row. No script runs in the SVG; GitHub draws it as an image.
+// state of the arc as Blade markup (build/readme/states.json). This script
+// stacks the states as layers in one page, styles them with the Tailwind
+// classes they use, measures their rows, and writes one SVG per theme whose
+// CSS keyframes play the arc: rows gain their people and bodies, a run of rows
+// collapses into a group, photos arrive and regroup, the feed narrows to one
+// person, then opens out to the whole feed, takes one more arrival, holds,
+// and dissolves back into the opening row. No script runs in the SVG; GitHub
+// draws it as an image.
 //
-// It also writes a PNG still of the closing frame, for reduced motion.
+// It also writes a PNG still of the richest frame, for reduced motion.
 //
 //   npm run readme:showcase    writes to STORYFEED_README_OUT (default ../storyfeed/art/samples)
 import { chromium } from 'playwright';
@@ -20,13 +20,12 @@ import { spawnSync } from 'node:child_process';
 
 const out = resolve(process.env.STORYFEED_README_OUT ?? '../storyfeed/art/samples');
 const states = JSON.parse(await readFile('build/readme/states.json', 'utf8'));
-const kits = JSON.parse(await readFile('build/readme/kits.json', 'utf8'));
 const css = await readFile('build/readme/readme.css', 'utf8');
 await mkdir(out, { recursive: true });
 
 const WIDTH = 800;
 const HEIGHT = 520;
-const LOOP = 18.4;
+const LOOP = 17.8;
 
 // The arc, in seconds. Each beat builds on the one before; the collapse, the
 // live run and the closing frame get the most time, and the live arrivals
@@ -36,18 +35,16 @@ const T = {
     joins: 4.0, joinArrivals: [4.15, 4.5, 4.85, 5.2, 5.5], collapse: 6.3,
     photos: [7.5, 8.55, 9.4, 10.05, 10.6],
     scoped: 11.9,
-    kits: 14.0, kitStagger: 0.25,
-    dissolve: 17.6,
+    richest: 13.6, arrival: 14.5,
+    dissolve: 17.0,
 };
 
-const ORDER = ['plain', 'rich', 'joins', 'joined', 'photos1', 'photos2', 'photos3', 'photos4', 'photos5', 'scoped', 'kits'];
+const ORDER = ['plain', 'rich', 'joins', 'joined', 'photos1', 'photos2', 'photos3', 'photos4', 'photos5', 'scoped', 'richest', 'payoff'];
 const feed = (html, extra = '') => `<div class="px-6 pt-4">${extra}${html}</div>`;
 const caption = text => `<div class="absolute right-6 top-4 rounded-full bg-muted px-3 py-1 text-[13px] text-muted-foreground">${text}</div>`;
-const kit = (name, html) => `<div class="kitcol min-w-0"><div class="mb-2 text-[13px] font-semibold text-muted-foreground">${name}</div><div style="--sf-font-size:0.8125rem">${html}</div></div>`;
 const LAYERS = {
     ...Object.fromEntries(ORDER.filter(key => states[key]).map(key => [key, feed(states[key])])),
     scoped: feed(states.scoped, caption('Sam Ortega’s feed')),
-    kits: `<div class="grid grid-cols-3 gap-5 px-6 pt-4">${kit('Blade', states.final)}${kit('Vue', kits.vue)}${kit('React', kits.react)}</div>`,
 };
 
 // Keyframes from [seconds, declarations] pairs, eased between them.
@@ -68,6 +65,12 @@ const timeline = tops => {
     const rules = [];
     const layer = key => `.L-${key}`;
     const row = (key, i) => `${layer(key)} .R${i}`;
+    // A new row arrives on top: the rows under it slide down, then it fades in where they made room.
+    const pushDown = (key, at) => {
+        const h = tops[key][1];
+        rules.push(animate(row(key, 0), [[at, 'opacity:0'], [at + 0.2, 'opacity:0'], [at + 0.45, 'opacity:1']]));
+        tops[key].slice(1).forEach((_, i) => rules.push(animate(row(key, i + 1), [[at, `transform:translateY(${-h}px)`], [at + 0.35, 'transform:translateY(0px)']])));
+    };
     const fade = (key, inAt, outAt, inFor = 0.3, outFor = 0.3) => rules.push(animate(layer(key), [[inAt - inFor, 'opacity:0'], [inAt, 'opacity:1'], [outAt, 'opacity:1'], [outAt + outFor, 'opacity:0']]));
 
     // 1. One plain row: shown at the start, and dissolving back in as the
@@ -107,25 +110,26 @@ const timeline = tops => {
         const key = `photos${n + 1}`;
         const next = T.photos[n + 1] ?? T.scoped;
         if (n < 2) {
-            const h = tops[key][1];
             fade(key, at + 0.01, next, 0.01, n === 1 ? 0.18 : 0.01);
-            rules.push(animate(row(key, 0), [[at, 'opacity:0'], [at + 0.2, 'opacity:0'], [at + 0.45, 'opacity:1']]));
-            tops[key].slice(1).forEach((_, i) => rules.push(animate(row(key, i + 1), [[at, `transform:translateY(${-h}px)`], [at + 0.35, 'transform:translateY(0px)']])));
+            pushDown(key, at);
         } else {
             fade(key, at + 0.25, next, 0.25, next === T.scoped ? 0.4 : 0.18);
         }
     });
 
     // 5. The feed narrows to everything one person touched.
-    fade('scoped', T.scoped + 0.4, T.kits - 0.3, 0.4, 0.3);
+    fade('scoped', T.scoped + 0.4, T.richest, 0.4, 0.4);
 
-    // 6. The three kits, side by side, hold, then dissolve into the opening row.
-    rules.push(animate(layer('kits'), [[T.kits, 'opacity:0'], [T.kits + 0.01, 'opacity:1'], [T.dissolve - 0.1, 'opacity:1'], [T.dissolve + 0.45, 'opacity:0']]));
-    [0, 1, 2].forEach(n => rules.push(animate(`${layer('kits')} .kitcol:nth-child(${n + 1})`, [[T.kits + n * T.kitStagger, hidden(10)], [T.kits + n * T.kitStagger + 0.45, shown()]])));
+    // 6. The payoff: it opens out to the whole feed, one more activity
+    // arrives live on top, and the richest state holds before dissolving
+    // into the opening row, so the last frame is the first.
+    fade('richest', T.richest + 0.4, T.arrival, 0.4, 0.01);
+    rules.push(animate(layer('payoff'), [[T.arrival, 'opacity:0'], [T.arrival + 0.01, 'opacity:1'], [T.dissolve - 0.1, 'opacity:1'], [T.dissolve + 0.45, 'opacity:0']]));
+    pushDown('payoff', T.arrival);
     return rules.join('');
 };
-// Reduced motion, where the viewer passes it through: the closing frame, still.
-const still = '@media (prefers-reduced-motion:reduce){#stage *{animation:none!important}.layer{opacity:0}.L-kits{opacity:1}}';
+// Reduced motion, where the viewer passes it through: the richest frame, still.
+const still = '@media (prefers-reduced-motion:reduce){#stage *{animation:none!important}.layer{opacity:0}#stage .L-payoff{opacity:1}}';
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: WIDTH, height: 900 }, deviceScaleFactor: 2 });
@@ -158,7 +162,7 @@ try {
             for (const layer of document.querySelectorAll('.layer')) {
                 const key = [...layer.classList].find(name => name.startsWith('L-')).slice(2);
                 const feed = layer.querySelector('[role=feed]');
-                if (!feed || key === 'kits') continue;
+                if (!feed) continue;
                 const rows = [...feed.children].filter(child => child.tagName === 'ARTICLE');
                 const first = rows[0].getBoundingClientRect().top;
                 rows.forEach((row, i) => row.classList.add(`R${i}`));
@@ -198,7 +202,7 @@ try {
         // Short class names: every class the stylesheet styles gets one, and
         // the rest (hooks no rule reads) are dropped. The timeline's own names stay.
         const tokens = await page.evaluate(() => [...new Set([...document.querySelectorAll('#stage, #stage [class]')].flatMap(element => [...element.classList]))]);
-        const keep = token => /^(layer|L-.+|R\d+|kitcol|p\d+)$/.test(token);
+        const keep = token => /^(layer|L-.+|R\d+|p\d+)$/.test(token);
         const escape = token => token.replace(/[^a-zA-Z0-9_-]/g, ch => `\\${ch}`).replace(/^(\d)/, '\\3$1 ');
         const map = {};
         let styled = css;
@@ -209,16 +213,16 @@ try {
             styled = styled.replace(pattern, `.${map[token]}`);
         });
         await page.evaluate(map => document.querySelectorAll('#stage, #stage [class]').forEach(element => {
-            const names = [...element.classList].map(name => /^(layer|L-.+|R\d+|kitcol|p\d+)$/.test(name) ? name : map[name]).filter(Boolean);
+            const names = [...element.classList].map(name => /^(layer|L-.+|R\d+|p\d+)$/.test(name) ? name : map[name]).filter(Boolean);
             names.length ? element.setAttribute('class', names.join(' ')) : element.removeAttribute('class');
         }), map);
 
         const xhtml = await page.evaluate(() => new XMLSerializer().serializeToString(document.getElementById('stage')));
-        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}" role="img" aria-label="A Storyfeed feed growing: one plain row gains avatars, a photo and a key-value card; five volunteers joining fold into one grouped row; photos arrive live and regroup with a strip of thumbnails; the feed narrows to one person; then the Blade, Vue and React kits render the same feed side by side."><style><![CDATA[${styled}${pictures}${timeline(tops)}${still}]]></style><foreignObject width="${WIDTH}" height="${HEIGHT}">${xhtml}</foreignObject></svg>`;
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}" role="img" aria-label="A Storyfeed feed growing: one plain row gains avatars, a photo and a key-value card; five volunteers joining fold into one grouped row; photos arrive live and regroup with a strip of thumbnails; the feed narrows to one person, then opens out to the whole feed as one more booking arrives."><style><![CDATA[${styled}${pictures}${timeline(tops)}${still}]]></style><foreignObject width="${WIDTH}" height="${HEIGHT}">${xhtml}</foreignObject></svg>`;
         await writeFile(resolve(out, `showcase-${theme}.svg`), svg);
         sizes.push(`showcase-${theme}.svg ${WIDTH}×${HEIGHT} ${Math.round(svg.length / 1024)} KB`);
 
-        // The reduced-motion still: the closing frame.
+        // The reduced-motion still: the richest frame.
         const shot = await browser.newPage({ viewport: { width: WIDTH, height: HEIGHT }, deviceScaleFactor: 2, reducedMotion: 'reduce' });
         await shot.setContent(`<body style="margin:0">${svg}</body>`);
         await shot.waitForTimeout(300);
