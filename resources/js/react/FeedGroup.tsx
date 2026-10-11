@@ -50,7 +50,7 @@ export default function FeedGroup({
                 line={!(isLast && !interactive && !open)}
             />
             <div
-                className={`sf-body min-w-0 flex-1 pt-1.5 ${
+                className={`sf-body min-w-0 flex-1 pt-[max(0px,calc((var(--sf-disc-v)-1lh)/2))] ${
                     !isLast || (!interactive && open)
                         ? 'sf-body--spaced pb-5'
                         : '[&:has(>.sf-disclosure[open])]:pb-5'

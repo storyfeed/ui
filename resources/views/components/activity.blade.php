@@ -22,7 +22,7 @@
 @endphp
 <article {{ $attributes->class('sf-row relative flex items-start gap-(--sf-gap-v) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]') }}>
     <x-storyfeed::rail :item="$activity" :rail="$rail" :dense="$dense" :last="$last" :renderers="$renderers" />
-    <div @class(['sf-body min-w-0 flex-1', 'sf-body--spaced pb-5' => ! $last, 'sf-body--dense pt-1' => $dense, 'pt-1.5' => ! $dense])>
+    <div @class(['sf-body min-w-0 flex-1 pt-[max(0px,calc((var(--sf-disc-v)-1lh)/2))]', 'sf-body--spaced pb-5' => ! $last, 'sf-body--dense' => $dense])>
         <div class="sf-head flex items-baseline gap-3"><x-storyfeed::headline :headline="$headline" /></div>
         <x-storyfeed::meta :item="$activity" :headline="$headline" :timezone="$timezone" :time-renderer="$renderers['time'] ?? null">{{ $time ?? '' }}</x-storyfeed::meta>
 @if ($removed)<p class="sf-removed mt-1 text-sm text-muted-foreground">{{ $removed }}</p>

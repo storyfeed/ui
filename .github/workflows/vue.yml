@@ -54,6 +54,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run test:hydrate
       - run: npm run kit:parity
+      - run: npm run test:alignment
         env:
           STORYFEED_SCREENSHOTS: ${{ runner.temp }}/kit-parity
       - uses: actions/upload-artifact@v6
