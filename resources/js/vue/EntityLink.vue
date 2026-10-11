@@ -6,7 +6,10 @@ import type { FeedEntity } from '../shared/types';
 
 const props = defineProps<{
     entity: FeedEntity | null;
-    /** Rendered when the entity itself is null (e.g. an anonymous actor). */
+    /**
+     * Rendered when the entity itself is null: an anonymous actor's
+     * "Someone", drawn as an actor (weight and colour, no link).
+     */
     fallback?: string;
 }>();
 
@@ -57,7 +60,8 @@ const label = computed(() => {
         class="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
         :class="{
             'sf-entity--tombstone text-muted-foreground font-normal': tombstone,
-            'sf-entity--unknown italic text-muted-foreground font-normal': !tombstone && !entity?.label,
+            'sf-entity--anonymous text-muted-foreground': !entity && fallback,
+            'sf-entity--unknown italic text-muted-foreground font-normal': !tombstone && !entity?.label && !(!entity && fallback),
         }"
     >
         {{ label }}

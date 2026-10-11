@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- An anonymous actor's "Someone" is drawn as an actor, in Blade, Vue and React: the actor's weight (`font-medium`) and markup (`sf-entity sf-entity--anonymous`), with a muted colour as the cue that nobody is named, and never italic, in single rows and in group headlines. It borrowed the italic, muted placeholder meant for an entity whose label is missing (Vue and React, and Blade's group headlines) or stayed bare headline words (Blade's single rows, #56), so the three kits disagreed. An unlabelled entity's "Something" and any other empty role keep their placeholder look.
+
 ### Added
 
 - `npm run test:bare` renders each kit's default output in a bare host, with no variant, no `--sf-*` tokens and no overrides, and fails when that output needs a consumer to add anything to be correct (ui#28). The host holds only what the README asks of an app: Tailwind, Typography and the Laravel starter kit's colour tokens. It runs the alignment, wells and targets checks there, in Blade, Vue and React: the headline's first line centres on the disc, every text-shaped body keeps its measure (never `none`), every row has the default rail, gap and spacing, every card's edge stands off the page in light and dark, and every standalone link has a 24×24 target. The measure, spacing and edge checks also run in the configured workbench. CI runs it. Closes #28.

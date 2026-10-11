@@ -1137,3 +1137,12 @@ test('a strip tile shows the picture its member\'s row draws, whichever role tha
     }
     assert.doesNotMatch(await renderRaw('/resources/js/vue/FeedItem.vue', { item: members[2] }), /<img/, 'a name tile\'s row draws no picture');
 });
+
+test('an anonymous actor draws as an actor, muted and never italic; an unlabelled entity stays a placeholder', async () => {
+    const someone = await renderRaw('/resources/js/vue/EntityLink.vue', { entity: null, fallback: 'Someone' });
+    assert.match(someone, /class="[^"]*sf-entity--anonymous[^"]*"/);
+    assert.match(someone, /class="[^"]*font-medium[^"]*text-muted-foreground[^"]*"[^>]*>\s*Someone/);
+    assert.doesNotMatch(someone, /italic/);
+    const degraded = await renderRaw('/resources/js/vue/EntityLink.vue', { entity: { type: 'order', id: '9', label: null } });
+    assert.match(degraded, /sf-entity--unknown italic/);
+});

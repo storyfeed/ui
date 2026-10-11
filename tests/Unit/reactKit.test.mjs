@@ -1179,3 +1179,11 @@ test('a strip tile shows the picture its member\'s row draws, whichever role tha
     }
     assert.doesNotMatch(raw('FeedItem', { item: members[2] }), /<img/, 'a name tile\'s row draws no picture');
 });
+
+test('an anonymous actor draws as an actor, muted and never italic; an unlabelled entity stays a placeholder', () => {
+    const someone = raw('EntityLink', { entity: null, fallback: 'Someone' });
+    assert.match(someone, /class="[^"]*sf-entity--anonymous[^"]*"/);
+    assert.match(someone, /class="[^"]*font-medium[^"]*text-muted-foreground[^"]*">Someone/);
+    assert.doesNotMatch(someone, /italic/);
+    assert.match(raw('EntityLink', { entity: { type: 'order', id: '9', label: null } }), /sf-entity--unknown italic/);
+});

@@ -54,7 +54,20 @@ it('draws the blank disc for a verb with no glyph', function () {
 it('reads a missing actor with core\'s placeholder', function () {
     Storyfeed::anonymous()->action('place', Order::create(['number' => '9']))->publish();
 
-    expect(render_feed())->toContain('<span>Someone placed <a href="/orders/1" target="_blank">Order #9</a></span>');
+    expect(render_feed())->toContain('<span><span>Someone</span> placed <a href="/orders/1" target="_blank">Order #9</a></span>');
+});
+
+it('draws an anonymous actor as an actor, muted, never italic', function () {
+    Storyfeed::anonymous()->action('place', Order::create(['number' => '9']))->publish();
+    Storyfeed::anonymous()->action('place', Order::create(['number' => '10']))->publish();
+
+    $single = Blade::render('<x-storyfeed::feed :page="$page" :grouped="false" />', ['page' => Storyfeed::feed()->get()]);
+    $group = Blade::render('<x-storyfeed::feed :page="$page" />', ['page' => Storyfeed::feed()->live()->get()]);
+
+    foreach ([$single, $group] as $html) {
+        expect($html)->toContain('<span class="sf-entity sf-entity--anonymous font-medium text-muted-foreground">Someone</span>')
+            ->not->toMatch('/<span[^>]*italic[^>]*>Someone</');
+    }
 });
 
 it('draws a deleted model as a tombstone, never a link', function () {
