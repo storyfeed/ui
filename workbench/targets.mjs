@@ -1,15 +1,14 @@
 import { chromium } from 'playwright';
-import { createServer } from 'node:http';
-import { readFile, mkdir } from 'node:fs/promises';
-import { resolve, extname } from 'node:path';
+import { mkdir } from 'node:fs/promises';
 import assert from 'node:assert/strict';
+import { serve, pages, bare } from './host.mjs';
 
 // ui#29: a link that stands alone in a body (WCAG 2.5.8's inline exception
 // doesn't cover it) has a 24×24 target, and growing it moves nothing: every
 // box and the link's own text sit where they would without the reach.
-// Run after `npm run workbench`.
-const pages = { blade: 'workbench/parity.html', vue: 'vue/index.html', react: 'react/index.html' };
-const scales = [
+// Run after `npm run workbench`; STORYFEED_HOST=bare runs it at the default
+// size in a host that sets nothing (ui#28).
+const scales = bare ? [{ name: 'bare host', vars: {} }] : [
     { name: 'default', vars: {} },
     { name: 'text 0.875rem', vars: { '--sf-font-size': '0.875rem' } },
     { name: 'text 1.125rem', vars: { '--sf-font-size': '1.125rem' } },
@@ -19,15 +18,7 @@ const buttons = ['.sf-cta__action'];
 const output = process.env.STORYFEED_SCREENSHOTS;
 if (output) await mkdir(output, { recursive: true });
 
-const server = createServer(async (req, res) => {
-    const url = new URL(req.url, 'http://localhost');
-    try {
-        const path = resolve('build', url.pathname.startsWith('/assets/') ? 'vue' + url.pathname : url.pathname.slice(1));
-        res.setHeader('Content-Type', ({ '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml' })[extname(path)] ?? 'text/plain');
-        res.end(await readFile(path));
-    } catch { res.writeHead(404).end(); }
-});
-await new Promise(r => server.listen(0, '127.0.0.1', r));
+const { server, origin } = await serve();
 const browser = await chromium.launch();
 
 // The target is what a pointer hits: every point 12px either side of the
@@ -74,7 +65,7 @@ const failures = [];
 try {
     for (const [kit, path] of Object.entries(pages)) for (const scale of scales) for (const width of [1512, 390]) {
         const page = await browser.newPage({ viewport: { width, height: 1000 }, timezoneId: 'UTC' });
-        await page.goto(`http://127.0.0.1:${server.address().port}/${path}?theme=light`);
+        await page.goto(`${origin}/${path}?theme=light`);
         await page.locator('.sf-feed').first().waitFor();
         await page.evaluate(vars => Object.entries(vars).forEach(([k, v]) => document.documentElement.style.setProperty(k, v)), scale.vars);
         const label = `${kit} ${width}px ${scale.name}`;
@@ -93,7 +84,7 @@ try {
         for (const m of moved.movedTexts.slice(0, 5)) failures.push(`${label}: link text moved ${m}`);
         console.log(`${label}: ${targets.length} targets, smallest ${Math.min(...targets.map(t => t.reach))}×${Math.min(...targets.map(t => t.across))}; ${moved.boxes} boxes and ${moved.texts} text lines, ${moved.movedBoxes.length + moved.movedTexts.length} moved`);
 
-        if (output && scale.name === 'default' && width === 1512) {
+        if (output && !Object.keys(scale.vars).length && width === 1512) {
             // The hit area outlined, for the screenshot only.
             await page.addStyleTag({ content: `${standalone.join(',')}, ${buttons.join(',')} { outline: 1px solid red !important; outline-offset: 0 !important; }` });
             for (const [name, selector] of Object.entries({ 'media-object': '.sf-media-object:has(.sf-file a)', 'item-list': '.sf-list-block:has(.sf-list__more a)', table: '.sf-table:has(td a)' }))

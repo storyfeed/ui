@@ -1,29 +1,26 @@
 import { chromium } from 'playwright';
-import { createServer } from 'node:http';
-import { readFile } from 'node:fs/promises';
-import { resolve, extname } from 'node:path';
+import { mkdir } from 'node:fs/promises';
 import assert from 'node:assert/strict';
+import { serve, pages, bare } from './host.mjs';
 
 // ui#62: every well-shaped body draws the same light fill and hairline edge,
 // derived from the host's tokens, and `--sf-well` / `--sf-well-border` set on
-// any ancestor replace both, in every kit and theme. Run after `npm run workbench`.
-const pages = { blade: 'workbench/parity.html', vue: 'vue/index.html', react: 'react/index.html' };
+// any ancestor replace both, in every kit and theme. Every edge stands off the
+// page it sits on, so a host that sets nothing still sees each card (ui#28).
+// Run after `npm run workbench`; STORYFEED_HOST=bare runs it in a bare host.
 const wells = ['.sf-media-object', '.sf-prose-block:not(.sf-prose-block--verbatim)', '.sf-list-block', '.sf-table-block', '.sf-facts', '.sf-cta'];
 const defaults = {
     light: { fill: 'color-mix(in oklab, var(--color-card) 55%, transparent)', edge: 'color-mix(in oklab, var(--color-foreground) 8%, transparent)' },
     dark: { fill: 'color-mix(in oklab, var(--color-foreground) 3%, transparent)', edge: 'color-mix(in oklab, var(--color-foreground) 8%, transparent)' },
 };
 
-const server = createServer(async (req, res) => {
-    const url = new URL(req.url, 'http://localhost');
-    try {
-        const path = resolve('build', url.pathname.startsWith('/assets/') ? 'vue' + url.pathname : url.pathname.slice(1));
-        res.setHeader('Content-Type', ({ '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml' })[extname(path)] ?? 'text/plain');
-        res.end(await readFile(path));
-    } catch { res.writeHead(404).end(); }
-});
-await new Promise(r => server.listen(0, '127.0.0.1', r));
+const { server, origin } = await serve();
 const browser = await chromium.launch();
+
+// The smallest contrast between a well's edge, laid over the page, and the page.
+const visible = 1.1;
+const output = process.env.STORYFEED_SCREENSHOTS;
+if (output) await mkdir(output, { recursive: true });
 
 // Each well's computed fill and edge, and what a probe resolves the expected colours to.
 const read = ({ wells, expected }) => {
@@ -42,10 +39,29 @@ const read = ({ wells, expected }) => {
     };
 };
 
+// Contrast between each well's edge and the page under it: the canvas lays the
+// edge over the page's background, whatever colour syntax either resolves to.
+const contrast = wells => {
+    const canvas = Object.assign(document.createElement('canvas'), { width: 1, height: 1 });
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const luminance = colours => {
+        ctx.clearRect(0, 0, 1, 1);
+        for (const colour of colours) { ctx.fillStyle = colour; ctx.fillRect(0, 0, 1, 1); }
+        const channel = v => (v /= 255) <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+        const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+        return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+    };
+    const page = getComputedStyle(document.body).backgroundColor;
+    return wells.flatMap(selector => [...document.querySelectorAll(selector)].map(el => {
+        const [a, b] = [luminance(['#fff', page]), luminance(['#fff', page, getComputedStyle(el).borderTopColor])];
+        return { selector, ratio: Math.round((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05) * 1000) / 1000 };
+    }));
+};
+
 try {
     for (const [kit, path] of Object.entries(pages)) for (const theme of ['light', 'dark']) {
         const page = await browser.newPage({ viewport: { width: 1512, height: 1000 }, timezoneId: 'UTC' });
-        await page.goto(`http://127.0.0.1:${server.address().port}/${path}?theme=${theme}`);
+        await page.goto(`${origin}/${path}?theme=${theme}`);
         await page.locator('.sf-feed').first().waitFor();
         await page.evaluate(dark => document.documentElement.classList.toggle('dark', dark), theme === 'dark');
 
@@ -56,6 +72,14 @@ try {
             assert.equal(well.fill, plain.want.fill, `${kit} ${theme} ${well.selector}: default fill`);
             assert.equal(well.edge, plain.want.edge, `${kit} ${theme} ${well.selector}: default edge`);
             assert.equal(well.width, '1px', `${kit} ${theme} ${well.selector}: hairline`);
+        }
+        const edges = await page.evaluate(contrast, wells);
+        for (const edge of edges) assert.ok(edge.ratio >= visible, `${kit} ${theme} ${edge.selector}: edge contrast ${edge.ratio}:1 against the page, under ${visible}:1`);
+        if (bare) {
+            if (output) await page.screenshot({ path: `${output}/bare-${kit}-${theme}.png` });
+            console.log(`${kit} ${theme} (bare host): ${plain.got.length} wells, faintest edge ${Math.min(...edges.map(e => e.ratio))}:1`);
+            await page.close();
+            continue;
         }
 
         // Set on the page root, an ancestor of every feed: both replace the defaults.

@@ -6,6 +6,14 @@
 
 - An Image body that names one of its entity's media slots, as `Image::make($this->feedMediaImage())` does, now takes the slot's alt when it has none of its own, in Blade, Vue and React (ui#70). It drew `alt=""` whatever the picture said. The body's alt still wins, then its caption, then the slot's. Closes #70.
 
+### Added
+
+- `npm run test:bare` renders each kit's default output in a bare host, with no variant, no `--sf-*` tokens and no overrides, and fails when that output needs a consumer to add anything to be correct (ui#28). The host holds only what the README asks of an app: Tailwind, Typography and the Laravel starter kit's colour tokens. It runs the alignment, wells and targets checks there, in Blade, Vue and React: the headline's first line centres on the disc, every text-shaped body keeps its measure (never `none`), every row has the default rail, gap and spacing, every card's edge stands off the page in light and dark, and every standalone link has a 24×24 target. The measure, spacing and edge checks also run in the configured workbench. CI runs it. Closes #28.
+
+### Fixed
+
+- A comment in the Vue kit's `FeedIcon` called the default badge 0.75rem; it is 0.875rem.
+
 ## v0.9.5 - 2026-10-11
 
 ### Added
