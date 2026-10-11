@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- An Image body that names one of its entity's media slots, as `Image::make($this->feedMediaImage())` does, now takes the slot's alt when it has none of its own, in Blade, Vue and React (ui#70). It drew `alt=""` whatever the picture said. The body's alt still wins, then its caption, then the slot's. Closes #70.
+
 ## v0.9.5 - 2026-10-11
 
 ### Added

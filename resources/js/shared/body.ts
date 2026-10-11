@@ -95,7 +95,8 @@ export function isTruncated(payload: Record<string, any>): boolean {
  * (core 0.18's Image v3), otherwise the entity's media slot it names, `icon`,
  * `preview`, `image` or a custom `slots.<name>`. Until v3 a body naming no
  * slot meant `preview`. The body's alt, falling back to its caption, and its
- * declared size win over the slot's. Mirrors `Bodies::picture()`.
+ * declared size win over the slot's; with none, the slot's own stand.
+ * Mirrors `Bodies::picture()`.
  */
 export function pictureOf(payload: Record<string, any>, media: Record<string, any> | null | undefined): Record<string, any> | null {
     if (payload?.$body !== 'Storyfeed/Body/Image') return null;
@@ -111,7 +112,10 @@ export function pictureOf(payload: Record<string, any>, media: Record<string, an
     return {
         ...picture,
         ...size,
-        alt: typeof payload.alt === 'string' ? payload.alt : typeof payload.caption === 'string' ? payload.caption : '',
+        // The body's alt, then its caption, then the slot's own.
+        alt: typeof payload.alt === 'string' ? payload.alt
+            : typeof payload.caption === 'string' ? payload.caption
+            : typeof picture.alt === 'string' ? picture.alt : '',
     };
 }
 
