@@ -185,6 +185,9 @@ try {
                     canvas.getContext('2d').drawImage(image, (canvas.width - image.naturalWidth * scale) / 2, (canvas.height - image.naturalHeight * scale) / 2, image.naturalWidth * scale, image.naturalHeight * scale);
                     encoded.set(src, canvas.toDataURL('image/webp', 0.5));
                 }
+                // Drawn through `content`, an <img> loses the size its attributes give it; keep the size the page drew.
+                const drawn = image.getBoundingClientRect();
+                Object.assign(image.style, { width: `${+drawn.width.toFixed(2)}px`, height: `${+drawn.height.toFixed(2)}px` });
                 image.classList.add(`p${[...encoded.keys()].indexOf(src)}`);
                 image.removeAttribute('src');
                 image.removeAttribute('srcset');
