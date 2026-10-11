@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Blade;
 use Storyfeed\Facades\Story;
 use Storyfeed\Facades\Storyfeed;
 use Storyfeed\Grouping\Group;
@@ -23,14 +24,14 @@ it('names the viewer You at the start of a headline', function () {
     Storyfeed::activity('place', Order::create(['number' => '1042']))->by($this->dana)->publish();
 
     expect(render_feed(attributes: ':viewer="$viewer"', data: ['viewer' => $this->dana]))
-        ->toContain('<span>You placed <a href="/orders/1" target="_blank">Order #1042</a></span>')
+        ->toContain('<span><span>You</span> placed <a href="/orders/1" target="_blank">Order #1042</a></span>')
         ->not->toContain('>Dana<');
 });
 
 it('names the viewer you mid-sentence, in any role', function () {
     Storyfeed::activity('assign', Order::create(['number' => '7']))->by($this->ravi)->target($this->dana)->publish();
 
-    expect(render_feed(attributes: 'viewer="user:1"'))->toContain('was assigned to you</span>');
+    expect(render_feed(attributes: 'viewer="user:1"'))->toContain('was assigned to <span>you</span></span>');
 });
 
 it('leaves everyone else, and pages with no viewer, as they were', function () {
@@ -39,7 +40,7 @@ it('leaves everyone else, and pages with no viewer, as they were', function () {
 
     $html = render_feed(attributes: ':viewer="[\'type\' => \'user\', \'id\' => 1]"');
 
-    expect($html)->toContain('<a href="/users/2">Ravi</a> placed')->toContain('<span>Someone placed')->not->toContain('You')
+    expect($html)->toContain('<a href="/users/2">Ravi</a> placed')->toContain('<span>Someone</span> placed')->not->toContain('You')
         ->and(render_feed())->toBe(render_feed(attributes: ':viewer="null"'));
 });
 
@@ -53,5 +54,12 @@ it('names the viewer You inside a list of actors', function () {
     }
 
     expect(render_blade('<x-storyfeed::feed :page="$page" viewer="user:1" />', ['page' => Storyfeed::feed()->live()->get()]))
-        ->toMatch('/<a href="\/users\/3">Kim<\/a>, <a href="\/users\/2">Ravi<\/a> and you reviewed/');
+        ->toMatch('/<a href="\/users\/3">Kim<\/a>, <a href="\/users\/2">Ravi<\/a> and <span>you<\/span> reviewed/');
+});
+
+it('draws the viewer as an actor: weight and colour, no link', function () {
+    Storyfeed::activity('place', Order::create(['number' => '3']))->by($this->dana)->publish();
+
+    expect(Blade::render('<x-storyfeed::feed :page="$page" viewer="user:1" />', ['page' => Storyfeed::feed()->get()]))
+        ->toContain('<span class="sf-entity sf-entity--viewer font-medium text-foreground">You</span> placed');
 });

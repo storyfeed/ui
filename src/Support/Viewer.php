@@ -40,10 +40,16 @@ final class Viewer
     public static function speak(string $html, string $mark): string
     {
         if (str_starts_with($html, $mark)) {
-            $html = self::word('You').substr($html, strlen($mark));
+            $html = self::drawn(self::word('You')).substr($html, strlen($mark));
         }
 
-        return str_replace($mark, self::word('you'), $html);
+        return str_replace($mark, self::drawn(self::word('you')), $html);
+    }
+
+    /** The viewer is an actor like any named one: the actor's weight and colour, unlinked. */
+    private static function drawn(string $word): string
+    {
+        return '<span class="sf-entity sf-entity--viewer font-medium text-foreground">'.$word.'</span>';
     }
 
     private static function pair(mixed $type, mixed $id): ?string

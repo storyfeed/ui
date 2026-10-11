@@ -8,7 +8,7 @@ import type {
 } from '../shared/types';
 import EntityLink from './EntityLink';
 import { useFeedOptions } from './context';
-import { isViewer, you } from '../shared/viewer';
+import { isViewer, you, VIEWER_CLASSES } from '../shared/viewer';
 import type { FeedViewer } from '../shared/viewer';
 export function EntityList({
     entities,
@@ -28,7 +28,7 @@ export function EntityList({
             {entities.map((entity, i) => (
                 <Fragment key={`${entity.type}:${entity.id}:${i}`}>
                     {isViewer(viewer, entity) ? (
-                        you(first && i === 0)
+                        <span className={VIEWER_CLASSES}>{you(first && i === 0)}</span>
                     ) : (
                         <EntityLink entity={entity} />
                     )}
@@ -88,7 +88,7 @@ export default function FeedHeadline({
                     roles.includes(role) &&
                     isViewer(viewer, entities[role as FeedSingularRole])
                 )
-                    part = you(i === 0);
+                    part = <span className={VIEWER_CLASSES}>{you(i === 0)}</span>;
                 else if (segment.startsWith(':') && roles.includes(role))
                     part = (
                         <EntityLink
@@ -125,7 +125,7 @@ export default function FeedHeadline({
             ) : (
                 <>
                     {isViewer(viewer, entities.actor) ? (
-                        you(true)
+                        <span className={VIEWER_CLASSES}>{you(true)}</span>
                     ) : (
                         <EntityLink
                             entity={entities.actor ?? null}

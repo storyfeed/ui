@@ -17,5 +17,8 @@ export function isViewer(viewer: FeedViewer | null | undefined, entity: FeedEnti
     return key !== null && !!entity?.type && key === `${entity.type}:${entity.id}`;
 }
 
+/** The viewer is an actor like any named one: drawn with the actor's weight and colour, unlinked. */
+export const VIEWER_CLASSES = 'sf-entity sf-entity--viewer font-medium text-foreground';
+
 /** "You" when the sentence starts with the viewer, "you" anywhere else. */
 export const you = (first: boolean): string => (first ? 'You' : 'you');

@@ -573,8 +573,8 @@ The viewer is a model (Blade), `{ type, id }` or `'type:id'`, matched against
 each entity's morph alias and id. "You" opens a sentence, "you" sits anywhere
 else. Templates written in the past tense read correctly; a present-tense
 template such as `:actor is reading :object` reads "You is reading", so
-reword it. "You" is plain text, like "Someone": the reader needs no link to
-themselves.
+reword it. "You" is drawn as the actor it is, with the actor's weight and
+colour, and no link: the reader needs no link to themselves.
 
 ## Customising the Views
 
