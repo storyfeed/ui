@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v0.9.2 - 2026-10-11
+
 ### Changed
 
 - Excerpt reads core's v3 body, which is complete by default (storyfeed/storyfeed#152): an Excerpt without `truncated` shows its ellipsis only when it is v2, in Blade, Vue and React. v1 and v3 bodies without the flag read as whole, as core's `Excerpt::upgrade()` reads them. Tagged core writes v2, which draws as before.
