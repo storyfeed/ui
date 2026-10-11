@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v0.9.1 - 2026-10-11
+
 ### Fixed
 
 - A MediaObject body draws an image it stores itself, in Blade, Vue and React (ui#53). `MediaObject::make()->image(FeedImage::make()->src(…)->alt(…))` stores `image: {src, alt, width, height}`, and the kits drew only a slot name (`icon`, `preview`, `image`), so the picture silently went missing. That left a composed entry whose object has no media slots no way to show one. It is drawn with its alt (empty allowed) and declared size, at the same size and placement as a slot picture; one with a missing or empty src draws no picture. A slot name draws as before.
