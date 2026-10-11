@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v0.9.4 - 2026-10-11
+
 ### Fixed
 
 - A link that stands alone in a body has a 24×24 target, in Blade, Vue and React (ui#29). A MediaObject's subject, files and footnote, an ItemList's items and "more" link, and a Table's link cells measured 14–16px tall: WCAG 2.5.8's inline exception covers a link within a sentence, and none of these is, so they failed AA at the defaults. Each is now an inline-block padded to 24px with a matching negative margin, so the text, the line and every box around it stay where they were (0px at the defaults, and with `--sf-font-size` at 0.875rem and 1.125rem). The only move: stacked file links in a MediaObject sit at least 25px apart (24px plus a pixel for hit-test rounding), so a card with two or more files grows 3px per extra file at the defaults. A call to action is already 32px tall. `npm run test:targets` checks every one in all three kits by hit-testing 12px either side of its centre. Closes #29.
