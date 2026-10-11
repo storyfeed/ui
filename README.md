@@ -553,6 +553,29 @@ const Shipment = ({ payload }: BodyProps) => <p>{payload.carrier} · {payload.tr
 <FeedProvider FEED_BODIES={{ 'Acme/Shipment': Shipment }}>…</FeedProvider>
 ```
 
+### The viewer reads as "You"
+
+Name who is reading the page, and every headline that names them says "You"
+instead: "You placed Order #1042", "Order #7 was assigned to you",
+"Kim, Ravi and you reviewed Order #9". The payload is the same for every
+reader; only the render changes.
+
+```blade
+<x-storyfeed::feed :page="$page" :viewer="auth()->user()" />
+```
+
+```ts
+app.provide(FEED_VIEWER, { type: 'user', id: user.id }); // Vue
+<FeedProvider FEED_VIEWER={`user:${user.id}`}>           // React
+```
+
+The viewer is a model (Blade), `{ type, id }` or `'type:id'`, matched against
+each entity's morph alias and id. "You" opens a sentence, "you" sits anywhere
+else. Templates written in the past tense read correctly; a present-tense
+template such as `:actor is reading :object` reads "You is reading", so
+reword it. "You" is plain text, like "Someone": the reader needs no link to
+themselves.
+
 ## Customising the Views
 
 Publish the views to change the markup:

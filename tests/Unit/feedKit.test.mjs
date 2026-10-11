@@ -1145,4 +1145,22 @@ test('an anonymous actor draws as an actor, muted and never italic; an unlabelle
     assert.doesNotMatch(someone, /italic/);
     const degraded = await renderRaw('/resources/js/vue/EntityLink.vue', { entity: { type: 'order', id: '9', label: null } });
     assert.match(degraded, /sf-entity--unknown italic/);
+test('the page viewer reads as You, at any position and in lists (ui#75)', async () => {
+    const { FEED_VIEWER } = await server.ssrLoadModule('/resources/js/vue/keys.ts');
+    const { default: FeedHeadline } = await server.ssrLoadModule('/resources/js/vue/FeedHeadline.vue');
+    const headline = async (props, viewer) => {
+        const app = createSSRApp({ render: () => h(FeedHeadline, props) });
+        if (viewer !== undefined) app.provide(FEED_VIEWER, viewer);
+        return (await renderToString(app)).replace(/<!--[\s\S]*?-->/g, '').replace(/ class="[^"]*"/g, '');
+    };
+    const object = { type: 'order', id: '7', label: 'Order #7', url: '/orders/7' };
+    const ravi = { ...entity, id: '2', label: 'Ravi', url: '/ravi' };
+    const placed = { template: ':actor placed :object', entities: { actor: entity, object }, verb: 'place' };
+
+    assert.match(await headline(placed, 'user:1'), /<span>You placed <a[^>]*>Order #7<\/a><\/span>/);
+    assert.match(await headline(placed, { type: 'user', id: 1 }), /<span>You placed/);
+    assert.match(await headline({ template: ':object was assigned to :target', entities: { object, target: entity }, verb: 'assign' }, 'user:1'), /was assigned to you<\/span>/);
+    assert.match(await headline({ template: ':actors joined :object', entities: { object }, sample: { actors: [entity, ravi] }, distinct: { actors: 4 }, verb: 'join', aggregate: true }, 'user:1'), /<span>You, <a[^>]*>Ravi<\/a> and 2 more joined/);
+    assert.match(await headline(placed, 'user:2'), /Ada Lovelace<\/a> placed/);
+    assert.equal(await headline(placed), await headline(placed, null));
 });

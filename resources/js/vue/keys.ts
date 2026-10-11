@@ -1,5 +1,6 @@
 import type { Component, InjectionKey } from 'vue';
 import type { FileLabeller } from '../shared/fileLabels';
+import type { FeedViewer } from '../shared/viewer';
 
 
 /** Complete media override, receiving image, href, linkAttributes and the kit classes. */
@@ -45,3 +46,10 @@ export const FEED_BODIES = Symbol('feedBodies') as InjectionKey<
 export const FEED_COMPONENTS = Symbol('feedComponents') as InjectionKey<
     Readonly<Record<string, Component>>
 >;
+
+/**
+ * Who is reading the feed (ui#75): `{ type, id }` or `'type:id'`. Headlines
+ * name that entity "You". Provide it from the page; the payload stays the
+ * same for every reader.
+ */
+export const FEED_VIEWER = Symbol('feedViewer') as InjectionKey<FeedViewer | null>;
