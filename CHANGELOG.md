@@ -4,7 +4,7 @@
 
 ### Changed
 
-- Card-shaped bodies draw a lighter well, in Blade, Vue and React (ui#62). MediaObject drew a solid `bg-muted` box with a full-strength `border-border` edge, and Prose, ItemList, Table, KeyValue and CallToAction each drew their own mix of `bg-card` and `border-border`. All six now share one treatment, mixed from your tokens: in light mode a 55% `card` fill the page shows through; in dark mode a 3% `foreground` lift; in both a hairline edge of 8% `foreground`. `--sf-well` and `--sf-well-border`, set on the feed or any element around it, replace the fill and the edge, as `--sf-disc` sizes the disc, so a host tunes them without styling `.sf-media-object`. No blur is drawn behind a card; over a busy photo, set an opaque `--sf-well`. Excerpt, FileAttachment, Image and verbatim Prose draw no card and are unchanged. Closes #62.
+- Card-shaped bodies draw a lighter well, in Blade, Vue and React (ui#62). MediaObject drew a solid `bg-muted` box with a full-strength `border-border` edge, and Prose, ItemList, Table, KeyValue and CallToAction each drew their own mix of `bg-card` and `border-border`. All six now share one treatment, mixed from your tokens: in light mode a 55% `card` fill the page shows through; in dark mode a 3% `foreground` lift; in both a hairline edge of 8% `foreground`. `--sf-well` and `--sf-well-border`, set on the feed or any element around it, replace the fill and the edge, as `--sf-disc` sizes the disc, so a host tunes them without styling `.sf-media-object`. No blur is drawn behind a card. Excerpt, FileAttachment, Image and verbatim Prose draw no card and are unchanged. Closes #62.
 
 ## v0.9.2 - 2026-10-11
 

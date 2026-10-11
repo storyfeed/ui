@@ -286,9 +286,8 @@ or any element around it to change them:
 ```
 
 A value applies in both themes, so set it again under `.dark` for a different
-dark one. Over a busy photo, give `--sf-well` an opaque colour so the text
-stays readable: the kit draws no blur behind cards, which would cost every card
-on a long feed its own compositing layer.
+dark one. The kit draws no blur behind cards, which would cost every card on a
+long feed its own compositing layer.
 
 #### Set the feed's size
 
