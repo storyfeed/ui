@@ -56,6 +56,7 @@ jobs:
       - run: npm run kit:parity
         env:
           STORYFEED_SCREENSHOTS: ${{ runner.temp }}/kit-parity
+      - run: npm run test:alignment
       - uses: actions/upload-artifact@v6
         if: always()
         with:

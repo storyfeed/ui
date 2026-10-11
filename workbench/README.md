@@ -51,6 +51,12 @@ scale" case also re-renders a row inside a 14px host to check it keeps its own
 sizes. Light/dark card captures
 and measurements use `k4-`.
 
+`npm run test:alignment` checks every row in all three kits (activities,
+groups and their members, single-line and wrapped headlines) at 1512px and
+390px: the headline's first line box centres on the rail's disc within 0.5px
+at the defaults and with `--sf-disc: 2.5rem` at 0.875rem and 1.125rem text,
+and a disc smaller than the line clamps the body's top padding at 0 (ui#58).
+
 ## Group strip samples
 
 The "Strip: …" cases in `vue/cases.json` are real core output, not hand-built
