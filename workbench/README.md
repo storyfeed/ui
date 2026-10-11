@@ -91,3 +91,15 @@ need core 0.18 (every entity has an avatar); install core main and run
 `npm run workbench:strip-cases` to regenerate them. The photographs are the
 docs world's Unsplash set, reduced in `media/` (credits in `media/CREDITS.md`);
 `npm run workbench` copies them to `build/workbench-media/`.
+
+## The core README's showcase
+
+`npm run readme:showcase` regenerates the animated showcase and the stills in
+storyfeed/storyfeed's README (`art/samples/`). `workbench/readme/ReadmeTest.php`
+records a made-up street fair through core and renders each scene with the
+Blade kit; `workbench/readme/showcase.mjs` styles the scenes with Tailwind
+classes taken from that output, serializes them as XHTML in Chromium and
+wraps them in one SVG per theme, animated with CSS keyframes only. PNG stills
+come from the same page, reduced to 256 colours when `ffmpeg` is on the path.
+Output goes to `../storyfeed/art/samples`; set `STORYFEED_README_OUT` for
+another core checkout.

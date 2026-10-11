@@ -1,0 +1,53 @@
+/* The README showcase's host: the bare host's setup (Tailwind, Typography and
+   the Laravel starter kit's tokens), with GitHub's page colours as the
+   background so the frames sit flush on a README in either theme. Classes
+   come from the rendered scenes only, so the SVG carries just what it draws. */
+@import "tailwindcss" source(none);
+@plugin "@tailwindcss/typography";
+@source "../../build/readme/classes.txt";
+@source "./showcase.mjs";
+@custom-variant dark (&:is(.dark *));
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-border: var(--border);
+    --color-ring: var(--ring);
+}
+.light {
+    --background: #ffffff;
+    --foreground: hsl(0 0% 3.9%);
+    --card: #ffffff;
+    --primary: hsl(0 0% 9%);
+    --primary-foreground: hsl(0 0% 98%);
+    --muted: hsl(0 0% 96.1%);
+    --muted-foreground: hsl(0 0% 45.1%);
+    --border: hsl(0 0% 92.8%);
+    --ring: hsl(0 0% 3.9%);
+    --code: #f6f8fa;
+    --code-key: #b65326;
+    --code-var: #0a7ea4;
+    --code-string: #3d7a2a;
+}
+.dark {
+    --background: #0d1117;
+    --foreground: hsl(0 0% 96%);
+    --card: #0d1117;
+    --primary: hsl(0 0% 98%);
+    --primary-foreground: hsl(0 0% 9%);
+    --muted: #1f242c;
+    --muted-foreground: hsl(0 0% 63.9%);
+    --border: #262c36;
+    --ring: hsl(0 0% 83.1%);
+    --code: #151b23;
+    --code-key: #e8834f;
+    --code-var: #79c0ff;
+    --code-string: #a5d6a7;
+}
+@layer base {
+    * { @apply border-border outline-ring/50; }
+}
