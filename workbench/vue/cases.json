@@ -9529,6 +9529,742 @@
     ]
   },
   {
+    "name": "Featured roles",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "featured-object",
+        "verb": "unveil",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actor unveiled :object at :location",
+        "headline": null,
+        "glyph": "activity",
+        "glyph_intent": null,
+        "actor": {
+          "type": "person",
+          "id": "1",
+          "label": "Ana Silva",
+          "link": {
+            "href": "/people/1",
+            "modal": false,
+            "attributes": []
+          },
+          "data": [],
+          "media": {
+            "icon": {
+              "src": "/workbench-media/ferris.jpg",
+              "mediaType": "image/jpeg",
+              "width": 192,
+              "height": 144,
+              "alt": null
+            },
+            "image": null,
+            "preview": null,
+            "initials": null,
+            "color": null,
+            "files": [],
+            "slots": []
+          },
+          "body": null,
+          "tombstone": null
+        },
+        "object": {
+          "type": "package",
+          "id": "storyfeed",
+          "label": "Storyfeed",
+          "link": {
+            "href": "/packages/storyfeed",
+            "modal": false,
+            "attributes": []
+          },
+          "data": [],
+          "media": {
+            "icon": null,
+            "image": null,
+            "preview": null,
+            "initials": null,
+            "color": null,
+            "files": [],
+            "slots": []
+          },
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Excerpt",
+              "$v": 2,
+              "text": "An activity feed for Laravel.",
+              "truncated": false
+            }
+          ],
+          "tombstone": null
+        },
+        "target": null,
+        "context": null,
+        "origin": null,
+        "result": null,
+        "instrument": null,
+        "location": {
+          "type": "event",
+          "id": "fair",
+          "label": "Summer fair",
+          "link": {
+            "href": "/events/fair",
+            "modal": false,
+            "attributes": []
+          },
+          "data": [],
+          "media": {
+            "icon": {
+              "src": "/workbench-media/fair.jpg",
+              "mediaType": "image/jpeg",
+              "width": 192,
+              "height": 144,
+              "alt": null
+            },
+            "image": null,
+            "preview": null,
+            "initials": null,
+            "color": null,
+            "files": [],
+            "slots": []
+          },
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Image",
+              "$v": 2,
+              "image": "icon"
+            },
+            {
+              "$body": "Storyfeed/Body/Excerpt",
+              "$v": 2,
+              "text": "Stalls open at ten on the harbour green.",
+              "truncated": false
+            }
+          ],
+          "tombstone": null
+        },
+        "generator": null,
+        "featured": "object"
+      },
+      {
+        "kind": "activity",
+        "id": "featured-location",
+        "verb": "unveil",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actor unveiled :object at :location",
+        "headline": null,
+        "glyph": "activity",
+        "glyph_intent": null,
+        "actor": {
+          "type": "person",
+          "id": "1",
+          "label": "Ana Silva",
+          "link": {
+            "href": "/people/1",
+            "modal": false,
+            "attributes": []
+          },
+          "data": [],
+          "media": {
+            "icon": {
+              "src": "/workbench-media/ferris.jpg",
+              "mediaType": "image/jpeg",
+              "width": 192,
+              "height": 144,
+              "alt": null
+            },
+            "image": null,
+            "preview": null,
+            "initials": null,
+            "color": null,
+            "files": [],
+            "slots": []
+          },
+          "body": null,
+          "tombstone": null
+        },
+        "object": {
+          "type": "package",
+          "id": "storyfeed",
+          "label": "Storyfeed",
+          "link": {
+            "href": "/packages/storyfeed",
+            "modal": false,
+            "attributes": []
+          },
+          "data": [],
+          "media": {
+            "icon": null,
+            "image": null,
+            "preview": null,
+            "initials": null,
+            "color": null,
+            "files": [],
+            "slots": []
+          },
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Excerpt",
+              "$v": 2,
+              "text": "An activity feed for Laravel.",
+              "truncated": false
+            }
+          ],
+          "tombstone": null
+        },
+        "target": null,
+        "context": null,
+        "origin": null,
+        "result": null,
+        "instrument": null,
+        "location": {
+          "type": "event",
+          "id": "fair",
+          "label": "Summer fair",
+          "link": {
+            "href": "/events/fair",
+            "modal": false,
+            "attributes": []
+          },
+          "data": [],
+          "media": {
+            "icon": {
+              "src": "/workbench-media/fair.jpg",
+              "mediaType": "image/jpeg",
+              "width": 192,
+              "height": 144,
+              "alt": null
+            },
+            "image": null,
+            "preview": null,
+            "initials": null,
+            "color": null,
+            "files": [],
+            "slots": []
+          },
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Image",
+              "$v": 2,
+              "image": "icon"
+            },
+            {
+              "$body": "Storyfeed/Body/Excerpt",
+              "$v": 2,
+              "text": "Stalls open at ten on the harbour green.",
+              "truncated": false
+            }
+          ],
+          "tombstone": null
+        },
+        "generator": null,
+        "featured": "location"
+      },
+      {
+        "kind": "activity",
+        "id": "featured-none",
+        "verb": "unveil",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline_template": ":actor unveiled :object at :location",
+        "headline": null,
+        "glyph": "activity",
+        "glyph_intent": null,
+        "actor": {
+          "type": "person",
+          "id": "1",
+          "label": "Ana Silva",
+          "link": {
+            "href": "/people/1",
+            "modal": false,
+            "attributes": []
+          },
+          "data": [],
+          "media": {
+            "icon": {
+              "src": "/workbench-media/ferris.jpg",
+              "mediaType": "image/jpeg",
+              "width": 192,
+              "height": 144,
+              "alt": null
+            },
+            "image": null,
+            "preview": null,
+            "initials": null,
+            "color": null,
+            "files": [],
+            "slots": []
+          },
+          "body": null,
+          "tombstone": null
+        },
+        "object": {
+          "type": "package",
+          "id": "storyfeed",
+          "label": "Storyfeed",
+          "link": {
+            "href": "/packages/storyfeed",
+            "modal": false,
+            "attributes": []
+          },
+          "data": [],
+          "media": {
+            "icon": null,
+            "image": null,
+            "preview": null,
+            "initials": null,
+            "color": null,
+            "files": [],
+            "slots": []
+          },
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Excerpt",
+              "$v": 2,
+              "text": "An activity feed for Laravel.",
+              "truncated": false
+            }
+          ],
+          "tombstone": null
+        },
+        "target": null,
+        "context": null,
+        "origin": null,
+        "result": null,
+        "instrument": null,
+        "location": {
+          "type": "event",
+          "id": "fair",
+          "label": "Summer fair",
+          "link": {
+            "href": "/events/fair",
+            "modal": false,
+            "attributes": []
+          },
+          "data": [],
+          "media": {
+            "icon": {
+              "src": "/workbench-media/fair.jpg",
+              "mediaType": "image/jpeg",
+              "width": 192,
+              "height": 144,
+              "alt": null
+            },
+            "image": null,
+            "preview": null,
+            "initials": null,
+            "color": null,
+            "files": [],
+            "slots": []
+          },
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Image",
+              "$v": 2,
+              "image": "icon"
+            },
+            {
+              "$body": "Storyfeed/Body/Excerpt",
+              "$v": 2,
+              "text": "Stalls open at ten on the harbour green.",
+              "truncated": false
+            }
+          ],
+          "tombstone": null
+        },
+        "generator": null,
+        "featured": null
+      },
+      {
+        "kind": "group",
+        "id": "featured-group",
+        "axis": "repeat",
+        "count": 3,
+        "verb": "checkin",
+        "published_at": "2026-08-14T11:55:00Z",
+        "headline_template": ":actor checked :count people in",
+        "headline": null,
+        "glyph": "user-plus",
+        "glyph_intent": null,
+        "actor": {
+          "type": "person",
+          "id": "1",
+          "label": "Ana Silva",
+          "link": {
+            "href": "/people/1",
+            "modal": false,
+            "attributes": []
+          },
+          "data": [],
+          "media": {
+            "icon": {
+              "src": "/workbench-media/ferris.jpg",
+              "mediaType": "image/jpeg",
+              "width": 192,
+              "height": 144,
+              "alt": null
+            },
+            "image": null,
+            "preview": null,
+            "initials": null,
+            "color": null,
+            "files": [],
+            "slots": []
+          },
+          "body": null,
+          "tombstone": null
+        },
+        "object": null,
+        "target": null,
+        "context": null,
+        "origin": null,
+        "result": null,
+        "instrument": null,
+        "location": null,
+        "generator": null,
+        "featured": "location",
+        "sample": {
+          "actors": [
+            {
+              "type": "person",
+              "id": "1",
+              "label": "Ana Silva",
+              "link": {
+                "href": "/people/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/ferris.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            }
+          ]
+        },
+        "distinct": {
+          "actors": 1
+        },
+        "children": [
+          {
+            "kind": "activity",
+            "id": "featured-member-0",
+            "verb": "checkin",
+            "published_at": "2026-08-14T11:55:00Z",
+            "headline_template": ":actor checked :object in at :location",
+            "headline": null,
+            "glyph": "user-plus",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "1",
+              "label": "Ana Silva",
+              "link": {
+                "href": "/people/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/ferris.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "2",
+              "label": "Ben Okafor",
+              "link": {
+                "href": "/people/2",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "BO",
+                "color": "#438d98",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": {
+              "type": "ride",
+              "id": "21",
+              "label": "Ferris wheel",
+              "link": {
+                "href": "/rides/21",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/ferris.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 2,
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            "generator": null,
+            "featured": "location"
+          },
+          {
+            "kind": "activity",
+            "id": "featured-member-1",
+            "verb": "checkin",
+            "published_at": "2026-08-14T11:54:00Z",
+            "headline_template": ":actor checked :object in at :location",
+            "headline": null,
+            "glyph": "user-plus",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "1",
+              "label": "Ana Silva",
+              "link": {
+                "href": "/people/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/ferris.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "3",
+              "label": "Dee Ford",
+              "link": {
+                "href": "/people/3",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "DF",
+                "color": "#be123c",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": {
+              "type": "ride",
+              "id": "22",
+              "label": "Carousel",
+              "link": {
+                "href": "/rides/22",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/carousel.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 2,
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            "generator": null,
+            "featured": "location"
+          },
+          {
+            "kind": "activity",
+            "id": "featured-member-2",
+            "verb": "checkin",
+            "published_at": "2026-08-14T11:53:00Z",
+            "headline_template": ":actor checked :object in at :location",
+            "headline": null,
+            "glyph": "user-plus",
+            "glyph_intent": null,
+            "actor": {
+              "type": "person",
+              "id": "1",
+              "label": "Ana Silva",
+              "link": {
+                "href": "/people/1",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": {
+                  "src": "/workbench-media/ferris.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "image": null,
+                "preview": null,
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "object": {
+              "type": "person",
+              "id": "4",
+              "label": "Cara Diaz",
+              "link": {
+                "href": "/people/4",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": null,
+                "initials": "CD",
+                "color": "#6366f1",
+                "files": [],
+                "slots": []
+              },
+              "body": null,
+              "tombstone": null
+            },
+            "target": null,
+            "context": null,
+            "origin": null,
+            "result": null,
+            "instrument": null,
+            "location": {
+              "type": "ride",
+              "id": "23",
+              "label": "Fireworks barge",
+              "link": {
+                "href": "/rides/23",
+                "modal": false,
+                "attributes": []
+              },
+              "data": [],
+              "media": {
+                "icon": null,
+                "image": null,
+                "preview": {
+                  "src": "/workbench-media/fireworks.jpg",
+                  "mediaType": "image/jpeg",
+                  "width": 192,
+                  "height": 144,
+                  "alt": null
+                },
+                "initials": null,
+                "color": null,
+                "files": [],
+                "slots": []
+              },
+              "body": [
+                {
+                  "$body": "Storyfeed/Body/Image",
+                  "$v": 2,
+                  "image": "preview"
+                }
+              ],
+              "tombstone": null
+            },
+            "generator": null,
+            "featured": "location"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "name": "Day dividers and a group",
     "grouped": true,
     "items": [

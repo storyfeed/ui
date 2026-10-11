@@ -87,6 +87,41 @@ it('walks activity and object data for bodies while leaving other roles alone', 
     expect(render_blade('<x-storyfeed::activity :activity="$item" />', compact('item')))->toContain('Activity words', 'Object slot', 'Object words')->not->toContain('Actor words');
 });
 
+it('draws its featured role\'s body: the object by default, none when featured is null (storyfeed/storyfeed#76)', function () {
+    $body = fn ($text) => ['$body' => 'Storyfeed/Body/Excerpt', 'text' => $text];
+    $talk = ['type' => 'event', 'id' => 'talk', 'label' => 'GPUG talk', 'url' => '/talks/gpug', 'body' => [$body('Live at the talk'), ['$body' => 'Storyfeed/Body/Image', 'image' => 'icon']], 'media' => ['icon' => ['src' => '/talk.svg']]];
+    $item = ['kind' => 'activity', 'headline' => 'Ada unveiled Storyfeed', 'object' => ['type' => 'package', 'id' => 'storyfeed', 'label' => 'Storyfeed', 'url' => '/storyfeed', 'body' => [$body('The package itself')]], 'location' => $talk];
+    $draw = fn (array $item) => render_blade('<x-storyfeed::activity :activity="$item" />', compact('item'));
+
+    // Before core sent the field, and with it naming the object, the object's body.
+    expect($draw($item))->toContain('The package itself')->not->toContain('Live at the talk')
+        ->and($draw([...$item, 'featured' => 'object']))->toContain('The package itself')->not->toContain('Live at the talk');
+    // A featured location draws its body, and its icon thumbnail links to it.
+    $located = Blade::render('<x-storyfeed::activity :activity="$item" />', ['item' => [...$item, 'featured' => 'location']]);
+    expect($located)->toContain('Live at the talk')->not->toContain('The package itself')
+        ->and(explode('sf-object-media', $located)[1])->toMatch('/<a href="\/talks\/gpug"[^>]*>\s*<img[^>]*src="\/talk\.svg"/');
+    // null draws no entity body; a featured role the payload left empty draws none either, and the row stays.
+    foreach ([[...$item, 'featured' => null], [...$item, 'featured' => 'target', 'target' => null]] as $node) {
+        expect($draw($node))->toContain('<article>', 'Ada unveiled Storyfeed')->not->toContain('The package itself', 'Live at the talk');
+    }
+});
+
+it('draws a strip tile only for the picture its member\'s row draws, whichever role that member features', function () {
+    $photo = fn (int $n) => ['type' => 'photo', 'id' => (string) $n, 'label' => "IMG_{$n}.jpg", 'url' => "/photos/{$n}", 'body' => [['$body' => 'Storyfeed/Body/Image', 'image' => 'preview']], 'media' => ['preview' => ['src' => "/p{$n}.jpg", 'width' => 192, 'height' => 144]]];
+    $ben = ['type' => 'person', 'id' => 'ben', 'label' => 'Ben Okafor', 'url' => '/people/ben', 'media' => ['icon' => null, 'initials' => 'BO', 'color' => '#438d98']];
+    $members = [
+        ['kind' => 'activity', 'headline' => 'Member', 'object' => $ben, 'featured' => 'location', 'location' => $photo(1)],
+        ['kind' => 'activity', 'headline' => 'Member', 'object' => $photo(2)],
+        ['kind' => 'activity', 'headline' => 'Member', 'object' => $photo(3), 'featured' => 'actor', 'actor' => $ben],
+    ];
+    $item = ['kind' => 'group', 'headline' => 'Updates', 'count' => 3, 'children' => $members];
+    expect(strip_tiles(Blade::render('<x-storyfeed::group :group="$item" />', compact('item')))['tiles'])->toBe(['/p1.jpg', '/p2.jpg', 'name:Ben Okafor']);
+    $row = fn (array $item) => Blade::render('<x-storyfeed::activity :activity="$item" />', compact('item'));
+    expect($row($members[0]))->toContain('src="/p1.jpg"')
+        ->and($row($members[1]))->toContain('src="/p2.jpg"')
+        ->and($row($members[2]))->not->toContain('<img');
+});
+
 it('keeps empty known forms from producing empty body wrappers', function () {
     foreach (['KeyValue', 'Prose', 'Excerpt', 'Image', 'Component', 'FileAttachment', 'ItemList', 'MediaObject'] as $type) {
         expect(render_blade('<x-storyfeed::body :body="$body" />', ['body' => ['$body' => 'Storyfeed/Body/'.$type]]))->toBe('');

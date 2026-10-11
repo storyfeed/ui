@@ -9,6 +9,7 @@ import FeedMediaStrip from './FeedMediaStrip';
 import Rail from './Rail';
 import { useFeedOptions } from './context';
 import { entityLink } from '../shared/link';
+import { featuredOf } from '../shared/strip';
 import { bodyFrame, iconOf } from '../shared/body';
 import { useRelativeTime } from './useRelativeTime';
 export interface FeedRenderProps {
@@ -60,7 +61,8 @@ export default function FeedItem({
                   template: item.headline_template,
                   headline: item.headline ?? null,
               };
-    const object = item.object;
+    // The row draws its featured role's body (storyfeed/storyfeed#76): the object by default, none when `featured` is null.
+    const object = featuredOf(item);
     const link = entityLink(object);
     const found = [
         ...formsIn(item.data, 4, bodies),

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- A row draws its featured role's body, in Blade, Vue and React (ui#13). Core's `featured` (storyfeed/storyfeed#76) names the role a row is about: the kits now draw `item[item.featured].body` and that entity's detail forms, where they always drew the object's. With no `featured` field, or `"featured": "object"`, a row draws the object's body as before. `"featured": null` (`withoutFeature()`) draws no entity body; the activity's own body and the meta line still render. A featured role the payload left empty draws no entity body, and the row stays. An Image body naming the icon slot links its thumbnail to the featured entity. A group's strip already read each member's featured role, so its tiles now match the pictures the expanded rows draw.
+
 ## v0.9.1 - 2026-10-11
 
 ### Fixed

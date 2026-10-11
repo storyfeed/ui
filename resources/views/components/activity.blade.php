@@ -3,7 +3,8 @@
     $activity = \Storyfeed\Support\FeedItem::of($activity);
     $removed ??= isset($renderers['removed']) ? $renderers['removed']($activity) : null;
     $headline = $activity->isRedundant() ? ($activity->missingHeadline() ?? $activity->headline()) : $activity->headline();
-    $object = $activity->object();
+    // The row draws its featured role's body (storyfeed/storyfeed#76): the object by default, none when `featured` is null.
+    $object = \Storyfeed\Ui\Support\Strip::featured($activity);
     $forms = \Storyfeed\Ui\Support\Bodies::in($activity->get('data'));
     $bodies = $object?->bodies() ?? collect();
     $bodies = $bodies->merge(\Storyfeed\Ui\Support\Bodies::in($object?->get('data')))->values();
@@ -26,7 +27,7 @@
         <x-storyfeed::meta :item="$activity" :headline="$headline" :timezone="$timezone" :time-renderer="$renderers['time'] ?? null">{{ $time ?? '' }}</x-storyfeed::meta>
 @if ($removed)<p class="sf-removed mt-1 text-sm text-muted-foreground">{{ $removed }}</p>
 @endif
-@if ($icon)<div class="sf-object-media mt-2 flex items-start gap-3"><x-storyfeed::media :image="$icon" :href="\Storyfeed\Ui\Support\Links::entity($activity->object())['href'] ?? null" :link-attributes="\Storyfeed\Ui\Support\Links::entity($activity->object())['attributes'] ?? []" :renderer="$renderers['media'] ?? null" class="mt-0! size-10! shrink-0 rounded-md!" /><div class="min-w-0 flex-1">
+@if ($icon)<div class="sf-object-media mt-2 flex items-start gap-3"><x-storyfeed::media :image="$icon" :href="\Storyfeed\Ui\Support\Links::entity($object)['href'] ?? null" :link-attributes="\Storyfeed\Ui\Support\Links::entity($object)['attributes'] ?? []" :renderer="$renderers['media'] ?? null" class="mt-0! size-10! shrink-0 rounded-md!" /><div class="min-w-0 flex-1">
 @endif
 @if (isset($renderers['body'])){!! $renderers['body']($activity) !!}
 @endif
