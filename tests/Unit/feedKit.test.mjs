@@ -761,6 +761,22 @@ test('MediaObject below placement draws the full picture after prose; beside sta
     assert.ok(beside.indexOf('src="/photo"') < beside.indexOf('Words'));
 });
 
+test('MediaObject draws an inline image as given; an empty src draws no img', async () => {
+    const draw = (payload) => renderRaw('/resources/js/vue/body/MediaObject.vue', { payload });
+    const html = await draw({ subject: 'Storyfeed', image: { src: '/share.png', alt: 'The share card', width: 1200, height: 630 } });
+    assert.match(html, /src="\/share\.png"/);
+    assert.match(html, /alt="The share card"/);
+    assert.match(html, /width="1200"/);
+    assert.match(html, /height="630"/);
+    assert.match(html, /--sf-picture-ratio:1\.9048;/);
+    assert.match(await draw({ subject: 'Storyfeed', image: { src: '/share.png' } }), /alt(=""|[ >])/);
+    for (const image of [{ src: '' }, { alt: 'Nothing to draw' }, { src: null }]) {
+        const empty = await draw({ subject: 'Storyfeed', image });
+        assert.match(empty, /Storyfeed/);
+        assert.doesNotMatch(empty, /<img|sf-media-object__image/);
+    }
+});
+
 test('a card picture keeps its shape: clamped declared ratio, whole when undeclared, square icon', async () => {
     const path = '/resources/js/vue/body/MediaObject.vue';
     const draw = (slot, image) => renderRaw(path, { payload: { subject: 'Post', image: slot }, entityMedia: { [slot]: { src: '/p', ...image } } });

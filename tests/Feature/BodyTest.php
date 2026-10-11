@@ -195,6 +195,30 @@ it('draws a media object with the entity\'s current picture, once', function () 
         ->and(substr_count($html, '/img/1042.jpg'))->toBe(1);
 });
 
+it('draws a media object\'s inline image with its alt and size', function () {
+    $html = render_bodies(MediaObject::make(subject: 'Storyfeed')->image(FeedImage::make('/img/share.png', width: 1200, height: 630, alt: 'The share card')));
+
+    expect($html)->toContain('src="/img/share.png"', 'alt="The share card"', 'width="1200"', 'height="630"', 'loading="lazy"', '--sf-picture-ratio: 1.9048')
+        ->and(substr_count($html, '/img/share.png'))->toBe(1);
+})->skip(! class_exists(DeferredMedia::class), 'core before 0.18 stores no inline picture');
+
+it('draws a media object\'s inline image with an empty alt', function () {
+    expect(render_bodies(MediaObject::make(subject: 'Storyfeed')->image(FeedImage::make('/img/share.png'))))->toContain('src="/img/share.png"', 'alt=""');
+})->skip(! class_exists(DeferredMedia::class), 'core before 0.18 stores no inline picture');
+
+it('draws no img for a media object\'s inline image without a src', function () {
+    $bodies = array_map(
+        fn (array $image) => ['$body' => 'Storyfeed/Body/MediaObject', '$v' => 5, 'subject' => 'Storyfeed', 'image' => $image],
+        [['src' => ''], ['alt' => 'Nothing to draw'], ['src' => null]],
+    );
+    $item = FeedItem::of(['kind' => 'activity', 'object' => ['type' => 'order', 'body' => $bodies]]);
+    $html = render_blade('<x-storyfeed::activity :activity="$item" />', ['item' => $item]);
+
+    // Each card holds only its text: no picture frame before it, no img.
+    expect(substr_count($html, '<div data-storyfeed-body> <div> <div> <p> Storyfeed </p> </div> </div> </div>'))->toBe(3)
+        ->and($html)->not->toContain('<img');
+});
+
 it('draws a linked card title without a picture or optional sections', function () {
     $html = render_bodies(MediaObject::make(subject: FeedLink::make('Order #1042', '/orders/1042'), content: 'Dinner'));
 

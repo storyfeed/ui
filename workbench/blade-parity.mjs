@@ -376,7 +376,7 @@ try {
                             readable: body.getBoundingClientRect().width >= Math.min(12 * parseFloat(getComputedStyle(body).fontSize), content) - 0.5,
                         };
                     }));
-                    assert.deepEqual(cards, [[1.9, 'cover'], [1, 'cover'], [1, 'cover'], [1.9, 'contain'], [1, 'cover']].map(([ratio, fit]) => ({ ratio, fit, readable: true })), `${renderers[i]} ${width} ${text}: card pictures`);
+                    assert.deepEqual(cards, [[1.9, 'cover'], [1, 'cover'], [1, 'cover'], [1.9, 'contain'], [1, 'cover'], [1.9, 'cover']].map(([ratio, fit]) => ({ ratio, fit, readable: true })), `${renderers[i]} ${width} ${text}: card pictures`);
                 }
                 // A group's strip: one uniform square tile per member activity, the picture its row draws or its featured entity's name, then "+N" (ui#27, ui#47).
                 if (text === 'default' && state === 'collapsed') for (let i = 0; i < frames.length; i++) {

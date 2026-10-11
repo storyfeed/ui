@@ -15,3 +15,14 @@ export function pictureShape(slot: unknown, image: Record<string, any> | null | 
     // Rounded so every kit writes the same custom property.
     return { shape: 'ratio', ratio: Math.round(Math.min(Math.max(width / height, 1), 2) * 10000) / 10000 };
 }
+
+/**
+ * A MediaObject's picture: the entity's media for a named slot, or the image
+ * the body stores itself when `image` is an object with a src. Mirrors the
+ * Blade card.
+ */
+export function mediaObjectPicture(image: unknown, entityMedia: Record<string, any> | null | undefined): Record<string, any> | null {
+    if (typeof image === 'string') return ['icon', 'preview', 'image'].includes(image) ? (entityMedia?.[image] ?? null) : null;
+
+    return image && typeof image === 'object' && typeof (image as any).src === 'string' && (image as any).src !== '' ? image as Record<string, any> : null;
+}

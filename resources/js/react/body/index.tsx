@@ -9,7 +9,7 @@ import {
 import { fileLabel } from '../../shared/fileLabels';
 import { isRich, renderProse } from '../../shared/prose';
 import { readTable, type TableCell } from '../../shared/table';
-import { pictureShape } from '../../shared/picture';
+import { mediaObjectPicture, pictureShape } from '../../shared/picture';
 import { readCallToAction } from '../../shared/callToAction';
 import { bodyLink, linkProps, ownLink, type ResolvedLink } from '../../shared/link';
 import FeedMedia from '../FeedMedia';
@@ -359,9 +359,7 @@ export function MediaObject({
               ? payload.attachments
               : [];
     const files = Array.isArray(listed) ? listed : [];
-    const picture = ['icon', 'preview', 'image'].includes(payload.image)
-        ? (entityMedia?.[payload.image] ?? null)
-        : null;
+    const picture = mediaObjectPicture(payload.image, entityMedia);
     const footnote = link(payload.footnote);
     // Beside the text, a picture keeps its own shape (see `shared/picture.ts`).
     const shape = pictureShape(payload.image, picture);
