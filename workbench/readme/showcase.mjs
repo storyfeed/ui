@@ -20,7 +20,6 @@
 import { chromium } from 'playwright';
 import { readFile, writeFile, mkdir, stat } from 'node:fs/promises';
 import { resolve, extname } from 'node:path';
-import { spawnSync } from 'node:child_process';
 
 const out = resolve(process.env.STORYFEED_README_OUT ?? '../storyfeed/art/samples');
 const states = JSON.parse(await readFile('build/readme/states.json', 'utf8'));
@@ -61,6 +60,31 @@ T.zoomIn = T.resolve; // the camera dives into the typing dots
 T.joinArrivals = [...Array(JOINS).keys()].map(k => T.joins + k * STAGGER);
 T.photoArrivals = [0, 1, 2, 3].map(k => T.photos + [0, 0.9, 1.62, 2.196][k]);
 const LOOP = +(T.zoomIn + DIVE).toFixed(2);
+
+// The window the showcase plays in, so it reads as one deliberate picture on
+// any page: a title bar with the three traffic lights, rounded corners, a
+// hairline and a soft shadow. The feed keeps its 800 px; the window adds 32,
+// inside GitHub's 838 px README column, so the kit's rows draw at their size.
+const BAR = 32; // the title bar
+const RADIUS = 10;
+const PAD = { x: 16, top: 10, bottom: 26 }; // room for the shadow
+const FRAME_W = WIDTH + 2 * PAD.x;
+const FRAME_H = PAD.top + BAR + HEIGHT + PAD.bottom;
+const CHROME = {
+    light: { bar: '#f6f6f6', rule: '#e3e3e3', outline: 'rgba(0,0,0,.14)', shadow: 'rgba(0,0,0,.16)' },
+    dark: { bar: '#161b22', rule: '#262c36', outline: 'rgba(255,255,255,.14)', shadow: 'rgba(0,0,0,.55)' },
+};
+const LIGHTS = [['#ff5f57', '#e0443e'], ['#febc2e', '#dea123'], ['#28c840', '#1aab29']];
+const frame = (theme, content) => {
+    const c = CHROME[theme], x = PAD.x, y = PAD.top, h = BAR + HEIGHT, r = RADIUS;
+    const bar = `M${x},${y + BAR}V${y + r}a${r},${r} 0 0 1 ${r},${-r}H${x + WIDTH - r}a${r},${r} 0 0 1 ${r},${r}V${y + BAR}Z`;
+    const lights = LIGHTS.map(([fill, edge], n) => `<circle cx="${x + 14 + 6 + n * 20}" cy="${y + BAR / 2}" r="6" fill="${fill}" stroke="${edge}" stroke-width=".5"/>`).join('');
+    return `<defs><filter id="shadow" x="-10%" y="-10%" width="120%" height="125%"><feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="${c.shadow}" flood-opacity=".5"/><feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="${c.shadow}"/></filter></defs>`
+        + `<rect x="${x}" y="${y}" width="${WIDTH}" height="${h}" rx="${r}" fill="${c.bar}" filter="url(#shadow)"/>`
+        + `<path d="${bar}" fill="${c.bar}"/><path d="M${x},${y + BAR - 0.5}H${x + WIDTH}" stroke="${c.rule}"/>${lights}`
+        + `<foreignObject x="${x}" y="${y + BAR}" width="${WIDTH}" height="${HEIGHT}">${content}</foreignObject>`
+        + `<rect x="${x + 0.5}" y="${y + 0.5}" width="${WIDTH - 1}" height="${h - 1}" rx="${r - 0.5}" fill="none" stroke="${c.outline}"/>`;
+};
 
 const ORDER = ['plain', 'avatar', 'rich1', 'rich2', 'joins', 'joined', 'photos1', 'photos2', 'photos3', 'finished'];
 const feed = (html, extra = '') => `<div class="px-6 pt-4">${extra}${html}</div>`;
@@ -211,7 +235,8 @@ try {
         const fade = '<div class="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-linear-to-b from-transparent to-background"></div>';
         const picture = (wrapper, stage, html) => `<div class="${wrapper} absolute" style="left:0;top:0"><div class="${stage} absolute overflow-hidden bg-background" style="left:0;top:0;width:${WIDTH}px;height:${HEIGHT}px;transform-origin:0 0">${html}</div></div>`;
         const body = `<div class="camera absolute inset-0" style="transform-origin:0 0"><div class="outer px-6 pt-4">${looks}</div>${picture('youpic', 'inner', inner)}${picture('nextpic', 'inner2', `<div class="absolute inset-x-0 top-0">${LAYERS.plain}</div>${fade}`)}</div><div class="outfade pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-linear-to-b from-transparent to-background"></div>`;
-        await writeFile('build/readme/page.html', `<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="readme.css"></head><body style="margin:0"><div id="stage" class="${theme} relative overflow-hidden bg-background text-foreground font-sans text-[16px] leading-normal antialiased" style="width:${WIDTH}px;height:${HEIGHT}px">${body}</div></body></html>`);
+        // The window's bottom corners clip the stage.
+        await writeFile('build/readme/page.html', `<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="readme.css"></head><body style="margin:0"><div id="stage" class="${theme} relative overflow-hidden bg-background text-foreground font-sans text-[16px] leading-normal antialiased" style="width:${WIDTH}px;height:${HEIGHT}px;border-radius:0 0 ${RADIUS}px ${RADIUS}px">${body}</div></body></html>`);
         await page.goto('http://readme.test/page.html');
         const { tops, pictures } = await page.evaluate(async ({ height, joinCount }) => {
             await document.fonts.ready;
@@ -315,8 +340,8 @@ try {
         const xhtml = await page.evaluate(() => new XMLSerializer().serializeToString(document.getElementById('stage')));
         // The rows are measured again where they are drawn, inside the SVG,
         // where a group row can lay out a few pixels apart from the page.
-        const build = tops => `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}" role="img" aria-label="Inside a feed of people looking at Storyfeed's README, your look's picture shows a feed growing: one plain row gains avatars, a photo and a key-value card; five volunteers joining fold into one grouped row; photos arrive live and regroup with a strip of thumbnails; then one more booking arrives. Your look sits at the top of a long feed of looks at the README; then the next person's arrives above it, still in progress with a typing indicator, whose dots the camera dives into."><style><![CDATA[${styled}${pictures}${timeline(tops)}${still}]]></style><foreignObject width="${WIDTH}" height="${HEIGHT}">${xhtml}</foreignObject></svg>`;
-        const measure = await browser.newPage({ viewport: { width: WIDTH, height: HEIGHT } });
+        const build = tops => `<svg xmlns="http://www.w3.org/2000/svg" width="${FRAME_W}" height="${FRAME_H}" viewBox="0 0 ${FRAME_W} ${FRAME_H}" role="img" aria-label="Inside a feed of people looking at Storyfeed's README, your look's picture shows a feed growing: one plain row gains avatars, a photo and a key-value card; five volunteers joining fold into one grouped row; photos arrive live and regroup with a strip of thumbnails; then one more booking arrives. Your look sits at the top of a long feed of looks at the README; then the next person's arrives above it, still in progress with a typing indicator, whose dots the camera dives into."><style><![CDATA[${styled}${pictures}${timeline(tops)}${still}]]></style>${frame(theme, xhtml)}</svg>`;
+        const measure = await browser.newPage({ viewport: { width: FRAME_W, height: FRAME_H } });
         await measure.setContent(`<body style="margin:0">${build(tops)}<style>#stage,#stage *{animation:none!important}</style></body>`);
         const drawn = await measure.evaluate(([keys, K]) => Object.fromEntries(keys.map(key => {
             const layer = document.querySelector(`.L-${key}`);
@@ -328,24 +353,21 @@ try {
         await measure.close();
         const svg = build({ ...tops, ...drawn });
         await writeFile(resolve(out, `showcase-${theme}.svg`), svg);
-        sizes.push(`showcase-${theme}.svg ${WIDTH}×${HEIGHT} ${Math.round(svg.length / 1024)} KB`);
+        sizes.push(`showcase-${theme}.svg ${FRAME_W}×${FRAME_H} ${Math.round(svg.length / 1024)} KB`);
 
-        // The reduced-motion still: the closing frame.
-        const shot = await browser.newPage({ viewport: { width: WIDTH, height: HEIGHT }, deviceScaleFactor: 2, reducedMotion: 'reduce' });
+        // The reduced-motion still: the closing frame, in its window, on a clear background.
+        const shot = await browser.newPage({ viewport: { width: FRAME_W, height: FRAME_H }, deviceScaleFactor: 2, reducedMotion: 'reduce' });
         await shot.setContent(`<body style="margin:0">${svg}</body>`);
         await shot.waitForTimeout(300);
-        await shot.locator('svg').first().screenshot({ path: resolve(out, `showcase-${theme}.png`) });
+        await shot.locator('svg').first().screenshot({ path: resolve(out, `showcase-${theme}.png`), omitBackground: true });
         await shot.close();
     }
 } finally {
     await browser.close();
 }
-// The still drops to 256 colours when ffmpeg is on the path, about half the bytes.
+// The still keeps full alpha: a 256-colour palette would cut the window's soft
+// shadow to on or off.
 for (const theme of ['light', 'dark']) {
-    const file = resolve(out, `showcase-${theme}.png`);
-    if (spawnSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', file, '-vf', 'split[a][b];[a]palettegen=max_colors=256:stats_mode=full[p];[b][p]paletteuse=dither=sierra2_4a', '-pix_fmt', 'pal8', `${file}.tmp.png`]).status === 0) {
-        spawnSync('mv', [`${file}.tmp.png`, file]);
-    }
-    sizes.push(`showcase-${theme}.png ${Math.round((await stat(file)).size / 1024)} KB`);
+    sizes.push(`showcase-${theme}.png ${Math.round((await stat(resolve(out, `showcase-${theme}.png`))).size / 1024)} KB`);
 }
 console.log(sizes.join('\n'));
