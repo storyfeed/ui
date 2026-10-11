@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react';
 import type { ComponentType, ElementType, ReactNode } from 'react';
 import type { FileLabeller } from '../shared/fileLabels';
+import type { FeedViewer } from '../shared/viewer';
 import type { BodyProps } from './body';
 
 /** Vue injection seams, supplied together through one React context. */
@@ -18,6 +19,8 @@ export interface FeedOptions {
     FEED_BODIES?: Readonly<Record<string, ComponentType<BodyProps>>>;
     FEED_FILE_LABELLER?: FileLabeller;
     FEED_MEDIA_OBJECT_PLACEMENT?: 'beside' | 'below';
+    /** Who is reading the feed (ui#75): headlines name that entity "You". */
+    FEED_VIEWER?: FeedViewer | null;
 }
 export const FeedContext = createContext<FeedOptions>({});
 export function FeedProvider({

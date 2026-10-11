@@ -1187,3 +1187,19 @@ test('an anonymous actor draws as an actor, muted and never italic; an unlabelle
     assert.doesNotMatch(someone, /italic/);
     assert.match(raw('EntityLink', { entity: { type: 'order', id: '9', label: null } }), /sf-entity--unknown italic/);
 });
+
+test('the page viewer reads as You, at any position and in lists (ui#75)', () => {
+    const ada = { type: 'user', id: '1', label: 'Ada Lovelace', url: '/ada' };
+    const ravi = { type: 'user', id: '2', label: 'Ravi', url: '/ravi' };
+    const object = { type: 'order', id: '7', label: 'Order #7', url: '/orders/7' };
+    const headline = (props, viewer) =>
+        raw('FeedHeadline', props, viewer === undefined ? {} : { FEED_VIEWER: viewer }).replace(/<!-- -->/g, '').replace(/ class="[^"]*"/g, '');
+    const placed = { template: ':actor placed :object', entities: { actor: ada, object }, verb: 'place' };
+
+    assert.match(headline(placed, 'user:1'), /<span><span>You<\/span> placed <a[^>]*>Order #7<\/a><\/span>/);
+    assert.match(headline(placed, { type: 'user', id: 1 }), /<span><span>You<\/span> placed/);
+    assert.match(headline({ template: ':object was assigned to :target', entities: { object, target: ada }, verb: 'assign' }, 'user:1'), /was assigned to <span>you<\/span><\/span>/);
+    assert.match(headline({ template: ':actors joined :object', entities: { object }, sample: { actors: [ada, ravi] }, distinct: { actors: 4 }, verb: 'join', aggregate: true }, 'user:1'), /<span><span>You<\/span>, <a[^>]*>Ravi<\/a> and 2 more joined/);
+    assert.match(headline(placed, 'user:2'), /Ada Lovelace<\/a> placed/);
+    assert.equal(headline(placed), headline(placed, null));
+});

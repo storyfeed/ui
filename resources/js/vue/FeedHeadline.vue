@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 import EntityLink from './EntityLink.vue';
 import type { FeedEntities, FeedEntity, FeedRole, FeedSingularRole } from '../shared/types';
+import { FEED_VIEWER } from './keys';
+import { isViewer, you, VIEWER_CLASSES } from '../shared/viewer';
+
+// The page's reader, named "You" wherever a headline names them (ui#75).
+const viewer = inject(FEED_VIEWER, null);
 
 const props = defineProps<{
     template: string | null;
@@ -105,6 +110,8 @@ const actorOverflow = computed(() => overflow('actors'));
             <template v-for="(part, index) in parts" :key="index">
                 <template v-if="part.type === 'text'">{{ part.text }}</template>
 
+                <span v-else-if="part.type === 'entity' && isViewer(viewer, entities[part.role])" :class="VIEWER_CLASSES">{{ you(index === 0) }}</span>
+
                 <EntityLink
                     v-else-if="part.type === 'entity'"
                     :entity="entities[part.role] ?? null"
@@ -121,7 +128,7 @@ const actorOverflow = computed(() => overflow('actors'));
                         v-for="(entity, entityIndex) in shown(part.role)"
                         :key="entity.id"
                     >
-                        <EntityLink :entity="entity" /><template
+                        <span v-if="isViewer(viewer, entity)" :class="VIEWER_CLASSES">{{ you(index === 0 && entityIndex === 0) }}</span><EntityLink v-else :entity="entity" /><template
                             v-if="
                                 overflow(part.role) === 0 &&
                                 entityIndex === shown(part.role).length - 2
@@ -158,7 +165,8 @@ const actorOverflow = computed(() => overflow('actors'));
         <template v-else-if="aggregate"> {{ count ?? 0 }} activities </template>
 
         <template v-else>
-            <EntityLink :entity="entities.actor ?? null" fallback="Someone" />
+            <span v-if="isViewer(viewer, entities.actor)" :class="VIEWER_CLASSES">{{ you(true) }}</span>
+            <EntityLink v-else :entity="entities.actor ?? null" fallback="Someone" />
             <template v-if="verb">{{ ' ' + verb }}</template>
             <template v-if="entities.object">
                 {{ ' ' }}<EntityLink :entity="entities.object" />

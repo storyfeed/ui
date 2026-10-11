@@ -21,9 +21,9 @@ function render_blade(string $template, array $data = []): string
 }
 
 /** Any page core reads: a FeedPage (core <=0.18), or a collection or paginator (storyfeed/storyfeed#95). */
-function render_feed(mixed $page = null, string $attributes = ''): string
+function render_feed(mixed $page = null, string $attributes = '', array $data = []): string
 {
-    return render_blade("<x-storyfeed::feed :page=\"\$page\" :grouped=\"false\" rail=\"activity-only\" {$attributes} />", ['page' => $page ?? Storyfeed::feed()->get()]);
+    return render_blade("<x-storyfeed::feed :page=\"\$page\" :grouped=\"false\" rail=\"activity-only\" {$attributes} />", ['page' => $page ?? Storyfeed::feed()->get(), ...$data]);
 }
 
 /** Ignore presentation classes while retaining semantic markup and attributes. */

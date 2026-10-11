@@ -7,18 +7,31 @@ import type {
     FeedSingularRole,
 } from '../shared/types';
 import EntityLink from './EntityLink';
+import { useFeedOptions } from './context';
+import { isViewer, you, VIEWER_CLASSES } from '../shared/viewer';
+import type { FeedViewer } from '../shared/viewer';
 export function EntityList({
     entities,
     overflow = 0,
+    viewer = null,
+    first = false,
 }: {
     entities: FeedEntity[];
     overflow?: number;
+    /** The page's reader, named "You" (ui#75). */
+    viewer?: FeedViewer | null;
+    /** Whether the list opens the sentence. */
+    first?: boolean;
 }) {
     return (
         <>
             {entities.map((entity, i) => (
                 <Fragment key={`${entity.type}:${entity.id}:${i}`}>
-                    <EntityLink entity={entity} />
+                    {isViewer(viewer, entity) ? (
+                        <span className={VIEWER_CLASSES}>{you(first && i === 0)}</span>
+                    ) : (
+                        <EntityLink entity={entity} />
+                    )}
                     {overflow === 0 && i === entities.length - 2
                         ? ' and '
                         : i < entities.length - 1
@@ -61,6 +74,7 @@ export default function FeedHeadline({
     verb,
     aggregate,
 }: HeadlineProps) {
+    const viewer = useFeedOptions().FEED_VIEWER ?? null;
     let content: ReactNode;
     if (template)
         content = template
@@ -69,7 +83,13 @@ export default function FeedHeadline({
             .map((segment, i) => {
                 const role = segment.slice(1);
                 let part: ReactNode = segment;
-                if (segment.startsWith(':') && roles.includes(role))
+                if (
+                    segment.startsWith(':') &&
+                    roles.includes(role) &&
+                    isViewer(viewer, entities[role as FeedSingularRole])
+                )
+                    part = <span className={VIEWER_CLASSES}>{you(i === 0)}</span>;
+                else if (segment.startsWith(':') && roles.includes(role))
                     part = (
                         <EntityLink
                             entity={entities[role as FeedSingularRole] ?? null}
@@ -84,6 +104,8 @@ export default function FeedHeadline({
                     part = (
                         <EntityList
                             entities={list}
+                            viewer={viewer}
+                            first={i === 0}
                             overflow={Math.max(
                                 0,
                                 (distinct[role as FeedRole] ?? 0) - list.length,
@@ -102,10 +124,14 @@ export default function FeedHeadline({
                 ` ${count} activities `
             ) : (
                 <>
-                    <EntityLink
-                        entity={entities.actor ?? null}
-                        fallback="Someone"
-                    />
+                    {isViewer(viewer, entities.actor) ? (
+                        <span className={VIEWER_CLASSES}>{you(true)}</span>
+                    ) : (
+                        <EntityLink
+                            entity={entities.actor ?? null}
+                            fallback="Someone"
+                        />
+                    )}
                     {verb && ' ' + verb}
                     {entities.object && (
                         <>
