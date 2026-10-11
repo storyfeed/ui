@@ -9,7 +9,7 @@ const rendered = computed(() => renderProse(props.payload))
 </script>
 
 <template>
-    <figure v-if="payload.content" class="sf-prose-block m-0 min-w-0 max-w-144" :class="payload.verbatim ? 'sf-prose-block--verbatim' : 'rounded-lg bg-card px-4 py-3'">
+    <figure v-if="payload.content" class="sf-prose-block m-0 min-w-0 max-w-144" :class="payload.verbatim ? 'sf-prose-block--verbatim' : 'rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] px-4 py-3'">
         <figcaption v-if="payload.title" class="sf-prose__title mb-2 text-sm font-semibold text-foreground">{{ payload.title }}</figcaption>
         <!-- Verbatim output is a dark block with light text in every theme (ui#23): the kit's own --sf-code-bg / --sf-code-fg, lifted a little from a dark page. -->
         <pre v-if="payload.verbatim" class="sf-verbatim m-0 max-h-[var(--sf-prose-max-h,--spacing(96))] overflow-auto rounded-lg bg-[var(--sf-code-bg,#18181b)] px-4 py-3 font-mono text-sm leading-[1.55] whitespace-pre-wrap text-[var(--sf-code-fg,#f4f4f5)] dark:bg-[var(--sf-code-bg,#27272a)] [overflow-wrap:anywhere] [&_code]:bg-transparent [&_code]:p-0 [&_code]:font-[inherit] [&_code]:text-inherit" tabindex="0"><code>{{ payload.content }}</code></pre>

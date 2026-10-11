@@ -44,7 +44,7 @@ export function CallToAction({ payload, entityUrl, entityLink }: BodyProps) {
     if (!cta.subject && !cta.content)
         return action('sf-cta__action inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground no-underline hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring');
     return (
-        <div className="sf-cta mt-1.5 flex min-w-0 max-w-128 flex-col items-start gap-1 rounded-lg border border-border bg-card p-3 [overflow-wrap:anywhere]">
+        <div className="sf-cta mt-1.5 flex min-w-0 max-w-128 flex-col items-start gap-1 rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] p-3 [overflow-wrap:anywhere]">
             {cta.subject && (
                 <p className="sf-cta__subject m-0 text-sm font-semibold text-foreground">{cta.subject}</p>
             )}
@@ -160,7 +160,7 @@ export function ItemList({ payload, entityUrl, entityLink }: BodyProps) {
             : 0;
     const Tag = payload.ordered ? 'ol' : 'ul';
     return (
-        <figure className="sf-list-block m-0 min-w-0 max-w-144 rounded-lg bg-card px-4 py-3">
+        <figure className="sf-list-block m-0 min-w-0 max-w-144 rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] px-4 py-3">
             {payload.title && (
                 <figcaption className="sf-list__title mb-1 text-sm font-semibold text-foreground">
                     {payload.title}
@@ -235,7 +235,7 @@ export function Table({ payload, entityUrl, entityLink }: BodyProps) {
         ] as const
     ).filter(([, rows]) => rows.length);
     return (
-        <figure className="sf-table-block m-0 min-w-0 max-w-144 rounded-lg bg-card px-4 py-3">
+        <figure className="sf-table-block m-0 min-w-0 max-w-144 rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] px-4 py-3">
             {table.title && (
                 <figcaption className="sf-table__title mb-1 text-sm font-semibold text-foreground">
                     {table.title}
@@ -292,7 +292,7 @@ export function KeyValue({ payload }: BodyProps) {
         typeof value === 'boolean' ? (value ? 'Yes' : 'No') : String(value);
     if (!rows.length) return null;
     return (
-        <figure className="sf-facts @container/facts m-0 flex max-w-128 flex-col rounded-lg border border-border px-3 py-1.5 text-sm leading-[1.5]">
+        <figure className="sf-facts @container/facts m-0 flex max-w-128 flex-col rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] px-3 py-1.5 text-sm leading-[1.5]">
             {payload.title && (
                 <figcaption className="sf-facts__title border-b border-border pt-0.75 pb-1.25 font-semibold text-foreground">
                     {payload.title}
@@ -385,7 +385,7 @@ export function MediaObject({
         ) : null;
     }
     return (
-        <div className="sf-media-object mt-1.5 flex min-w-0 max-w-128 flex-wrap items-start gap-3 rounded-lg border border-border bg-muted p-3">
+        <div className="sf-media-object mt-1.5 flex min-w-0 max-w-128 flex-wrap items-start gap-3 rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] p-3">
             {picture && placement === 'beside' && (
                 <div
                     className={frame.wrapper}
@@ -450,7 +450,7 @@ export function Prose({ payload }: BodyProps) {
     if (!payload.content) return null;
     return (
         <figure
-            className={`sf-prose-block m-0 min-w-0 max-w-144 ${payload.verbatim ? 'sf-prose-block--verbatim' : 'rounded-lg bg-card px-4 py-3'}`}
+            className={`sf-prose-block m-0 min-w-0 max-w-144 ${payload.verbatim ? 'sf-prose-block--verbatim' : 'rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] px-4 py-3'}`}
         >
             {payload.title && (
                 <figcaption className="sf-prose__title mb-2 text-sm font-semibold text-foreground">

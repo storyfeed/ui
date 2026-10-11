@@ -23,7 +23,7 @@ const text = (value: unknown) => (typeof value === 'boolean' ? (value ? 'Yes' : 
 </script>
 
 <template>
-    <figure v-if="rows.length" class="sf-facts @container/facts m-0 flex max-w-128 flex-col rounded-lg border border-border px-3 py-1.5 text-sm leading-[1.5]">
+    <figure v-if="rows.length" class="sf-facts @container/facts m-0 flex max-w-128 flex-col rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] px-3 py-1.5 text-sm leading-[1.5]">
         <figcaption v-if="payload.title" class="sf-facts__title border-b border-border pt-0.75 pb-1.25 font-semibold text-foreground">{{ payload.title }}</figcaption>
         <dl class="sf-facts__rows m-0 grid grid-cols-[fit-content(40%)_minmax(0,1fr)] @max-[28rem]/facts:grid-cols-1">
             <div v-for="row in rows" :key="row.key" class="sf-facts__row col-span-full grid grid-cols-subgrid items-baseline gap-x-4 gap-y-1 border-b border-border py-0.75 last:border-b-0">

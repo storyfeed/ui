@@ -10,7 +10,7 @@
         && (! (($row['value'] ?? null) === null || ($row['value'] ?? null) === '') || ($row['placeholder'] ?? null) !== null));
 @endphp
 @if ($rows->isNotEmpty())
-    <figure {{ $attributes->class('sf-facts @container/facts m-0 flex max-w-128 flex-col rounded-lg border border-border px-3 py-1.5 text-sm leading-[1.5]') }}>
+    <figure {{ $attributes->class('sf-facts @container/facts m-0 flex max-w-128 flex-col rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] px-3 py-1.5 text-sm leading-[1.5]') }}>
 @if (filled($body['title'] ?? null))
             <figcaption class="border-b border-border pt-0.75 pb-1.25 font-semibold text-foreground">{{ $body['title'] }}</figcaption>
 @endif

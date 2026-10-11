@@ -1,6 +1,6 @@
 @props(['body', 'entity' => null])
 @if (filled($body['content'] ?? null))
-    <figure {{ $attributes->class(['sf-prose-block m-0 min-w-0 max-w-144', 'sf-prose-block--verbatim' => $body['verbatim'] ?? false, 'rounded-lg bg-card px-4 py-3' => ! ($body['verbatim'] ?? false)]) }}>
+    <figure {{ $attributes->class(['sf-prose-block m-0 min-w-0 max-w-144', 'sf-prose-block--verbatim' => $body['verbatim'] ?? false, 'rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] px-4 py-3' => ! ($body['verbatim'] ?? false)]) }}>
 @if (filled($body['title'] ?? null))<figcaption class="sf-prose__title mb-2 text-sm font-semibold text-foreground">{{ $body['title'] }}</figcaption>
 @endif
 @if ($body['verbatim'] ?? false)

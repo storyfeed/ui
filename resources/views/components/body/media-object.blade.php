@@ -48,7 +48,7 @@
     $files = collect($body['files'] ?? [])->filter(fn ($file) => is_array($file) && filled($file['href'] ?? null));
 @endphp
 @if ($subject || filled($body['content'] ?? null) || is_array($picture) || $files->isNotEmpty())
-<div {{ $attributes->class('sf-media-object mt-1.5 flex min-w-0 max-w-128 flex-wrap items-start gap-3 rounded-lg border border-border bg-muted p-3') }}>
+<div {{ $attributes->class('sf-media-object mt-1.5 flex min-w-0 max-w-128 flex-wrap items-start gap-3 rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] p-3') }}>
 @if (is_array($picture) && $imagePlacement === 'beside')
         <div class="{{ $frame }}" @if ($ratio !== null) style="--sf-picture-ratio: {{ $ratio }}" @endif><x-storyfeed::media :image="$picture" :renderer="$mediaRenderer" :class="$frameMedia" /></div>
 @endif

@@ -13,7 +13,7 @@
     $tag = ($body['ordered'] ?? false) ? 'ol' : 'ul';
 @endphp
 @if ($items->isNotEmpty())
-    <figure {{ $attributes->class('sf-list-block m-0 min-w-0 max-w-144 rounded-lg bg-card px-4 py-3') }}>
+    <figure {{ $attributes->class('sf-list-block m-0 min-w-0 max-w-144 rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] px-4 py-3') }}>
 @if (filled($body['title'] ?? null))
             <figcaption class="sf-list__title mb-1 text-sm font-semibold text-foreground">{{ $body['title'] }}</figcaption>
 @endif
