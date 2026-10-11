@@ -18,7 +18,7 @@ use Storyfeed\Ui\Tests\TestCase;
 /**
  * The group strip samples, as core writes them (ui#27).
  *
- * Publishes four realistic scenes through core, reads them back as a live
+ * Publishes five realistic scenes through core, reads them back as a live
  * feed and stores each group in `vue/cases.json` as a "Strip: …" case, so the
  * Blade, Vue and React workbenches all draw the same core output. Needs core
  * 0.18 (every entity has an avatar, storyfeed/storyfeed#92); regenerate with
@@ -50,6 +50,8 @@ final class StripCasesTest extends TestCase
             ->grouped(fn ($group) => $group->repeat(':actor added :count people to :target'));
         Story::verb('upload')->headline(':actor uploaded :object to :target')->icon('image')
             ->grouped(fn ($group) => $group->repeat(':actor uploaded :count photos to :target'));
+        Story::verb('check_in')->headline(':actor checked in at :object')->icon('map-pin')
+            ->grouped(fn ($group) => $group->actors(':actors checked in at :object'));
         Story::verb('share')->headline(':actor shared :object in :target')->icon('file-up')
             ->grouped(fn ($group) => $group->repeat(':actor shared :count files in :target'));
 
@@ -87,12 +89,27 @@ final class StripCasesTest extends TestCase
             Storyfeed::activity('upload', StripFile::create(['name' => "IMG_51{$i}0.jpg", 'kind' => 'photo', 'photo' => $photo]))->by($dev)->to($launch)->publish();
         }
 
+        // 5. A crowd: 35 people checked in at the fair, a few with photos (ui#48).
+        $this->travel(20)->minutes();
+        $crowd = [
+            'Murray Bauman', 'Joyce Byers', 'Jim Hopper', 'Nancy Wheeler', 'Jonathan Byers', 'Steve Harrington', 'Robin Buckley',
+            'Dustin Henderson', 'Lucas Sinclair', 'Erica Sinclair', 'Max Mayfield', 'Will Byers', 'Mike Wheeler', 'Karen Wheeler',
+            'Ted Wheeler', 'Holly Wheeler', 'Claudia Henderson', 'Billy Hargrove', 'Heather Holloway', 'Bob Newby', 'Barb Holland',
+            'Eddie Munson', 'Argyle', 'Suzie Bingham', 'Vickie Dunne', 'Chrissy Cunningham', 'Jason Carver', 'Wayne Munson',
+            'Dmitri Antonov', 'Enzo Ruiz', 'Keith Lawson', 'Tammy Thompson', 'Benny Hammond', 'Scott Clarke', 'Terry Ives',
+        ];
+        $photos = [1 => 'carousel', 4 => 'ferris', 6 => 'arcade', 9 => 'parlour', 13 => 'fireworks'];
+        foreach (array_reverse($crowd, true) as $i => $name) {
+            $this->travel(1)->minutes();
+            Storyfeed::activity('check_in', $fair)->by($person($name, $photos[$i] ?? null))->publish();
+        }
+
         // The page's nodes as JSON, whichever shape this core reads (storyfeed/storyfeed#95).
         $items = json_decode((string) json_encode(Page::read(Storyfeed::feed()->live()->get())['items']), true, flags: JSON_THROW_ON_ERROR);
         $groups = array_values(array_filter($items, fn (array $item) => $item['kind'] === 'group'));
-        $this->assertCount(4, $groups, 'every scene is one group');
+        $this->assertCount(5, $groups, 'every scene is one group');
 
-        $names = ['Ana' => 'Strip: people added to a project', 'Ben' => 'Strip: photos uploaded to an album', 'Cara' => 'Strip: a mixed group', 'Dev' => 'Strip: a two-member group'];
+        $names = ['Ana' => 'Strip: people added to a project', 'Ben' => 'Strip: photos uploaded to an album', 'Cara' => 'Strip: a mixed group', 'Dev' => 'Strip: a two-member group', 'Murray' => 'Strip: a crowd checked in'];
         $strip = [];
         foreach ($groups as $group) {
             $actor = strtok($group['sample']['actors'][0]['label'], ' ');

@@ -4,8 +4,10 @@ import EntityAvatar from './EntityAvatar.vue';
 import FeedHeadline from './FeedHeadline.vue';
 import FeedIcon from './FeedIcon.vue';
 import FeedItem from './FeedItem.vue';
+import FeedActorStrip from './FeedActorStrip.vue';
 import FeedMediaStrip from './FeedMediaStrip.vue';
 import FeedMeta from './FeedMeta.vue';
+import { actorStrip } from '../shared/actors';
 import { strip as stripOf } from '../shared/strip';
 import { rail as parseRail, railFor } from '../shared/rail';
 import type { Rail, RailName } from '../shared/rail';
@@ -77,6 +79,12 @@ const entities = computed(() => ({
  * expanding hides it while they show below; the head row stays put (ui#47).
  */
 const strip = computed(() => stripOf(props.item) ?? { tiles: [], overflow: 0 });
+
+/**
+ * The group's actor strip: every actor's face, newest first, up to eight, then
+ * "+N" (ui#48). Hidden when expanded, like the feature strip.
+ */
+const actors = computed(() => actorStrip(props.item) ?? { faces: [], overflow: 0 });
 
 // `count` is the TRUE total and `children` is capped by the server, so the
 // remainder has to be stated rather than implied by the list length.
@@ -168,6 +176,14 @@ const hiddenBeyondChildren = computed(
                 activity does — otherwise a documentation surface can annotate
                 every kind of node except the interesting one.
             -->
+            <FeedActorStrip
+                v-if="actors.faces.length && !expanded"
+                :faces="actors.faces"
+                :overflow="actors.overflow"
+                :toggle="interactive && item.children.length > 0 ? { expanded, controls: membersId, label: `Show all ${item.count}` } : null"
+                @toggle="expanded = !expanded"
+            />
+
             <FeedMediaStrip
                 v-if="strip.tiles.length && !expanded"
                 :tiles="strip.tiles"

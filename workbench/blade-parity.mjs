@@ -378,6 +378,37 @@ try {
                     }));
                     assert.deepEqual(cards, [[1.9, 'cover'], [1, 'cover'], [1, 'cover'], [1.9, 'contain'], [1, 'cover'], [1.9, 'cover']].map(([ratio, fit]) => ({ ratio, fit, readable: true })), `${renderers[i]} ${width} ${text}: card pictures`);
                 }
+                // The lead (ui#48): every face in an actor strip sits above the one to its right, so its ring cuts into that face's edge and never its initials, nor the "+N".
+                if (state === 'collapsed') for (let i = 0; i < frames.length; i++) {
+                    const faults = await frames[i].locator('.sf-row:not(.sf-children .sf-row) > .sf-body > .sf-actor-strip').evaluateAll(strips => strips.flatMap(strip => {
+                        const slots = [...strip.children];
+                        const items = slots.map(item => item.querySelector('.sf-avatar') ?? item);
+                        const spread = el => Math.max(0, ...[...getComputedStyle(el).boxShadow.matchAll(/(-?[\d.]+)px(?=\s*(?:inset)?\s*(?:,|$))/g)].map(m => Number(m[1])));
+                        return items.slice(1).flatMap((item, n) => {
+                            const left = items[n];
+                            const label = item.getAttribute('aria-label') ?? item.textContent.trim();
+                            const out = [];
+                            // Leftmost on top: the overlap belongs to the left face.
+                            const l = left.getBoundingClientRect(), r = item.getBoundingClientRect();
+                            // A strip in a hidden pane draws nothing to obscure.
+                            if (r.width === 0) return out;
+                            // A row that wraps at large text starts its next line with nothing to its left.
+                            if (Math.abs(l.top - r.top) > 1) return out;
+                            const hit = document.elementFromPoint((l.right + r.left) / 2, r.top + r.height / 2);
+                            if (!slots[n].contains(hit)) out.push(`${label}: the face to its left is not on top`);
+                            // Initials, or the chip's count: the left face and its ring end before the text begins.
+                            if (item.querySelector('img:not([hidden])')) return out;
+                            const range = document.createRange();
+                            range.selectNodeContents(item);
+                            const text = range.getBoundingClientRect();
+                            if (text.width === 0) return out;
+                            const edge = l.right + spread(left);
+                            if (edge > text.left + 0.01) out.push(`${label}: its text starts at ${text.left.toFixed(2)} under the left face's edge at ${edge.toFixed(2)}`);
+                            return out;
+                        });
+                    }));
+                    assert.deepEqual(faults, [], `${renderers[i]} ${width} ${theme} ${text}: actor strip faces are unobscured`);
+                }
                 // A group's strip: one uniform square tile per member activity, the picture its row draws or its featured entity's name, then "+N" (ui#27, ui#47).
                 if (text === 'default' && state === 'collapsed') for (let i = 0; i < frames.length; i++) {
                     const strips = await frames[i].locator('.example:has(>h2:text-matches("^Strip: ")) .sf-row:not(.sf-children .sf-row) .sf-media-strip').evaluateAll(strips => strips.map(strip => [...strip.children].map(tile => {

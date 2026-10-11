@@ -7,6 +7,7 @@ export { default as FeedMeta } from './FeedMeta';
 export { default as FeedIcon } from './FeedIcon';
 export { default as FeedMedia } from './FeedMedia';
 export { default as FeedMediaStrip } from './FeedMediaStrip';
+export { default as FeedActorStrip } from './FeedActorStrip';
 export { default as EntityAvatar } from './EntityAvatar';
 export { default as EntityLink } from './EntityLink';
 export * from './context';

@@ -444,6 +444,75 @@ it('hides a group\'s strip and keeps its rail faces in place when it expands (ui
     expect($html)->toContain('Ana uploaded a photo', 'Ben uploaded a photo', 'src="/one.jpg"', 'src="/two.jpg"');
 })->with(['interactive' => true, 'static' => false]);
 
+/** A crowd group: `$members` rows, each a different person, from a group of `$total` actors. */
+function crowd(int $total, ?int $members = null): array
+{
+    return ['kind' => 'group', 'id' => "crowd-{$total}", 'headline' => 'People checked in', 'count' => $total, 'distinct' => ['actors' => $total], 'sample' => ['actors' => []],
+        'children' => array_map(fn (int $n) => ['kind' => 'activity', 'id' => "visit-{$n}", 'headline' => "Person {$n} checked in", 'actor' => ['type' => 'person', 'id' => "p{$n}", 'label' => "Person {$n}", 'url' => "/people/{$n}"]], range(0, ($members ?? min($total, 25)) - 1))];
+}
+
+/** A group's actor strip as face labels then `+N`, or null when there is none. */
+function actor_faces(string $html): ?array
+{
+    if (! str_contains($html, 'sf-actor-strip ')) {
+        return null;
+    }
+    $section = explode('</div>', explode('sf-actor-strip ', $html, 2)[1])[0];
+    preg_match_all('/aria-label="([^"]+)"[^>]*class="sf-avatar |>\+(\d+)</', preg_replace('/\s+/', ' ', $section), $matches, PREG_SET_ORDER);
+
+    return array_map(fn (array $m) => isset($m[2]) ? '+'.$m[2] : $m[1], $matches);
+}
+
+it('draws every face of a group with several actors, newest first, eight before "+N" (ui#48)', function () {
+    $draw = fn (array $item) => actor_faces(Blade::render('<x-storyfeed::group :group="$item" />', compact('item')));
+    $people = fn (int $n) => array_map(fn (int $i) => "Person {$i}", range(0, $n - 1));
+
+    // Jasper: "always, 8 faces, 24px". 35 actors, 25 members shipped: eight faces and "+27" from the true count.
+    expect($draw(crowd(35)))->toBe([...$people(8), '+27'])
+        // Eight actors or fewer: every one shows, no chip.
+        ->and($draw(crowd(5)))->toBe($people(5))
+        ->and($draw(crowd(8)))->toBe($people(8));
+    // One actor draws no strip, however many members.
+    $one = crowd(4);
+    $one['children'] = array_map(fn (array $child) => [...$child, 'actor' => $one['children'][0]['actor']], $one['children']);
+    $one['distinct'] = ['actors' => 1];
+    expect($draw($one))->toBeNull();
+    // A repeat actor shows once, and an anonymous member adds no face.
+    $repeat = crowd(3);
+    $repeat['children'] = [$repeat['children'][0], [...$repeat['children'][1], 'actor' => $repeat['children'][0]['actor']], [...$repeat['children'][2], 'actor' => null], ...array_slice(crowd(3)['children'], 1)];
+    expect($draw($repeat))->toBe($people(3));
+    // Faces are 24px avatars.
+    $item = crowd(5);
+    expect(explode('sf-actor-strip ', Blade::render('<x-storyfeed::group :group="$item" />', compact('item')))[1])->toContain('sf-avatar--sm size-6');
+    // Each face sits above the one to its right, so its ring cuts into that face's edge, never its initials.
+    $item = crowd(35);
+    preg_match_all('/sf-actor-strip__face[^"]*" style="z-index: (\d+)"/', Blade::render('<x-storyfeed::group :group="$item" />', compact('item')), $zs);
+    expect(array_map(intval(...), $zs[1]))->toBe([8, 7, 6, 5, 4, 3, 2, 1]);
+    // "+N" opens the group like "Show all N"; a static group keeps a plain chip.
+    $item = crowd(35);
+    $live = Blade::render('<x-storyfeed::group :group="$item" />', compact('item'));
+    preg_match('/<button[^>]*sf-actor-strip__more[^>]*>/', $live, $button);
+    preg_match('/aria-controls="([^"]+)"/', $button[0], $controls);
+    expect($button[0])->toContain('aria-label="Show all 35"', 'aria-expanded="false"')
+        ->and($live)->toContain('id="'.$controls[1].'"')
+        ->and(Blade::render('<x-storyfeed::group :group="$item" :interactive="false" :collapsed="true" />', compact('item')))->not->toMatch('/<button[^>]*sf-actor-strip__more/');
+});
+
+it('hides a group\'s actor strip when it expands, and every face is a member row\'s face (ui#48)', function (bool $interactive) {
+    $item = crowd(35);
+    $collapsed = Blade::render('<x-storyfeed::feed :items="[$item]" rail="actor" />', compact('item'));
+    $members = explode('sf-children', $collapsed, 2)[1];
+    foreach (array_filter(actor_faces($collapsed), fn (string $face) => ! str_starts_with($face, '+')) as $face) {
+        expect(preg_replace('/\s+/', ' ', $members))->toMatch('/aria-label="'.$face.'"[^>]*class="sf-avatar /');
+    }
+
+    $head = explode('class="sf-children', Blade::render('<x-storyfeed::feed :items="[$item]" rail="actor" :interactive="$interactive" :collapsed="false" />', compact('item', 'interactive')))[0];
+    // An open native <details> hides the strip with CSS, so toggling it in the browser shows or hides it; a static open group draws none.
+    $interactive
+        ? expect($head)->toContain('sf-actor-strip ', '[&:has(>.sf-disclosure[open])>.sf-actor-strip]:hidden')
+        : expect($head)->not->toContain('sf-actor-strip ');
+})->with(['interactive' => true, 'static' => false]);
+
 it('lets rail size variables set around a feed or a lone row reach the rail', function (string $component) {
     $item = ['kind' => 'group', 'headline' => 'Ana posted', 'count' => 2, 'glyph' => 'file-up', 'sample' => ['actors' => [['id' => 'a', 'label' => 'Ana']]],
         'children' => [['kind' => 'activity', 'headline' => 'Ana posted', 'glyph' => 'file-up', 'actor' => ['id' => 'a', 'label' => 'Ana']]]];

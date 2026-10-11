@@ -121,6 +121,13 @@ and a "+N" tile counting the members not shown. On a group that can open, the "+
 closes it like "Show all N". A strip of identical tiles is
 skipped. Expanding a group hides the strip while its members show below, and
 keeps the rail faces in place. `FeedMediaStrip` draws tiles built with `strip()`.
+A group with several actors also draws an actor strip: every actor's face,
+newest first, including the ones the headline names, as one row of
+overlapping 24px avatars. Eight faces, then a "+N" chip counting the actors
+not shown (core's `distinct.actors`); with eight or fewer, all of them and no
+chip. The faces come from the members, so each is a member row's face once
+the group opens. Like the feature strip, the chip opens the group and
+expanding hides the strip. `FeedActorStrip` draws faces built with `actorStrip()`.
 Summary rendering has been removed from all kits, mirroring core. Unknown extra
 payload keys are ignored.
 
