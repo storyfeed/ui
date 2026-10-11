@@ -1082,3 +1082,37 @@ test('a null verb is left out of the fallback headline (storyfeed/storyfeed#127)
     assert.doesNotMatch(raw('FeedItem', { item }), /null/);
     assert.match(raw('FeedItem', { item: { ...item, headline: 'Imported from the archive' } }), /Imported from the archive/);
 });
+
+test('a row draws its featured role\'s body: the object by default, none when featured is null', () => {
+    const talk = { type: 'event', id: 'talk', label: 'GPUG talk', url: '/talks/gpug', body: [{ $body: 'Storyfeed/Body/Excerpt', text: 'Live at the talk' }, { $body: 'Storyfeed/Body/Image', image: 'icon' }], media: { icon: { src: '/talk.svg' } } };
+    const item = { ...activity, object: { ...activity.object, body: [{ $body: 'Storyfeed/Body/Excerpt', text: 'The package itself' }] }, location: talk };
+    const draw = (node) => raw('FeedItem', { item: node });
+    // Before core sent the field, and with it naming the object, the object's body.
+    for (const node of [item, { ...item, featured: 'object' }]) {
+        const html = draw(node);
+        assert.match(html, /The package itself/);
+        assert.doesNotMatch(html, /Live at the talk/);
+    }
+    // A featured location draws its body, and its icon thumbnail links to it.
+    const located = draw({ ...item, featured: 'location' });
+    assert.match(located, /Live at the talk/);
+    assert.doesNotMatch(located, /The package itself/);
+    assert.match(located, /<a href="\/talks\/gpug" class="sf-media[^>]*>(?:<!--[^]*?-->)?<img[^>]*src="\/talk\.svg"/);
+    // null draws no entity body; a featured role the payload left empty draws none either, and the row stays.
+    for (const node of [{ ...item, featured: null }, { ...item, featured: 'target', target: null }]) {
+        const html = draw(node);
+        assert.doesNotMatch(html, /The package itself|Live at the talk/);
+        assert.match(html, /sf-row/);
+    }
+});
+
+test('a strip tile shows the picture its member\'s row draws, whichever role that member features', () => {
+    const located = { ...stripMember(0, stripBen), featured: 'location', location: stripPhoto(1) };
+    const members = [located, stripMember(1, stripPhoto(2)), { ...stripMember(2, stripPhoto(3)), featured: 'actor', actor: stripBen }];
+    const { tiles } = stripTiles(raw('FeedGroup', { item: { ...group, count: 3, children: members, sample: { actors: group.sample.actors } } }));
+    assert.deepEqual(tiles, ['/p1.jpg', '/p2.jpg', 'name:Ben Okafor']);
+    for (const [member, src] of [[located, '/p1.jpg'], [members[1], '/p2.jpg']]) {
+        assert.match(raw('FeedItem', { item: member }), new RegExp(`src="${src}"`), `the row draws ${src}`);
+    }
+    assert.doesNotMatch(raw('FeedItem', { item: members[2] }), /<img/, 'a name tile\'s row draws no picture');
+});

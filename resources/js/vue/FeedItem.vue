@@ -12,6 +12,7 @@ import FeedMediaStrip from './FeedMediaStrip.vue';
 import FeedMeta from './FeedMeta.vue';
 import FeedMedia from './FeedMedia.vue';
 import { entityLink } from '../shared/link';
+import { featuredOf } from '../shared/strip';
 import { rail as parseRail, railFor, withoutSecondary } from '../shared/rail';
 import type { Rail, RailName } from '../shared/rail';
 import type { ActivityNode } from '../shared/types';
@@ -90,21 +91,23 @@ const strip = computed(() => {
 });
 
 /**
- * The forms this node carries: the activity's own, then the object's.
+ * The forms this node carries: the activity's own, then its featured role's.
  *
  * A detail lands at an APP-CHOSEN key inside the app's own map, so finding one
  * means walking `data` rather than reading a fixed key. An unrecognised form
  * yields nothing and the activity renders as it always would, minus the block.
  *
- * THE OBJECT IS THE ONLY ROLE READ, and that is a renderer's choice rather than
- * a rule of the payload — every entity may carry a detail, whatever role it
- * fills. Reading them all is what this did until the cost showed itself: an
- * actor's detail draws again under every row that person acts in, so one cook
- * and fifty rows is the same card fifty times. The object is what a row is
- * about, so its detail is the one that belongs beneath the sentence.
+ * ONE ROLE IS READ: the one the activity features (storyfeed/storyfeed#76),
+ * the object by default and none when `featured` is null. Every entity may
+ * carry a detail, whatever role it fills, but reading them all draws an actor's
+ * detail again under every row that person acts in, so one cook and fifty rows
+ * is the same card fifty times. The featured role is what a row is about, so
+ * its detail is the one that belongs beneath the sentence.
  */
+const featured = computed(() => featuredOf(props.item));
+
 const found = computed(() => {
-    const object = (props.item as any).object;
+    const object = featured.value;
 
     const link = entityLink(object);
     const attributed = (found: any) => ({
@@ -119,7 +122,7 @@ const found = computed(() => {
         // The activity's own map, still walked: an app may put a form at a key
         // of its own and this kit will find it.
         ...formsIn(props.item.data, 4, bodies),
-        // The object's `body` — the slot — read directly, because that is the
+        // The featured entity's `body` — the slot — read directly, because that is the
         // whole point of it being a slot and not a key somebody chose.
         ...resolve(object?.body, bodies).map(attributed),
         ...formsIn(object?.data, 4, bodies).map(attributed),
@@ -255,8 +258,8 @@ const slots = computed(() =>
                 <FeedMedia
                     v-if="icon"
                     :image="icon"
-                    :href="entityLink(item.object)?.href ?? null"
-                    :link-attributes="entityLink(item.object)?.attributes"
+                    :href="entityLink(featured)?.href ?? null"
+                    :link-attributes="entityLink(featured)?.attributes"
                     class="mt-0! size-10! shrink-0 rounded-md!"
                 />
                 <div :class="icon ? 'min-w-0 flex-1' : 'contents'">
