@@ -25,19 +25,22 @@ await mkdir(out, { recursive: true });
 
 const WIDTH = 800;
 const HEIGHT = 520;
-const LOOP = 17.8;
+// One transition system for every beat: a single easing curve, three
+// durations, and one stagger between rows.
+const EASE = 'cubic-bezier(.3,0,.2,1)';
+const ENTER = 0.3; // something appears: a row, a group, a state
+const MOVE = 0.4; // rows slide or a state regroups
+const EXIT = 0.5; // a scene dissolves into the next
+const STAGGER = 0.4; // between rows arriving one after another
 
-// The arc, in seconds. Each beat builds on the one before; the collapse, the
-// live run and the closing frame get the most time, and the live arrivals
-// come faster and faster, as mod's tree does.
-const T = {
-    rich: 1.6, richRows: [2.0, 2.4],
-    joins: 4.0, joinArrivals: [4.15, 4.5, 4.85, 5.2, 5.5], collapse: 6.3,
-    photos: [7.5, 8.55, 9.4, 10.05, 10.6],
-    scoped: 11.9,
-    richest: 13.6, arrival: 14.5,
-    dissolve: 17.0,
-};
+// The arc, in seconds. Each beat builds on the one before. The live photos
+// come faster and faster (each gap 0.8 of the last), as mod's tree does, and
+// the richest state holds longest before the loop dissolves back to its start.
+const T = { rich: 1.6, joins: 4.0, collapse: 6.4, photos: 7.6, scoped: 11.8, richest: 13.4, arrival: 14.3, dissolve: 16.8 };
+T.richRows = [0, 1].map(k => T.rich + MOVE + k * STAGGER);
+T.joinArrivals = [0, 1, 2, 3, 4].map(k => T.joins + k * STAGGER);
+T.photoArrivals = [0, 1, 2, 3, 4].map(k => T.photos + [0, 1, 1.8, 2.44, 2.952][k]);
+const LOOP = +(T.dissolve + EXIT + 0.2).toFixed(2);
 
 const ORDER = ['plain', 'rich', 'joins', 'joined', 'photos1', 'photos2', 'photos3', 'photos4', 'photos5', 'scoped', 'richest', 'payoff'];
 const feed = (html, extra = '') => `<div class="px-6 pt-4">${extra}${html}</div>`;
@@ -54,77 +57,68 @@ const animate = (selector, frames) => {
     const name = `a${names++}`;
     const sorted = [...frames].sort((a, b) => a[0] - b[0]);
     const all = [[0, sorted[0][1]], ...sorted, [LOOP, sorted.at(-1)[1]]];
-    return `${selector}{animation:${name} ${LOOP}s cubic-bezier(.3,0,.2,1) infinite}@keyframes ${name}{${all.map(([t, d]) => `${pct(t)}{${d}}`).join('')}}`;
+    return `${selector}{animation:${name} ${LOOP}s ${EASE} infinite}@keyframes ${name}{${all.map(([t, d]) => `${pct(t)}{${d}}`).join('')}}`;
 };
-const shown = (t, y = 0) => `opacity:1;transform:translateY(${y}px)`;
-const hidden = (y = 0) => `opacity:0;transform:translateY(${y}px)`;
 
 // Builds every rule once the rows are measured: tops[layer] lists each row's
-// offset from its feed's first row.
+// offset from the top of its layer.
 const timeline = tops => {
+    const from = (key, i) => +(tops[key][i] - tops[key][0]).toFixed(2);
     const rules = [];
     const layer = key => `.L-${key}`;
     const row = (key, i) => `${layer(key)} .R${i}`;
-    // A new row arrives on top: the rows under it slide down, then it fades in where they made room.
-    const pushDown = (key, at) => {
-        const h = tops[key][1];
-        rules.push(animate(row(key, 0), [[at, 'opacity:0'], [at + 0.2, 'opacity:0'], [at + 0.45, 'opacity:1']]));
-        tops[key].slice(1).forEach((_, i) => rules.push(animate(row(key, i + 1), [[at, `transform:translateY(${-h}px)`], [at + 0.35, 'transform:translateY(0px)']])));
+    const at = (key, frames) => rules.push(animate(key, frames));
+
+    // Which state shows when: each takes over from the one before across
+    // the window given (0 where the two draw the same rows, a straight swap).
+    const sequence = [
+        ['plain', 0, 0],
+        ['rich', T.rich, MOVE],
+        ['joins', T.joins, 0],
+        ['joined', T.collapse + MOVE, ENTER],
+        ...T.photoArrivals.map((time, n) => [`photos${n + 1}`, time, n < 2 ? 0 : MOVE]),
+        ['scoped', T.scoped, EXIT],
+        ['richest', T.richest, EXIT],
+        ['payoff', T.arrival, 0],
+        ['plain', T.dissolve, EXIT],
+    ];
+    const visibility = {};
+    sequence.forEach(([key, time, window], n) => {
+        const span = window || 0.01;
+        (visibility[key] ??= []).push(...(time === 0 ? [[0, 'opacity:1']] : [[time, 'opacity:0'], [time + span, 'opacity:1']]));
+        if (n) (visibility[sequence[n - 1][0]] ??= []).push([time, 'opacity:1'], [time + span, 'opacity:0']);
+    });
+    Object.entries(visibility).forEach(([key, frames]) => at(layer(key), frames[0][0] === 0 ? frames : [[0, 'opacity:0'], ...frames]));
+
+    // A row arrives on top: the rows under it move down to make room, and it
+    // enters halfway through the move.
+    const arrive = (time, i, isNew, from, to) => {
+        if (!isNew) return [[time, from], [time + MOVE, to]];
+        const place = to.replace(/opacity:[^;]*;?/, '');
+        return [[time, `opacity:0;${place}`], [time + MOVE / 2, `opacity:0;${place}`], [time + MOVE / 2 + ENTER, `opacity:1;${place}`]];
     };
-    const fade = (key, inAt, outAt, inFor = 0.3, outFor = 0.3) => rules.push(animate(layer(key), [[inAt - inFor, 'opacity:0'], [inAt, 'opacity:1'], [outAt, 'opacity:1'], [outAt + outFor, 'opacity:0']]));
 
-    // 1. One plain row: shown at the start, and dissolving back in as the
-    // closing frame fades, so the last frame is the first.
-    rules.push(animate(layer('plain'), [[0, 'opacity:1'], [T.rich, 'opacity:1'], [T.rich + 0.3, 'opacity:0'], [T.dissolve - 0.05, 'opacity:0'], [T.dissolve + 0.5, 'opacity:1']]));
+    // 2. The plain row gains its person; the rows under it enter one by one.
+    T.richRows.forEach((time, n) => at(row('rich', n + 1), [[time, 'opacity:0;transform:translateY(-6px)'], [time + ENTER, 'opacity:1;transform:translateY(0px)']]));
 
-    // 2. The same row with its people, then the rows under it with their bodies.
-    fade('rich', T.rich + 0.3, T.joins);
-    T.richRows.forEach((at, n) => rules.push(animate(row('rich', n + 1), [[at, hidden(-6)], [at + 0.35, shown()]])));
-
-    // 3. Joins arrive one by one at the top, pushing the feed down: the rows
-    // below slide first, then the new row fades in where they made room.
-    const joins = tops.joins;
-    const arrivals = T.joinArrivals.map((at, k) => ({ at, first: 4 - k }));
-    const lift = first => `transform:translateY(${-joins[first]}px)`;
-    rules.push(animate(layer('joins'), [[T.joins, 'opacity:0'], [T.joins + 0.01, 'opacity:1'], [T.collapse + 0.45, 'opacity:1'], [T.collapse + 0.6, 'opacity:0']]));
+    // 3. Joins arrive one by one, then fold: each slides up under the top
+    // one, gone by half the move, while the rows below rise under the group.
+    const joins = tops.joins.map((_, i) => from('joins', i));
+    const lift = (first, i) => `opacity:${i >= first ? 1 : 0};transform:translateY(${-joins[first]}px)`;
     joins.forEach((_, i) => {
-        const frames = [[T.joins, `opacity:${i >= 5 ? 1 : 0};${lift(5)}`]];
-        arrivals.forEach(({ at, first }, k) => {
-            const before = k ? arrivals[k - 1].first : 5;
-            if (i === first) frames.push([at, `opacity:0;${lift(first)}`], [at + 0.12, `opacity:0;${lift(first)}`], [at + 0.35, `opacity:1;${lift(first)}`]);
-            else frames.push([at, `opacity:${i >= before ? 1 : 0};${lift(before)}`], [at + 0.25, `opacity:${i >= first ? 1 : 0};${lift(first)}`]);
-        });
-        // The fold: each join slides up under the top one and fades, and the
-        // rows below glide to where they sit under the grouped row.
-        const below = tops.joined[i - 4] ?? joins[i];
-        if (i >= 1 && i <= 4) frames.push([T.collapse + 0.22, `opacity:0;transform:translateY(${Math.round(-joins[i] * 0.6)}px)`]);
-        frames.push([T.collapse, 'opacity:1;transform:translateY(0px)'],
-            [T.collapse + 0.45, i === 0 ? 'opacity:1;transform:translateY(0px)' : i <= 4 ? `opacity:0;transform:translateY(${-joins[i]}px)` : `opacity:1;transform:translateY(${below - joins[i]}px)`]);
-        rules.push(animate(row('joins', i), frames));
-    });
-    fade('joined', T.collapse + 0.6, T.photos[0], 0.2, 0.01);
-
-    // 4. Photos: the first two arrive at the top and push the feed down; from
-    // the third on, the rows regroup into one.
-    T.photos.forEach((at, n) => {
-        const key = `photos${n + 1}`;
-        const next = T.photos[n + 1] ?? T.scoped;
-        if (n < 2) {
-            fade(key, at + 0.01, next, 0.01, n === 1 ? 0.18 : 0.01);
-            pushDown(key, at);
-        } else {
-            fade(key, at + 0.25, next, 0.25, next === T.scoped ? 0.4 : 0.18);
-        }
+        const frames = [[T.joins, lift(5, i)]];
+        T.joinArrivals.forEach((time, k) => frames.push(...arrive(time, i, i === 4 - k, lift(5 - k, i), lift(4 - k, i))));
+        const fold = T.collapse;
+        if (i === 0) frames.push([fold, lift(0, 0)]);
+        else if (i <= 4) frames.push([fold, lift(0, i)], [fold + MOVE / 2, `opacity:0;transform:translateY(${-joins[i] / 2}px)`], [fold + MOVE, `opacity:0;transform:translateY(${-joins[i]}px)`]);
+        else frames.push([fold, lift(0, i)], [fold + MOVE, `opacity:1;transform:translateY(${+((tops.joined[i - 4] ?? tops.joins[i]) - tops.joins[i]).toFixed(2)}px)`]);
+        at(row('joins', i), frames);
     });
 
-    // 5. The feed narrows to everything one person touched.
-    fade('scoped', T.scoped + 0.4, T.richest, 0.4, 0.4);
-
-    // 6. The payoff: it opens out to the whole feed, one more activity
-    // arrives live on top, and the richest state holds before dissolving
-    // into the opening row, so the last frame is the first.
-    fade('richest', T.richest + 0.4, T.arrival, 0.4, 0.01);
-    rules.push(animate(layer('payoff'), [[T.arrival, 'opacity:0'], [T.arrival + 0.01, 'opacity:1'], [T.dissolve - 0.1, 'opacity:1'], [T.dissolve + 0.45, 'opacity:0']]));
+    // 4 and 6. The first two photos and the payoff's booking push in on top.
+    const pushDown = (key, time) => tops[key].forEach((_, i) => at(row(key, i), arrive(time, i, i === 0, `transform:translateY(${-from(key, 1)}px)`, 'transform:translateY(0px)')));
+    pushDown('photos1', T.photoArrivals[0]);
+    pushDown('photos2', T.photoArrivals[1]);
     pushDown('payoff', T.arrival);
     return rules.join('');
 };
@@ -164,9 +158,9 @@ try {
                 const feed = layer.querySelector('[role=feed]');
                 if (!feed) continue;
                 const rows = [...feed.children].filter(child => child.tagName === 'ARTICLE');
-                const first = rows[0].getBoundingClientRect().top;
+                const top = layer.getBoundingClientRect().top;
                 rows.forEach((row, i) => row.classList.add(`R${i}`));
-                tops[key] = rows.map(row => Math.round(row.getBoundingClientRect().top - first));
+                tops[key] = rows.map(row => +(row.getBoundingClientRect().top - top).toFixed(2));
                 rows.filter(row => row.getBoundingClientRect().top - layer.getBoundingClientRect().top > height + 200).forEach(row => row.remove());
             }
             // Each picture once per size it is drawn at, as WebP at twice that size.
@@ -218,7 +212,20 @@ try {
         }), map);
 
         const xhtml = await page.evaluate(() => new XMLSerializer().serializeToString(document.getElementById('stage')));
-        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}" role="img" aria-label="A Storyfeed feed growing: one plain row gains avatars, a photo and a key-value card; five volunteers joining fold into one grouped row; photos arrive live and regroup with a strip of thumbnails; the feed narrows to one person, then opens out to the whole feed as one more booking arrives."><style><![CDATA[${styled}${pictures}${timeline(tops)}${still}]]></style><foreignObject width="${WIDTH}" height="${HEIGHT}">${xhtml}</foreignObject></svg>`;
+        // The rows are measured again where they are drawn, inside the SVG,
+        // where a group row can lay out a few pixels apart from the page.
+        const build = tops => `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}" role="img" aria-label="A Storyfeed feed growing: one plain row gains avatars, a photo and a key-value card; five volunteers joining fold into one grouped row; photos arrive live and regroup with a strip of thumbnails; the feed narrows to one person, then opens out to the whole feed as one more booking arrives."><style><![CDATA[${styled}${pictures}${timeline(tops)}${still}]]></style><foreignObject width="${WIDTH}" height="${HEIGHT}">${xhtml}</foreignObject></svg>`;
+        const measure = await browser.newPage({ viewport: { width: WIDTH, height: HEIGHT } });
+        await measure.setContent(`<body style="margin:0">${build(tops)}<style>#stage *{animation:none!important}</style></body>`);
+        const drawn = await measure.evaluate(keys => Object.fromEntries(keys.map(key => {
+            const layer = document.querySelector(`.L-${key}`);
+            const top = layer.getBoundingClientRect().top;
+            return [key, [...layer.querySelectorAll('[class~=R0],[class*=" R"],[class^="R"]')].filter(row => /(^| )R\d+( |$)/.test(row.getAttribute('class')))
+                .sort((a, b) => +a.getAttribute('class').match(/R(\d+)/)[1] - +b.getAttribute('class').match(/R(\d+)/)[1])
+                .map(row => +(row.getBoundingClientRect().top - top).toFixed(2))];
+        })), Object.keys(tops));
+        await measure.close();
+        const svg = build({ ...tops, ...drawn });
         await writeFile(resolve(out, `showcase-${theme}.svg`), svg);
         sizes.push(`showcase-${theme}.svg ${WIDTH}×${HEIGHT} ${Math.round(svg.length / 1024)} KB`);
 
