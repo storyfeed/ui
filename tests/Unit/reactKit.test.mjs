@@ -986,6 +986,15 @@ test("an Image body draws its own picture, else the slot it names, custom slots 
     assert.doesNotMatch(await draw({ $v: 2, src: '/not-yet.jpg' }), /not-yet/);
 });
 
+test("an Image body naming a slot takes the slot's alt when it has none of its own", async () => {
+    const media = { image: { src: '/card.png', alt: 'The share card' } };
+    const draw = (body) => raw('Image', { payload: { $body: 'Storyfeed/Body/Image', $v: 3, image: 'image', ...body }, entityMedia: media });
+    assert.match(await draw({}), /alt="The share card"/);
+    assert.match(await draw({ alt: 'Its own' }), /alt="Its own"/);
+    assert.match(await draw({ caption: 'Captioned' }), /alt="Captioned"/);
+    assert.doesNotMatch(await draw({ caption: 'Captioned' }), /The share card/);
+});
+
 test("a stored or custom-slot Image stands for its entity in a group's strip", () => {
     const photo = (id, body, media = null) => ({ type: 'document', id, label: id, url: '/' + id, body: [{ $body: 'Storyfeed/Body/Image', $v: 3, ...body }], media });
     const objects = [photo('a', { src: '/own.jpg' }), photo('b', { image: 'slots.chart' }, { slots: { chart: { src: '/chart.svg' } } })];

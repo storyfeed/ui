@@ -56,7 +56,8 @@ final class Bodies
      * one (core 0.18's Image v3), otherwise the entity's media slot it names,
      * `icon`, `preview`, `image` or a custom `slots.<name>`. Until v3 a body
      * naming no slot meant `preview`. The body's alt, falling back to its
-     * caption, and its declared size win over the slot's. Read here rather
+     * caption, and its declared size win over the slot's; with none, the
+     * slot's own stand. Read here rather
      * than through `Image::upgrade()` so every supported core reads it the
      * same way. Mirrors `pictureOf()` in `shared/body.ts`.
      *
@@ -79,7 +80,12 @@ final class Bodies
 
         $size = fn (string $key): mixed => is_int($body[$key] ?? null) && $body[$key] > 0 ? $body[$key] : ($picture[$key] ?? null);
 
-        return [...$picture, 'alt' => is_string($body['alt'] ?? null) ? $body['alt'] : (is_string($body['caption'] ?? null) ? $body['caption'] : ''), 'width' => $size('width'), 'height' => $size('height')];
+        // The body's alt, then its caption, then the slot's own.
+        $alt = is_string($body['alt'] ?? null) ? $body['alt']
+            : (is_string($body['caption'] ?? null) ? $body['caption']
+            : (is_string($picture['alt'] ?? null) ? $picture['alt'] : ''));
+
+        return [...$picture, 'alt' => $alt, 'width' => $size('width'), 'height' => $size('height')];
     }
 
     /**

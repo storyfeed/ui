@@ -479,6 +479,15 @@ it('draws an Image body\'s own picture, else the slot it names, custom slots inc
     expect($draw(['$v' => 2, 'src' => '/not-yet.jpg']))->toContain('/preview.jpg')->not->toContain('/not-yet.jpg');
 });
 
+it('gives an Image body naming a slot the slot\'s alt when it has none of its own', function () {
+    $entity = Entity::of(['label' => 'Card', 'media' => ['image' => ['src' => '/card.png', 'alt' => 'The share card']]]);
+    $draw = fn (array $body) => Blade::render('<x-storyfeed::body :body="$body" :entity="$entity" />', ['body' => ['$body' => 'Storyfeed/Body/Image', '$v' => 3, 'image' => 'image', ...$body], 'entity' => $entity]);
+
+    expect($draw([]))->toContain('alt="The share card"');
+    expect($draw(['alt' => 'Its own']))->toContain('alt="Its own"')->not->toContain('The share card');
+    expect($draw(['caption' => 'Captioned']))->toContain('alt="Captioned"')->not->toContain('The share card');
+});
+
 it('lets a stored or custom-slot Image stand for its entity in a group\'s strip', function () {
     $photo = fn (string $id, array $body, array $media = []) => ['type' => 'document', 'id' => $id, 'label' => $id, 'url' => '/'.$id, 'body' => [['$body' => 'Storyfeed/Body/Image', '$v' => 3, ...$body]], 'media' => $media];
     $objects = [$photo('a', ['src' => '/own.jpg']), $photo('b', ['image' => 'slots.chart'], ['slots' => ['chart' => ['src' => '/chart.svg']]])];
