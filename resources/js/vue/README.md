@@ -112,6 +112,8 @@ along the rail, keeping the headline aligned with single-actor rows.
 Initials and icons scale with the disc or badge they sit in, and a badge
 keeps its centre where its default size puts it, so a larger one grows
 outward from the disc's corner.
+`--sf-well` and `--sf-well-border` set the fill and edge of card-shaped
+bodies from any ancestor; unset, both mix from your tokens (see the root README).
 The `sf-*` classes remain semantic hooks; styling lives in utilities.
 
 Metadata follows the headline: date, then unused instrument/origin/result/

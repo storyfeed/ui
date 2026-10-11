@@ -7,7 +7,7 @@
 
 @php($table = \Storyfeed\Ui\Support\TableBody::read($body))
 @if ($table !== null)
-    <figure {{ $attributes->class('sf-table-block m-0 min-w-0 max-w-144 rounded-lg bg-card px-4 py-3') }}>
+    <figure {{ $attributes->class('sf-table-block m-0 min-w-0 max-w-144 rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] px-4 py-3') }}>
 @if ($table['title'] !== null)
         <figcaption class="sf-table__title mb-1 text-sm font-semibold text-foreground">{{ $table['title'] }}</figcaption>
 @endif

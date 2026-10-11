@@ -13,7 +13,7 @@
     // A link without an href goes to the body's own entity.
     $link = \Storyfeed\Ui\Support\Links::body($body['action']['link'] ?? null, $entity);
     $href = $link['href'] ?? null;
-    $attributes = $attributes->class(($subject || $content) ? 'sf-cta mt-1.5 flex min-w-0 max-w-128 flex-col items-start gap-1 rounded-lg border border-border bg-card p-3 [overflow-wrap:anywhere]' : '');
+    $attributes = $attributes->class(($subject || $content) ? 'sf-cta mt-1.5 flex min-w-0 max-w-128 flex-col items-start gap-1 rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] p-3 [overflow-wrap:anywhere]' : '');
     $linkAttributes = $link['attributes'] ?? [];
 @endphp
 @if ($subject || $content)

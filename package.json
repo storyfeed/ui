@@ -17,7 +17,8 @@
     "kit:parity": "STORYFEED_STRICT_PARITY=1 node workbench/blade-parity.mjs",
     "test:hydrate": "node workbench/react/hydration.mjs",
     "test:installed": "node --test tests/Unit/installedKits.test.mjs",
-    "test:alignment": "node workbench/alignment.mjs"
+    "test:alignment": "node workbench/alignment.mjs",
+    "test:wells": "node workbench/wells.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.0.0",

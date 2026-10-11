@@ -271,6 +271,25 @@ ratio are data-driven inline styles. Verbatim prose keeps a dark code surface
 in both themes. Rich prose, lists and tables use Typography's `prose` with its colours
 mapped to your tokens, and quotations carry their own utility styles.
 
+#### Tune the body cards
+
+Card-shaped bodies (MediaObject, Prose, ItemList, Table, KeyValue and
+CallToAction) draw on a light fill with a hairline edge, both mixed from your
+tokens. In light mode the fill is 55% of `card`, so the page shows through; in
+dark mode it is a 3% lift of `foreground`. The edge is 8% of `foreground` in
+both. Set `--sf-well` (the fill) and `--sf-well-border` (the edge) on the feed
+or any element around it to change them:
+
+```css
+.activity { --sf-well: var(--color-card); --sf-well-border: var(--color-border); }
+.dark .activity { --sf-well: var(--color-muted); }
+```
+
+A value applies in both themes, so set it again under `.dark` for a different
+dark one. Over a busy photo, give `--sf-well` an opaque colour so the text
+stays readable: the kit draws no blur behind cards, which would cost every card
+on a long feed its own compositing layer.
+
 #### Set the feed's size
 
 The feed is sized in `rem` on Tailwind's scale, so it follows the reader's

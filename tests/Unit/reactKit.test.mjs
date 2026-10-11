@@ -956,7 +956,7 @@ test('MediaObject footnotes stand alone, resolve links and keep strings unlinked
     }
     assert.equal(raw('MediaObject', { payload: {} }), '');
     const html = raw('MediaObject', { payload: { content: 'Discussion summary', footnote: { label: 'Read more', href: '/discussion' } } });
-    assert.match(html, /<div class="sf-media-object mt-1.5 flex min-w-0 max-w-128 flex-wrap items-start gap-3 rounded-lg border border-border bg-muted p-3">/);
+    assert.ok(html.includes('<div class="sf-media-object mt-1.5 flex min-w-0 max-w-128 flex-wrap items-start gap-3 rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] p-3">'));
     assert.match(html, /sf-media-object__content[^>]*>Discussion summary/);
     assert.match(html, /sf-media-object__footnote[^>]*><a href="\/discussion">Read more<\/a><\/p>/);
 });

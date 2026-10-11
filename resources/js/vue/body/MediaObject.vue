@@ -68,7 +68,7 @@ const footnote = computed(() => {
         <component :is="linkComponent" v-if="footnote.link" v-bind="linkProps(footnote.link, linkComponent)" class="font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring">{{ footnote.label }}</component>
         <template v-else>{{ footnote.label }}</template>
     </p>
-    <div v-else-if="subject || payload.content || picture || files.length" class="sf-media-object mt-1.5 flex min-w-0 max-w-128 flex-wrap items-start gap-3 rounded-lg border border-border bg-muted p-3">
+    <div v-else-if="subject || payload.content || picture || files.length" class="sf-media-object mt-1.5 flex min-w-0 max-w-128 flex-wrap items-start gap-3 rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] p-3">
         <div v-if="picture && placement === 'beside'" :class="frame.wrapper" :style="shape.shape === 'ratio' ? { '--sf-picture-ratio': shape.ratio } : undefined">
             <FeedMedia :image="picture" :class="frame.media" />
         </div>
