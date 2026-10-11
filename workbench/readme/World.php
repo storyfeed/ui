@@ -15,9 +15,10 @@ use Storyfeed\FeedMedia;
 use Storyfeed\MediaSlot;
 
 /*
- * The README showcase's world: a made-up street fair and the volunteers who
- * run it. Every name here is invented; the photos are the workbench's
- * Unsplash-licensed set (media/CREDITS.md).
+ * The README showcase's worlds. Inside the picture: a made-up street fair and
+ * the volunteers who run it. Around it: the feed of looks at Storyfeed's
+ * README that the showcase pulls back to. Every name here is invented; the
+ * photos are the workbench's Unsplash-licensed set (media/CREDITS.md).
  */
 
 function migrate(): void
@@ -27,6 +28,14 @@ function migrate(): void
     Schema::create('bookings', fn (Blueprint $table) => [$table->id(), $table->string('number'), $table->timestamps()]);
     Schema::create('photos', fn (Blueprint $table) => [$table->id(), $table->string('file'), $table->timestamps()]);
     Schema::create('permits', fn (Blueprint $table) => [$table->id(), $table->string('number'), $table->timestamps()]);
+}
+
+function migrateLooks(): void
+{
+    Schema::create('projects', fn (Blueprint $table) => [$table->id(), $table->string('name'), $table->timestamps()]);
+    Schema::create('docs', fn (Blueprint $table) => [$table->id(), $table->string('title'), $table->timestamps()]);
+    Schema::create('visits', fn (Blueprint $table) => [$table->id(), $table->timestamps()]);
+    Schema::create('readers', fn (Blueprint $table) => [$table->id(), $table->string('name'), $table->timestamps()]);
 }
 
 class Member extends Model implements Feedable
@@ -117,5 +126,76 @@ class Permit extends Model implements Feedable
     public static function feedMedia(FeedContext $context): ?FeedMedia
     {
         return FeedMedia::make("/permits/{$context->data('id')}");
+    }
+}
+
+class Project extends Model implements Feedable
+{
+    use InteractsWithFeed;
+
+    protected $guarded = [];
+
+    public function toFeed(): FeedEntity
+    {
+        return FeedEntity::make(label: $this->name, data: ['id' => $this->id]);
+    }
+
+    public static function feedMedia(FeedContext $context): ?FeedMedia
+    {
+        return FeedMedia::make('https://github.com/storyfeed/storyfeed');
+    }
+}
+
+/** The README. Its picture is the showcase as a finished look leaves it. */
+class Doc extends Model implements Feedable
+{
+    use InteractsWithFeed;
+
+    protected $guarded = [];
+
+    public function toFeed(): FeedEntity
+    {
+        return FeedEntity::make(label: $this->title, data: ['id' => $this->id], body: Image::make(MediaSlot::Preview, alt: 'The Storyfeed showcase, at its finished frame'));
+    }
+
+    public static function feedMedia(FeedContext $context): ?FeedMedia
+    {
+        return FeedMedia::make('https://github.com/storyfeed/storyfeed#readme', preview: FeedImage::make('media/showcase-finished.webp', width: 320, height: 208, alt: 'The Storyfeed showcase, at its finished frame'));
+    }
+}
+
+/** A look still in progress: a visit to the README, with nothing to show yet. */
+class Visit extends Model implements Feedable
+{
+    use InteractsWithFeed;
+
+    protected $guarded = [];
+
+    public function toFeed(): FeedEntity
+    {
+        return FeedEntity::make(label: 'a visit', data: ['id' => $this->id]);
+    }
+
+    public static function feedMedia(FeedContext $context): ?FeedMedia
+    {
+        return null;
+    }
+}
+
+/** Whoever is reading the README: the page's viewer, drawn as "You". */
+class Reader extends Model implements Feedable
+{
+    use InteractsWithFeed;
+
+    protected $guarded = [];
+
+    public function toFeed(): FeedEntity
+    {
+        return FeedEntity::make(label: $this->name, data: ['id' => $this->id]);
+    }
+
+    public static function feedMedia(FeedContext $context): ?FeedMedia
+    {
+        return null;
     }
 }
