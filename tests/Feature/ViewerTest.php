@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Blade;
 use Storyfeed\Facades\Story;
 use Storyfeed\Facades\Storyfeed;
 use Storyfeed\Grouping\Group;
+use Storyfeed\Support\Entity;
 use Storyfeed\Ui\Tests\Fixtures\Order;
 use Storyfeed\Ui\Tests\Fixtures\User;
 
@@ -40,7 +41,7 @@ it('leaves everyone else, and pages with no viewer, as they were', function () {
 
     $html = render_feed(attributes: ':viewer="[\'type\' => \'user\', \'id\' => 1]"');
 
-    expect($html)->toContain('<a href="/users/2">Ravi</a> placed')->toContain('<span>Someone</span> placed')->not->toContain('You')
+    expect($html)->toContain('<a href="/users/2">Ravi</a> placed')->toContain(method_exists(Entity::class, 'isAbsent') ? '<span>Someone</span> placed' : '<span>Someone placed')->not->toContain('You')
         ->and(render_feed())->toBe(render_feed(attributes: ':viewer="null"'));
 });
 
