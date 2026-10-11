@@ -5,6 +5,7 @@
 @import "tailwindcss" source(none);
 @plugin "@tailwindcss/typography";
 @source "../../build/readme/classes.txt";
+@source "../../build/readme/kits-classes.txt";
 @source "./showcase.mjs";
 @custom-variant dark (&:is(.dark *));
 @theme inline {
