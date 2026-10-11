@@ -2,8 +2,9 @@
     Storyfeed/Body/MediaObject: a post. A subject line, some prose, one
     picture, its files and a footnote.
 
-    The body stores no image. `image` names one of the entity's media slots,
-    minted when the feed is read, so the picture is always the current one.
+    `image` usually names one of the entity's media slots, minted when the
+    feed is read, so the picture is always the current one. It may instead be
+    an image the body stores itself: {src, alt, width, height}.
     The supplied subject titles the card independently of the headline.
 --}}
 @props(['body', 'entity' => null, 'mediaRenderer' => null, 'imagePlacement' => 'beside'])
@@ -26,7 +27,11 @@
     $subject = $link($body['subject'] ?? null);
     $footnote = $link($body['footnote'] ?? null);
     $imageSlot = is_string($body['image'] ?? null) ? $body['image'] : null;
-    $picture = in_array($imageSlot, ['icon', 'preview', 'image'], true) ? $entity?->media()?->get($imageSlot) : null;
+    $picture = match (true) {
+        in_array($imageSlot, ['icon', 'preview', 'image'], true) => $entity?->media()?->get($imageSlot),
+        is_array($body['image'] ?? null) && is_string($body['image']['src'] ?? null) && $body['image']['src'] !== '' => $body['image'],
+        default => null,
+    };
     // Beside the text, a picture keeps its own shape: an icon is square, a
     // declared size keeps its ratio clamped to 1:1–2:1, and an undeclared one
     // shows whole at a fixed width. Mirrors `shared/picture.ts`.

@@ -2,17 +2,18 @@
 import { computed, inject } from 'vue'
 import { FEED_LINK, FEED_MEDIA_OBJECT_PLACEMENT } from '../keys'
 import FeedMedia from '../FeedMedia.vue'
-import { pictureShape } from '../../shared/picture'
+import { mediaObjectPicture, pictureShape } from '../../shared/picture'
 import { bodyLink, linkProps, ownLink, type ResolvedLink } from '../../shared/link'
 
 /**
  * `Storyfeed/Body/MediaObject` — the shape of a post: a title line, some
  * prose, one picture, the files it names, and a line of small print.
  *
- * THE DETAIL STORES NO IMAGE. `image` is a slot NAME — icon, preview or image
- * — and the picture is the entity's media for that slot, minted at read time.
- * A row recorded under an old thumbnail conversion draws the current one, and
- * a slot the resolver left empty draws no picture and no placeholder.
+ * `image` is usually a slot NAME — icon, preview or image — and the picture is
+ * the entity's media for that slot, minted at read time. A row recorded under
+ * an old thumbnail conversion draws the current one, and a slot the resolver
+ * left empty draws no picture and no placeholder. It may instead be an image
+ * the body stores itself, `{src, alt, width, height}`, drawn as given.
  *
  * A supplied subject is always shown. A link without an href uses the owning
  * entity's current URL; a plain string remains unlinked.
@@ -43,9 +44,7 @@ const files = computed(() => {
     return Array.isArray(listed) ? listed : []
 })
 
-const picture = computed(() =>
-    ['icon', 'preview', 'image'].includes(props.payload.image) ? (props.entityMedia?.[props.payload.image] ?? null) : null,
-)
+const picture = computed(() => mediaObjectPicture(props.payload.image, props.entityMedia))
 
 /** Beside the text, a picture keeps its own shape (see `shared/picture.ts`). */
 const shape = computed(() => pictureShape(props.payload.image, picture.value))
