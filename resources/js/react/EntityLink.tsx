@@ -6,6 +6,7 @@ export default function EntityLink({
     fallback,
 }: {
     entity: FeedEntity | null;
+    /** Rendered for a null entity: an anonymous actor's "Someone", drawn as an actor. */
     fallback?: string;
 }) {
     const { FEED_LINK: Link = 'a' } = useFeedOptions();
@@ -32,7 +33,7 @@ export default function EntityLink({
     }
     return (
         <span
-            className={`${classes}${tombstone ? ' sf-entity--tombstone text-muted-foreground font-normal' : !entity?.label ? ' sf-entity--unknown italic text-muted-foreground font-normal' : ''}`}
+            className={`${classes}${tombstone ? ' sf-entity--tombstone text-muted-foreground font-normal' : !entity && fallback ? ' sf-entity--anonymous text-muted-foreground' : !entity?.label ? ' sf-entity--unknown italic text-muted-foreground font-normal' : ''}`}
         >
             {label}
         </span>
