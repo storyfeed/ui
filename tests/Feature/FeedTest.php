@@ -5,6 +5,7 @@ use Illuminate\Pagination\CursorPaginator;
 use Illuminate\Support\Facades\Blade;
 use Storyfeed\Facades\Story;
 use Storyfeed\Facades\Storyfeed;
+use Storyfeed\Support\Entity;
 use Storyfeed\Ui\Support\Page;
 use Storyfeed\Ui\Tests\Fixtures\Order;
 use Storyfeed\Ui\Tests\Fixtures\User;
@@ -54,7 +55,10 @@ it('draws the blank disc for a verb with no glyph', function () {
 it('reads a missing actor with core\'s placeholder', function () {
     Storyfeed::anonymous()->action('place', Order::create(['number' => '9']))->publish();
 
-    expect(render_feed())->toContain('<span><span>Someone</span> placed <a href="/orders/1" target="_blank">Order #9</a></span>');
+    // Before storyfeed/storyfeed#98, core draws the empty role's words itself, so they stay bare.
+    expect(render_feed())->toContain(method_exists(Entity::class, 'isAbsent')
+        ? '<span><span>Someone</span> placed <a href="/orders/1" target="_blank">Order #9</a></span>'
+        : '<span>Someone placed <a href="/orders/1" target="_blank">Order #9</a></span>');
 });
 
 it('draws an anonymous actor as an actor, muted, never italic', function () {
@@ -64,7 +68,8 @@ it('draws an anonymous actor as an actor, muted, never italic', function () {
     $single = Blade::render('<x-storyfeed::feed :page="$page" :grouped="false" />', ['page' => Storyfeed::feed()->get()]);
     $group = Blade::render('<x-storyfeed::feed :page="$page" />', ['page' => Storyfeed::feed()->live()->get()]);
 
-    foreach ([$single, $group] as $html) {
+    // A core before storyfeed/storyfeed#98 draws a single row's empty role itself; the group headline is the kit's own.
+    foreach (method_exists(Entity::class, 'isAbsent') ? [$single, $group] : [$group] as $html) {
         expect($html)->toContain('<span class="sf-entity sf-entity--anonymous font-medium text-muted-foreground">Someone</span>')
             ->not->toMatch('/<span[^>]*italic[^>]*>Someone</');
     }
