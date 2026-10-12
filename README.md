@@ -372,6 +372,11 @@ deterministic type/id palette. Tombstones suppress former pictures and
 colours. The default image fallback uses an inline error handler; apps with
 strict script CSP can supply an avatar renderer with their own fallback.
 
+An image avatar has a transparent fill and a neutral hairline border. Without
+an image, or when loading fails, the disc shows its brand colour and initials.
+Tombstones stay muted. The arbitrary per-entity colour is bound only as
+`--sf-avatar-color`; Tailwind utilities control the disc’s appearance.
+
 Day dividers are on by default; `:grouped="false"` hides them. Per-item
 `dividers` are keyed by public item id and work in either mode.
 Both draw as a branch: a curve off the rail into the label.

@@ -59,10 +59,10 @@ test('avatar colours prefer snapshot data, retain the source hash and mute tombs
     const path = '/resources/js/vue/EntityAvatar.vue';
     const provided = { ...entity, media: null, data: { avatar_color: '#FAF6EF' } };
     const html = await renderRaw(path, { entity: provided });
-    assert.match(html, /background-color:#FAF6EF/);
+    assert.match(html, /--sf-avatar-color:#FAF6EF/);
     assert.match(html, /class="[^"]*\btext-white\b/);
 
-    const background = html => html.match(/background-color:([^;"\s]+)/)?.[1];
+    const background = html => html.match(/--sf-avatar-color:([^;"\s]+)/)?.[1];
     const first = await renderRaw(path, { entity: { ...entity, media: null } });
     const repeated = await renderRaw(path, { entity: { ...entity, media: null } });
     // Source palette index for user:1; label changes do not change identity colour.
@@ -84,7 +84,7 @@ test('avatars prefer declared media initials and colour, with contrasting text',
     const faint = await renderRaw(path, {
         entity: { ...entity, media: { icon: null, initials: 'AC', color: '#e6f2f3' }, data: legacy },
     });
-    assert.match(faint, /background-color:#e6f2f3/);
+    assert.match(faint, /--sf-avatar-color:#e6f2f3/);
     assert.match(faint, /class="[^"]*\btext-black\b/);
     assert.match(faint, />AC</);
     assert.doesNotMatch(faint, /OLD|text-white/);
@@ -96,7 +96,7 @@ test('avatars prefer declared media initials and colour, with contrasting text',
     assert.match(badge.replace(/<!--.*?-->/g, ''), />A<\/span>/);
 
     const fallback = await renderRaw(path, { entity: { ...entity, media: { icon: null, initials: '', color: 'teal' }, data: legacy } });
-    assert.match(fallback, /background-color:#123456/);
+    assert.match(fallback, /--sf-avatar-color:#123456/);
     assert.match(fallback, />OLD</);
     assert.match(fallback, /class="[^"]*\btext-white\b/);
 });
@@ -1186,4 +1186,12 @@ test('Image sizes override the inherited feed choice, including explicit full', 
     assert.ok(both.includes('--sf-image-size-card,24rem)') && both.includes('--sf-image-size-full,100%)'));
     payload.$meta = { size: 'bad);color:red' };
     assert.doesNotMatch(await renderRaw('/resources/js/vue/body/Image.vue', { payload }), /\[--sf-image-width:|style=|color:red/);
+});
+
+
+test('image avatars use neutral ring utilities and bind only their colour variable', async () => {
+    const html = await renderRaw('/resources/js/vue/EntityAvatar.vue', { entity });
+    for (const utility of ['has-[&gt;img:not([hidden])]:bg-transparent', 'has-[&gt;img:not([hidden])]:border', 'has-[&gt;img:not([hidden])]:border-border', 'bg-(--sf-avatar-color)', 'ring-2 ring-background']) assert.ok(html.includes(utility), utility);
+    assert.match(html, /--sf-avatar-color:/);
+    assert.doesNotMatch(html, /background-color/);
 });

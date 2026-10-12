@@ -96,7 +96,7 @@ test('avatars prefer declared media initials and colour, with contrasting text',
     const faint = raw('EntityAvatar', {
         entity: { ...entity, media: { icon: null, initials: 'AC', color: '#e6f2f3' }, data: legacy },
     });
-    assert.match(faint, /background-color:#e6f2f3/);
+    assert.match(faint, /--sf-avatar-color:#e6f2f3/);
     assert.match(faint, /class="[^"]*\btext-black\b/);
     assert.match(faint, />AC</);
     assert.doesNotMatch(faint, /OLD|text-white/);
@@ -107,7 +107,7 @@ test('avatars prefer declared media initials and colour, with contrasting text',
     const fallback = raw('EntityAvatar', {
         entity: { ...entity, media: { icon: null, initials: '', color: 'teal' }, data: legacy },
     });
-    assert.match(fallback, /background-color:#123456/);
+    assert.match(fallback, /--sf-avatar-color:#123456/);
     assert.match(fallback, />OLD</);
 });
 
@@ -115,13 +115,13 @@ test('avatars show icons, deterministic colours and one-letter badges; tombstone
     assert.match(raw('EntityAvatar', { entity }), /src="\/ada.svg"/);
     assert.match(
         raw('EntityAvatar', { entity: { ...entity, media: null } }),
-        /background-color:#6366f1/,
+        /--sf-avatar-color:#6366f1/,
     );
     assert.match(
         raw('EntityAvatar', {
             entity: { ...entity, data: { avatar_color: '#FAF6EF' } },
         }),
-        /background-color:#FAF6EF/,
+        /--sf-avatar-color:#FAF6EF/,
     );
     assert.match(
         render('EntityAvatar', {
@@ -1223,4 +1223,12 @@ test('Image sizes override the inherited feed choice, including explicit full', 
     assert.ok(both.includes('--sf-image-size-card,24rem)') && both.includes('--sf-image-size-full,100%)'));
     payload.$meta = { size: 'bad);color:red' };
     assert.doesNotMatch(raw('Image', { payload }), /\[--sf-image-width:|style=|color:red/);
+});
+
+
+test('image avatars use neutral ring utilities and bind only their colour variable', async () => {
+    const html = raw('EntityAvatar', { entity });
+    for (const utility of ['has-[&gt;img:not([hidden])]:bg-transparent', 'has-[&gt;img:not([hidden])]:border', 'has-[&gt;img:not([hidden])]:border-border', 'bg-(--sf-avatar-color)', 'ring-2 ring-background']) assert.ok(html.includes(utility), utility);
+    assert.match(html, /--sf-avatar-color:/);
+    assert.doesNotMatch(html, /background-color/);
 });

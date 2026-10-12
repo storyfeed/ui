@@ -42,7 +42,7 @@ it('uses snapshot colours and the Vue signed hash palette, with muted tombstones
         ->and(Avatar::color($entity))->toBe('#8b5cf6');
     $colored = Entity::of(['label' => 'Dana', 'data' => ['initials' => 'DX', 'avatar_color' => '#123456']]);
     expect(render_blade('<x-storyfeed::avatar :entity="$entity" />', ['entity' => $colored]))
-        ->toContain('aria-label="Dana"', 'background-color: #123456', 'DX');
+        ->toContain('aria-label="Dana"', '--sf-avatar-color: #123456', 'DX');
     $removed = Entity::of(['label' => 'Dana', 'tombstone' => ['formerType' => 'user'], 'data' => ['avatar_color' => '#123456'], 'media' => ['icon' => ['src' => '/old.jpg']]]);
     expect(Avatar::color($removed))->toBeNull()
         ->and(render_blade('<x-storyfeed::avatar :entity="$entity" />', ['entity' => $removed]))->not->toContain('#123456', '/old.jpg');
@@ -53,7 +53,7 @@ it('prefers declared media initials and colour, with contrasting text', function
     $html = Blade::render('<x-storyfeed::avatar :entity="$entity" />', ['entity' => $declared]);
     expect(Avatar::initials($declared))->toBe('AC')->and(Avatar::initials($declared, true))->toBe('A')
         ->and(Avatar::color($declared))->toBe('#e6f2f3')->and(Avatar::darkText($declared))->toBeTrue()
-        ->and($html)->toContain('background-color: #e6f2f3', 'text-black', 'AC')->not->toContain('text-white', 'OLD');
+        ->and($html)->toContain('--sf-avatar-color: #e6f2f3', 'text-black', 'AC')->not->toContain('text-white', 'OLD');
 
     $deep = Entity::of(['label' => 'Acme Co', 'media' => ['initials' => 'AC', 'color' => '#1e3a40']]);
     expect(Avatar::darkText($deep))->toBeFalse()
@@ -541,4 +541,11 @@ it('sizes initials and icons from their own circle and grows a badge outward fro
     $anchor = 'top-[calc(var(--sf-disc-v)+--spacing(0.5)-(var(--sf-badge-anchor-v)+var(--sf-badge-v))/2)] left-[calc(50%+var(--sf-disc-v)/2-(var(--sf-badge-anchor-v)+var(--sf-badge-v))/2)]';
     expect($actor)->toContain('sf-badge absolute z-30 [--sf-badge-anchor-v:--spacing(3.5)] '.$anchor)
         ->and($activity)->toContain('[--sf-badge-v:var(--sf-badge-face-v)] [--sf-badge-anchor-v:--spacing(4.5)] absolute '.$anchor);
+});
+
+it('keeps image avatars as neutral empty rings with only a runtime colour variable', function () {
+    $entity = Entity::of(['type' => 'user', 'id' => '1', 'label' => 'Dana', 'media' => ['icon' => ['src' => '/dana.svg'], 'color' => '#123456']]);
+    $html = Blade::render('<x-storyfeed::avatar :entity="$entity" />', compact('entity'));
+    expect($html)->toContain('has-[&gt;img:not([hidden])]:bg-transparent', 'has-[&gt;img:not([hidden])]:border-border', 'bg-(--sf-avatar-color)', '--sf-avatar-color: #123456', 'ring-2 ring-background')
+        ->not->toContain('background-color');
 });

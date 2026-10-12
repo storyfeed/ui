@@ -4,6 +4,7 @@
 
 ### Changed
 
+- Image avatars show a transparent disc with a neutral hairline border while their picture loads. Brand colour and initials appear when there is no picture or it fails; tombstones remain muted. Avatar colour is carried only as `--sf-avatar-color`, with appearance expressed by Tailwind utilities in all three kits.
 - Headlines wrap with `text-wrap: pretty` in Blade, Vue and React, so a wrapped headline no longer leaves a word or two alone on its last line.
 
 ### Added
