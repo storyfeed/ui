@@ -11,15 +11,16 @@
 //   card, a photo, three joins folding into a group, live photos arriving and
 //   regrouping), the camera pulls back to show it is the picture in your look
 //   at the README, the next person's look arrives above yours, typing, and
-//   the camera dives into its dots, landing on the opening frame.
+//   the camera dives into its dots, then cuts back to the opening frame.
 //
 // No script runs in the SVG; GitHub draws it as an image. It also writes a
 // PNG still of the closing frame for reduced motion.
 //
 //   npm run readme:showcase    writes to STORYFEED_README_OUT (default ../storyfeed/art/samples)
 import { chromium } from 'playwright';
-import { readFile, writeFile, mkdir, stat } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, stat, rename } from 'node:fs/promises';
 import { resolve, extname } from 'node:path';
+import { spawnSync } from 'node:child_process';
 
 const out = resolve(process.env.STORYFEED_README_OUT ?? '../storyfeed/art/samples');
 const states = JSON.parse(await readFile('build/readme/states.json', 'utf8'));
@@ -51,7 +52,7 @@ const T = { avatar: 1.2, rich1: 2.0, rich2: 2.6, joins: 3.4, collapse: 5.0, phot
 // person's look arrives, typing; its dots linger for suspense; then the
 // camera dives into them in one beat, landing on frame 0.
 const BEAT = 1.5;
-const DOTS = 3.4; // from the dots' beat to the dive: about 3.15 s of typing dots on screen
+const DOTS = 3.0; // from the dots' beat to the dive: about 2.75 s of typing dots on screen
 const DIVE = BEAT; // the third beat: the dive into the dots
 T.you = T.pull + ZOOM / 2;
 T.next = T.you + BEAT; // one beat after your look, the next person's look arrives, typing
@@ -61,30 +62,13 @@ T.joinArrivals = [...Array(JOINS).keys()].map(k => T.joins + k * STAGGER);
 T.photoArrivals = [0, 1, 2, 3].map(k => T.photos + [0, 0.9, 1.62, 2.196][k]);
 const LOOP = +(T.zoomIn + DIVE).toFixed(2);
 
-// The window the showcase plays in, so it reads as one deliberate picture on
-// any page: a title bar with the three traffic lights, rounded corners, a
-// hairline and a soft shadow. The feed keeps its 800 px; the window adds 32,
-// inside GitHub's 838 px README column, so the kit's rows draw at their size.
-const BAR = 32; // the title bar
-const RADIUS = 10;
-const PAD = { x: 16, top: 10, bottom: 26 }; // room for the shadow
-const FRAME_W = WIDTH + 2 * PAD.x;
-const FRAME_H = PAD.top + BAR + HEIGHT + PAD.bottom;
-const CHROME = {
-    light: { bar: '#f6f6f6', rule: '#e3e3e3', outline: 'rgba(0,0,0,.14)', shadow: 'rgba(0,0,0,.16)' },
-    dark: { bar: '#161b22', rule: '#262c36', outline: 'rgba(255,255,255,.14)', shadow: 'rgba(0,0,0,.55)' },
-};
-const LIGHTS = [['#ff5f57', '#e0443e'], ['#febc2e', '#dea123'], ['#28c840', '#1aab29']];
-const frame = (theme, content) => {
-    const c = CHROME[theme], x = PAD.x, y = PAD.top, h = BAR + HEIGHT, r = RADIUS;
-    const bar = `M${x},${y + BAR}V${y + r}a${r},${r} 0 0 1 ${r},${-r}H${x + WIDTH - r}a${r},${r} 0 0 1 ${r},${r}V${y + BAR}Z`;
-    const lights = LIGHTS.map(([fill, edge], n) => `<circle cx="${x + 14 + 6 + n * 20}" cy="${y + BAR / 2}" r="6" fill="${fill}" stroke="${edge}" stroke-width=".5"/>`).join('');
-    return `<defs><filter id="shadow" x="-10%" y="-10%" width="120%" height="125%"><feDropShadow dx="0" dy="1" stdDeviation="1" flood-color="${c.shadow}" flood-opacity=".5"/><feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="${c.shadow}"/></filter></defs>`
-        + `<rect x="${x}" y="${y}" width="${WIDTH}" height="${h}" rx="${r}" fill="${c.bar}" filter="url(#shadow)"/>`
-        + `<path d="${bar}" fill="${c.bar}"/><path d="M${x},${y + BAR - 0.5}H${x + WIDTH}" stroke="${c.rule}"/>${lights}`
-        + `<foreignObject x="${x}" y="${y + BAR}" width="${WIDTH}" height="${HEIGHT}">${content}</foreignObject>`
-        + `<rect x="${x + 0.5}" y="${y + 0.5}" width="${WIDTH - 1}" height="${h - 1}" rx="${r - 0.5}" fill="none" stroke="${c.outline}"/>`;
-};
+// The last 21 ms use the opening camera directly. Chromium snaps descendants
+// differently through the dots' 17.54× scale and the opening picture's 2.5×
+// scale, even when each is exactly cancelled by its picture's inverse scale.
+// A cut avoids asking those two rasterizations to stitch at the loop seam.
+const CUT = LOOP - 0.021;
+const LAND = CUT - 0.001;
+const cutTo = (frames, opening) => [...frames, [LAND, `${frames.at(-1)[1]};animation-timing-function:steps(1,end)`], [CUT, opening]];
 
 const ORDER = ['plain', 'avatar', 'rich1', 'rich2', 'joins', 'joined', 'photos1', 'photos2', 'photos3', 'finished'];
 const feed = (html, extra = '') => `<div class="px-6 pt-4">${extra}${html}</div>`;
@@ -128,12 +112,12 @@ const timeline = tops => {
         // The last photo's regroup is the finished frame.
         ...T.photoArrivals.map((time, n) => [n === 3 ? 'finished' : `photos${n + 1}`, time, n < 2 ? 0 : MOVE]),
         // Your picture keeps the feed as you left it; it returns to the opening
-        // row only at the loop's seam, pushed far off screen by then.
-        ['plain', LOOP - 0.02, 0],
+        // row at the cut, when the opening camera takes over.
+        ['plain', CUT, 0],
     ];
     const visibility = {};
     sequence.forEach(([key, time, window], n) => {
-        const span = window || 0.01;
+        const span = time === CUT ? 0 : window || 0.01;
         (visibility[key] ??= []).push(...(time === 0 ? [[0, 'opacity:1']] : [[time, 'opacity:0'], [time + span, 'opacity:1']]));
         if (n) (visibility[sequence[n - 1][0]] ??= []).push([time, 'opacity:1'], [time + span, 'opacity:0']);
     });
@@ -172,9 +156,9 @@ const timeline = tops => {
     // The mirror: the camera sits zoomed into the outer row's picture, pulls
     // back to show that the feed so far is that picture, then zooms back in.
     const zoomed = `transform:translate(${-CAM.x * CAM.k}px,${-CAM.y * CAM.k}px) scale(${CAM.k})`;
-    // It ends zoomed into the next look's typing dots, where the same opening frame waits.
+    // It ends zoomed into the next look's typing dots, then cuts back.
     const intoDots = `transform:translate(${-CAM.dots.x * CAM.dots.k}px,${-CAM.dots.y * CAM.dots.k}px) scale(${CAM.dots.k})`;
-    at('.camera', [[0, zoomed], [T.pull, zoomed], [T.pull + ZOOM, 'transform:translate(0px,0px) scale(1)'], [T.zoomIn, 'transform:translate(0px,0px) scale(1)'], [T.zoomIn + DIVE, intoDots]]);
+    at('.camera', [[0, zoomed], [T.pull, zoomed], [T.pull + ZOOM, 'transform:translate(0px,0px) scale(1)'], [T.zoomIn, 'transform:translate(0px,0px) scale(1)'], [LAND, `${intoDots};animation-timing-function:steps(1,end)`], [CUT, zoomed]]);
     // The feed of looks, top-first: past looks are already there, your look
     // holds the top slot as the camera pulls back, and the next person's look
     // arrives above it, pushing everything down.
@@ -190,21 +174,23 @@ const timeline = tops => {
         frames.push(...(i === 1 ? [[you, `opacity:0;${raise(1)}`], [you + ENTER, `opacity:1;${raise(1)}`]] : [[you, shown(2, raise(1))]]));
         // One beat later, the next person's look (row 0) arrives, still in progress.
         frames.push(...(i === 0 ? [[T.next, `opacity:0;${raise(0)}`], [T.next + MOVE / 2, `opacity:0;${raise(0)}`], [T.next + MOVE / 2 + ENTER, `opacity:1;${raise(0)}`]] : [[T.next, shown(1, raise(1))], [T.next + MOVE, shown(1, raise(0))]]));
-        outerRow(i, frames);
+        outerRow(i, cutTo(frames, frames[0][1]));
         // Your picture is part of your row: it moves exactly as the row does.
-        if (i === 1) at('.youpic', frames.map(([t, d]) => [t, d.replace(/opacity:[^;]*;?/, '')]));
+        if (i === 1) at('.youpic', cutTo(frames.map(([t, d]) => [t, d.replace(/opacity:[^;]*;?/, '')]), raise(1)));
     });
-    // Your picture is framed once the camera has pulled back, and stays so.
+    // Your picture is framed after the pullback, until the cut.
     const framed = `border-radius:${8 * CAM.k}px;box-shadow:0 0 0 ${CAM.k}px var(--border)`, bare = 'border-radius:0px;box-shadow:0 0 0 0px var(--border)';
-    at('.inner', [[0, bare], [T.pull, bare], [T.pull + ZOOM, framed]]);
-    // The dots open into the opening frame as the camera reaches them.
-    at('.inner2', [[0, `opacity:0;border-radius:${HEIGHT / 2}px`], [T.zoomIn + DIVE * 0.45, `opacity:0;border-radius:${HEIGHT / 2}px`], [T.zoomIn + DIVE * 0.8, 'opacity:1;border-radius:0px']]);
+    at('.inner', cutTo([[0, bare], [T.pull, bare], [T.pull + ZOOM, framed]], bare));
+    // Stay on the typing dots through the dive, then cut to the opening
+    // picture. Repeating the opening row inside the dots exposed their
+    // different pixel snapping as an apparent shift of the same content.
     // While pulled back, the stream of looks fades off the bottom edge.
-    at('.outfade', [[0, 'opacity:0'], [T.pull, 'opacity:0'], [T.pull + ZOOM, 'opacity:1'], [T.zoomIn, 'opacity:1'], [T.zoomIn + DIVE, 'opacity:0']]);
+    at('.outfade', [[0, '--fade:0'], [T.pull, '--fade:0'], [T.pull + ZOOM, '--fade:1'], [T.zoomIn, '--fade:1'], [LAND, '--fade:0']]);
     return rules.join('');
 };
 // Reduced motion, where the viewer passes it through: the closing frame, still.
-const still = '@media (prefers-reduced-motion:reduce){#stage,#stage *{animation:none!important}.layer{opacity:0}#stage .L-finished{opacity:1}#stage .outfade{opacity:1}}';
+const mask = '@property --fade{syntax:"<number>";inherits:false;initial-value:0}.outfade{mask-image:linear-gradient(to bottom,#000 calc(100% - 128px),rgb(0 0 0 / calc(1 - var(--fade))))}';
+const still = '@media (prefers-reduced-motion:reduce){#stage,#stage *{animation:none!important}.layer{opacity:0}#stage .L-finished{opacity:1}#stage .outfade{--fade:1}}';
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: WIDTH, height: 900 }, deviceScaleFactor: 2 });
@@ -232,11 +218,10 @@ try {
         await page.locator('#stage').screenshot({ path: `build/readme/finished-${theme}.png` });
         const inner = ORDER.map(key => `<div class="layer L-${key} absolute inset-x-0 top-0">${LAYERS[key]}</div>`).join('')
             + '<div class="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-linear-to-b from-transparent to-background"></div>';
-        const fade = '<div class="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-linear-to-b from-transparent to-background"></div>';
         const picture = (wrapper, stage, html) => `<div class="${wrapper} absolute" style="left:0;top:0"><div class="${stage} absolute overflow-hidden bg-background" style="left:0;top:0;width:${WIDTH}px;height:${HEIGHT}px;transform-origin:0 0">${html}</div></div>`;
-        const body = `<div class="camera absolute inset-0" style="transform-origin:0 0"><div class="outer px-6 pt-4">${looks}</div>${picture('youpic', 'inner', inner)}${picture('nextpic', 'inner2', `<div class="absolute inset-x-0 top-0">${LAYERS.plain}</div>${fade}`)}</div><div class="outfade pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-linear-to-b from-transparent to-background"></div>`;
-        // The window's bottom corners clip the stage.
-        await writeFile('build/readme/page.html', `<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="readme.css"></head><body style="margin:0"><div id="stage" class="${theme} relative overflow-hidden bg-background text-foreground font-sans text-[16px] leading-normal antialiased" style="width:${WIDTH}px;height:${HEIGHT}px;border-radius:0 0 ${RADIUS}px ${RADIUS}px">${body}</div></body></html>`);
+        const body = `<div class="outfade absolute inset-0"><div class="camera absolute inset-0" style="transform-origin:0 0"><div class="outer px-6 pt-4">${looks}</div>${picture('youpic', 'inner', inner)}</div></div>`;
+        // The outer stage is clear; the two pictures retain their own background.
+        await writeFile('build/readme/page.html', `<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="readme.css"></head><body style="margin:0"><div id="stage" class="${theme} relative overflow-hidden text-foreground font-sans text-[16px] leading-normal antialiased" style="width:${WIDTH}px;height:${HEIGHT}px">${body}</div></body></html>`);
         await page.goto('http://readme.test/page.html');
         const { tops, pictures } = await page.evaluate(async ({ height, joinCount }) => {
             await document.fonts.ready;
@@ -300,7 +285,7 @@ try {
             const rows = [...document.querySelectorAll('.outer [role=feed] > article')];
             rows.forEach((row, i) => row.classList.add(`O${i}`));
             // Your live picture sits over your row's picture. The next look's row
-            // gets the typing bubble, and a tiny live opening frame inside it.
+            // gets the typing bubble that the ending camera dives into.
             // The typing bubble goes in first: it moves every row under it, so your picture is measured after.
             rows[0].querySelector('.sf-meta').insertAdjacentHTML('afterend', '<div class="typing" style="display:flex;width:max-content;align-items:center;gap:5px;margin-top:8px;padding:11px 13px;border-radius:9999px;background:var(--muted)"><span class="tdot" style="width:7px;height:7px;border-radius:9999px;background:var(--muted-foreground)"></span><span class="tdot" style="width:7px;height:7px;border-radius:9999px;background:var(--muted-foreground)"></span><span class="tdot" style="width:7px;height:7px;border-radius:9999px;background:var(--muted-foreground)"></span></div>');
             const yours = rows[1].querySelector('img').getBoundingClientRect();
@@ -311,8 +296,6 @@ try {
             const dots = { x: bubble.left - stage.left + bubble.width / 2 - stage.width / k2 / 2, y: bubble.top - stage.top + bubble.height / 2 - stage.height / k2 / 2 };
             Object.assign(document.querySelector('.youpic').style, { left: `${yours.left - stage.left}px`, top: `${yours.top - stage.top}px` });
             Object.assign(document.querySelector('.inner').style, { transform: `scale(${1 / k})`, borderRadius: `${8 * k}px`, boxShadow: `0 0 0 ${k}px var(--border)` });
-            Object.assign(document.querySelector('.nextpic').style, { left: `${dots.x}px`, top: `${dots.y}px` });
-            Object.assign(document.querySelector('.inner2').style, { transform: `scale(${1 / k2})`, borderRadius: `${(stage.height / 2) * 1}px`, opacity: '0' });
             // At the start your row holds the top slot, so the camera starts on your picture there.
             const box = { left: yours.left, top: yours.top - (tops[1] - tops[0]) };
             return { x: +(box.left - stage.left).toFixed(2), y: +(box.top - stage.top).toFixed(2), k: +k.toFixed(4), dots: { x: +dots.x.toFixed(2), y: +dots.y.toFixed(2), k: +k2.toFixed(4) }, rows: rows.length - 1, tops: tops.map(top => +top.toFixed(2)) };
@@ -322,7 +305,7 @@ try {
         // Short class names: every class the stylesheet styles gets one, and
         // the rest (hooks no rule reads) are dropped. The timeline's own names stay.
         const tokens = await page.evaluate(() => [...new Set([...document.querySelectorAll('#stage, #stage [class]')].flatMap(element => [...element.classList]))]);
-        const keep = token => /^(layer|L-.+|R\d+|O\d+|p\d+|camera|outer|inner|inner2|youpic|nextpic|outfade|typing|tdot)$/.test(token);
+        const keep = token => /^(layer|L-.+|R\d+|O\d+|p\d+|camera|outer|inner|youpic|outfade|typing|tdot)$/.test(token);
         const escape = token => token.replace(/[^a-zA-Z0-9_-]/g, ch => `\\${ch}`).replace(/^(\d)/, '\\3$1 ');
         const map = {};
         let styled = css;
@@ -333,15 +316,15 @@ try {
             styled = styled.replace(pattern, `.${map[token]}`);
         });
         await page.evaluate(map => document.querySelectorAll('#stage, #stage [class]').forEach(element => {
-            const names = [...element.classList].map(name => /^(layer|L-.+|R\d+|O\d+|p\d+|camera|outer|inner|inner2|youpic|nextpic|outfade|typing|tdot)$/.test(name) ? name : map[name]).filter(Boolean);
+            const names = [...element.classList].map(name => /^(layer|L-.+|R\d+|O\d+|p\d+|camera|outer|inner|youpic|outfade|typing|tdot)$/.test(name) ? name : map[name]).filter(Boolean);
             names.length ? element.setAttribute('class', names.join(' ')) : element.removeAttribute('class');
         }), map);
 
         const xhtml = await page.evaluate(() => new XMLSerializer().serializeToString(document.getElementById('stage')));
         // The rows are measured again where they are drawn, inside the SVG,
         // where a group row can lay out a few pixels apart from the page.
-        const build = tops => `<svg xmlns="http://www.w3.org/2000/svg" width="${FRAME_W}" height="${FRAME_H}" viewBox="0 0 ${FRAME_W} ${FRAME_H}" role="img" aria-label="Inside a feed of people looking at Storyfeed's README, your look's picture shows a feed growing: one plain row gains avatars, a photo and a key-value card; five volunteers joining fold into one grouped row; photos arrive live and regroup with a strip of thumbnails; then one more booking arrives. Your look sits at the top of a long feed of looks at the README; then the next person's arrives above it, still in progress with a typing indicator, whose dots the camera dives into."><style><![CDATA[${styled}${pictures}${timeline(tops)}${still}]]></style>${frame(theme, xhtml)}</svg>`;
-        const measure = await browser.newPage({ viewport: { width: FRAME_W, height: FRAME_H } });
+        const build = tops => `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}" role="img" aria-label="Inside a feed of people looking at Storyfeed's README, your look's picture shows a feed growing: one plain row gains avatars, a photo and a key-value card; five volunteers joining fold into one grouped row; photos arrive live and regroup with a strip of thumbnails; then one more booking arrives. Your look sits at the top of a long feed of looks at the README; then the next person's arrives above it, still in progress with a typing indicator, whose dots the camera dives into."><style><![CDATA[${styled}${pictures}${timeline(tops)}${mask}${still}]]></style><foreignObject width="${WIDTH}" height="${HEIGHT}">${xhtml}</foreignObject></svg>`;
+        const measure = await browser.newPage({ viewport: { width: WIDTH, height: HEIGHT } });
         await measure.setContent(`<body style="margin:0">${build(tops)}<style>#stage,#stage *{animation:none!important}</style></body>`);
         const drawn = await measure.evaluate(([keys, K]) => Object.fromEntries(keys.map(key => {
             const layer = document.querySelector(`.L-${key}`);
@@ -353,10 +336,10 @@ try {
         await measure.close();
         const svg = build({ ...tops, ...drawn });
         await writeFile(resolve(out, `showcase-${theme}.svg`), svg);
-        sizes.push(`showcase-${theme}.svg ${FRAME_W}×${FRAME_H} ${Math.round(svg.length / 1024)} KB`);
+        sizes.push(`showcase-${theme}.svg ${WIDTH}×${HEIGHT} ${Math.round(svg.length / 1024)} KB`);
 
-        // The reduced-motion still: the closing frame, in its window, on a clear background.
-        const shot = await browser.newPage({ viewport: { width: FRAME_W, height: FRAME_H }, deviceScaleFactor: 2, reducedMotion: 'reduce' });
+        // The reduced-motion still: the closing frame, on a clear background.
+        const shot = await browser.newPage({ viewport: { width: WIDTH, height: HEIGHT }, deviceScaleFactor: 2, reducedMotion: 'reduce' });
         await shot.setContent(`<body style="margin:0">${svg}</body>`);
         await shot.waitForTimeout(300);
         await shot.locator('svg').first().screenshot({ path: resolve(out, `showcase-${theme}.png`), omitBackground: true });
@@ -365,9 +348,13 @@ try {
 } finally {
     await browser.close();
 }
-// The still keeps full alpha: a 256-colour palette would cut the window's soft
-// shadow to on or off.
+// pngquant retains partial alpha through the bottom mask. Without it (or
+// when its quality floor fails), keep the original RGBA still. ffmpeg's
+// palette threshold would turn the gradual fade into a hard edge.
 for (const theme of ['light', 'dark']) {
+    const file = resolve(out, `showcase-${theme}.png`);
+    const palette = spawnSync(process.env.PNGQUANT ?? 'pngquant', ['--quality=80-100', '--speed=1', '--force', '--output', `${file}.tmp.png`, file]);
+    if (palette.status === 0) await rename(`${file}.tmp.png`, file);
     sizes.push(`showcase-${theme}.png ${Math.round((await stat(resolve(out, `showcase-${theme}.png`))).size / 1024)} KB`);
 }
 console.log(sizes.join('\n'));
