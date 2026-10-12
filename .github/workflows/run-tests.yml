@@ -68,9 +68,9 @@ jobs:
         run: |
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
-      - name: Install core image-size branch (restore dev-main at merge)
+      - name: Install core main
         if: matrix.core == 'main'
-        run: composer require "storyfeed/storyfeed:dev-feat/image-size" -W --${{ matrix.stability }} --prefer-dist --no-interaction
+        run: composer require "storyfeed/storyfeed:dev-main" -W --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: List Installed Dependencies
         run: composer show -D
