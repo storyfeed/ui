@@ -621,7 +621,7 @@ test('a group with several actors draws every face, newest first, eight before "
     // Faces are 24px avatars.
     assert.match((await renderRaw('/resources/js/vue/FeedGroup.vue', { item: crowd(5) })).split('sf-actor-strip ')[1], /sf-avatar--sm size-6/);
     // Each face sits above the one to its right, so its ring cuts into that face's edge, never its initials.
-    const zs = [...(await renderRaw('/resources/js/vue/FeedGroup.vue', { item: crowd(35) })).split('sf-actor-strip ')[1].split('</div>')[0].matchAll(/sf-actor-strip__face[^"]*"[^>]*style="z-index: ?(\d+);?"/g)].map((m) => Number(m[1]));
+    const zs = [...(await renderRaw('/resources/js/vue/FeedGroup.vue', { item: crowd(35) })).split('sf-actor-strip ')[1].split('</div>')[0].matchAll(/class="(?=[^"]*sf-actor-strip__face)[^"]*\bz-(\d+)\b[^"]*"/g)].map((m) => Number(m[1]));
     assert.deepEqual(zs, [8, 7, 6, 5, 4, 3, 2, 1]);
     // "+N" opens the group like "Show all N"; a static group keeps a plain chip.
     const live = await renderRaw('/resources/js/vue/FeedGroup.vue', { item: crowd(35) });
