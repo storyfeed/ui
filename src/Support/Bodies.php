@@ -9,6 +9,12 @@ use Storyfeed\Support\Entity;
 final class Bodies
 {
     /**
+     * The Image sizes core 0.20.7 names (`Image::size()`), kept here so the
+     * kit still renders with an older core that has no `Image::SIZES`.
+     */
+    public const array IMAGE_SIZES = ['thumbnail', 'inline', 'card', 'feature', 'full'];
+
+    /**
      * @param  array<array-key, mixed>  $body
      * @param  (callable(array<array-key, mixed>, string): string)|null  $mediaRenderer
      * @param  (callable(array{name: ?string, mediaType: ?string}): ?string)|null  $fileLabeller
@@ -49,6 +55,22 @@ final class Bodies
             },
             'capped' => $height !== null && $height !== 'none',
         ];
+    }
+
+    /**
+     * Literal size utilities for the body or feed root. Null inherits the containing feed.
+     *
+     * @param  array<array-key, mixed>  $body
+     */
+    public static function imageClasses(array $body, mixed $fallback = null): ?string
+    {
+        $own = is_array($body['$meta'] ?? null) ? ($body['$meta']['size'] ?? null) : null;
+        $size = is_string($own) && in_array($own, self::IMAGE_SIZES, true) ? $own
+            : (is_string($fallback) && in_array($fallback, self::IMAGE_SIZES, true) ? $fallback : null);
+
+        $classes = require dirname(__DIR__, 2).'/resources/views/image-sizes.php';
+
+        return $size !== null && is_array($classes) && is_string($classes[$size] ?? null) ? $classes[$size] : null;
     }
 
     /**
@@ -96,11 +118,11 @@ final class Bodies
      *
      * @return array<array-key, mixed>|null
      */
-    public static function icon(mixed $body, ?Entity $entity): ?array
+    public static function icon(mixed $body, ?Entity $entity, mixed $feedSize = 'full'): ?array
     {
         $own = is_array($body) && is_int($body['$v'] ?? null) && $body['$v'] >= 3 && is_string($body['src'] ?? null) && $body['src'] !== '';
 
-        return is_array($body) && ! $own && ($body['image'] ?? null) === 'icon' ? self::picture($body, $entity) : null;
+        return is_array($body) && self::imageClasses($body) === null && ($feedSize === 'full' || $feedSize === null) && ! $own && ($body['image'] ?? null) === 'icon' ? self::picture($body, $entity) : null;
     }
 
     /** An entity's picture for a slot a body names: a built-in one, or `slots.<name>`. */

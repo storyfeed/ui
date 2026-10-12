@@ -9,6 +9,7 @@ export interface FeedOptions {
     FEED_LINK?: ElementType;
     /** Complete media override with image, href, linkAttributes and className. */
     FEED_MEDIA?: ElementType;
+    FEED_IMAGE_SIZE?: import('../shared/body').ImageSize;
     FEED_NOW?: number;
     FEED_COMPONENTS?: Readonly<Record<string, ComponentType<any>>>;
     /**

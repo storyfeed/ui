@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import { darkText, declaredColor } from '../shared/avatar';
 import type { FeedEntity } from '../shared/types';
 const colors = [
@@ -63,8 +63,8 @@ export default function EntityAvatar({
             role="img"
             aria-label={entity?.label ?? 'Someone'}
             title={entity?.label ?? 'Someone'}
-            className={`sf-avatar flex shrink-0 items-center justify-center rounded-full font-semibold select-none ring-2 ring-background ${sizes[size]} ${className} ${entity?.tombstone ? 'bg-muted text-white' : color ? text : 'bg-primary text-primary-foreground'}`}
-            style={color ? { backgroundColor: color } : undefined}
+            className={`sf-avatar flex shrink-0 items-center justify-center rounded-full font-semibold select-none ring-2 ring-background has-[>img:not([hidden])]:bg-transparent has-[>img:not([hidden])]:border has-[>img:not([hidden])]:border-border ${sizes[size]} ${className} ${entity?.tombstone ? 'bg-muted text-white' : color ? `bg-(--sf-avatar-color) ${text}` : 'bg-primary text-primary-foreground'}`}
+            style={color ? ({ '--sf-avatar-color': color } as CSSProperties) : undefined}
         >
             {icon && failed !== icon ? (
                 <img

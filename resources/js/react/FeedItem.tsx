@@ -49,7 +49,7 @@ export default function FeedItem({
     annotations,
 }: NodeProps & { item: ActivityNode; dense?: boolean }) {
     const timestamp = useNodeTime(item, time);
-    const { FEED_BODIES: bodies = {} } = useFeedOptions();
+    const { FEED_BODIES: bodies = {}, FEED_IMAGE_SIZE: feedImageSize } = useFeedOptions();
     const reading =
         item.redundant &&
         (item.missing_headline_template || item.missing_headline)
@@ -80,9 +80,9 @@ export default function FeedItem({
     // draws as the small thumbnail beside the other bodies, unless the app
     // draws Image bodies itself.
     const lead = found.findIndex(
-        (form) => form.component === Image && iconOf(form.payload, (form as any).entityMedia) !== null,
+        (form) => form.component === Image && iconOf(form.payload, (form as any).entityMedia, feedImageSize) !== null,
     );
-    const icon = lead === -1 ? null : iconOf(found[lead].payload, (found[lead] as any).entityMedia);
+    const icon = lead === -1 ? null : iconOf(found[lead].payload, (found[lead] as any).entityMedia, feedImageSize);
     const forms = found.filter((_, index) => index !== lead);
     const sample = (item as any).sample?.objects ?? [];
     const tiles = sample

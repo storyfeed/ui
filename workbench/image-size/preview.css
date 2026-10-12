@@ -1,0 +1,18 @@
+@import "../app.css";
+@source "../../build/image-size/classes.txt";
+@source "./preview.mjs";
+@source "./check.mjs";
+body { font-family: ui-sans-serif, system-ui, sans-serif; }
+header, main { max-width: 1280px; margin: auto; padding: 32px; }
+header { padding-bottom: 0; }
+h1 { font-size: 32px; font-weight: 650; margin: 0 0 12px; }
+h2 { font-size: 22px; font-weight: 600; margin-bottom: 16px; }
+h3 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+p { margin-bottom: 12px; }
+a { color: #527ac9; text-decoration: underline; }
+.grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
+.panel { min-width: 0; border: 1px solid var(--border); padding: 24px; border-radius: 14px; background: var(--background); color: var(--foreground); }
+.theme { padding: 24px; border-radius: 18px; margin-bottom: 32px; background: var(--muted); color: var(--foreground); }
+.meta { font-size: 14px; color: var(--muted-foreground); min-height: 100px; }
+section { margin-bottom: 36px; }
+@media(max-width:800px) { .grid { grid-template-columns:1fr; } header, main { padding:16px; } .theme,.panel { padding:16px; } }

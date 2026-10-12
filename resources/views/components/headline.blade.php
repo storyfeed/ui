@@ -20,4 +20,4 @@
         default => trim(view('storyfeed::entity', ['entity' => $entity])->render()),
     });
 @endphp
-<span {{ $attributes->class('sf-headline leading-[1.6] text-muted-foreground [overflow-wrap:anywhere]') }}>{!! \Storyfeed\Ui\Support\Viewer::speak($html, $mark) !!}</span>
+<span {{ $attributes->class('sf-headline leading-[1.6] text-pretty text-muted-foreground [overflow-wrap:anywhere]') }}>{!! \Storyfeed\Ui\Support\Viewer::speak($html, $mark) !!}</span>

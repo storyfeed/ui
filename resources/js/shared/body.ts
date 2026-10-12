@@ -133,10 +133,10 @@ function slotOf(media: Record<string, any> | null | undefined, slot: unknown): R
  * null. A row shows it small beside its other bodies, the way it once drew the
  * object's icon unasked; now only the body asks. Mirrors `Bodies::icon()`.
  */
-export function iconOf(payload: Record<string, any>, media: Record<string, any> | null | undefined): Record<string, any> | null {
+export function iconOf(payload: Record<string, any>, media: Record<string, any> | null | undefined, feedSize: unknown = 'full'): Record<string, any> | null {
     const own = (typeof payload?.$v === 'number' ? payload.$v : 1) >= 3 && typeof payload?.src === 'string' && payload.src !== '';
 
-    return !own && payload?.image === 'icon' ? pictureOf(payload, media) : null;
+    return imageClasses(payload) === undefined && (feedSize === 'full' || feedSize == null) && !own && payload?.image === 'icon' ? pictureOf(payload, media) : null;
 }
 
 /** Only an Image body opts a sampled entity into the photograph strip. */
@@ -147,4 +147,22 @@ export function imageOf(entity: any): any {
         if (image) return image;
     }
     return null;
+}
+
+const IMAGE_SIZE_CLASSES = {
+    thumbnail: '[--sf-image-width:var(--sf-image-size-thumbnail,6rem)] [--sf-image-height:var(--sf-image-size-thumbnail-height,6rem)]',
+    inline: '[--sf-image-width:var(--sf-image-size-inline,16rem)] [--sf-image-height:var(--sf-image-size-inline-height,12rem)]',
+    card: '[--sf-image-width:var(--sf-image-size-card,24rem)] [--sf-image-height:var(--sf-image-size-card-height,18rem)]',
+    feature: '[--sf-image-width:var(--sf-image-size-feature,36rem)] [--sf-image-height:var(--sf-image-size-feature-height,27rem)]',
+    full: '[--sf-image-width:var(--sf-image-size-full,100%)] [--sf-image-height:var(--sf-image-size-full-height,none)]',
+} as const;
+export type ImageSize = keyof typeof IMAGE_SIZE_CLASSES;
+export const IMAGE_SIZES: readonly ImageSize[] = Object.keys(IMAGE_SIZE_CLASSES) as ImageSize[];
+
+/** Literal size utilities; a body's choice overrides its inherited feed choice. Mirrors Bodies::imageClasses(). */
+export function imageClasses(payload: Record<string, any>, fallback?: unknown): string | undefined {
+    const own = payload?.$meta?.size;
+    const valid = (value: unknown): value is ImageSize => typeof value === 'string' && Object.hasOwn(IMAGE_SIZE_CLASSES, value);
+    const size = valid(own) ? own : valid(fallback) ? fallback : undefined;
+    return size ? IMAGE_SIZE_CLASSES[size] : undefined;
 }

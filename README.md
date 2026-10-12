@@ -372,6 +372,11 @@ deterministic type/id palette. Tombstones suppress former pictures and
 colours. The default image fallback uses an inline error handler; apps with
 strict script CSP can supply an avatar renderer with their own fallback.
 
+An image avatar has a transparent fill and a neutral hairline border. Without
+an image, or when loading fails, the disc shows its brand colour and initials.
+Tombstones stay muted. The arbitrary per-entity colour is bound only as
+`--sf-avatar-color`; Tailwind utilities control the disc’s appearance.
+
 Day dividers are on by default; `:grouped="false"` hides them. Per-item
 `dividers` are keyed by public item id and work in either mode.
 Both draw as a branch: a curve off the rail into the label.
@@ -610,3 +615,47 @@ The paperclip icon is from [Heroicons](https://github.com/tailwindlabs/heroicons
 copyright Tailwind Labs, Inc., used under the MIT licence. The full notice is
 included in [licenses/heroicons.txt](licenses/heroicons.txt). The attachment row
 layout is original work.
+
+
+### Image sizes
+
+Size limits use Tailwind utilities; the existing kit `@source` scans are sufficient.
+No extra stylesheet import is needed.
+
+`<x-storyfeed::feed image-size="card" />`, Vue `<FeedStream image-size="card" />`,
+and React `<FeedStream imageSize="card" />` set the default for that feed.
+`Image::size('inline')` on a body wins; explicit `full` overrides a feed default.
+Without either choice the picture renders as before. Unknown payload sizes inherit.
+
+| Size | Use | Max width | Max height |
+| --- | --- | --- | --- |
+| thumbnail | Small identifying picture | 6rem | 6rem |
+| inline | Picture supporting an update | 16rem | 12rem |
+| card | Project or link-card picture | 24rem | 18rem |
+| feature | Photo central to the update | 36rem | 27rem |
+| full | Current column-width behaviour | 100% | none |
+
+Retune `--sf-image-size-card: 20rem` and `--sf-image-size-card-height: 15rem`
+on a feed or host. Pictures preserve aspect ratio and never crop. The limits
+apply to the image, leaving captions readable at the normal text width.
+The literal class maps live in `resources/views/image-sizes.php` (Blade) and
+`shared/body.ts` (Vue/React). The Blade map is inside the existing vendor-view
+scan; the copied shared map is inside the existing kit scan. Defaults are
+`var()` fallbacks in those utilities, so tokens set above the feed inherit.
+For example, use `[--sf-image-size-card:20rem] [--sf-image-size-card-height:15rem]`
+on the feed’s wrapper.
+
+
+An app can also retune the tokens in its own Tailwind theme:
+
+```css
+@theme {
+    --sf-image-size-inline: 20rem;
+    --sf-image-size-inline-height: 15rem;
+}
+```
+
+With the kit’s literal utilities scanned, Tailwind emits these referenced
+variables to `:root`. The image harness verifies the resulting 320×240 limit
+in all three kits. `@theme static` also works and emits the tokens even when
+unused; that form is verified by the same harness.

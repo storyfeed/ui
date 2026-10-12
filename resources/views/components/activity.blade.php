@@ -1,3 +1,4 @@
+@aware(['imageSize' => 'full'])
 @props(['activity', 'last' => false, 'dense' => false, 'rail' => null, 'timezone' => null, 'renderers' => [], 'removed' => null])
 @php
     $activity = \Storyfeed\Support\FeedItem::of($activity);
@@ -13,7 +14,7 @@
     // form renderer draws that body itself.
     $icon = null;
     foreach ($bodies as $index => $body) {
-        if (($icon = \Storyfeed\Ui\Support\Bodies::icon($body, $object)) !== null && (! isset($renderers['form']) || $renderers['form']($body, $object) === null)) {
+        if (($icon = \Storyfeed\Ui\Support\Bodies::icon($body, $object, $imageSize)) !== null && (! isset($renderers['form']) || $renderers['form']($body, $object) === null)) {
             $bodies = $bodies->forget($index);
             break;
         }

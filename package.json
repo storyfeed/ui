@@ -3,6 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "image-size:check": "npm run workbench:bare && node workbench/image-size/check.mjs",
+    "image-size:preview": "vendor/bin/phpunit --no-configuration --bootstrap vendor/autoload.php workbench/image-size/PreviewTest.php && node workbench/image-size/preview.mjs && tailwindcss -i workbench/image-size/preview.css -o build/image-size/preview/preview.css --minify",
     "workbench": "npm run workbench:blade && npm run workbench:vue && npm run workbench:react",
     "workbench:bare": "tailwindcss -i workbench/bare/blade.css -o build/bare/blade.css && tailwindcss -i workbench/bare/vue.css -o build/bare/vue.css && tailwindcss -i workbench/bare/react.css -o build/bare/react.css",
     "screenshots": "node workbench/screenshots.mjs",
@@ -16,7 +18,8 @@
     "workbench:react": "tailwindcss -i workbench/react/app.css -o build/react-tokens.css --minify && vite build --config workbench/react/vite.config.mjs",
     "test:react": "node --test tests/Unit/reactKit.test.mjs",
     "typecheck:react": "tsc -p tests/tsconfig.react.json",
-    "kit:parity": "STORYFEED_STRICT_PARITY=1 node workbench/blade-parity.mjs",
+    "kit:parity": "STORYFEED_SCREENSHOTS=build/kit-parity STORYFEED_STRICT_PARITY=1 node workbench/blade-parity.mjs",
+    "test:avatar-rings": "node workbench/avatar-rings.mjs",
     "test:hydrate": "node workbench/react/hydration.mjs",
     "test:installed": "node --test tests/Unit/installedKits.test.mjs",
     "test:alignment": "node workbench/alignment.mjs",

@@ -3,6 +3,7 @@
    ships them. No --sf-* tokens, no variant, no framing. */
 @import "tailwindcss" source(none);
 @plugin "@tailwindcss/typography";
+@source "../../resources/js/shared";
 @source "../../resources/js/vue";
 @source "../vue/*.vue";
 @custom-variant dark (&:is(.dark *));
