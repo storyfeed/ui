@@ -55,17 +55,16 @@ it('does not allow a second binding, changed exception or stale exception', func
     }
 });
 
-it('accepts only exact pre and post variable avatar bindings', function () {
+it('accepts only value-only avatar variables and rejects legacy background bindings', function () {
     $allowlist = require dirname(__DIR__).'/tailwind-allowlist.php';
-    foreach ($allowlist as $path => $entries) {
-        foreach ($entries as $entry) {
-            if (! isset($entry['legacy_pattern'])) {
-                continue;
-            }
-            expect(TailwindGuard::violations($path, $entry['legacy_pattern'], $allowlist))->toBe([])
-                ->and(TailwindGuard::violations($path, $entry['pattern'], $allowlist))->toBe([])
-                ->and(TailwindGuard::violations($path, $entry['legacy_pattern'].$entry['pattern'], $allowlist))->not->toBeEmpty();
-        }
+    $legacy = [
+        'resources/js/vue/EntityAvatar.vue' => ':style="color ? { backgroundColor: color } : undefined"',
+        'resources/js/react/EntityAvatar.tsx' => 'style={color ? { backgroundColor: color } : undefined}',
+        'resources/views/components/avatar.blade.php' => '])->merge([\'style\' => $color !== null ? \'background-color: \'.$color : null]) }}>',
+    ];
+    foreach ($legacy as $path => $pattern) {
+        expect(TailwindGuard::violations($path, $allowlist[$path][0]['pattern'], $allowlist))->toBe([])
+            ->and(TailwindGuard::violations($path, $pattern, $allowlist))->not->toBeEmpty();
     }
 });
 

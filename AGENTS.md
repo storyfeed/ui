@@ -14,8 +14,8 @@ build output, dependencies and Markdown usage examples are excluded.
 precompile. Prefer utilities. To add an exception, inventory the value,
 explain why it is not a fixed set, add the smallest exact snippet and count,
 and run the guard. Changed, missing and duplicated exceptions fail. Avatar
-entries accept exact pre/post-variable migration bindings without depending
-on the pending avatar change. Every exception has `kind: genuine` or `debt`.
+exceptions carry only the per-entity --sf-avatar-color value; appearance stays
+in utilities. Legacy background-colour bindings are forbidden. Every exception has `kind: genuine` or `debt`.
 Debt entries must be burned down, never added; UI has no legacy debt allowance.
 
 # Storyfeed UI

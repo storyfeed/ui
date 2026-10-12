@@ -8,9 +8,7 @@ return json_decode(<<<'JSON'
             "pattern": ":style=\"color ? { '--sf-avatar-color': color } : undefined\"",
             "reason": "per-entity runtime colour (app avatar_color or hashed palette); value only, appearance in utilities",
             "count": 1,
-            "kind": "genuine",
-            "legacy_pattern": ":style=\"color ? { backgroundColor: color } : undefined\"",
-            "migration": "Exact pre-variable binding also accepted so the guard is independent of the pending avatar change."
+            "kind": "genuine"
         }
     ],
     "resources/js/vue/FeedItem.vue": [
@@ -42,9 +40,7 @@ return json_decode(<<<'JSON'
             "pattern": "style={color ? ({ '--sf-avatar-color': color } as CSSProperties) : undefined}",
             "reason": "per-entity runtime colour (app avatar_color or hashed palette); value only, appearance in utilities",
             "count": 1,
-            "kind": "genuine",
-            "legacy_pattern": "style={color ? { backgroundColor: color } : undefined}",
-            "migration": "Exact pre-variable binding also accepted so the guard is independent of the pending avatar change."
+            "kind": "genuine"
         }
     ],
     "resources/js/react/FeedStream.tsx": [
@@ -84,9 +80,7 @@ return json_decode(<<<'JSON'
             "pattern": "])->merge(array_filter(['style' => $color !== null ? '--sf-avatar-color: '.$color : null])) }}>",
             "reason": "per-entity runtime colour (app avatar_color or hashed palette); value only, appearance in utilities",
             "count": 1,
-            "kind": "genuine",
-            "legacy_pattern": "])->merge(['style' => $color !== null ? 'background-color: '.$color : null]) }}>",
-            "migration": "Exact pre-variable binding also accepted so the guard is independent of the pending avatar change."
+            "kind": "genuine"
         }
     ],
     "resources/views/components/body.blade.php": [
