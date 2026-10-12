@@ -9,6 +9,12 @@ use Storyfeed\Support\Entity;
 final class Bodies
 {
     /**
+     * The Image sizes core 0.20.7 names (`Image::size()`), kept here so the
+     * kit still renders with an older core that has no `Image::SIZES`.
+     */
+    public const array IMAGE_SIZES = ['thumbnail', 'inline', 'card', 'feature', 'full'];
+
+    /**
      * @param  array<array-key, mixed>  $body
      * @param  (callable(array<array-key, mixed>, string): string)|null  $mediaRenderer
      * @param  (callable(array{name: ?string, mediaType: ?string}): ?string)|null  $fileLabeller
@@ -59,8 +65,8 @@ final class Bodies
     public static function imageFrame(array $body, mixed $fallback = null): ?string
     {
         $own = is_array($body['$meta'] ?? null) ? ($body['$meta']['size'] ?? null) : null;
-        $size = is_string($own) && in_array($own, Image::SIZES, true) ? $own
-            : (is_string($fallback) && in_array($fallback, Image::SIZES, true) ? $fallback : null);
+        $size = is_string($own) && in_array($own, self::IMAGE_SIZES, true) ? $own
+            : (is_string($fallback) && in_array($fallback, self::IMAGE_SIZES, true) ? $fallback : null);
 
         return $size === null ? null : '--sf-image-width: var(--sf-image-size-'.$size.'); --sf-image-height: var(--sf-image-size-'.$size.'-height)';
     }
