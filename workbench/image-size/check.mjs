@@ -12,17 +12,16 @@ import { renderToString as rr } from 'react-dom/server';
 const server = await createServer({ configFile:false, plugins:[vue()], esbuild:{jsx:'automatic'}, optimizeDeps:{noDiscovery:true}, server:{middlewareMode:true,hmr:false}, appType:'custom', ssr:{external:['vue','vue/server-renderer','react','react/jsx-runtime','react-dom/server','lucide-react','lucide-vue-next']} });
 const browser = await chromium.launch({ headless:true });
 try {
-    const { default: VImage } = await server.ssrLoadModule('/resources/js/vue/body/Image.vue');
     const { default: VFeed } = await server.ssrLoadModule('/resources/js/vue/FeedStream.vue');
-    const { Image: RImage } = await server.ssrLoadModule('/resources/js/react/body/index.tsx');
     const { default: RFeed } = await server.ssrLoadModule('/resources/js/react/FeedStream.tsx');
     const rows = JSON.parse(await readFile('build/image-size/rows.json','utf8'));
     const names = ['thumbnail','inline','card','feature','full'];
     const payload = size => ({ $body:'Storyfeed/Body/Image',$v:3,src:'media/fair.jpg',width:1200,height:800,alt:'Fair',$meta:{size} });
     let html = '';
     for (const theme of ['light','dark']) for (const name of names) {
-        const props = {payload:payload(name)};
-        const rendered = { blade:rows.sizes[name], vue:await vr(createSSRApp({render:()=>vh(VImage,props)})), react:rr(rh(RImage,props)) };
+        const item = {kind:'activity',id:'1',verb:null,published_at:null,headline_template:null,headline:'Maple Street Fair',object:{type:'project',id:'1',label:'Maple Street Fair',body:[payload(name)]}};
+        const props = {items:[item],grouped:false,rail:'activity-only',interactive:false};
+        const rendered = { blade:rows.sizes[name], vue:await vr(createSSRApp({render:()=>vh(VFeed,props)})), react:rr(rh(RFeed,props)) };
         for (const [kit,row] of Object.entries(rendered)) html += `<div class="${theme}" data-kit="${kit}" data-size="${name}" style="width:640px">${row}</div>`;
     }
     // Test feed precedence with real feed components, including the icon-slot optimization.
@@ -43,8 +42,8 @@ try {
         const limits = {thumbnail:[96,96],inline:[256,192],card:[384,288],feature:[576,432],full:[640,Infinity]}[row.size];
         assert.ok(row.width<=limits[0]+1 && row.height<=limits[1]+1,JSON.stringify(row));
     }
-    // Blade's real row has gutters; compare non-full sizes whose limits fit all columns.
-    for (const name of names.filter(n=>n!=='full')) {
+    // Equivalent feed columns, including full, must produce the same image dimensions.
+    for (const name of names) {
         const sample=sizes.filter(r=>r.size===name);
         for (const row of sample) assert.ok(Math.abs(row.width-sample[0].width)<1 && Math.abs(row.height-sample[0].height)<1,JSON.stringify(sample));
     }
