@@ -5,7 +5,7 @@ namespace Storyfeed\Ui\Tests\Arch;
 /** Static shipping boundary: workbench/, build/ and dependencies are never scanned. */
 final class TailwindGuard
 {
-    /** @param array<string, array<int, array{pattern: string, reason: string, count: int}>> $allowlist
+    /** @param array<string, array<int, array{pattern: string, reason: string, count: int, kind: string, legacy_pattern?: string}>> $allowlist
      * @return list<string>
      */
     public static function violations(string $file, string $source, array $allowlist = []): array
@@ -19,10 +19,16 @@ final class TailwindGuard
             $errors[] = "$file: style blocks are forbidden";
         }
         foreach ($allowlist[$file] ?? [] as $entry) {
-            if (trim($entry['reason']) === '' || substr_count($source, $entry['pattern']) !== $entry['count']) {
+            // No new debt: UI starts with an empty legacy-debt inventory.
+            if (($entry['kind'] ?? null) !== 'genuine') {
+                $errors[] = "$file: exceptions need a valid kind; debt must be burned down, never added";
+            }
+            $patterns = [$entry['pattern'], ...isset($entry['legacy_pattern']) ? [$entry['legacy_pattern']] : []];
+            $count = array_sum(array_map(fn ($pattern) => substr_count($source, $pattern), $patterns));
+            if (trim($entry['reason']) === '' || $count !== $entry['count']) {
                 $errors[] = "$file: stale or unexplained exception";
             } else {
-                $source = str_replace($entry['pattern'], '', $source);
+                $source = str_replace($patterns, '', $source);
             }
         }
         // Include Blade attribute-bag merges and Vue object bindings, not just HTML attributes.

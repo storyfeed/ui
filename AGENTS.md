@@ -10,16 +10,27 @@ executable markup under `resources/`, including Blade attribute-bag merges,
 and rejects CSS files, style blocks and unlisted style bindings. Workbench,
 build output, dependencies and Markdown usage examples are excluded.
 `tests/tailwind-allowlist.php` holds exact snippets, occurrence counts and
-one-line reasons for genuinely arbitrary runtime values Tailwind cannot
+`kind: genuine` and one-line reasons for arbitrary runtime values Tailwind cannot
 precompile. Prefer utilities. To add an exception, inventory the value,
 explain why it is not a fixed set, add the smallest exact snippet and count,
-and run the guard. Changed, missing and duplicated exceptions fail.
+and run the guard. Changed, missing and duplicated exceptions fail. Avatar
+entries accept exact pre/post-variable migration bindings without depending
+on the pending avatar change. Every exception has `kind: genuine` or `debt`.
+Debt entries must be burned down, never added; UI has no legacy debt allowance.
 
 # Storyfeed UI
 
 Free MIT renderer package for Storyfeed's versioned payload: Blade,
 Vue/Inertia and React/Inertia kits. Core stays headless. Keep all three kits
 in parity, use morph aliases and preserve payload compatibility.
+
+## Tests stay in their lane
+
+Each package tests only what it implements: everyone stays in their lane.
+UI tests cover UI output: its markup, behaviour and geometry in its own
+workbench. Tests never read another package's source files or assert another
+package's class names or geometry. Never open vendor/storyfeed source to pin
+its implementation; test consumed payload contracts through public output.
 
 ## Gates and conventions
 

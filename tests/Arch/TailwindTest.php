@@ -54,3 +54,24 @@ it('does not allow a second binding, changed exception or stale exception', func
         }
     }
 });
+
+it('accepts only exact pre and post variable avatar bindings', function () {
+    $allowlist = require dirname(__DIR__).'/tailwind-allowlist.php';
+    foreach ($allowlist as $path => $entries) {
+        foreach ($entries as $entry) {
+            if (! isset($entry['legacy_pattern'])) {
+                continue;
+            }
+            expect(TailwindGuard::violations($path, $entry['legacy_pattern'], $allowlist))->toBe([])
+                ->and(TailwindGuard::violations($path, $entry['pattern'], $allowlist))->toBe([])
+                ->and(TailwindGuard::violations($path, $entry['legacy_pattern'].$entry['pattern'], $allowlist))->not->toBeEmpty();
+        }
+    }
+});
+
+it('requires exception kind and never admits new debt', function () {
+    foreach ([null, 'unknown', 'debt'] as $kind) {
+        $entry = ['pattern' => 'style={color}', 'reason' => 'Runtime colour.', 'count' => 1, 'kind' => $kind];
+        expect(TailwindGuard::violations('new.tsx', 'style={color}', ['new.tsx' => [$entry]]))->not->toBeEmpty();
+    }
+});
