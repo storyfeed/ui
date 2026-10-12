@@ -1203,3 +1203,21 @@ test('the page viewer reads as You, at any position and in lists (ui#75)', () =>
     assert.match(headline(placed, 'user:2'), /Ada Lovelace<\/a> placed/);
     assert.equal(headline(placed), headline(placed, null));
 });
+
+test('Image sizes override the inherited feed choice, including explicit full', async () => {
+    for (const size of ['thumbnail', 'inline', 'card', 'feature', 'full']) {
+        const payload = { $body: 'Storyfeed/Body/Image', $v: 3, src: '/fair.jpg', $meta: { size } };
+        const html = raw('Image', { payload });
+        assert.ok(html.includes(`--sf-image-width:var(--sf-image-size-${size})`));
+        assert.ok(html.includes(`--sf-image-height:var(--sf-image-size-${size}-height)`));
+    }
+    const payload = { $body: 'Storyfeed/Body/Image', $v: 3, src: '/fair.jpg' };
+    assert.doesNotMatch(raw('Image', { payload }), /--sf-image-width/);
+    const item = { kind: 'activity', id: '1', published_at: null, headline_template: null, headline: 'Updated Maple Fair', object: { type: 'project', id: '1', label: 'Maple Fair', body: [payload] } };
+    assert.ok((raw('FeedStream', { items: [item], imageSize: 'card', grouped: false })).includes('--sf-image-size-card)'));
+    payload.$meta = { size: 'full' };
+    const both = raw('FeedStream', { items: [item], imageSize: 'card', grouped: false });
+    assert.ok(both.includes('--sf-image-size-card)') && both.includes('--sf-image-size-full)'));
+    payload.$meta = { size: 'bad);color:red' };
+    assert.doesNotMatch(raw('Image', { payload }), /--sf-image-width|color:red/);
+});

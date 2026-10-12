@@ -52,6 +52,20 @@ final class Bodies
     }
 
     /**
+     * A body's own size, else a feed default. Null inherits the containing feed.
+     *
+     * @param  array<array-key, mixed>  $body
+     */
+    public static function imageFrame(array $body, mixed $fallback = null): ?string
+    {
+        $own = is_array($body['$meta'] ?? null) ? ($body['$meta']['size'] ?? null) : null;
+        $size = is_string($own) && in_array($own, Image::SIZES, true) ? $own
+            : (is_string($fallback) && in_array($fallback, Image::SIZES, true) ? $fallback : null);
+
+        return $size === null ? null : '--sf-image-width: var(--sf-image-size-'.$size.'); --sf-image-height: var(--sf-image-size-'.$size.'-height)';
+    }
+
+    /**
      * The picture an Image body draws, or null: its own `src` when it stores
      * one (core 0.18's Image v3), otherwise the entity's media slot it names,
      * `icon`, `preview`, `image` or a custom `slots.<name>`. Until v3 a body
@@ -96,11 +110,11 @@ final class Bodies
      *
      * @return array<array-key, mixed>|null
      */
-    public static function icon(mixed $body, ?Entity $entity): ?array
+    public static function icon(mixed $body, ?Entity $entity, mixed $feedSize = 'full'): ?array
     {
         $own = is_array($body) && is_int($body['$v'] ?? null) && $body['$v'] >= 3 && is_string($body['src'] ?? null) && $body['src'] !== '';
 
-        return is_array($body) && ! $own && ($body['image'] ?? null) === 'icon' ? self::picture($body, $entity) : null;
+        return is_array($body) && self::imageFrame($body) === null && ($feedSize === 'full' || $feedSize === null) && ! $own && ($body['image'] ?? null) === 'icon' ? self::picture($body, $entity) : null;
     }
 
     /** An entity's picture for a slot a body names: a built-in one, or `slots.<name>`. */

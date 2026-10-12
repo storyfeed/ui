@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { pictureOf } from '../../shared/body'
+import { pictureOf, imageFrame } from '../../shared/body'
 
 const props = defineProps<{
     payload: Record<string, any>
@@ -12,7 +12,7 @@ const picture = computed(() => pictureOf({ $body: 'Storyfeed/Body/Image', ...pro
 </script>
 
 <template>
-    <figure v-if="picture" class="sf-image m-0">
+    <figure v-if="picture" class="sf-image m-0" :style="imageFrame(payload)">
         <img class="block max-w-full rounded-lg" :src="picture.src" :alt="picture.alt" :width="picture.width ?? undefined" :height="picture.height ?? undefined" loading="lazy" />
         <figcaption class="mt-2 text-xs leading-[1.6] text-muted-foreground" v-if="caption">{{ caption }}</figcaption>
     </figure>

@@ -610,3 +610,38 @@ The paperclip icon is from [Heroicons](https://github.com/tailwindlabs/heroicons
 copyright Tailwind Labs, Inc., used under the MIT licence. The full notice is
 included in [licenses/heroicons.txt](licenses/heroicons.txt). The attachment row
 layout is original work.
+
+
+### Image sizes
+
+Import the image stylesheet in your app CSS alongside Tailwind:
+
+Blade:
+
+```css
+@import "../../vendor/storyfeed/ui/resources/js/shared/image.css";
+```
+
+Copied Vue or React kit (adjust for your install path):
+
+```css
+@import "../js/components/storyfeed/shared/image.css";
+```
+
+`<x-storyfeed::feed image-size="card" />`, Vue `<FeedStream image-size="card" />`,
+and React `<FeedStream imageSize="card" />` set the default for that feed.
+`Image::size('inline')` on a body wins; explicit `full` overrides a feed default.
+Without either choice the picture renders as before. Unknown payload sizes inherit.
+
+| Size | Use | Max width | Max height |
+| --- | --- | --- | --- |
+| thumbnail | Small identifying picture | 6rem | 6rem |
+| inline | Picture supporting an update | 16rem | 12rem |
+| card | Project or link-card picture | 24rem | 18rem |
+| feature | Photo central to the update | 36rem | 27rem |
+| full | Current column-width behaviour | 100% | none |
+
+Retune `--sf-image-size-card: 20rem` and `--sf-image-size-card-height: 15rem`
+on a feed or host. Pictures preserve aspect ratio and never crop. The limits
+apply to the image, leaving captions readable at the normal text width.
+Core is temporarily pinned to `dev-feat/image-size`; restore `dev-main` at merge.

@@ -18,6 +18,8 @@ import type { Rail, RailName } from '../shared/rail';
 import type { ActivityNode } from '../shared/types';
 import { useRelativeTime } from './useRelativeTime';
 
+const feedImageSize = inject<import('vue').Ref<string | undefined>>('FEED_IMAGE_SIZE', computed(() => 'full'));
+
 const props = withDefaults(
     defineProps<{
         item: ActivityNode;
@@ -135,7 +137,7 @@ const found = computed(() => {
  * Image bodies itself.
  */
 const lead = computed(() => {
-    const index = found.value.findIndex((form: any) => form.component === ImageBody && iconOf(form.payload, form.entityMedia) !== null);
+    const index = found.value.findIndex((form: any) => form.component === ImageBody && iconOf(form.payload, form.entityMedia, feedImageSize.value ?? 'full') !== null);
 
     return index === -1 ? null : { index, icon: iconOf(found.value[index].payload, (found.value[index] as any).entityMedia)! };
 });

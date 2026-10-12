@@ -6,7 +6,7 @@
     $caption = is_string($body['caption'] ?? null) ? $body['caption'] : null;
 @endphp
 @if ($picture !== null)
-    <figure {{ $attributes->class('sf-image m-0') }}>
+    <figure {{ $attributes->merge(array_filter(['style' => \Storyfeed\Ui\Support\Bodies::imageFrame($body)]))->class('sf-image m-0') }}>
         @if ($mediaRenderer)
             {!! $mediaRenderer(['image' => $picture, 'href' => null], 'block max-w-full rounded-lg') !!}
         @else

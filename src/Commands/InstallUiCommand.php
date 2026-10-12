@@ -81,6 +81,7 @@ class InstallUiCommand extends Command
         $cssDirectory = resource_path('css');
         $cssSource = $this->relativePath($cssDirectory, $destination);
         $this->line('In resources/css/app.css, register the Typography plugin and add the kit once if this path is not already scanned:');
+        $this->line('@import "'.str_replace(['\\', '"'], ['/', '\\"'], $cssSource).'/shared/image.css";');
         $this->line('@plugin "@tailwindcss/typography";');
         $this->line('@source "'.str_replace(['\\', '"'], ['/', '\\"'], $cssSource).'";');
         $this->line('Components expect the Laravel '.($kit === 'vue' ? 'Vue' : 'React').' starter-kit colour tokens and Tailwind v4.');

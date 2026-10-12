@@ -1,0 +1,18 @@
+:root {
+    --sf-image-size-thumbnail: 6rem;
+    --sf-image-size-thumbnail-height: 6rem;
+    --sf-image-size-inline: 16rem;
+    --sf-image-size-inline-height: 12rem;
+    --sf-image-size-card: 24rem;
+    --sf-image-size-card-height: 18rem;
+    --sf-image-size-feature: 36rem;
+    --sf-image-size-feature-height: 27rem;
+    --sf-image-size-full: 100%;
+    --sf-image-size-full-height: none;
+}
+.sf-image img {
+    max-width: min(100%, var(--sf-image-width, var(--sf-image-size-full)));
+    max-height: var(--sf-image-height, var(--sf-image-size-full-height));
+    height: auto;
+    object-fit: contain;
+}

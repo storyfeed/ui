@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, toRef, useId } from 'vue';
+import { imageFrame, type ImageSize } from '../shared/body';
+import { computed, toRef, useId, provide } from 'vue';
 import FeedNodeView from './FeedNode.vue';
 import type { Rail, RailName } from '../shared/rail';
 import type { FeedNode } from '../shared/types';
@@ -8,6 +9,7 @@ import { useFeedDays } from './useRelativeTime';
 
 const props = withDefaults(
     defineProps<{
+        imageSize?: ImageSize;
         items?: FeedNode[];
         /** Null means the end of the feed — never an empty page. */
         nextCursor?: string | null;
@@ -36,6 +38,7 @@ const props = withDefaults(
         dividerStyle?: 'dot' | 'branch';
     }>(),
     {
+        imageSize: undefined,
         items: undefined,
         nextCursor: undefined,
         page: undefined,
@@ -49,6 +52,8 @@ const props = withDefaults(
     },
 );
 
+provide('FEED_IMAGE_SIZE', toRef(() => props.imageSize));
+
 const emit = defineEmits<{ loadMore: [] }>();
 
 const read = computed(() => readPage(props.page));
@@ -61,7 +66,7 @@ const gradientId = `sf-branch-${useId()}`;
 </script>
 
 <template>
-    <div class="sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6] text-muted-foreground">
+    <div :style="imageFrame({}, imageSize)" class="sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6] text-muted-foreground">
         <div v-if="nodes.length === 0" class="sf-empty rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">
             <slot name="empty">No activity yet.</slot>
         </div>

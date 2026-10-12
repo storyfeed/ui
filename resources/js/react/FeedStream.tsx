@@ -1,12 +1,15 @@
+import { imageFrame, type ImageSize } from '../shared/body';
 import { useId, type CSSProperties, type ReactNode } from 'react';
 import type { FeedNode } from '../shared/types';
 import { readPage, type FeedPageLike } from '../shared/page';
+import { FeedProvider } from './context';
 import FeedNodeView from './FeedNode';
 import type { NodeProps } from './FeedItem';
 import { useFeedDays } from './useRelativeTime';
 export interface FeedStreamProps extends NodeProps {
     className?: string;
     style?: CSSProperties & Record<`--${string}`, string | number>;
+    imageSize?: ImageSize;
     items?: FeedNode[];
     nextCursor?: string | null;
     /** A whole page in place of `items` and `nextCursor`: core's JSON, with the nodes under `data` (#95) or `items`. */
@@ -80,6 +83,7 @@ function Divider({
     );
 }
 export default function FeedStream({
+    imageSize,
     items: given,
     page,
     className = '',
@@ -100,69 +104,71 @@ export default function FeedStream({
     const nextCursor = givenCursor ?? read.nextCursor;
     const days = useFeedDays(items);
     return (
-        <div
-            className={`sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6] text-muted-foreground ${className}`}
-            style={style}
-        >
-            {!items.length ? (
-                <div className="sf-empty rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">
-                    {empty}
-                </div>
-            ) : (
-                <div role="list">
-                    {days.map((day, dayIndex) => (
-                        <section key={`${day.label}:${dayIndex}`}>
-                            {grouped && day.label !== null && (
-                                <Divider
-                                    label={day.label}
-                                    style={dividerStyle}
-                                />
-                            )}
-                            {day.items.map((item, i) => (
-                                <div key={item.id} role="listitem">
-                                    {dividers[item.id] && (
-                                        <Divider
-                                            label={dividers[item.id]}
-                                            style={dividerStyle}
+        <FeedProvider FEED_IMAGE_SIZE={imageSize ?? 'full'}>
+            <div
+                className={`sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6] text-muted-foreground ${className}`}
+                style={{ ...imageFrame({}, imageSize), ...style }}
+            >
+                {!items.length ? (
+                    <div className="sf-empty rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">
+                        {empty}
+                    </div>
+                ) : (
+                    <div role="list">
+                        {days.map((day, dayIndex) => (
+                            <section key={`${day.label}:${dayIndex}`}>
+                                {grouped && day.label !== null && (
+                                    <Divider
+                                        label={day.label}
+                                        style={dividerStyle}
+                                    />
+                                )}
+                                {day.items.map((item, i) => (
+                                    <div key={item.id} role="listitem">
+                                        {dividers[item.id] && (
+                                            <Divider
+                                                label={dividers[item.id]}
+                                                style={dividerStyle}
+                                            />
+                                        )}
+                                        <FeedNodeView
+                                            item={item}
+                                            isLast={
+                                                dayIndex === days.length - 1 &&
+                                                i === day.items.length - 1 &&
+                                                !nextCursor
+                                            }
+                                            rail={rail}
+                                            childRail={childRail}
+                                            {...renderers}
                                         />
-                                    )}
-                                    <FeedNodeView
-                                        item={item}
-                                        isLast={
-                                            dayIndex === days.length - 1 &&
-                                            i === day.items.length - 1 &&
-                                            !nextCursor
-                                        }
-                                        rail={rail}
-                                        childRail={childRail}
-                                        {...renderers}
+                                    </div>
+                                ))}
+                            </section>
+                        ))}
+                        {nextCursor && (
+                            <div className="sf-row relative flex items-start gap-(--sf-gap-v)">
+                                <div className="sf-rail flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
+                                    <div
+                                        aria-hidden="true"
+                                        className="sf-rail__line mt-1 w-px flex-1 bg-border"
                                     />
                                 </div>
-                            ))}
-                        </section>
-                    ))}
-                    {nextCursor && (
-                        <div className="sf-row relative flex items-start gap-(--sf-gap-v)">
-                            <div className="sf-rail flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
-                                <div
-                                    aria-hidden="true"
-                                    className="sf-rail__line mt-1 w-px flex-1 bg-border"
-                                />
+                                <button
+                                    type="button"
+                                    className="sf-more cursor-pointer rounded-md border border-border bg-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground enabled:hover:bg-muted enabled:hover:text-foreground disabled:cursor-default disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-ring"
+                                    disabled={loadingMore}
+                                    onClick={onLoadMore}
+                                >
+                                    {loadingMore
+                                        ? 'Loading…'
+                                        : 'Load older activity'}
+                                </button>
                             </div>
-                            <button
-                                type="button"
-                                className="sf-more cursor-pointer rounded-md border border-border bg-transparent px-3 py-1.5 text-sm font-medium text-muted-foreground enabled:hover:bg-muted enabled:hover:text-foreground disabled:cursor-default disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-ring"
-                                disabled={loadingMore}
-                                onClick={onLoadMore}
-                            >
-                                {loadingMore
-                                    ? 'Loading…'
-                                    : 'Load older activity'}
-                            </button>
-                        </div>
-                    )}
-                </div>
-            )}
-        </div>
+                        )}
+                    </div>
+                )}
+            </div>
+        </FeedProvider>
     );
 }

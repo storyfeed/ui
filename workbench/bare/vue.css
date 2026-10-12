@@ -1,3 +1,4 @@
+@import "../../resources/js/shared/image.css";
 /* A bare host (ui#28): what the README asks of an app and nothing more. Tailwind,
    Typography and the Laravel starter kit's colour tokens, as the starter kit
    ships them. No --sf-* tokens, no variant, no framing. */

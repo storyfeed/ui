@@ -13,6 +13,7 @@ import { mediaObjectPicture, pictureShape } from '../../shared/picture';
 import { readCallToAction } from '../../shared/callToAction';
 import { bodyLink, linkProps, ownLink, type ResolvedLink } from '../../shared/link';
 import FeedMedia from '../FeedMedia';
+import { imageFrame } from '../../shared/body';
 import { useFeedOptions } from '../context';
 export { imageOf } from '../../shared/body';
 export interface BodyProps {
@@ -127,7 +128,7 @@ export function Image({ payload, entityMedia }: BodyProps) {
         entityMedia,
     );
     return picture ? (
-        <figure className="sf-image m-0">
+        <figure className="sf-image m-0" style={imageFrame(payload)}>
             <img
                 className="block max-w-full rounded-lg"
                 src={picture.src}
