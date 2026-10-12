@@ -8,7 +8,7 @@
 
 ### Added
 
-- Image bodies render `thumbnail`, `inline`, `card`, `feature`, and `full` sizes without cropping in Blade, Vue, and React. A feed `imageSize` prop supplies the default; a body’s `$meta.size` overrides it. Import shared `image.css` and retune `--sf-image-size-<name>` and `--sf-image-size-<name>-height` as needed (#83).
+- Image bodies render `thumbnail`, `inline`, `card`, `feature`, and `full` sizes without cropping in Blade, Vue, and React. A feed `imageSize` prop supplies the default; a body’s `$meta.size` overrides it. Literal Tailwind utilities provide the default limits without an extra stylesheet; retune `--sf-image-size-<name>` and `--sf-image-size-<name>-height` as needed (#83).
 
 ## v0.9.7 - 2026-10-11
 

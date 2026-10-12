@@ -1,6 +1,6 @@
-@import "../../resources/js/shared/image.css";
 @import 'tailwindcss' source(none);
 @plugin "@tailwindcss/typography";
+@source "../../resources/js/shared";
 @source "../../resources/js/react";
 @source "./*.tsx";
 @custom-variant dark (&:where(.dark, .dark *));

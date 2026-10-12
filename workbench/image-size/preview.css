@@ -1,6 +1,7 @@
 @import "../app.css";
 @source "../../build/image-size/classes.txt";
 @source "./preview.mjs";
+@source "./check.mjs";
 body { font-family: ui-sans-serif, system-ui, sans-serif; }
 header, main { max-width: 1280px; margin: auto; padding: 32px; }
 header { padding-bottom: 0; }

@@ -13,7 +13,10 @@ not measurements of those products. Names remain provisional for Jasper's review
 `check.mjs` renders Vue/React components too and measures all three kits in a
 headless browser. It verifies limits, picture containment, feed/body precedence,
 explicit full, icon-slot images, declared-width compatibility, and narrow-host
-overflow. It writes desktop/mobile screenshots and `measurements.json` under
+overflow. It also compiles the existing bare-kit source scans and measures
+each kit with its own CSS, proving both literal class maps are discoverable.
+Size choices have no inline styles, and wrapper utilities can retune the limits.
+It writes desktop/mobile screenshots and `measurements.json` under
 `build/image-size`. No visible browser is launched.
 
 The workbench photo set is deliberately small (192 by 144). Declared image

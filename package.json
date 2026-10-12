@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "image-size:check": "node workbench/image-size/check.mjs",
+    "image-size:check": "npm run workbench:bare && node workbench/image-size/check.mjs",
     "image-size:preview": "vendor/bin/phpunit --no-configuration --bootstrap vendor/autoload.php workbench/image-size/PreviewTest.php && node workbench/image-size/preview.mjs && tailwindcss -i workbench/image-size/preview.css -o build/image-size/preview/preview.css --minify",
     "workbench": "npm run workbench:blade && npm run workbench:vue && npm run workbench:react",
     "workbench:bare": "tailwindcss -i workbench/bare/blade.css -o build/bare/blade.css && tailwindcss -i workbench/bare/vue.css -o build/bare/vue.css && tailwindcss -i workbench/bare/react.css -o build/bare/react.css",

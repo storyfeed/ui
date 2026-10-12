@@ -6,11 +6,11 @@
     $caption = is_string($body['caption'] ?? null) ? $body['caption'] : null;
 @endphp
 @if ($picture !== null)
-    <figure {{ $attributes->merge(array_filter(['style' => \Storyfeed\Ui\Support\Bodies::imageFrame($body)]))->class('sf-image m-0') }}>
+    <figure {{ $attributes->class(['sf-image m-0', \Storyfeed\Ui\Support\Bodies::imageClasses($body)]) }}>
         @if ($mediaRenderer)
-            {!! $mediaRenderer(['image' => $picture, 'href' => null], 'block max-w-full rounded-lg') !!}
+            {!! $mediaRenderer(['image' => $picture, 'href' => null], 'block h-auto object-contain max-w-[min(100%,var(--sf-image-width,100%))] max-h-[var(--sf-image-height,none)] rounded-lg') !!}
         @else
-        <img src="{{ $picture['src'] }}" alt="{{ $picture['alt'] }}" width="{{ $picture['width'] ?? '' }}" height="{{ $picture['height'] ?? '' }}" loading="lazy" class="block max-w-full rounded-lg" />
+        <img src="{{ $picture['src'] }}" alt="{{ $picture['alt'] }}" width="{{ $picture['width'] ?? '' }}" height="{{ $picture['height'] ?? '' }}" loading="lazy" class="block h-auto object-contain max-w-[min(100%,var(--sf-image-width,100%))] max-h-[var(--sf-image-height,none)] rounded-lg" />
         @endif
 @if ($caption !== null && $caption !== '')
             <figcaption class="mt-2 text-xs leading-[1.6] text-muted-foreground">{{ $caption }}</figcaption>

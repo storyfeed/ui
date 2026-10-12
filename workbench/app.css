@@ -1,4 +1,3 @@
-@import "../resources/js/shared/image.css";
 @import "tailwindcss" source(none);
 @plugin "@tailwindcss/typography";
 @source "../resources/views";

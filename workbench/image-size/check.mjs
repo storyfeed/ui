@@ -13,6 +13,7 @@ const server = await createServer({ configFile:false, plugins:[vue()], esbuild:{
 const browser = await chromium.launch({ headless:true });
 try {
     const { default: VFeed } = await server.ssrLoadModule('/resources/js/vue/FeedStream.vue');
+    const { Image: RImage } = await server.ssrLoadModule('/resources/js/react/body/index.tsx');
     const { default: RFeed } = await server.ssrLoadModule('/resources/js/react/FeedStream.tsx');
     const rows = JSON.parse(await readFile('build/image-size/rows.json','utf8'));
     const names = ['thumbnail','inline','card','feature','full'];
@@ -35,6 +36,7 @@ try {
     const page = await browser.newPage({viewport:{width:1400,height:1100}});
     await page.goto(pathToFileURL(resolve('build/image-size/preview/parity.html')).href);
     await page.locator('img').evaluateAll(async imgs => { for (const img of imgs) { img.loading='eager'; await img.decode(); } });
+    assert.equal(await page.locator('.sf-feed[style], .sf-image[style]').count(), 0, 'Size choices must not add inline styles');
     const sizes = await page.locator('[data-size]').evaluateAll(nodes => nodes.map(node=>{const img=node.querySelector('img'), style=getComputedStyle(img),r=img.getBoundingClientRect();return {kit:node.dataset.kit,size:node.dataset.size,theme:node.className,width:r.width,height:r.height,natural:img.naturalWidth/img.naturalHeight,fit:style.objectFit};}));
     for (const row of sizes) {
         assert.equal(row.fit,'contain');
@@ -49,9 +51,26 @@ try {
     }
     const precedence = await page.locator('[data-precedence]').evaluateAll(nodes=>nodes.map(n=>({kit:n.dataset.kit,choice:n.dataset.precedence,width:n.querySelector('.sf-image img').getBoundingClientRect().width,ratio:n.querySelector('.sf-image img').naturalWidth/n.querySelector('.sf-image img').naturalHeight})));
     for (const row of precedence) assert.ok(Math.abs(row.width-({inherit:Math.min(384,288*row.ratio),inline:Math.min(256,192*row.ratio),full:596}[row.choice]))<2,JSON.stringify(row));
+    // Compile the existing source scans alone: no stylesheet import or safelist can supply the size rules.
+    await page.evaluate(()=>{document.querySelector('link').sheet.disabled=true;const style=document.createElement('style');style.id='kit-source-scan';document.head.append(style);});
+    for(const kit of ['blade','vue','react']) {
+        const css = await readFile(`build/bare/${kit}.css`,'utf8');
+        await page.evaluate(css=>{document.querySelector('#kit-source-scan').textContent=css;},css);
+        const actual = await page.locator(`[data-kit="${kit}"][data-size]`).evaluateAll(nodes=>nodes.map(node=>{const img=node.querySelector('.sf-image img');return {kit:node.dataset.kit,size:node.dataset.size,theme:node.className,width:img.clientWidth,height:img.clientHeight,fit:getComputedStyle(img).objectFit};}));
+        for(const row of actual) {
+            const expected = sizes.find(value=>value.kit===row.kit && value.size===row.size && value.theme===row.theme);
+            assert.ok(Math.abs(row.width-expected.width)<1 && Math.abs(row.height-expected.height)<1,JSON.stringify({actual:row,expected}));
+            assert.equal(row.fit,'contain');
+        }
+    }
+    await page.evaluate(()=>{document.querySelector('#kit-source-scan').remove();document.querySelector('link').sheet.disabled=false;});
+    await page.locator('[data-size="card"]').evaluateAll(nodes=>nodes.forEach(node=>node.classList.add('[--sf-image-size-card:20rem]', '[--sf-image-size-card-height:15rem]')));
+    const tuned = await page.locator('[data-size="card"] .sf-image img').evaluateAll(imgs=>imgs.map(img=>({width:img.clientWidth,height:img.clientHeight})));
+    for(const row of tuned) assert.ok(Math.abs(row.width-320)<1 && Math.abs(row.height-240)<1,JSON.stringify(row));
     // Tall/wide pictures remain contained; full retains an existing declared width.
     const css = await readFile('build/image-size/preview/preview.css', 'utf8');
-    await page.setContent(`<style>${css}</style><div style="width:640px">${[ [800,1200,'card'], [1600,400,'card'], [160,120,'full'] ].map(([w,h,size])=>`<figure class="sf-image" style="--sf-image-width:var(--sf-image-size-${size});--sf-image-height:var(--sf-image-size-${size}-height)"><img width="${w}" height="${h}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}'%3E%3Crect width='${w}' height='${h}' fill='tomato'/%3E%3C/svg%3E"></figure>`).join('')}</div>`);
+    const shapesHtml = [ [800,1200,'card'], [1600,400,'card'], [160,120,'full'] ].map(([width,height,size]) => rr(rh(RImage,{payload:{$body:'Storyfeed/Body/Image',$v:3,src:`data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='${width}' height='${height}'%3E%3Crect width='${width}' height='${height}' fill='tomato'/%3E%3C/svg%3E`,width,height,$meta:{size}}}))).join('');
+    await page.setContent(`<style>${css}</style><div class="w-160">${shapesHtml}</div>`);
     await page.locator('img').evaluateAll(async imgs=>{for(const img of imgs) await img.decode();});
     const shapes = await page.locator('img').evaluateAll(imgs=>imgs.map(img=>({width:img.clientWidth,height:img.clientHeight,fit:getComputedStyle(img).objectFit})));
     for(const row of shapes.slice(0,2)) {assert.equal(row.fit,'contain'); assert.ok(row.width<=384 && row.height<=288);}
@@ -63,5 +82,5 @@ try {
     await page.screenshot({path:'build/image-size/preview/mobile.png',fullPage:true});
     assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
     await writeFile('build/image-size/measurements.json',JSON.stringify({sizes,precedence},null,2));
-    console.log('PASS: 30 kit/theme/size samples keep their ratio and limits; 6 feed precedence cases; mobile has no overflow.');
+    console.log('PASS: 30 kit/theme/size samples match in preview and compiled bare-kit CSS; 6 precedence cases; wrapper retuning; no inline size styles; mobile has no overflow.');
 } finally { await browser.close();await server.close(); }

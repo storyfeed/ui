@@ -614,19 +614,8 @@ layout is original work.
 
 ### Image sizes
 
-Import the image stylesheet in your app CSS alongside Tailwind:
-
-Blade:
-
-```css
-@import "../../vendor/storyfeed/ui/resources/js/shared/image.css";
-```
-
-Copied Vue or React kit (adjust for your install path):
-
-```css
-@import "../js/components/storyfeed/shared/image.css";
-```
+Size limits use Tailwind utilities; the existing kit `@source` scans are sufficient.
+No extra stylesheet import is needed.
 
 `<x-storyfeed::feed image-size="card" />`, Vue `<FeedStream image-size="card" />`,
 and React `<FeedStream imageSize="card" />` set the default for that feed.
@@ -644,4 +633,9 @@ Without either choice the picture renders as before. Unknown payload sizes inher
 Retune `--sf-image-size-card: 20rem` and `--sf-image-size-card-height: 15rem`
 on a feed or host. Pictures preserve aspect ratio and never crop. The limits
 apply to the image, leaving captions readable at the normal text width.
-Core is temporarily pinned to `dev-feat/image-size`; restore `dev-main` at merge.
+The literal class maps live in `resources/views/image-sizes.php` (Blade) and
+`shared/body.ts` (Vue/React). The Blade map is inside the existing vendor-view
+scan; the copied shared map is inside the existing kit scan. Defaults are
+`var()` fallbacks in those utilities, so tokens set above the feed inherit.
+For example, use `[--sf-image-size-card:20rem] [--sf-image-size-card-height:15rem]`
+on the feed’s wrapper.

@@ -58,17 +58,19 @@ final class Bodies
     }
 
     /**
-     * A body's own size, else a feed default. Null inherits the containing feed.
+     * Literal size utilities for the body or feed root. Null inherits the containing feed.
      *
      * @param  array<array-key, mixed>  $body
      */
-    public static function imageFrame(array $body, mixed $fallback = null): ?string
+    public static function imageClasses(array $body, mixed $fallback = null): ?string
     {
         $own = is_array($body['$meta'] ?? null) ? ($body['$meta']['size'] ?? null) : null;
         $size = is_string($own) && in_array($own, self::IMAGE_SIZES, true) ? $own
             : (is_string($fallback) && in_array($fallback, self::IMAGE_SIZES, true) ? $fallback : null);
 
-        return $size === null ? null : '--sf-image-width: var(--sf-image-size-'.$size.'); --sf-image-height: var(--sf-image-size-'.$size.'-height)';
+        $classes = require dirname(__DIR__, 2).'/resources/views/image-sizes.php';
+
+        return $size !== null && is_array($classes) && is_string($classes[$size] ?? null) ? $classes[$size] : null;
     }
 
     /**
@@ -120,7 +122,7 @@ final class Bodies
     {
         $own = is_array($body) && is_int($body['$v'] ?? null) && $body['$v'] >= 3 && is_string($body['src'] ?? null) && $body['src'] !== '';
 
-        return is_array($body) && self::imageFrame($body) === null && ($feedSize === 'full' || $feedSize === null) && ! $own && ($body['image'] ?? null) === 'icon' ? self::picture($body, $entity) : null;
+        return is_array($body) && self::imageClasses($body) === null && ($feedSize === 'full' || $feedSize === null) && ! $own && ($body['image'] ?? null) === 'icon' ? self::picture($body, $entity) : null;
     }
 
     /** An entity's picture for a slot a body names: a built-in one, or `slots.<name>`. */
