@@ -3,7 +3,9 @@
 `npm run readme:showcase` renders the Blade fixtures, builds the Tailwind host,
 measures the rendered rows, and writes light/dark SVGs and reduced-motion PNGs.
 The SVG is 800×520 and loops every 15.7 seconds. The typing hold is 3.0 seconds;
-the look beats and final dive stay 1.5 seconds. The PNG is a 2× still.
+the look beats and final dive stay 1.5 seconds. The PNG is a 2× still of the calm finished feed, before the pullback.
+The reduced-motion SVG shows the same feed at the opening camera, with the
+README-look rows hidden and its ground/fade transparent.
 
 The outer stage is transparent. Each picture in a row keeps its own background;
 the outer feed's bottom fade uses an animated alpha mask. Theme backgrounds
@@ -34,6 +36,7 @@ Before changing the generator, render the baseline with
 `build/readme/preview` and run:
 
 ```sh
+node workbench/readme/sweep.mjs
 node workbench/readme/preview.mjs
 ```
 
@@ -48,3 +51,28 @@ before/after 2× loop captures, full diffs, and native-scale / exact-camera cont
 captures. `proof.json` records changed pixel counts, PNG dimensions and alpha
 levels, and asset byte sizes. The script fails if the candidate loop captures
 differ or a PNG loses partial transparency. All preview output is ignored by Git.
+
+## State handoffs and overlap audit
+
+Each state keeps an explicit opacity hold. A state handoff fades the old state
+out during the first half of its existing ENTER/MOVE window, then brings the
+new state in during the second half, with the shared easing. Row movement keeps
+its original MOVE duration. The final cut uses distinct LAND/CUT keyframes and
+step timing, rather than two opacity values at the same keyframe percentage.
+
+Keep the first unframed candidate (`a880d62`) in `build/readme/round2-before`
+before regenerating the fixed candidate. `sweep.mjs` audits the original,
+first candidate, and current candidate in both themes. It pauses real rendered
+CSS animations at each 0.02 s sample across the whole loop, including frame 0
+at the loop boundary. It multiplies ancestor opacities, clips row/headline
+rectangles to picture/stage bounds, and reports overlapping state layers above
+0.05 opacity in the same region. It separately checks readable headline
+rectangles, including rows inside the joins fold and the outer You/next-look
+rows. `layer-sweep.json` includes every hit and merged time ranges. The audit
+fails on any current overlap. The preview includes matching original/before/
+after captures at the overlap times in both themes.
+
+Core asset notes for the follow-up PR: replace “is the closing frame, still” in
+`art/samples/README.md` with “shows the calm finished feed before the pullback”.
+The selected state has the grouped joins, four-photo thumbnails, and actors,
+without the You/next-look climax or typing dots. Core files stay untouched here.

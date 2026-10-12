@@ -14,7 +14,7 @@
 //   the camera dives into its dots, then cuts back to the opening frame.
 //
 // No script runs in the SVG; GitHub draws it as an image. It also writes a
-// PNG still of the closing frame for reduced motion.
+// PNG still of the finished feed before pullback for reduced motion.
 //
 //   npm run readme:showcase    writes to STORYFEED_README_OUT (default ../storyfeed/art/samples)
 import { chromium } from 'playwright';
@@ -115,13 +115,26 @@ const timeline = tops => {
         // row at the cut, when the opening camera takes over.
         ['plain', CUT, 0],
     ];
-    const visibility = {};
-    sequence.forEach(([key, time, window], n) => {
-        const span = time === CUT ? 0 : window || 0.01;
-        (visibility[key] ??= []).push(...(time === 0 ? [[0, 'opacity:1']] : [[time, 'opacity:0'], [time + span, 'opacity:1']]));
-        if (n) (visibility[sequence[n - 1][0]] ??= []).push([time, 'opacity:1'], [time + span, 'opacity:0']);
+    // Hold each state explicitly between handoffs. Two keyframes at the same
+    // percentage merge in CSS: using 0 then 1 at CUT erased the hidden hold
+    // and interpolated the plain layer back in across most of the loop.
+    const visibility = Object.fromEntries(ORDER.map(key => [key, [[0, `opacity:${key === 'plain' ? 1 : 0}`]]]));
+    sequence.slice(1).forEach(([key, time, window], n) => {
+        const outgoing = sequence[n][0];
+        if (time === CUT) {
+            visibility[outgoing].push([LAND, 'opacity:1;animation-timing-function:steps(1,end)'], [CUT, 'opacity:0']);
+            visibility[key].push([LAND, 'opacity:0;animation-timing-function:steps(1,end)'], [CUT, 'opacity:1']);
+            return;
+        }
+        // Keep the original ENTER/MOVE handoff window and easing, but let the
+        // outgoing state finish its fade before the new headline can appear.
+        // The row-motion rules still run across their original MOVE duration.
+        const span = window || 0.01;
+        const middle = time + span / 2;
+        visibility[outgoing].push([time, 'opacity:1'], [middle, 'opacity:0']);
+        visibility[key].push([middle, 'opacity:0'], [time + span, 'opacity:1']);
     });
-    Object.entries(visibility).forEach(([key, frames]) => at(layer(key), frames[0][0] === 0 ? frames : [[0, 'opacity:0'], ...frames]));
+    Object.entries(visibility).forEach(([key, frames]) => at(layer(key), frames));
 
     // A row arrives on top: the rows under it move down to make room, and it
     // enters halfway through the move.
@@ -188,9 +201,19 @@ const timeline = tops => {
     at('.outfade', [[0, '--fade:0'], [T.pull, '--fade:0'], [T.pull + ZOOM, '--fade:1'], [T.zoomIn, '--fade:1'], [LAND, '--fade:0']]);
     return rules.join('');
 };
-// Reduced motion, where the viewer passes it through: the closing frame, still.
+// Reduced motion: the calm finished feed, before the README-look pullback.
 const mask = '@property --fade{syntax:"<number>";inherits:false;initial-value:0}.outfade{mask-image:linear-gradient(to bottom,#000 calc(100% - 128px),rgb(0 0 0 / calc(1 - var(--fade))))}';
-const still = '@media (prefers-reduced-motion:reduce){#stage,#stage *{animation:none!important}.layer{opacity:0}#stage .L-finished{opacity:1}#stage .outfade{--fade:1}}';
+const still = () => `@media (prefers-reduced-motion:reduce){
+#stage,#stage *{animation:none!important}
+.layer{opacity:0}#stage .L-finished{opacity:1}
+#stage .outer{visibility:hidden}
+#stage .camera{transform:translate(${-CAM.x * CAM.k}px,${-CAM.y * CAM.k}px) scale(${CAM.k})}
+#stage .youpic{transform:translateY(${-(OUTER_TOPS[1] - OUTER_TOPS[0])}px)}
+#stage .inner{background:transparent;border-radius:0!important;box-shadow:none!important;mask-image:linear-gradient(to bottom,#000 calc(100% - 56px),transparent)}
+#stage .inner>div:last-child{display:none}
+#stage .outfade{--fade:0}
+}`;
+
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: WIDTH, height: 900 }, deviceScaleFactor: 2 });
@@ -323,7 +346,7 @@ try {
         const xhtml = await page.evaluate(() => new XMLSerializer().serializeToString(document.getElementById('stage')));
         // The rows are measured again where they are drawn, inside the SVG,
         // where a group row can lay out a few pixels apart from the page.
-        const build = tops => `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}" role="img" aria-label="Inside a feed of people looking at Storyfeed's README, your look's picture shows a feed growing: one plain row gains avatars, a photo and a key-value card; five volunteers joining fold into one grouped row; photos arrive live and regroup with a strip of thumbnails; then one more booking arrives. Your look sits at the top of a long feed of looks at the README; then the next person's arrives above it, still in progress with a typing indicator, whose dots the camera dives into."><style><![CDATA[${styled}${pictures}${timeline(tops)}${mask}${still}]]></style><foreignObject width="${WIDTH}" height="${HEIGHT}">${xhtml}</foreignObject></svg>`;
+        const build = tops => `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}" role="img" aria-label="Inside a feed of people looking at Storyfeed's README, your look's picture shows a feed growing: one plain row gains avatars, a photo and a key-value card; five volunteers joining fold into one grouped row; photos arrive live and regroup with a strip of thumbnails; then one more booking arrives. Your look sits at the top of a long feed of looks at the README; then the next person's arrives above it, still in progress with a typing indicator, whose dots the camera dives into."><style><![CDATA[${styled}${pictures}${timeline(tops)}${mask}${still()}]]></style><foreignObject width="${WIDTH}" height="${HEIGHT}">${xhtml}</foreignObject></svg>`;
         const measure = await browser.newPage({ viewport: { width: WIDTH, height: HEIGHT } });
         await measure.setContent(`<body style="margin:0">${build(tops)}<style>#stage,#stage *{animation:none!important}</style></body>`);
         const drawn = await measure.evaluate(([keys, K]) => Object.fromEntries(keys.map(key => {
@@ -338,7 +361,7 @@ try {
         await writeFile(resolve(out, `showcase-${theme}.svg`), svg);
         sizes.push(`showcase-${theme}.svg ${WIDTH}×${HEIGHT} ${Math.round(svg.length / 1024)} KB`);
 
-        // The reduced-motion still: the closing frame, on a clear background.
+        // The reduced-motion still: the calm finished feed on a clear background.
         const shot = await browser.newPage({ viewport: { width: WIDTH, height: HEIGHT }, deviceScaleFactor: 2, reducedMotion: 'reduce' });
         await shot.setContent(`<body style="margin:0">${svg}</body>`);
         await shot.waitForTimeout(300);
