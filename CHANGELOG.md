@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Headlines wrap with `text-wrap: pretty` in Blade, Vue and React, so a wrapped headline no longer leaves a word or two alone on its last line.
+
 ### Added
 
 - Image bodies render `thumbnail`, `inline`, `card`, `feature`, and `full` sizes without cropping in Blade, Vue, and React. A feed `imageSize` prop supplies the default; a body’s `$meta.size` overrides it. Import shared `image.css` and retune `--sf-image-size-<name>` and `--sf-image-size-<name>-height` as needed (#83).
