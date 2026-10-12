@@ -46,6 +46,7 @@ it('does not allow a second binding, changed exception or stale exception', func
     foreach ($allowlist as $path => $entries) {
         $source = implode("\n", array_map(fn ($entry) => str_repeat($entry['pattern'], $entry['count']), $entries));
         expect(TailwindGuard::violations($path, $source, $allowlist))->toBe([])
+            ->and(TailwindGuard::violations($path, str_replace("\n", "\r\n", $source), $allowlist))->toBe([])
             ->and(TailwindGuard::violations($path, $source.'<p style="color:red">', $allowlist))->not->toBeEmpty()
             ->and(TailwindGuard::violations($path, '', $allowlist))->not->toBeEmpty();
         foreach ($entries as $entry) {

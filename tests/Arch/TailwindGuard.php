@@ -10,6 +10,7 @@ final class TailwindGuard
      */
     public static function violations(string $file, string $source, array $allowlist = []): array
     {
+        $source = str_replace("\r\n", "\n", $source);
         $errors = [];
         if (str_ends_with(strtolower($file), '.css')) {
             $errors[] = "$file: shipped CSS is forbidden";
