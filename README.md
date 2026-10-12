@@ -639,3 +639,18 @@ scan; the copied shared map is inside the existing kit scan. Defaults are
 `var()` fallbacks in those utilities, so tokens set above the feed inherit.
 For example, use `[--sf-image-size-card:20rem] [--sf-image-size-card-height:15rem]`
 on the feed’s wrapper.
+
+
+An app can also retune the tokens in its own Tailwind theme:
+
+```css
+@theme {
+    --sf-image-size-inline: 20rem;
+    --sf-image-size-inline-height: 15rem;
+}
+```
+
+With the kit’s literal utilities scanned, Tailwind emits these referenced
+variables to `:root`. The image harness verifies the resulting 320×240 limit
+in all three kits. `@theme static` also works and emits the tokens even when
+unused; that form is verified by the same harness.

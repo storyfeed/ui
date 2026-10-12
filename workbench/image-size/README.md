@@ -15,7 +15,9 @@ headless browser. It verifies limits, picture containment, feed/body precedence,
 explicit full, icon-slot images, declared-width compatibility, and narrow-host
 overflow. It also compiles the existing bare-kit source scans and measures
 each kit with its own CSS, proving both literal class maps are discoverable.
-Size choices have no inline styles, and wrapper utilities can retune the limits.
+Size choices have no inline styles. Wrapper utilities, app `@theme`, and
+`@theme static` can retune the limits; both theme forms are compiled and
+measured, with results in `build/image-size/theme-results.json`.
 It writes desktop/mobile screenshots and `measurements.json` under
 `build/image-size`. No visible browser is launched.
 

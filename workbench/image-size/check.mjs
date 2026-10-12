@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import { readFile, writeFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
@@ -64,6 +66,24 @@ try {
         }
     }
     await page.evaluate(()=>{document.querySelector('#kit-source-scan').remove();document.querySelector('link').sheet.disabled=false;});
+    // An app can configure tokens in its own @theme; verify whether static emission is needed.
+    const compile = promisify(execFile);
+    const themeResults = [];
+    for(const mode of ['', ' static']) {
+        const name = mode ? 'static' : 'ordinary';
+        const input = `build/image-size/theme-${name}.css`;
+        const output = `build/image-size/theme-${name}-built.css`;
+        await writeFile(input, `@import "../../workbench/bare/blade.css";\n@theme${mode} { --sf-image-size-inline: 20rem; --sf-image-size-inline-height: 15rem; }\n`);
+        await compile('node_modules/.bin/tailwindcss',['-i',input,'-o',output,'--minify']);
+        const css = await readFile(output,'utf8');
+        await page.evaluate(css=>{document.querySelector('link').sheet.disabled=true;const style=document.createElement('style');style.id='app-theme';style.textContent=css;document.head.append(style);},css);
+        const result = await page.locator('[data-size="inline"] .sf-image img').evaluateAll(imgs=>({token:getComputedStyle(document.documentElement).getPropertyValue('--sf-image-size-inline').trim(),sizes:imgs.map(img=>({width:img.clientWidth,height:img.clientHeight}))}));
+        const works = result.token === '20rem' && result.sizes.every(row=>Math.abs(row.width-320)<1 && Math.abs(row.height-240)<1);
+        themeResults.push({mode:name,works,...result});
+        assert.ok(works,JSON.stringify({mode:name,...result}));
+        await page.evaluate(()=>{document.querySelector('#app-theme').remove();document.querySelector('link').sheet.disabled=false;});
+    }
+    await writeFile('build/image-size/theme-results.json',JSON.stringify(themeResults,null,2));
     await page.locator('[data-size="card"]').evaluateAll(nodes=>nodes.forEach(node=>node.classList.add('[--sf-image-size-card:20rem]', '[--sf-image-size-card-height:15rem]')));
     const tuned = await page.locator('[data-size="card"] .sf-image img').evaluateAll(imgs=>imgs.map(img=>({width:img.clientWidth,height:img.clientHeight})));
     for(const row of tuned) assert.ok(Math.abs(row.width-320)<1 && Math.abs(row.height-240)<1,JSON.stringify(row));
@@ -82,5 +102,5 @@ try {
     await page.screenshot({path:'build/image-size/preview/mobile.png',fullPage:true});
     assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
     await writeFile('build/image-size/measurements.json',JSON.stringify({sizes,precedence},null,2));
-    console.log('PASS: 30 kit/theme/size samples match in preview and compiled bare-kit CSS; 6 precedence cases; wrapper retuning; no inline size styles; mobile has no overflow.');
+    console.log('PASS: 30 kit/theme/size samples match in preview and compiled bare-kit CSS; 6 precedence cases; wrapper retuning; app @theme emission; no inline size styles; mobile has no overflow.');
 } finally { await browser.close();await server.close(); }
