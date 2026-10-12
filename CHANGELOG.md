@@ -2,15 +2,17 @@
 
 ## Unreleased
 
-### Changed
-
-- Image avatars show a transparent disc with a neutral hairline border while their picture loads. Brand colour and initials appear when there is no picture or it fails; tombstones remain muted. Avatar colour is carried only as `--sf-avatar-color`, with appearance expressed by Tailwind utilities in all three kits.
-- Headlines wrap with `text-wrap: pretty` in Blade, Vue and React, so a wrapped headline no longer leaves a word or two alone on its last line.
+## v0.9.8 - 2026-10-11
 
 ### Added
 
-- Enforce the Tailwind-only shipping boundary in CI, with exact reviewed runtime exceptions and repository agent guidance. Actor strips use literal stacking utilities in all three kits.
-- Image bodies render `thumbnail`, `inline`, `card`, `feature`, and `full` sizes without cropping in Blade, Vue, and React. A feed `imageSize` prop supplies the default; a body’s `$meta.size` overrides it. Literal Tailwind utilities provide the default limits without an extra stylesheet; retune `--sf-image-size-<name>` and `--sf-image-size-<name>-height` as needed (#83).
+- Pictures can be drawn at a semantic size (ui#83), from core 0.20.7's `Image::make($src)->size('inline')`. The five sizes are `thumbnail`, `inline`, `card`, `feature` and `full`. A whole feed can take a default: `<x-storyfeed::feed image-size="inline">` in Blade, `image-size` on Vue's `FeedStream` and `imageSize` on React's, and a body's own size wins over it. Pictures scale down and keep their shape; they're never cropped. Each size's limits are Tailwind utilities with default lengths, so there's no stylesheet to install. To retune them, set `--sf-image-size-<name>` and `--sf-image-size-<name>-height`, for example in your app's `@theme`. Without a size, a picture is drawn full-width, as before.
+- CI fails on any shipped `.css` file, `<style>` block or inline appearance `style` in the kits. Each remaining runtime exception (avatar colours, picture ratios, a body's `maxHeight`) is listed with its reason. `AGENTS.md` sets out the Tailwind mandate for contributors. Actor strips now stack with literal `z-` utilities.
+
+### Changed
+
+- An avatar with a picture shows an empty ring while the picture loads: a transparent disc with a hairline border, in Blade, Vue and React. A row of avatars no longer flashes a strip of brand colours before the pictures arrive. The brand colour and initials still appear when there's no picture or it fails to load, and tombstones stay muted. The colour now travels as the `--sf-avatar-color` custom property, drawn with Tailwind utilities.
+- Headlines wrap with `text-wrap: pretty`, so a wrapped headline no longer leaves a word or two alone on its last line.
 
 ## v0.9.7 - 2026-10-11
 
