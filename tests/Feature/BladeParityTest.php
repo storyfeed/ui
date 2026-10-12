@@ -486,7 +486,7 @@ it('draws every face of a group with several actors, newest first, eight before 
     expect(explode('sf-actor-strip ', Blade::render('<x-storyfeed::group :group="$item" />', compact('item')))[1])->toContain('sf-avatar--sm size-6');
     // Each face sits above the one to its right, so its ring cuts into that face's edge, never its initials.
     $item = crowd(35);
-    preg_match_all('/sf-actor-strip__face[^"]*" style="z-index: (\d+)"/', Blade::render('<x-storyfeed::group :group="$item" />', compact('item')), $zs);
+    preg_match_all('/sf-actor-strip__face[^"]* z-(\d+)"/', Blade::render('<x-storyfeed::group :group="$item" />', compact('item')), $zs);
     expect(array_map(intval(...), $zs[1]))->toBe([8, 7, 6, 5, 4, 3, 2, 1]);
     // "+N" opens the group like "Show all N"; a static group keeps a plain chip.
     $item = crowd(35);

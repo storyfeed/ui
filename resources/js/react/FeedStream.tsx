@@ -23,19 +23,19 @@ export interface FeedStreamProps extends NodeProps {
 }
 function Divider({
     label,
-    style,
+    kind,
 }: {
     label: string;
-    style: 'dot' | 'branch';
+    kind: 'dot' | 'branch';
 }) {
     // The stroke gradient needs an id unique on the page; React's ids may hold characters a url() reference shouldn't.
     const gradient = `sf-branch-${useId().replace(/[^\w-]/g, '')}`;
     return (
         <div
-            className={`sf-row sf-divider relative flex items-start gap-(--sf-gap-v) ${style === 'dot' ? 'sf-divider--dot [&_.sf-rail>div:last-child]:mt-[calc(var(--spacing)*1.625)]' : 'sf-divider--branch'}`}
+            className={`sf-row sf-divider relative flex items-start gap-(--sf-gap-v) ${kind === 'dot' ? 'sf-divider--dot [&_.sf-rail>div:last-child]:mt-[calc(var(--spacing)*1.625)]' : 'sf-divider--branch'}`}
         >
             <div className="sf-rail relative flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
-                {style === 'dot' ? (
+                {kind === 'dot' ? (
                     <div
                         aria-hidden="true"
                         className="sf-rail__node mt-[calc(var(--spacing)*1.625)] size-1.5 shrink-0 rounded-full border border-border bg-background"
@@ -73,7 +73,7 @@ function Divider({
                 )}
                 <div
                     aria-hidden="true"
-                    className={`sf-rail__line w-px flex-1 bg-border ${style === 'dot' ? 'mt-1' : 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]'}`}
+                    className={`sf-rail__line w-px flex-1 bg-border ${kind === 'dot' ? 'mt-1' : 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]'}`}
                 />
             </div>
             <h2 className="sf-day m-0 border-0 pt-0 pb-5 text-xs leading-[1.6] font-semibold tracking-[0.05em] text-muted-foreground uppercase">
@@ -120,7 +120,7 @@ export default function FeedStream({
                                 {grouped && day.label !== null && (
                                     <Divider
                                         label={day.label}
-                                        style={dividerStyle}
+                                        kind={dividerStyle}
                                     />
                                 )}
                                 {day.items.map((item, i) => (
@@ -128,7 +128,7 @@ export default function FeedStream({
                                         {dividers[item.id] && (
                                             <Divider
                                                 label={dividers[item.id]}
-                                                style={dividerStyle}
+                                                kind={dividerStyle}
                                             />
                                         )}
                                         <FeedNodeView
