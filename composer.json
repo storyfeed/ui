@@ -55,6 +55,15 @@
             "providers": [
                 "Storyfeed\\Ui\\UiServiceProvider"
             ]
+        },
+        "tey-standards": {
+            "ci": {
+                "default-branches": [
+                    "main",
+                    "*.x"
+                ],
+                "distribution": "package"
+            }
         }
     }
 }
