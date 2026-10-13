@@ -41,8 +41,8 @@
         ? round(min(max($width / $height, 1), 2), 4)
         : null;
     [$frame, $frameMedia] = match (true) {
-        $imageSlot === 'icon' => ['sf-media-object__image w-16 flex-none', 'mt-0! size-16! rounded-md!'],
-        $ratio !== null => ['sf-media-object__image h-16 w-[calc(--spacing(16)*var(--sf-picture-ratio))] flex-none', 'mt-0! size-full! max-w-none! aspect-auto! rounded-md!'],
+        $imageSlot === 'icon' => ['sf-media-object__image w-16 flex-none', 'mt-0! size-16! rounded-md! [&_img]:size-full! [&_img]:max-w-none! [&_img]:max-h-none! [&_img]:object-cover!'],
+        $ratio !== null => ['sf-media-object__image h-16 w-[calc(--spacing(16)*var(--sf-picture-ratio))] flex-none', 'mt-0! size-full! max-w-none! aspect-auto! rounded-md! [&_img]:size-full! [&_img]:max-w-none! [&_img]:max-h-none! [&_img]:object-cover!'],
         default => ['sf-media-object__image w-24 flex-none', 'mt-0! w-full! max-w-none! rounded-md! [&_img]:h-auto! [&_img]:max-h-32 [&_img]:object-contain!'],
     };
     $files = collect($body['files'] ?? [])->filter(fn ($file) => is_array($file) && filled($file['href'] ?? null));

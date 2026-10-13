@@ -886,7 +886,7 @@ test('an Image body naming the icon slot draws as the linked thumbnail through h
     assert.match(frame, /data-router="host"/);
     assert.match(frame, /alt="Dal"/);
     assert.ok(frame.indexOf('dal-icon.jpg') < frame.indexOf('Status'), 'the other bodies sit beside the thumbnail');
-    assert.doesNotMatch(frame, /\/wrong|onClick|bad name|nested|sf-image/);
+    assert.doesNotMatch(frame, /\/wrong|onClick|bad name|nested|\bsf-image(?:\s|")/);
     let received;
     assert.match(raw('FeedStream', props, { FEED_MEDIA: props => { received = props; return h('button', { className: props.className }, 'Lightbox'); } }), /Lightbox/);
     assert.equal(received.href, '/dishes/7');
@@ -1223,6 +1223,20 @@ test('Image sizes override the inherited feed choice, including explicit full', 
     assert.ok(both.includes('--sf-image-size-card,24rem)') && both.includes('--sf-image-size-full,100%)'));
     payload.$meta = { size: 'bad);color:red' };
     assert.doesNotMatch(raw('Image', { payload }), /\[--sf-image-width:|style=|color:red/);
+});
+
+test('custom Image renderers reuse FeedMedia sizing and retain their links (ui#88)', () => {
+    const LinkedImage = ({ payload, entityMedia, entityUrl }) => h(kit.FeedMedia, { image: shared.pictureOf(payload, entityMedia), payload, href: entityUrl });
+    for (const size of [undefined, 'thumbnail', 'inline', 'card', 'feature', 'full', 'unknown']) {
+        const payload = { $body: 'Storyfeed/Body/Image', $v: 3, src: '/fair.jpg', width: 800, height: 1200, $meta: { size } };
+        const item = { kind: 'activity', id: '1', published_at: null, headline: 'Maple Fair', object: { type: 'project', id: '1', url: '/project', body: [payload] } };
+        const html = raw('FeedStream', { items: [item], imageSize: 'card', grouped: false }, { FEED_BODIES: { 'Storyfeed/Body/Image': LinkedImage } });
+        assert.match(html, /<a[^>]*href="\/project"[^>]*class="sf-media/);
+        assert.ok(html.includes('--sf-image-size-card,24rem)'));
+        if (size && size !== 'unknown') assert.ok(html.includes(`--sf-image-size-${size},`), size);
+        assert.ok(html.includes('max-h-[var(--sf-image-height,none)]'));
+        assert.doesNotMatch(html, /aspect-ratio|bg-muted|payload=/);
+    }
 });
 
 

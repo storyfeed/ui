@@ -20,6 +20,12 @@ plugin in `resources/css/app.css`:
 
 The copy command includes the framework-free core in a self-contained `shared/` directory.
 
+Scan `@source "../js/components/storyfeed";` in `resources/css/app.css` for
+the copied kit. If a Vite alias imports the kit straight from vendor instead,
+scan `@source "../../vendor/storyfeed/ui/resources/js";`, not only `vue/`:
+the size utilities also live in `shared/`. See the root README's
+[vendor-alias setup](../../../README.md#import-directly-from-vendor-vue-or-react).
+
 Use the Laravel Vue starter-kit tokens: `background`, `foreground`, `card`,
 `muted`, `muted-foreground`, `primary`, `primary-foreground`, `border` and `ring`.
 Define these tokens in a non-starter-kit app. Theme colours come from tokens.
@@ -144,6 +150,11 @@ renders an unlinked image. An app that registers its own Image renderer through
 `FEED_BODIES` draws icon Image bodies in place instead. Provide `FEED_MEDIA` with a component receiving
 `image`, `href`, `linkAttributes` and the kit classes to render media yourself
 (for example, a lightbox button).
+
+For a custom Image body, use `<FeedMedia :image="picture" :payload="payload"
+:href="entityUrl" />`. It consumes inherited feed size variables; `payload`
+applies the body's own size, and the frame follows the picture. See the root
+README's [custom Image examples](../../../README.md#custom-image-renderers).
 
 `interactive` defaults to true. Set it false for a static feed; `collapsed`
 selects its initial group state (null opens static groups). Collapsed members

@@ -23,6 +23,11 @@ Register the Typography plugin and, if needed, the kit in `resources/css/app.css
 @source "../js/components/storyfeed";
 ```
 
+If a Vite alias imports the kit straight from vendor instead, scan
+`@source "../../vendor/storyfeed/ui/resources/js";`, not only `react/`:
+the size utilities also live in `shared/`. See the root README's
+[vendor-alias setup](../../../README.md#import-directly-from-vendor-vue-or-react).
+
 Use Laravel starter-kit tokens: `background`, `foreground`, `card`, `muted`,
 `muted-foreground`, `primary`, `primary-foreground`, `border`, and `ring`.
 The kit adds no stylesheet. Rich `Prose`, `ItemList` and `Table` render inside
@@ -162,6 +167,11 @@ produce unlinked images. An app that registers its own Image renderer through
 `FEED_BODIES` draws icon Image bodies in place instead. `FeedProvider` accepts `FEED_MEDIA`, a component
 receiving `image`, `href`, `linkAttributes` and `className`, for a host media
 renderer such as a lightbox.
+
+For a custom Image body, use `<FeedMedia image={picture} payload={payload}
+href={entityUrl} />`. It consumes inherited feed size variables; `payload`
+applies the body's own size, and the frame follows the picture. See the root
+README's [custom Image examples](../../../README.md#custom-image-renderers).
 
 `interactive` defaults to true and keeps native `<details>` with its print
 rules. Set false for a static feed; `collapsed` sets the initial group state

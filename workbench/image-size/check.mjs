@@ -17,6 +17,15 @@ try {
     const { default: VFeed } = await server.ssrLoadModule('/resources/js/vue/FeedStream.vue');
     const { Image: RImage } = await server.ssrLoadModule('/resources/js/react/body/index.tsx');
     const { default: RFeed } = await server.ssrLoadModule('/resources/js/react/FeedStream.tsx');
+    const { default: VMedia } = await server.ssrLoadModule('/resources/js/vue/FeedMedia.vue');
+    const { FEED_BODIES } = await server.ssrLoadModule('/resources/js/vue/keys.ts');
+    const { FeedProvider, FeedMedia: RMedia } = await server.ssrLoadModule('/resources/js/react/index.ts');
+    const { pictureOf } = await server.ssrLoadModule('/resources/js/shared/body.ts');
+    const VLinkedImage = {
+        props: ['payload', 'entityMedia', 'entityUrl'],
+        setup: props => () => vh(VMedia, { image: pictureOf(props.payload, props.entityMedia), payload: props.payload, href: props.entityUrl }),
+    };
+    const RLinkedImage = ({ payload, entityMedia, entityUrl }) => rh(RMedia, { image: pictureOf(payload, entityMedia), payload, href: entityUrl });
     const rows = JSON.parse(await readFile('build/image-size/rows.json','utf8'));
     const names = ['thumbnail','inline','card','feature','full'];
     const payload = size => ({ $body:'Storyfeed/Body/Image',$v:3,src:'media/fair.jpg',width:1200,height:800,alt:'Fair',$meta:{size} });
@@ -95,6 +104,55 @@ try {
     const shapes = await page.locator('img').evaluateAll(imgs=>imgs.map(img=>({width:img.clientWidth,height:img.clientHeight,fit:getComputedStyle(img).objectFit})));
     for(const row of shapes.slice(0,2)) {assert.equal(row.fit,'contain'); assert.ok(row.width<=384 && row.height<=288);}
     assert.equal(shapes[2].width,160);
+
+    // Custom renderers use FeedMedia, not the kit's Image. Exercise both links and
+    // divs, inherited/own sizes, height-limited portraits and small intrinsic logos.
+    const mediaCases = JSON.parse(await readFile('build/image-size/media.json', 'utf8'));
+    let mediaHtml = '';
+    for (const [index, sample] of mediaCases.entries()) {
+        const props = { items: [sample.item], imageSize: 'card', grouped: false, rail: 'activity-only' };
+        const app = createSSRApp({ render: () => vh(VFeed, props) });
+        app.provide(FEED_BODIES, { 'Storyfeed/Body/Image': VLinkedImage });
+        const rendered = { blade: sample.html, vue: await vr(app), react: rr(rh(FeedProvider, { FEED_BODIES: { 'Storyfeed/Body/Image': RLinkedImage } }, rh(RFeed, props))) };
+        for (const theme of ['light', 'dark']) for (const [kit, row] of Object.entries(rendered)) {
+            mediaHtml += `<div class="${theme}" data-media-case="${index}" data-kit="${kit}" style="width:640px;background:var(--background);color:var(--foreground)">${row}</div>`;
+        }
+    }
+    await writeFile('build/image-size/preview/media.html', `<!doctype html><body>${mediaHtml}</body>`);
+    await page.setContent(mediaHtml);
+    await page.locator('img').evaluateAll(async imgs => { for (const img of imgs) { img.loading = 'eager'; await img.decode(); } });
+    const mediaMeasurements = [];
+    // The README's vendor-alias path scans the parent JS directory, not only
+    // vue/ or react/. Use that scan alone, with the bare host's colour tokens.
+    const vendorInput = 'build/image-size/vendor-source.css';
+    const bareHost = (await readFile('workbench/bare/vue.css', 'utf8')).replace(/@source[^;]+;/g, '');
+    await writeFile(vendorInput, `${bareHost}\n@source "../../resources/js";\n`);
+    await compile('node_modules/.bin/tailwindcss', ['-i', vendorInput, '-o', 'build/image-size/vendor-source-built.css']);
+    for (const kit of ['blade', 'vue', 'react']) {
+        const kitCss = await readFile(kit === 'blade' ? 'build/bare/blade.css' : 'build/image-size/vendor-source-built.css', 'utf8');
+        await page.evaluate(css => { document.head.innerHTML = `<style>${css}</style>`; }, kitCss);
+        for (const hostWidth of [640, 320]) {
+            await page.locator('[data-media-case]').evaluateAll((nodes, width) => nodes.forEach(node => { node.style.width = `${width}px`; }), hostWidth);
+            const actual = await page.locator(`[data-media-case][data-kit="${kit}"]`).evaluateAll(nodes => nodes.map(node => {
+                const frame = node.querySelector('.sf-media'), img = frame.querySelector('img');
+                const rect = element => { const r = element.getBoundingClientRect(); return { width: r.width, height: r.height }; };
+                return { index: Number(node.dataset.mediaCase), theme: node.className, frame: rect(frame), image: rect(img), column: rect(node.querySelector('.sf-body')).width, fit: getComputedStyle(img).objectFit, background: getComputedStyle(frame).backgroundColor, href: frame.getAttribute('href') };
+            }));
+            for (const row of actual) {
+                const sample = mediaCases[row.index];
+                const size = ['inherit', 'unknown'].includes(sample.size) ? 'card' : sample.size;
+                const [maxWidth, maxHeight] = { thumbnail: [96, 96], inline: [256, 192], card: [384, 288], feature: [576, 432], full: [Infinity, Infinity] }[size];
+                const scale = Math.min(1, maxWidth / sample.width, maxHeight / sample.height, row.column / sample.width);
+                assert.ok(Math.abs(row.image.width - sample.width * scale) < 1 && Math.abs(row.image.height - sample.height * scale) < 1, JSON.stringify({ kit, hostWidth, sample: { size, shape: sample.shape }, row }));
+                assert.ok(Math.abs(row.frame.width - row.image.width) < 1 && Math.abs(row.frame.height - row.image.height) < 1, JSON.stringify({ kit, hostWidth, sample: { size, shape: sample.shape }, row }));
+                assert.equal(row.fit, 'contain');
+                assert.equal(row.background, 'rgba(0, 0, 0, 0)');
+                assert.equal(row.href, sample.linked ? '/project' : null);
+                mediaMeasurements.push({ kit, hostWidth, size, shape: sample.shape, ...row });
+            }
+        }
+    }
+    await writeFile('build/image-size/media-measurements.json', JSON.stringify(mediaMeasurements, null, 2));
     await page.goto(pathToFileURL(resolve('build/image-size/preview/index.html')).href);
     await page.locator('img').evaluateAll(async imgs=>{for(const img of imgs){img.loading='eager';await img.decode();}});
     await page.screenshot({path:'build/image-size/preview/desktop.png',fullPage:true});
@@ -103,4 +161,5 @@ try {
     assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
     await writeFile('build/image-size/measurements.json',JSON.stringify({sizes,precedence},null,2));
     console.log('PASS: 30 kit/theme/size samples match in preview and compiled bare-kit CSS; 6 precedence cases; wrapper retuning; app @theme emission; no inline size styles; mobile has no overflow.');
+    console.log(`PASS: ${mediaMeasurements.length} custom-renderer samples honour feed/body sizes; frames match pictures in light/dark at 640/320px; parent-js source scan emits sizing utilities.`);
 } finally { await browser.close();await server.close(); }

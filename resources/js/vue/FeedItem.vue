@@ -262,7 +262,7 @@ const slots = computed(() =>
                     :image="icon"
                     :href="entityLink(featured)?.href ?? null"
                     :link-attributes="entityLink(featured)?.attributes"
-                    class="mt-0! size-10! shrink-0 rounded-md!"
+                    class="mt-0! size-10! shrink-0 rounded-md! [&_img]:size-full! [&_img]:max-w-none! [&_img]:max-h-none! [&_img]:object-cover!"
                 />
                 <div :class="icon ? 'min-w-0 flex-1' : 'contents'">
                     <slot name="body" :node="item" />

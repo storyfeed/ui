@@ -1,25 +1,30 @@
+import { imageClasses } from '../shared/body';
 import { linkAttributes as filterAttributes } from '../shared/linkAttributes';
 import { useFeedOptions } from './context';
 export default function FeedMedia({
     image,
+    payload,
     href,
     className = '',
     linkAttributes,
 }: {
     image: Record<string, any>;
+    payload?: Record<string, any>;
     href?: string | null;
     className?: string;
     linkAttributes?: Record<string, unknown>;
 }) {
     const { FEED_LINK: Link = 'a', FEED_MEDIA: Media } = useFeedOptions();
     const attributes = href ? filterAttributes(linkAttributes) : {};
+    // Feed limits inherit through CSS; a custom Image renderer passes its body to override them.
+    const classes = `sf-media mt-2 block w-fit max-w-[min(100%,var(--sf-image-width,22rem))] overflow-hidden rounded-lg [&>img]:block [&>img]:w-auto [&>img]:h-auto [&>img]:object-contain [&>img]:max-w-full [&>img]:max-h-[var(--sf-image-height,none)] ${imageClasses(payload ?? {}) ?? ''} ${className}`;
     if (Media)
         return (
             <Media
                 image={image}
                 href={href}
                 linkAttributes={attributes}
-                className={`sf-media mt-2 block max-w-88 overflow-hidden rounded-lg bg-muted ${className}`}
+                className={classes}
             />
         );
     const Tag = href ? Link : 'div';
@@ -27,15 +32,9 @@ export default function FeedMedia({
         <Tag
             {...attributes}
             href={href || undefined}
-            className={`sf-media mt-2 block max-w-88 overflow-hidden rounded-lg bg-muted ${className}`}
-            style={
-                image.width && image.height
-                    ? { aspectRatio: `${image.width} / ${image.height}` }
-                    : undefined
-            }
+            className={classes}
         >
             <img
-                className="block size-full object-cover"
                 src={image.src}
                 alt={image.alt ?? ''}
                 width={image.width ?? undefined}

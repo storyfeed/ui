@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- Custom Image renderers can pass their body as `payload` to `FeedMedia` (`<x-storyfeed::media>` in Blade) to reuse the feed's image-size limits and the body's own override, including `full`. Media frames shrink to the whole picture without a muted box beyond it, in Blade, Vue and React; fixed icon and sample tiles retain their crop. The README documents this renderer path and the parent `vendor/storyfeed/ui/resources/js` Tailwind scan required when importing a kit through a Vite alias. (#88)
+
 ## v0.9.8 - 2026-10-11
 
 ### Added

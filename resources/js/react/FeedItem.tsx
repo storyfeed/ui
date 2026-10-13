@@ -128,7 +128,7 @@ export default function FeedItem({
                             image={icon}
                             href={link?.href ?? null}
                             linkAttributes={link?.attributes}
-                            className="mt-0! size-10! shrink-0 rounded-md!"
+                            className="mt-0! size-10! shrink-0 rounded-md! [&_img]:size-full! [&_img]:max-w-none! [&_img]:max-h-none! [&_img]:object-cover!"
                         />
                     )}
                     <div className={icon ? 'min-w-0 flex-1' : 'contents'}>

@@ -23,7 +23,7 @@ defineProps<{
 defineEmits<{ toggle: [] }>()
 
 const linkComponent = inject(FEED_LINK, 'a')
-const tileClass = 'mt-0! aspect-square! size-full! max-w-none! rounded-lg!'
+const tileClass = 'mt-0! aspect-square! size-full! max-w-none! rounded-lg! [&_img]:size-full! [&_img]:max-w-none! [&_img]:max-h-none! [&_img]:object-cover!'
 </script>
 
 <template>
