@@ -46,6 +46,11 @@ Before commit and PR updates run:
 - For layout changes, run the applicable headless parity, alignment, wells,
   targets, hydration and bare-host checks from `package.json`.
 
+The Boost guideline and skill in `resources/boost` are the kits' agent
+edition. A change to a kit's props, exports, provide keys or install steps
+updates them in the same PR; `tests/BoostSkillTest.php` fails on names the
+package no longer ships.
+
 Every change needs a regression test and an Unreleased changelog entry, with
 an issue number when working on an issue. Local passing checks are one
 configuration; inspect GitHub CI on the final PR commit before claiming green.
