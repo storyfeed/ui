@@ -18,11 +18,12 @@ the work teaches us, and a dropped item is closed as not planned with its reason
 
 - [ ] **[v0.10 — Motion](https://github.com/storyfeed/ui/milestone/8).** Kits
       animate: groups expand in place, Live arrivals slide in.
-- [ ] **[v0.11 — Payload v1](https://github.com/storyfeed/ui/milestone/9).** Kits
-      render Payload v1 unchanged once core declares it stable.
+- [ ] **[v0.11 — Image sizes](https://github.com/storyfeed/ui/milestone/9).**
+      Custom Image renderers and `FeedMedia` follow the feed's image sizes.
 - [ ] **[v1.0 — Stable](https://github.com/storyfeed/ui/milestone/2).**
       storyfeed/ui 1.0 ships alongside core 1.0: Blade, Vue and React kits with
-      a frozen component API.
+      a frozen component API, rendering Payload v1 unchanged once core declares
+      it stable with its release candidate.
 
 ## After 1.0
 
