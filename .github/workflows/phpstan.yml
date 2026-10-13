@@ -2,6 +2,7 @@ name: PHPStan
 
 on:
   push:
+    branches: [main, '*.x']
     paths:
       - 'README.md'
       - 'CHANGELOG.md'
@@ -9,6 +10,18 @@ on:
       - 'phpstan.neon.dist'
       - 'composer.json'
       - '.github/workflows/phpstan.yml'
+  pull_request:
+    paths:
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - '**.php'
+      - 'phpstan.neon.dist'
+      - 'composer.json'
+      - '.github/workflows/phpstan.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   phpstan:
