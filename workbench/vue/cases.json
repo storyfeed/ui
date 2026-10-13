@@ -1,5 +1,63 @@
 [
   {
+    "name": "Code body",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "code-body",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline": "Code examples",
+        "actor": null,
+        "object": {
+          "label": "Migration",
+          "body": [
+            {
+              "$body": "Storyfeed/Body/Code",
+              "$v": 1,
+              "title": "Rename the pivot table",
+              "language": "diff",
+              "source": "- drop('orders_users')\n+ rename('orders_users', 'order_users')"
+            },
+            {
+              "$body": "Storyfeed/Body/Code",
+              "$v": 1,
+              "source": "if (a < b && b > 0) {\n  <script>alert('x')</script>\n}\n"
+            },
+            {
+              "$body": "Storyfeed/Body/Code",
+              "$v": 1,
+              "source": ""
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "name": "Callout body",
+    "items": [
+      {
+        "kind": "activity",
+        "id": "callout-body",
+        "published_at": "2026-08-14T12:00:00Z",
+        "headline": "Callout examples",
+        "actor": null,
+        "object": {
+          "label": "Notes",
+          "body": [
+            { "$body": "Storyfeed/Body/Callout", "$v": 1, "title": "Note", "content": "Pin a version until 1.0 ships.", "intent": "note" },
+            { "$body": "Storyfeed/Body/Callout", "$v": 1, "title": "Info", "content": "Your update is in the queue.", "intent": "info" },
+            { "$body": "Storyfeed/Body/Callout", "$v": 1, "title": "Success", "content": "The migration finished.", "intent": "success" },
+            { "$body": "Storyfeed/Body/Callout", "$v": 1, "title": "Warning", "content": "This order ships from the backup warehouse.", "intent": "warning" },
+            { "$body": "Storyfeed/Body/Callout", "$v": 1, "title": "Danger", "content": "The shipment could not be booked.", "intent": "danger" },
+            { "$body": "Storyfeed/Body/Callout", "$v": 1, "title": "Unknown intent", "content": "This draws as a note.", "intent": "warm" },
+            { "$body": "Storyfeed/Body/Callout", "$v": 1, "content": "<b>Plain text</b> & no title.\nA second line stays separate." }
+          ]
+        }
+      }
+    ]
+  },
+  {
     "name": "Stacked actors and truncated members",
     "items": [
       {

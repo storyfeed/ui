@@ -15,7 +15,7 @@ const scales = bare ? [{ name: 'bare host', vars: {} }] : [
 ];
 const tolerance = 0.5;
 // Each body's measure at the default size: the wrapper 44rem, text 36rem, cards 32rem.
-const measures = { '.sf-body-form': 704, '.sf-prose-block': 576, '.sf-list-block': 576, '.sf-table-block': 576, '.sf-media-object': 512, '.sf-facts': 512, '.sf-cta': 512 };
+const measures = { '.sf-body-form': 704, '.sf-prose-block': 576, '.sf-list-block': 576, '.sf-table-block': 576, '.sf-media-object': 512, '.sf-facts': 512, '.sf-cta': 512, '.sf-code-block': 576, '.sf-callout': 512 };
 // A row's rail is the 2rem disc, its body 0.75rem off it, 1.25rem below it but for the feed's last.
 const spacing = { rail: '32px', offset: 44, below: ['20px', '0px'] };
 const output = process.env.STORYFEED_SCREENSHOTS;

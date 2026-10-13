@@ -11,7 +11,7 @@ npm install lucide-vue-next micromark micromark-extension-gfm-autolink-literal m
 npm install -D @tailwindcss/typography
 ```
 
-Rich `Prose`, `ItemList` and `Table` render inside Typography's `prose`, so register the
+Rich `Prose`, `ItemList`, `Table` and `Code` render inside Typography's `prose`, so register the
 plugin in `resources/css/app.css`:
 
 ```css
@@ -135,9 +135,17 @@ location/generator roles. Context appears only when named by the headline.
 Lead-in words live in `messages.ts`; time uses local calendar boundaries.
 
 Generic bodies include KeyValue, Excerpt, FileAttachment (plus legacy File),
-Prose, ItemList, Image and MediaObject. Rich Markdown/HTML is sanitized;
+Prose, ItemList, Image, MediaObject, Table, CallToAction, Code and Callout. Rich Markdown/HTML is sanitized;
 verbatim and plain text are escaped and preserve whitespace. Published
 historical `$v` forms continue to render.
+
+Code draws escaped `source` in `<pre><code>` inside `prose`, with an optional
+`title` above and `language-<name>` on `<code>` when `language` is set. The host
+owns highlighting. It uses the `muted`/`foreground` tokens and scrolls at
+`--sf-prose-max-h`. Callout frames escaped `content`, with an optional title,
+in neutral `note`, sky `info`, emerald `success`, amber `warning` or red
+`danger`, in light and dark. Missing or unknown intents draw as `note`.
+Neither body parses HTML or Markdown. The existing Tailwind scan covers both.
 
 A row shows a picture only when one of its bodies asks for one. An Image body
 draws its own `src` at its declared size when it stores one, else the entity's

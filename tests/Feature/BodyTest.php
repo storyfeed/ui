@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Str;
+use Storyfeed\Body\Callout;
 use Storyfeed\Body\CallToAction;
+use Storyfeed\Body\Code;
 use Storyfeed\Body\Component;
 use Storyfeed\Body\Excerpt;
 use Storyfeed\Body\FileAttachment;
@@ -319,6 +321,46 @@ it('draws core\'s Table body through the feed', function () {
     $html = render_bodies(Table::make(['Item', 'Price'])->title('Receipt')->row(['Seats', '$40.00'])->footer(['Total', '$49.00']));
 
     expect($html)->toContain('<figcaption>Receipt</figcaption>', '<thead><tr><th>Item</th><th>Price</th></tr></thead>', '<tr><td>Seats</td><td>$40.00</td></tr>', '<tr><td>Total</td><td>$49.00</td></tr>');
+});
+
+it('draws Code as escaped source inside prose, with an optional title and language', function () {
+    $render = fn (array $payload) => Blade::render('<x-storyfeed::body :body="$body" />', ['body' => ['$body' => 'Storyfeed/Body/Code', '$v' => 1, '$fallback' => 'Not the code', ...$payload]]);
+    $source = "if (a < b && b > 0) {\n  <script>alert('x')</script>\n}\n";
+    $html = $render(['title' => 'Diff <1>', 'language' => 'diff', 'source' => $source]);
+
+    expect($html)->toContain('sf-code__prose prose', 'class="language-diff"', "if (a &lt; b &amp;&amp; b &gt; 0) {\n  &lt;script&gt;alert(&#039;x&#039;)&lt;/script&gt;\n}\n")
+        ->not->toContain('<script>', 'Not the code')
+        ->and(structural_html($html))->toContain('<figcaption>Diff &lt;1&gt;</figcaption>')
+        ->and($render(['source' => '0']))->toContain('>0</code>')->not->toContain('language-', '<figcaption')
+        ->and($render(['source' => '', 'title' => '', 'language' => '']))->toContain('</code></pre>')->not->toContain('language-', '<figcaption')
+        ->and($render(['source' => 'text', 'title' => '0', 'language' => 'x" onclick="bad']))->toContain('>0</figcaption>', 'language-x&quot; onclick=&quot;bad')->not->toContain(' onclick="bad');
+});
+
+it('draws Callout as a framed plain-text note, mapping known intents and defaulting others', function () {
+    $render = fn (array $payload) => Blade::render('<x-storyfeed::body :body="$body" />', ['body' => ['$body' => 'Storyfeed/Body/Callout', '$v' => 1, '$fallback' => 'Not the note', ...$payload]]);
+
+    foreach (['note', 'info', 'success', 'warning', 'danger', 'warm', '__proto__', '', null] as $intent) {
+        $expected = in_array($intent, ['info', 'success', 'warning', 'danger'], true) ? $intent : 'note';
+        $html = $render(['title' => 'Caution <1>', 'content' => "<b>Backup</b> & ready.\nNext line.", 'intent' => $intent]);
+        expect($html)->toContain('<aside data-sf-intent="'.$expected.'"', '&lt;b&gt;Backup&lt;/b&gt; &amp; ready.')
+            ->not->toContain('<b>', 'Not the note')
+            ->and(structural_html($html))->toContain('<p>Caution &lt;1&gt;</p> <p>&lt;b&gt;Backup&lt;/b&gt; &amp; ready. Next line.</p>');
+    }
+
+    expect($render(['content' => '0']))->toContain('data-sf-intent="note"', '>0</p>')->not->toContain('sf-callout__title')
+        ->and($render(['content' => '', 'title' => '0']))->toContain('>0</p>', 'sf-callout__content');
+});
+
+it('draws core\'s Code and Callout bodies through the feed', function () {
+    if (! class_exists(Code::class) || ! class_exists(Callout::class)) {
+        $this->markTestSkipped('This core has no Code or Callout body.');
+    }
+
+    expect(render_bodies([
+        Code::make("- old\n+ new")->language('diff')->title('Migration'),
+        Callout::make('Backup warehouse.')->title('Split shipment')->warning(),
+    ]))->toContain('<figcaption>Migration</figcaption>', 'data-sf-intent="warning"', '<p>Split shipment</p>', '<p>Backup warehouse.</p>')
+        ->toMatch('/<code\s*>- old \+ new<\/code>/');
 });
 
 it('draws a call to action as a plain link button, with safe attributes and its entity as the default target', function () {
