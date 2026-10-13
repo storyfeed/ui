@@ -49,8 +49,8 @@ const picture = computed(() => mediaObjectPicture(props.payload.image, props.ent
 /** Beside the text, a picture keeps its own shape (see `shared/picture.ts`). */
 const shape = computed(() => pictureShape(props.payload.image, picture.value))
 const frames = {
-    icon: { wrapper: 'sf-media-object__image w-16 flex-none', media: 'mt-0! size-16! rounded-md!' },
-    ratio: { wrapper: 'sf-media-object__image h-16 w-[calc(--spacing(16)*var(--sf-picture-ratio))] flex-none', media: 'mt-0! size-full! max-w-none! aspect-auto! rounded-md!' },
+    icon: { wrapper: 'sf-media-object__image w-16 flex-none', media: 'mt-0! size-16! rounded-md! [&_img]:size-full! [&_img]:max-w-none! [&_img]:max-h-none! [&_img]:object-cover!' },
+    ratio: { wrapper: 'sf-media-object__image h-16 w-[calc(--spacing(16)*var(--sf-picture-ratio))] flex-none', media: 'mt-0! size-full! max-w-none! aspect-auto! rounded-md! [&_img]:size-full! [&_img]:max-w-none! [&_img]:max-h-none! [&_img]:object-cover!' },
     free: { wrapper: 'sf-media-object__image w-24 flex-none', media: 'mt-0! w-full! max-w-none! rounded-md! [&_img]:h-auto! [&_img]:max-h-32 [&_img]:object-contain!' },
 } as const
 const frame = computed(() => frames[shape.value.shape])

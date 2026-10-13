@@ -140,6 +140,35 @@ use the browser's local calendar and live or pinned clock. See the
 [React kit README](resources/js/react/README.md) for the complete provider,
 pagination, body and SSR contracts.
 
+### Import directly from vendor (Vue or React)
+
+Instead of copying a kit, point a Vite alias at the package's JS directory.
+For example, add this alias to your `vite.config.ts` (alongside existing aliases):
+
+```ts
+import { fileURLToPath } from 'node:url';
+
+// Merge into defineConfig's resolve.alias:
+const alias = {
+    '@storyfeed': fileURLToPath(new URL('./vendor/storyfeed/ui/resources/js', import.meta.url)),
+};
+```
+
+Import Vue components from `@storyfeed/vue/FeedStream.vue`, or React exports
+from `@storyfeed/react`. Shared helpers live at `@storyfeed/shared/body`.
+Install the same npm dependencies as for the copied kit. In
+`resources/css/app.css`, use this scan instead of the copied-directory scan:
+
+```css
+@plugin "@tailwindcss/typography";
+@source "../../vendor/storyfeed/ui/resources/js";
+```
+
+Scan the parent `resources/js`, **not only `resources/js/vue` or
+`resources/js/react`**: both kits use literal utilities from `shared/`,
+including the image-size map. If you also render Blade views, keep its
+`@source "../../vendor/storyfeed/ui/resources/views";` line too.
+
 ## Usage
 
 Pass a page of the feed to a view:
@@ -659,3 +688,72 @@ With the kit’s literal utilities scanned, Tailwind emits these referenced
 variables to `:root`. The image harness verifies the resulting 320×240 limit
 in all three kits. `@theme static` also works and emits the tokens even when
 unused; that form is verified by the same harness.
+
+#### Custom Image renderers
+
+Use `FeedMedia` (`<x-storyfeed::media>` in Blade) for a linked picture. It
+consumes the inherited `--sf-image-width` and `--sf-image-height` without an
+injection or extra stylesheet. Pass the body as `payload` so its own
+`$meta.size` wins over the feed, including explicit `full`; absent or unknown
+sizes inherit. Its frame shrinks to the picture, with no fill beyond it.
+Outside a sized feed, media retains its 22rem maximum width. Pictures keep
+their intrinsic ratio and scale down, never up; declared width/height
+attributes reserve space while loading. Captions stay in your renderer,
+outside the media frame, so their text can use the normal column width.
+
+**Blade:** replace `resources/views/vendor/storyfeed/components/body/image.blade.php`:
+
+```blade
+@props(['body', 'entity' => null])
+@php
+    $picture = \Storyfeed\Ui\Support\Bodies::picture($body, $entity);
+    $link = \Storyfeed\Ui\Support\Links::entity($entity);
+@endphp
+@if ($picture)
+    <x-storyfeed::media :image="$picture" :payload="$body"
+        :href="$link['href'] ?? null" :link-attributes="$link['attributes'] ?? []" />
+@endif
+```
+
+**Vue:** register this component with
+`app.use(feedBodies({ 'Storyfeed/Body/Image': LinkedImage }))`:
+
+```vue
+<script setup lang="ts">
+import { computed } from 'vue';
+import FeedMedia from '@/components/storyfeed/FeedMedia.vue';
+import { pictureOf } from '@/components/storyfeed/shared/body';
+
+const props = defineProps<{
+    payload: Record<string, any>;
+    entityMedia?: Record<string, any> | null;
+    entityUrl?: string | null;
+}>();
+const picture = computed(() => pictureOf(props.payload, props.entityMedia));
+</script>
+
+<template>
+    <FeedMedia v-if="picture" :image="picture" :payload="payload" :href="entityUrl" />
+</template>
+```
+
+**React:** register the renderer through `FeedProvider`:
+
+```tsx
+import { FeedMedia, FeedProvider, type BodyProps } from '@/components/storyfeed';
+import { pictureOf } from '@/components/storyfeed/shared/body';
+
+function LinkedImage({ payload, entityMedia, entityUrl }: BodyProps) {
+    const picture = pictureOf(payload, entityMedia);
+    return picture ? <FeedMedia image={picture} payload={payload} href={entityUrl} /> : null;
+}
+
+<FeedProvider FEED_BODIES={{ 'Storyfeed/Body/Image': LinkedImage }}>…</FeedProvider>
+```
+
+For vendor-alias imports, replace `@/components/storyfeed` in these JS
+examples with `@storyfeed/vue` or `@storyfeed/react`, and import `pictureOf`
+from `@storyfeed/shared/body`. A host `FEED_MEDIA` component or Blade media
+callback receives the same size and frame classes; apply them to a root
+containing the `<img>` as a direct child, or consume the size variables in
+your own markup if it wraps the image differently.

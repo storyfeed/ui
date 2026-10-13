@@ -12,11 +12,14 @@
  * picture does not navigate — the payload's `entity.url` for a photo IS the
  * full file, so tapping one would leave the feed for a raw image.
  */
-import { inject } from 'vue'
+import { computed, inject } from 'vue'
+import { imageClasses } from '../shared/body'
 import { linkAttributes as filterAttributes } from '../shared/linkAttributes'
 import { FEED_LINK, FEED_MEDIA } from './keys'
 
-defineProps<{ image: Record<string, any>; href?: string | null; linkAttributes?: Record<string, unknown> }>()
+const props = defineProps<{ image: Record<string, any>; payload?: Record<string, any>; href?: string | null; linkAttributes?: Record<string, unknown> }>()
+// Feed limits inherit through CSS; a custom Image renderer passes its body to override them.
+const classes = computed(() => ['sf-media mt-2 block w-fit max-w-[min(100%,var(--sf-image-width,22rem))] overflow-hidden rounded-lg [&>img]:block [&>img]:w-auto [&>img]:h-auto [&>img]:object-contain [&>img]:max-w-full [&>img]:max-h-[var(--sf-image-height,none)]', imageClasses(props.payload ?? {})])
 
 // The same seam an entity link uses, so a docs page can make a tile inert and
 // an app can hand it a router component.
@@ -25,17 +28,16 @@ const mediaComponent = inject(FEED_MEDIA, null)
 </script>
 
 <template>
-    <component v-if="mediaComponent" :is="mediaComponent" :image="image" :href="href" :link-attributes="href ? filterAttributes(linkAttributes) : {}" class="sf-media mt-2 block max-w-88 overflow-hidden rounded-lg bg-muted" />
+    <component v-if="mediaComponent" :is="mediaComponent" :image="image" :href="href" :link-attributes="href ? filterAttributes(linkAttributes) : {}" :class="classes" />
     <component
         v-else
         v-bind="href ? filterAttributes(linkAttributes) : {}"
         :is="href ? linkComponent : 'div'"
         :href="href || undefined"
-        class="sf-media mt-2 block max-w-88 overflow-hidden rounded-lg bg-muted"
-        :style="image.width && image.height ? { aspectRatio: `${image.width} / ${image.height}` } : undefined"
+        :class="classes"
     >
         <!-- Load documentation previews before scrolling or printing the page. -->
-        <img class="block size-full object-cover"
+        <img
             :src="image.src"
             :alt="image.alt ?? ''"
             :width="image.width"

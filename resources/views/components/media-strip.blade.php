@@ -9,7 +9,7 @@
     own `mediaTiles`, `{image, href}`) is drawn as a picture.
 --}}
 @props(['tiles' => [], 'overflow' => 0, 'renderer' => null, 'toggle' => null])
-@php($classes = 'mt-0! aspect-square! size-full! max-w-none! rounded-lg!')
+@php($classes = 'mt-0! aspect-square! size-full! max-w-none! rounded-lg! [&_img]:size-full! [&_img]:max-w-none! [&_img]:max-h-none! [&_img]:object-cover!')
 @if ($tiles)
     <div {{ $attributes->class('sf-media-strip mt-2 grid max-w-88 grid-cols-4 gap-1') }}>
 @foreach ($tiles as $tile)

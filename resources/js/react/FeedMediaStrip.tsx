@@ -2,7 +2,7 @@ import FeedMedia from './FeedMedia';
 import { useFeedOptions } from './context';
 import { linkProps } from '../shared/link';
 
-const tileClass = 'mt-0! aspect-square! size-full! max-w-none! rounded-lg!';
+const tileClass = 'mt-0! aspect-square! size-full! max-w-none! rounded-lg! [&_img]:size-full! [&_img]:max-w-none! [&_img]:max-h-none! [&_img]:object-cover!';
 
 /**
  * A group's strip: one rounded-square tile per member activity, all the same

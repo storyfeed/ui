@@ -52,6 +52,8 @@ jobs:
       - run: npm run typecheck:react
       - run: npm run workbench
       - run: npx playwright install --with-deps chromium
+      - run: npm run image-size:preview
+      - run: npm run image-size:check
       - run: npm run test:hydrate
       - run: npm run kit:parity
         env:

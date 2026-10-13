@@ -44,3 +44,21 @@ it('honours the feed choice on an image naming the icon slot', function () {
     $items = [FeedItem::of(['kind' => 'activity', 'headline' => 'Maple Fair', 'object' => $object])];
     expect(render_image_size('<x-storyfeed::feed :items="$items" image-size="card" />', compact('items')))->toContain('<figure', '--sf-image-size-full,100%)');
 });
+
+it('lets a custom Image renderer reuse media sizing and keep its link', function () {
+    $renderer = function (array $body, $entity): string {
+        $image = Bodies::picture($body, $entity);
+
+        return Blade::render('<x-storyfeed::media :image="$image" :payload="$body" href="/project" />', compact('image', 'body'));
+    };
+    foreach ([null, 'thumbnail', 'inline', 'card', 'feature', 'full', 'unknown'] as $size) {
+        $body = ['$body' => 'Storyfeed/Body/Image', '$v' => 3, 'src' => '/fair.jpg', 'width' => 800, 'height' => 1200, '$meta' => ['size' => $size]];
+        $items = [FeedItem::of(['kind' => 'activity', 'headline' => 'Maple Fair', 'object' => ['type' => 'project', 'id' => '1', 'body' => [$body]]])];
+        $html = render_image_size('<x-storyfeed::feed :items="$items" image-size="card" :renderers="[\'form\' => $renderer]" />', compact('items', 'renderer'));
+        expect($html)->toContain('<a href="/project"', '--sf-image-size-card,24rem)', 'max-h-[var(--sf-image-height,none)]')
+            ->not->toContain('aspect-ratio', 'payload=');
+        if ($size !== null && $size !== 'unknown') {
+            expect($html)->toContain('--sf-image-size-'.$size.',');
+        }
+    }
+});

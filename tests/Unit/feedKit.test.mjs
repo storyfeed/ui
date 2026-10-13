@@ -901,7 +901,7 @@ test('an Image body naming the icon slot draws as the linked thumbnail through h
     assert.match(frame, /alt="Dal"/);
     assert.match(frame, /size-10!/);
     assert.ok(frame.indexOf('dal-icon.jpg') < frame.indexOf('Status'), 'the other bodies sit beside the thumbnail');
-    assert.doesNotMatch(frame, /\/wrong|onClick|bad name|nested|sf-image/);
+    assert.doesNotMatch(frame, /\/wrong|onClick|bad name|nested|\bsf-image(?:\s|")/);
     let received;
     const host = createSSRApp({ render: () => h(Component, props) });
     host.provide(FEED_MEDIA, { props: ['image', 'href', 'linkAttributes'], setup(props) { received = props; return () => h('button', 'Lightbox'); } });
@@ -1186,6 +1186,29 @@ test('Image sizes override the inherited feed choice, including explicit full', 
     assert.ok(both.includes('--sf-image-size-card,24rem)') && both.includes('--sf-image-size-full,100%)'));
     payload.$meta = { size: 'bad);color:red' };
     assert.doesNotMatch(await renderRaw('/resources/js/vue/body/Image.vue', { payload }), /\[--sf-image-width:|style=|color:red/);
+});
+
+test('custom Image renderers reuse FeedMedia sizing and retain their links (ui#88)', async () => {
+    const { default: Feed } = await server.ssrLoadModule('/resources/js/vue/FeedStream.vue');
+    const { default: Media } = await server.ssrLoadModule('/resources/js/vue/FeedMedia.vue');
+    const { FEED_BODIES } = await server.ssrLoadModule('/resources/js/vue/keys.ts');
+    const { pictureOf } = await server.ssrLoadModule('/resources/js/shared/body.ts');
+    const LinkedImage = {
+        props: ['payload', 'entityMedia', 'entityUrl'],
+        setup: props => () => h(Media, { image: pictureOf(props.payload, props.entityMedia), payload: props.payload, href: props.entityUrl }),
+    };
+    for (const size of [undefined, 'thumbnail', 'inline', 'card', 'feature', 'full', 'unknown']) {
+        const payload = { $body: 'Storyfeed/Body/Image', $v: 3, src: '/fair.jpg', width: 800, height: 1200, $meta: { size } };
+        const item = { kind: 'activity', id: '1', published_at: null, headline: 'Maple Fair', object: { type: 'project', id: '1', url: '/project', body: [payload] } };
+        const app = createSSRApp({ render: () => h(Feed, { items: [item], imageSize: 'card', grouped: false }) });
+        app.provide(FEED_BODIES, { 'Storyfeed/Body/Image': LinkedImage });
+        const html = await renderToString(app);
+        assert.match(html, /<a[^>]*href="\/project"[^>]*class="sf-media/);
+        assert.ok(html.includes('--sf-image-size-card,24rem)'));
+        if (size && size !== 'unknown') assert.ok(html.includes(`--sf-image-size-${size},`), size);
+        assert.ok(html.includes('max-h-[var(--sf-image-height,none)]'));
+        assert.doesNotMatch(html, /aspect-ratio|bg-muted|payload=/);
+    }
 });
 
 
