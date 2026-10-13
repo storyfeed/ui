@@ -50,7 +50,7 @@ npm install -D @tailwindcss/typography
 @source "../../vendor/storyfeed/ui/resources/views";
 ```
 
-Text-shaped bodies (rich `Prose`, `ItemList` and `Table`) render inside Typography's
+Text-shaped bodies (rich `Prose`, `ItemList`, `Table` and `Code`) render inside Typography's
 `prose`, coloured from your tokens and sized by the feed (see
 [Set the feed's size](#set-the-feeds-size)), so they follow dark mode with the rest of the feed.
 
@@ -217,8 +217,21 @@ can be used on its own:
 
 Each of core's body types has a component in `components/body`: `key-value`,
 `excerpt`, `prose`, `file-attachment` (including stored `File`), `item-list`,
-`image`, `component`, `media-object`, `table` and `call-to-action`. A body
+`image`, `component`, `media-object`, `table`, `call-to-action`, `code` and `callout`. A body
 type with no component draws its `$fallback` line, or nothing.
+
+Code draws escaped `source` as `<pre><code>` inside Typography's `prose`, with
+an optional `title` above it. An optional `language` adds `language-<name>` to
+`<code>` for your application's syntax highlighter; the kit adds no highlighter.
+Whitespace is preserved and long blocks scroll at `--sf-prose-max-h`, like code
+inside rich Prose. The surface uses your `muted` and `foreground` tokens in both themes.
+
+Callout draws plain-text `content` in a frame, with an optional `title` above
+it. `intent` selects neutral `note` (the default), sky `info`, emerald
+`success`, amber `warning` or red `danger`, with light and dark treatments.
+Unknown intents draw as `note`. All three kits escape the title and content;
+neither body treats its text as HTML or Markdown. Existing Tailwind scans cover
+both bodies; no stylesheet or allow-list exception is needed.
 
 A CallToAction draws its heading and text in a card with its one action as a
 button, or the button alone when it has neither. Blade draws a plain link with

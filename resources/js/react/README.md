@@ -30,7 +30,7 @@ the size utilities also live in `shared/`. See the root README's
 
 Use Laravel starter-kit tokens: `background`, `foreground`, `card`, `muted`,
 `muted-foreground`, `primary`, `primary-foreground`, `border`, and `ring`.
-The kit adds no stylesheet. Rich `Prose`, `ItemList` and `Table` render inside
+The kit adds no stylesheet. Rich `Prose`, `ItemList`, `Table` and `Code` render inside
 Typography's `prose`, coloured from the same tokens. Dark mode follows your
 starter-kit tokens. The `sf-*` classes remain semantic hooks.
 
@@ -151,10 +151,18 @@ location/generator roles in that order. Context appears only in the headline.
 Translate lead-in words in `shared/messages.ts`.
 
 Generic bodies are Component, KeyValue, Excerpt, FileAttachment (including
-historical File), Prose, ItemList, Image and MediaObject. Activity data and the
+historical File), Prose, ItemList, Image, MediaObject, Table, CallToAction, Code and Callout. Activity data and the
 object's body/data supply automatic previews; other roles are not previewed.
 Published historical `$v` forms still render. Rich Markdown/HTML goes through
 the same sanitizer as Vue; plain/verbatim source is escaped.
+
+Code draws escaped `source` in `<pre><code>` inside `prose`, with an optional
+`title` above and `language-<name>` on `<code>` when `language` is set. The host
+owns highlighting. It uses the `muted`/`foreground` tokens and scrolls at
+`--sf-prose-max-h`. Callout frames escaped `content`, with an optional title,
+in neutral `note`, sky `info`, emerald `success`, amber `warning` or red
+`danger`, in light and dark. Missing or unknown intents draw as `note`.
+Neither body parses HTML or Markdown. The existing Tailwind scan covers both.
 
 A row shows a picture only when one of its bodies asks for one. An Image body
 draws its own `src` at its declared size when it stores one, else the entity's

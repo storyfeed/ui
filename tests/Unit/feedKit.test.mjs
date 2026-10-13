@@ -713,6 +713,42 @@ test('Table draws inside prose with a tfoot, escaped cells that keep line breaks
     assert.equal((await render(path, { payload: { headers: ['A'] } })).replace(/<!--[\s\S]*?-->/g, ''), '');
 });
 
+test('Code draws escaped source inside prose with an optional title and highlighter language', async () => {
+    const path = '/resources/js/vue/body/Code.vue';
+    const payload = { $body: 'Storyfeed/Body/Code', title: 'Diff <1>', language: 'diff', source: "if (a < b && b > 0) {\n  <script>alert('x')</script>\n}\n" };
+    const html = await renderRaw(path, { payload });
+    assert.match(html, /sf-code__prose prose/);
+    assert.match(html, /<figcaption[^>]*>Diff &lt;1&gt;<\/figcaption>/);
+    assert.ok(html.includes('<code class="language-diff">if (a &lt; b &amp;&amp; b &gt; 0) {\n  &lt;script&gt;alert(&#39;x&#39;)&lt;/script&gt;\n}\n</code></pre>'));
+    const bare = await renderRaw(path, { payload: { source: '0' } });
+    assert.match(bare, /<code>0<\/code>/);
+    assert.doesNotMatch(bare, /language-|<figcaption/);
+    assert.match(await renderRaw(path, { payload: { source: '', title: '', language: '' } }), /<code><\/code><\/pre>/);
+    const quoted = await renderRaw(path, { payload: { title: '0', language: 'x" onclick="bad', source: 'text' } });
+    assert.match(quoted, />0<\/figcaption>/);
+    assert.match(quoted, /language-x&quot; onclick=&quot;bad/);
+    assert.doesNotMatch(quoted, / onclick="bad/);
+    const feed = await renderRaw('/resources/js/vue/FeedItem.vue', { item: { ...activity, object: { ...entity, body: [{ ...payload, $fallback: 'Not the code' }] } } });
+    assert.match(feed, /language-diff/);
+    assert.doesNotMatch(feed, /Not the code/);
+});
+
+test('Callout frames escaped text, maps the five intents and draws unknown intents as note', async () => {
+    const path = '/resources/js/vue/body/Callout.vue';
+    for (const intent of ['note', 'info', 'success', 'warning', 'danger', 'warm', '__proto__', '', null, undefined]) {
+        const expected = ['info', 'success', 'warning', 'danger'].includes(intent) ? intent : 'note';
+        const html = (await render(path, { payload: { title: 'Caution <1>', content: '<b>Backup</b> & ready.\nNext line.', intent } })).replace(/<!--[\s\S]*?-->/g, '');
+        assert.equal(html, `<aside data-sf-intent="${expected}" class="sf-callout"><p class="sf-callout__title">Caution &lt;1&gt;</p><p class="sf-callout__content">&lt;b&gt;Backup&lt;/b&gt; &amp; ready.\nNext line.</p></aside>`);
+    }
+    const bare = await render(path, { payload: { content: '0' } });
+    assert.match(bare, /data-sf-intent="note"/);
+    assert.match(bare, />0<\/p>/);
+    assert.doesNotMatch(bare, /sf-callout__title/);
+    const feed = await renderRaw('/resources/js/vue/FeedItem.vue', { item: { ...activity, data: { note: { $body: 'Storyfeed/Body/Callout', content: 'Ready', intent: 'success', $fallback: 'Not the note' } } } });
+    assert.match(feed, /data-sf-intent="success"/);
+    assert.doesNotMatch(feed, /Not the note/);
+});
+
 test('activity rows draw their time range after the time; groups never do', async () => {
     const html = await render('/resources/js/vue/FeedItem.vue', { item: { ...activity, starts_at: '2026-10-01T12:00:00Z', ends_at: '2026-10-09T12:00:00Z' } });
     assert.match(html.replace(/<!--[\s\S]*?-->/g, ''), /<\/time> · <span class="sf-meta__range">1 – 9 Oct 2026<\/span>/);

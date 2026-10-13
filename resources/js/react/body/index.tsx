@@ -25,6 +25,31 @@ export interface BodyProps {
     entityMedia?: Record<string, any> | null;
     imagePlacement?: 'beside' | 'below';
 }
+/** Source characters only; a host highlighter can use the language class. */
+export function Code({ payload }: BodyProps) {
+    return (
+        <figure className="sf-code-block m-0 min-w-0 max-w-144">
+            {typeof payload.title === 'string' && payload.title !== '' && (
+                <figcaption className="sf-code__title mb-2 text-sm font-semibold text-foreground">{payload.title}</figcaption>
+            )}
+            <div className="sf-code__prose prose max-w-none text-[length:var(--text-sm)] [--tw-prose-pre-code:var(--color-foreground)] [--tw-prose-pre-bg:var(--color-muted)]">
+                <pre className="sf-code m-0 max-h-[var(--sf-prose-max-h,--spacing(96))] overflow-auto rounded-lg px-4 py-3 font-mono text-[length:1em] leading-[1.55] whitespace-pre" tabIndex={0}><code className={typeof payload.language === 'string' && payload.language !== '' ? `language-${payload.language}` : undefined}>{payload.source ?? ''}</code></pre>
+            </div>
+        </figure>
+    );
+}
+/** Unknown app-owned intents use the neutral note palette. */
+export function Callout({ payload }: BodyProps) {
+    const intent = ['info', 'success', 'warning', 'danger'].includes(payload.intent) ? payload.intent : 'note';
+    return (
+        <aside data-sf-intent={intent} className="sf-callout min-w-0 max-w-128 rounded-lg border border-border bg-muted/50 px-3 py-2 text-sm leading-[1.6] text-foreground [overflow-wrap:anywhere] data-[sf-intent=info]:border-sky-500/25 data-[sf-intent=info]:bg-sky-500/5 data-[sf-intent=info]:text-sky-800 dark:data-[sf-intent=info]:bg-sky-500/10 dark:data-[sf-intent=info]:text-sky-200 data-[sf-intent=success]:border-emerald-500/25 data-[sf-intent=success]:bg-emerald-500/5 data-[sf-intent=success]:text-emerald-800 dark:data-[sf-intent=success]:bg-emerald-500/10 dark:data-[sf-intent=success]:text-emerald-200 data-[sf-intent=warning]:border-amber-500/25 data-[sf-intent=warning]:bg-amber-500/5 data-[sf-intent=warning]:text-amber-800 dark:data-[sf-intent=warning]:bg-amber-500/10 dark:data-[sf-intent=warning]:text-amber-200 data-[sf-intent=danger]:border-red-500/25 data-[sf-intent=danger]:bg-red-500/5 data-[sf-intent=danger]:text-red-800 dark:data-[sf-intent=danger]:bg-red-500/10 dark:data-[sf-intent=danger]:text-red-200">
+            {typeof payload.title === 'string' && payload.title !== '' && (
+                <p className="sf-callout__title m-0 mb-1 font-semibold">{payload.title}</p>
+            )}
+            <p className="sf-callout__content m-0 whitespace-pre-wrap">{payload.content ?? ''}</p>
+        </aside>
+    );
+}
 /**
  * `Storyfeed/Body/CallToAction`: an optional heading and a sentence or two,
  * then one action, drawn as a button. A lone action draws as the button
@@ -492,6 +517,8 @@ const FORMS: Record<string, ComponentType<BodyProps>> = Object.fromEntries(
         MediaObject,
         Table,
         CallToAction,
+        Code,
+        Callout,
     }).map(([name, component]) => [`Storyfeed/Body/${name}`, component]),
 );
 type Bodies = Readonly<Record<string, ComponentType<BodyProps>>>;

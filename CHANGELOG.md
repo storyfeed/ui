@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Code and Callout bodies render in Blade, Vue and React. Code draws escaped source in `<pre><code>` inside Typography's `prose`, with an optional title and a `language-<name>` class for a host highlighter. Callout frames escaped content with an optional title and light/dark palettes for note, info, success, warning and danger; unknown intents draw as note. (#92)
+
 ### Fixed
 
 - Custom Image renderers can pass their body as `payload` to `FeedMedia` (`<x-storyfeed::media>` in Blade) to reuse the feed's image-size limits and the body's own override, including `full`. Media frames shrink to the whole picture without a muted box beyond it, in Blade, Vue and React; fixed icon and sample tiles retain their crop. The README documents this renderer path and the parent `vendor/storyfeed/ui/resources/js` Tailwind scan required when importing a kit through a Vite alias. (#88)

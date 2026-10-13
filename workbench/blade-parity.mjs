@@ -7,6 +7,20 @@ import { checkKeyValue } from './key-value-parity.mjs';
 import { checkMediaObject } from './media-object-parity.mjs';
 const bodyTexts = {
     'App body type': ['UPS · 1Z999AA10123456784'],
+    'Code body': [
+        "Rename the pivot table - drop('orders_users') + rename('orders_users', 'order_users')",
+        "if (a < b && b > 0) { <script>alert('x')</script> }",
+        '',
+    ],
+    'Callout body': [
+        'Note Pin a version until 1.0 ships.',
+        'Info Your update is in the queue.',
+        'Success The migration finished.',
+        'Warning This order ships from the backup warehouse.',
+        'Danger The shipment could not be booked.',
+        'Unknown intent This draws as a note.',
+        '<b>Plain text</b> & no title. A second line stays separate.',
+    ],
     // A fallback line, nothing without one, the registered renderer over its fallback, escaped text.
     // Header, rows with a link, a kept line break and an empty mark, footer rows; then a slim, headerless, ragged table.
     'Table body': [
@@ -74,6 +88,30 @@ try {
                 assert.equal(sizes.table / sizes.head, 0.875, `${renderers[i]} ${text}: Prose table scales with the headline`);
                 assert.equal(sizes.body / sizes.head, 0.875, `${renderers[i]} ${text}: Table body scales with the headline`);
                 assert.equal(sizes.list / sizes.head, 0.875, `${renderers[i]} ${text}: ItemList scales with the headline`);
+                const bodies = await frames[i].evaluate(() => {
+                    const code = document.querySelector('.sf-code');
+                    const callouts = [...document.querySelectorAll('.sf-callout')];
+                    const colours = el => {
+                        const style = getComputedStyle(el);
+                        return [style.backgroundColor, style.borderTopColor, style.color];
+                    };
+                    return {
+                        codeSize: parseFloat(getComputedStyle(code).fontSize),
+                        calloutSize: parseFloat(getComputedStyle(callouts[0]).fontSize),
+                        whitespace: getComputedStyle(code).whiteSpace,
+                        colours: callouts.map(colours),
+                        intents: callouts.map(el => el.dataset.sfIntent),
+                        languages: [...document.querySelectorAll('.sf-code code')].map(el => el.getAttribute('class')),
+                    };
+                });
+                assert.equal(bodies.codeSize / sizes.head, 0.875, `${renderers[i]} ${text}: Code scales with the headline`);
+                assert.equal(bodies.calloutSize / sizes.head, 0.875, `${renderers[i]} ${text}: Callout scales with the headline`);
+                assert.equal(bodies.whitespace, 'pre', `${renderers[i]}: Code preserves source whitespace`);
+                assert.deepEqual(bodies.languages, ['language-diff', null, null], `${renderers[i]}: optional code language`);
+                assert.deepEqual(bodies.intents, ['note', 'info', 'success', 'warning', 'danger', 'note', 'note'], `${renderers[i]}: callout intents`);
+                assert.equal(new Set(bodies.colours.slice(0, 5).map(JSON.stringify)).size, 5, `${renderers[i]} ${theme}: five distinct callout palettes`);
+                assert.deepEqual(bodies.colours[5], bodies.colours[0], `${renderers[i]} ${theme}: unknown intent draws as note`);
+                assert.deepEqual(bodies.colours[6], bodies.colours[0], `${renderers[i]} ${theme}: absent intent draws as note`);
                 // ui#23's root cause: a row drawn outside a feed, in a host whose base is 14px (a Filament panel), still sizes from --sf-font-size: headline 1em, KeyValue one step below.
                 const hosted = await frames[i].evaluate(() => {
                     const host = document.createElement('div');
@@ -295,7 +333,7 @@ try {
                     }
                 }
                 const geometry = await Promise.all(frames.map(frame => frame.evaluate(() => {
-                    const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media', '.sf-facts', '.sf-facts__row', '.sf-facts__label', '.sf-facts__value', '.sf-facts__value > span', '.sf-rich-text', '.sf-rich-text *', '.sf-list-block', '.sf-list__prose *', '.sf-media-strip > *', '.sf-avatar--tile', '.sf-table-block', '.sf-table__prose *', '.sf-media-object__image img', '.sf-cta', '.sf-cta > *', '.sf-cta__action'];
+                    const selectors = ['.sf-feed', '.sf-row', '.sf-head', '.sf-meta', '.sf-body-form', '.sf-avatar', '.sf-rail__disc', '.sf-badge', '.sf-rail__line', '.sf-rail__node', '.sf-rail__branch', '.sf-day', '.sf-toggle', '.sf-children', '.sf-media-strip', '.sf-media-object', '.sf-media-object__image', '.sf-media-object__body', '.sf-object-media', '.sf-object-media > .sf-media', '.sf-facts', '.sf-facts__row', '.sf-facts__label', '.sf-facts__value', '.sf-facts__value > span', '.sf-rich-text', '.sf-rich-text *', '.sf-list-block', '.sf-list__prose *', '.sf-media-strip > *', '.sf-avatar--tile', '.sf-table-block', '.sf-table__prose *', '.sf-media-object__image img', '.sf-cta', '.sf-cta > *', '.sf-cta__action', '.sf-code-block', '.sf-code-block *', '.sf-callout', '.sf-callout > *'];
                     return Object.fromEntries(selectors.map(selector => [selector, [...document.querySelectorAll(selector)].filter(e => !e.closest('details:not([open]) .sf-children') && e.getClientRects().length && e.getBoundingClientRect().height > 0).map(e => {
                         const r = e.getBoundingClientRect();
                         return { x: r.x, y: r.y, w: r.width, h: r.height, text: e.textContent.trim().replace(/\s+/g, ' ') };
@@ -320,6 +358,16 @@ try {
                     const texts = await frames[i].locator(`.example:has(>h2:text-is("${section}")) .sf-body-form`).allTextContents();
                     // Kits differ only in whitespace between tags, which renders as nothing.
                     assert.deepEqual(texts.map(t => t.replace(/\s+/g, '')), expected.map(t => t.replace(/\s+/g, '')), `${renderers[i]}: ${section}`);
+                }
+                // Code and Callout share tags, attributes, literal classes and exact source characters, not just geometry.
+                if (state === 'collapsed' && text === 'default') {
+                    const markup = await Promise.all(frames.map(frame => frame.locator('.sf-code-block, .sf-callout').evaluateAll(roots => roots.map(root => [root, ...root.querySelectorAll('*')].map(el => ({
+                        tag: el.tagName,
+                        attributes: [...el.attributes].map(({ name, value }) => [name, value]).sort(([a], [b]) => a.localeCompare(b)),
+                        text: el.children.length ? null : el.textContent,
+                    }))))));
+                    assert.deepEqual(markup[1], markup[0], 'Blade/Vue Code and Callout markup');
+                    assert.deepEqual(markup[2], markup[0], 'React/Vue Code and Callout markup');
                 }
                 // Flowing text is never capped; code and verbatim blocks scroll at `--sf-prose-max-h` (24rem), which `none` lifts.
                 if (state === 'collapsed' && text === 'default') for (let i = 0; i < frames.length; i++) {
@@ -466,7 +514,7 @@ try {
                     assert.equal(await history.locator('.sf-children').count(), 1);
                     assert.equal(await history.locator('.sf-children').isVisible(), false);
                     assert.equal(await history.locator('.sf-toggle').count(), 0);
-                    for (const [label, name] of [['Icon Image bodies', 'icons'], ['Static collapsed print history', 'static']]) {
+                    for (const [label, name] of [['Icon Image bodies', 'icons'], ['Static collapsed print history', 'static'], ['Code body', 'code'], ['Callout body', 'callout']]) {
                         await frames[i].locator(`.example:has(>h2:text-is("${label}"))`).screenshot({ path: `${output}/b2-${renderers[i]}-${name}-${state}-${theme}-${width}.png` });
                     }
                 }

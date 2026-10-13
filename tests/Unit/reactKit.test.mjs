@@ -686,6 +686,38 @@ test('Table draws inside prose with a tfoot, escaped cells that keep line breaks
     assert.doesNotMatch(slim, /<thead|<tfoot|<figcaption/);
     assert.equal(render('Table', { payload: { headers: ['A'] } }), '');
 });
+test('Code draws escaped source inside prose with an optional title and highlighter language', () => {
+    const payload = { $body: 'Storyfeed/Body/Code', title: 'Diff <1>', language: 'diff', source: "if (a < b && b > 0) {\n  <script>alert('x')</script>\n}\n" };
+    const html = raw('Code', { payload });
+    assert.match(html, /sf-code__prose prose/);
+    assert.match(html, /<figcaption[^>]*>Diff &lt;1&gt;<\/figcaption>/);
+    assert.ok(html.includes('<code class="language-diff">if (a &lt; b &amp;&amp; b &gt; 0) {\n  &lt;script&gt;alert(&#x27;x&#x27;)&lt;/script&gt;\n}\n</code></pre>'));
+    const bare = raw('Code', { payload: { source: '0' } });
+    assert.match(bare, /<code>0<\/code>/);
+    assert.doesNotMatch(bare, /language-|<figcaption/);
+    assert.match(raw('Code', { payload: { source: '', title: '', language: '' } }), /<code><\/code><\/pre>/);
+    const quoted = raw('Code', { payload: { title: '0', language: 'x" onclick="bad', source: 'text' } });
+    assert.match(quoted, />0<\/figcaption>/);
+    assert.match(quoted, /language-x&quot; onclick=&quot;bad/);
+    assert.doesNotMatch(quoted, / onclick="bad/);
+    const feed = raw('FeedItem', { item: { ...activity, object: { ...entity, body: [{ ...payload, $fallback: 'Not the code' }] } } });
+    assert.match(feed, /language-diff/);
+    assert.doesNotMatch(feed, /Not the code/);
+});
+test('Callout frames escaped text, maps the five intents and draws unknown intents as note', () => {
+    for (const intent of ['note', 'info', 'success', 'warning', 'danger', 'warm', '__proto__', '', null, undefined]) {
+        const expected = ['info', 'success', 'warning', 'danger'].includes(intent) ? intent : 'note';
+        const html = render('Callout', { payload: { title: 'Caution <1>', content: '<b>Backup</b> & ready.\nNext line.', intent } });
+        assert.equal(html, `<aside data-sf-intent="${expected}" class="sf-callout"><p class="sf-callout__title">Caution &lt;1&gt;</p><p class="sf-callout__content">&lt;b&gt;Backup&lt;/b&gt; &amp; ready.\nNext line.</p></aside>`);
+    }
+    const bare = raw('Callout', { payload: { content: '0' } });
+    assert.match(bare, /data-sf-intent="note"/);
+    assert.match(bare, />0<\/p>/);
+    assert.doesNotMatch(bare, /sf-callout__title/);
+    const feed = raw('FeedItem', { item: { ...activity, data: { note: { $body: 'Storyfeed/Body/Callout', content: 'Ready', intent: 'success', $fallback: 'Not the note' } } } });
+    assert.match(feed, /data-sf-intent="success"/);
+    assert.doesNotMatch(feed, /Not the note/);
+});
 test('a call to action draws one button; modal reaches a host link, attributes are filtered, href-less goes to the entity', () => {
     const action = (href, extra = {}) => ({ label: 'See <it>', link: { href, modal: false, attributes: {}, ...extra } });
     const draw = (payload, options = {}) => render('CallToAction', { payload, entityUrl: '/roadmap' }, options);
