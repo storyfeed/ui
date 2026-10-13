@@ -4,6 +4,7 @@
 
 ### Added
 
+- A Laravel Boost guideline and a `storyfeed-ui` skill, in `resources/boost`, so `php artisan boost:install` gives an app's coding agent the kit setup: installing the Blade, Vue or React kit with the Tailwind `@source` lines for a copied kit and for a Vite alias to `vendor`, retuning tokens through `@theme`, the feed props (`image-size`, the viewer, rails and dense child rows), the `FEED_*` provides, and replacing a body renderer with `FeedMedia` so pictures keep their size. A test fails when either file names a component, prop, export, provide key, class or path the package doesn't ship. (#89)
 - Code and Callout bodies render in Blade, Vue and React. Code draws escaped source in `<pre><code>` inside Typography's `prose`, with an optional title and a `language-<name>` class for a host highlighter. Callout frames escaped content with an optional title and light/dark palettes for note, info, success, warning and danger; unknown intents draw as note. (#92)
 
 ### Fixed
