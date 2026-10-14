@@ -1,6 +1,6 @@
 ---
 name: storyfeed-ui
-description: Render Storyfeed activity feeds with storyfeed/ui's Blade, Vue or React kit. Use when installing a kit (php artisan storyfeed:ui vue or react, or importing from vendor through a Vite alias), adding the Tailwind @plugin and @source lines, rendering <x-storyfeed::feed>, Vue's FeedStream or React's FeedProvider and FeedStream, setting image-size, the viewer, rails or dense child rows, providing FEED_LINK, FEED_BODIES, FEED_VIEWER and the other FEED_* seams, retuning tokens through @theme, or replacing a body renderer such as Image without losing image sizing.
+description: Render Storyfeed activity feeds with storyfeed/ui's Blade, Vue or React kit. Use when installing a kit (php artisan storyfeed:ui vue or react, or importing from vendor through a Vite alias), adding the Tailwind @plugin and @source lines, rendering <x-storyfeed::feed>, Vue's FeedStream or React's FeedProvider and FeedStream, setting image-size, the viewer, rails or dense child rows, providing FEED_LINK, FEED_BODIES, FEED_VIEWER and the other FEED_* seams, formatting headline text with FEED_HEADLINE_TEXT, headlineText or HeadlineText and the inlineCode formatter, retuning tokens through @theme, or replacing a body renderer such as Image without losing image sizing.
 ---
 
 # Storyfeed UI
@@ -180,6 +180,7 @@ Vue provides these keys from `@/components/storyfeed/keys` (`app.provide()` or `
 | `FEED_NOW` | a fixed "now" in milliseconds, for static or SSR pages |
 | `FEED_FILE_LABELLER` | `({ name, mediaType }) => label or null` |
 | `FEED_MEDIA_OBJECT_PLACEMENT` | `'beside'` (default) or `'below'` |
+| `FEED_HEADLINE_TEXT` (React: `headlineText`) | `(text) => VNodeChild` (React: `ReactNode`) drawing headline text; see below |
 
 ```ts
 import { createApp } from 'vue';
@@ -187,6 +188,37 @@ import { Link } from '@inertiajs/vue3';
 import { FEED_LINK } from '@/components/storyfeed/keys';
 
 createApp(App).provide(FEED_LINK, Link);
+```
+
+## Format headline text
+
+A headline's own words (template text and the pre-rendered `headline` fallback) render as escaped text by default. A headline-text seam draws them instead; it never receives entity names, lists, counts or "You". Each kit ships one opt-in formatter, `inlineCode`: it escapes the text and draws each pair of single backticks as a Tailwind-styled `<code>`, so "Released `` `v2.3` ``" shows `v2.3` as code. An unmatched backtick stays literal; nothing else is Markdown.
+
+Blade, in a service provider's `boot()` (`register(null)` restores escaped text; needs Storyfeed core 0.21, older cores keep plain text):
+
+```php
+use Storyfeed\Ui\Support\HeadlineText;
+
+app(HeadlineText::class)->register(HeadlineText::inlineCode(...));
+```
+
+A custom Blade callback, `fn (string $text): string`, returns trusted HTML that is not sanitized, so it must escape the text with `e()` before adding markup.
+
+Vue, `(text: string) => VNodeChild`:
+
+```ts
+import { FEED_HEADLINE_TEXT } from '@/components/storyfeed/keys';
+import { inlineCode } from '@/components/storyfeed/inlineCode';
+
+app.provide(FEED_HEADLINE_TEXT, inlineCode);
+```
+
+React, `(text: string) => ReactNode`:
+
+```tsx
+import { FeedProvider, inlineCode } from '@/components/storyfeed';
+
+<FeedProvider headlineText={inlineCode}>…</FeedProvider>
 ```
 
 ## Replace a body renderer

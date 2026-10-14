@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { createServer } from 'vite';
 import { createElement as h } from 'react';
 import { renderToString } from 'react-dom/server';
+import { headlineTextTests } from './headlineText.mjs';
 process.env.TZ = 'UTC';
 const server = await createServer({
     configFile: false,
@@ -31,6 +32,8 @@ const raw = (name, props, options = {}) =>
     renderToString(
         h(kit.FeedProvider, options, h(kit[name] ?? bodies[name], props)),
     );
+headlineTextTests((props, headlineText, FEED_VIEWER) =>
+    raw('FeedHeadline', props, { headlineText, FEED_VIEWER }), kit.inlineCode, h);
 const render = (name, props, options) =>
     raw(name, props, options)
         .replace(

@@ -2,11 +2,13 @@
 import { computed, inject } from 'vue';
 import EntityLink from './EntityLink.vue';
 import type { FeedEntities, FeedEntity, FeedRole, FeedSingularRole } from '../shared/types';
-import { FEED_VIEWER } from './keys';
+import { FEED_HEADLINE_TEXT, FEED_VIEWER } from './keys';
 import { isViewer, you, VIEWER_CLASSES } from '../shared/viewer';
 
 // The page's reader, named "You" wherever a headline names them (ui#75).
 const viewer = inject(FEED_VIEWER, null);
+const headlineText = inject(FEED_HEADLINE_TEXT, null);
+const HeadlineText = (props: { text: string }) => headlineText ? headlineText(props.text) : props.text;
 
 const props = defineProps<{
     template: string | null;
@@ -108,7 +110,7 @@ const actorOverflow = computed(() => overflow('actors'));
     <span class="sf-headline leading-[1.6] text-pretty text-muted-foreground [overflow-wrap:anywhere]">
         <template v-if="parts.length > 0">
             <template v-for="(part, index) in parts" :key="index">
-                <template v-if="part.type === 'text'">{{ part.text }}</template>
+                <template v-if="part.type === 'text'"><HeadlineText v-if="headlineText" :text="part.text" /><template v-else>{{ part.text }}</template></template>
 
                 <span v-else-if="part.type === 'entity' && isViewer(viewer, entities[part.role])" :class="VIEWER_CLASSES">{{ you(index === 0) }}</span>
 
@@ -155,7 +157,7 @@ const actorOverflow = computed(() => overflow('actors'));
             </template>
         </template>
 
-        <template v-else-if="headline">{{ headline }}</template>
+        <template v-else-if="headline"><HeadlineText v-if="headlineText" :text="headline" /><template v-else>{{ headline }}</template></template>
 
         <!--
             No grammar authored. Groups get the count only — the avatar stack

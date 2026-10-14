@@ -1,7 +1,9 @@
-import type { Component, InjectionKey } from 'vue';
+import type { Component, InjectionKey, VNodeChild } from 'vue';
 import type { FileLabeller } from '../shared/fileLabels';
 import type { FeedViewer } from '../shared/viewer';
 
+/** Draws headline text only, never entities, lists, counts or viewer labels. */
+export const FEED_HEADLINE_TEXT = Symbol('feedHeadlineText') as InjectionKey<(text: string) => VNodeChild>;
 
 /** Complete media override, receiving image, href, linkAttributes and the kit classes. */
 export const FEED_MEDIA = Symbol('feedMedia') as InjectionKey<Component>;

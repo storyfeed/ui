@@ -83,6 +83,14 @@ All provider names retain the Vue seams' meaning:
 - `FEED_NOW`: pins the clock to a millisecond timestamp after mount. Without it,
   relative labels refresh every second/minute/hour according to age; timers are
   cleaned up on unmount or clock/input changes.
+- `headlineText`: `(text: string) => ReactNode`, drawing a headline's own
+  words: template text and the pre-rendered `headline` fallback, never entity
+  names, lists, counts or "You". Without it, text renders escaped as before.
+  The kit exports `inlineCode`, the built-in formatter: each pair of single
+  backticks becomes a `<code>` styled with Tailwind utilities, the rest stays
+  escaped text, and an unmatched backtick stays literal. Nothing else is
+  Markdown. `<FeedProvider headlineText={inlineCode}>`, with `inlineCode`
+  imported from `@/components/storyfeed`.
 
 `body` and `annotations` are functions receiving `{ node }`; `time` receives
 `{ node, label }`. They work on activities, groups and expanded children.

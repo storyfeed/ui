@@ -4,6 +4,7 @@ import vue from '@vitejs/plugin-vue';
 import { createServer } from 'vite';
 import { createSSRApp, h } from 'vue';
 import { renderToString } from 'vue/server-renderer';
+import { headlineTextTests } from './headlineText.mjs';
 
 const server = await createServer({
     configFile: false,
@@ -32,6 +33,16 @@ const entity = {
     modal: false,
     media: { icon: { src: '/ada.svg', alt: 'Ada' } },
 };
+
+const headlineKeys = await server.ssrLoadModule('/resources/js/vue/keys.ts');
+const { inlineCode } = await server.ssrLoadModule('/resources/js/vue/inlineCode.ts');
+const { default: Headline } = await server.ssrLoadModule('/resources/js/vue/FeedHeadline.vue');
+headlineTextTests(async (props, formatter, viewer) => {
+    const app = createSSRApp({ render: () => h(Headline, props) });
+    if (formatter) app.provide(headlineKeys.FEED_HEADLINE_TEXT, formatter);
+    if (viewer) app.provide(headlineKeys.FEED_VIEWER, viewer);
+    return renderToString(app);
+}, inlineCode, h);
 
 test('avatars show icons and deleted entities remain muted and unlinked', async () => {
     assert.match(
