@@ -7,6 +7,10 @@ correctly with no configuration, behind a component API that won't break.
 
 ## Shipped
 
+- [x] **[v0.10 — Headline text](https://github.com/storyfeed/ui/milestone/8).**
+      Each kit draws a headline's text through one seam, with an opt-in
+      `inlineCode` formatter for `` `code` `` spans.
+
 Earlier releases: see [CHANGELOG.md](CHANGELOG.md).
 
 ## The countdown to 1.0
@@ -16,9 +20,6 @@ titles start with the version they target, such as `[0.10]`. Milestones show
 the current plan: items may be reordered, moved to a later version or dropped as
 the work teaches us, and a dropped item is closed as not planned with its reason.
 
-- [ ] **[v0.10 — Headline text](https://github.com/storyfeed/ui/milestone/8).**
-      Each kit draws a headline's text through one seam, with an opt-in
-      `inlineCode` formatter for `` `code` `` spans.
 - [ ] **[v0.11 — Motion and image sizes](https://github.com/storyfeed/ui/milestone/9).**
       Kits animate: groups expand in place, Live arrivals slide in. Custom
       Image renderers and `FeedMedia` follow the feed's image sizes.

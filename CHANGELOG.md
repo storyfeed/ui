@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v0.10.0 - 2026-10-14
+
 ### Added
 
 - A Laravel Boost guideline and a `storyfeed-ui` skill, in `resources/boost`, so `php artisan boost:install` gives an app's coding agent the kit setup: installing the Blade, Vue or React kit with the Tailwind `@source` lines for a copied kit and for a Vite alias to `vendor`, retuning tokens through `@theme`, the feed props (`image-size`, the viewer, rails and dense child rows), the `FEED_*` provides, and replacing a body renderer with `FeedMedia` so pictures keep their size. A test fails when either file names a component, prop, export, provide key, class or path the package doesn't ship. (#89)
