@@ -3,6 +3,8 @@
 use Storyfeed\Facades\Story;
 use Storyfeed\Facades\Storyfeed;
 use Storyfeed\Grouping\Group;
+use Storyfeed\Support\FeedItem;
+use Storyfeed\Support\Headline;
 use Storyfeed\Ui\Support\HeadlineText;
 use Storyfeed\Ui\Support\Page;
 use Storyfeed\Ui\Tests\Fixtures\Order;
@@ -50,7 +52,7 @@ it('passes only a singular headline\'s text to the formatter, never entities or 
         ->and($seen->getArrayCopy())->toBe([' released `v2.3` <b>to</b> ']);
 })->skip(fn () => ! HeadlineText::supported(), 'core without Headline::toHtml(text:)');
 
-it('passes only a group headline\'s text to the formatter, never its entity lists', function () {
+it('passes only a group headline\'s text to the formatter, never its entity lists or counts', function () {
     Story::for(Order::class)->verb('review')->headline(':actor reviewed :object')
         ->groups(Group::byActors()->headline(':actors reviewed `main` on :object (:count reviews, :others; 3)'));
     $order = Order::create(['number' => '9']);
@@ -67,6 +69,20 @@ it('passes only a group headline\'s text to the formatter, never its entity list
         ->not->toContain('3')->not->toContain('0 others')->not->toContain(' 0 others')
         ->and(implode('|', $seen->getArrayCopy()))->not->toContain('Kim')->not->toContain('Ravi')->not->toContain('you')->not->toContain('Order #9');
 })->skip(fn () => ! HeadlineText::supported(), 'core without Headline::toHtml(text:)');
+
+it('leaves counts unformatted while formatting the selected count-form prose', function (int $count, string $word) {
+    $headline = new Headline(
+        FeedItem::of(['kind' => 'group', 'count' => $count]),
+        'Released :count builds',
+        null,
+    );
+    $seen = record_headline_text();
+
+    expect(render_blade('<x-storyfeed::headline :headline="$headline" />', ['headline' => $headline]))
+        ->toBe("<span><em>Released </em>{$count}<em> {$word}</em></span>")
+        ->and($seen->getArrayCopy())->toBe(['Released ', ' '.$word]);
+})->with([[1, 'build'], [3, 'builds']])
+    ->skip(fn () => ! HeadlineText::supported(), 'core without Headline::toHtml(text:)');
 
 it('passes a pre-rendered fallback headline to the formatter', function () {
     Storyfeed::anonymous()->action('release', Order::create(['number' => '9']))->publish();
@@ -111,5 +127,10 @@ it('does not format generated fallback words or counts', function () {
     $seen = record_headline_text();
 
     expect(render_feed([$node]))->toBe($before)
+        ->and($seen->getArrayCopy())->toBe([]);
+
+    $headline = new Headline(FeedItem::of(['kind' => 'group', 'count' => 3]), null, null);
+    expect(render_blade('<x-storyfeed::headline :headline="$headline" />', ['headline' => $headline]))
+        ->toBe('<span>3 activities</span>')
         ->and($seen->getArrayCopy())->toBe([]);
 });

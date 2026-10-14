@@ -57,26 +57,13 @@ final class HeadlineText
      */
     public static function draw(Headline $headline, ?Closure $entity = null, ?Closure $text = null): string
     {
+        // Core also sends generated fallback words to the closure; this seam is authored text only.
         if ($text === null || ! self::supported() || $headline->isFallback()) {
             return $headline->toHtml($entity);
         }
 
-        // Core exposes one segment per template part, but counts are text too.
-        // Keep their provenance rather than guessing from the rendered value.
-        $parts = preg_split('/(:[a-z_]+)/', $headline->template() ?? '', flags: PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY) ?: [];
-        $format = [];
-        foreach ($headline->segments() as $index => $segment) {
-            if ($segment['type'] === 'text') {
-                $format[] = ! in_array($parts[$index] ?? null, [':count', ':others'], true);
-            }
-        }
-        $index = 0;
-        $drawText = function (string $value) use ($text, $format, &$index): string {
-            return ($format[$index++] ?? false) ? $text($value) : e($value);
-        };
-
         // Reflection keeps the call valid against the older core's signature too.
-        $html = (new ReflectionMethod($headline, 'toHtml'))->invoke($headline, $entity, $drawText);
+        $html = (new ReflectionMethod($headline, 'toHtml'))->invoke($headline, $entity, $text);
 
         return is_string($html) ? $html : $headline->toHtml($entity);
     }
