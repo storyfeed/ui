@@ -49,20 +49,23 @@ final class GroupHeadline
         })->values();
     }
 
-    /** @param (Closure(Entity): string)|null $entity */
-    public function toHtml(?Closure $entity = null): string
+    /**
+     * @param  (Closure(Entity): string)|null  $entity
+     * @param  (Closure(string): string)|null  $text  Draws text segments only (ui#97), on a core that supports it.
+     */
+    public function toHtml(?Closure $entity = null, ?Closure $text = null): string
     {
         $template = $this->template();
         if ($template === null) {
-            return $this->group->headline()->toHtml($entity);
+            return HeadlineText::draw($this->group->headline(), $entity, $text);
         }
 
         $draw = $entity ?? fn (Entity $entity): string => $entity->toHtml();
         $parts = preg_split('/(:[a-z_]+)/', $template, flags: PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY) ?: [];
 
-        return collect($parts)->map(function (string $part) use ($draw): string {
+        return collect($parts)->map(function (string $part) use ($draw, $text): string {
             if (preg_match('/^:(actor|object|target|context|instrument|origin|result|location|generator)$/', $part, $match) !== 1) {
-                return (new Headline($this->group, $part, null))->toHtml($draw);
+                return HeadlineText::draw(new Headline($this->group, $part, null), $draw, $text);
             }
 
             $pinned = $this->group->entity($match[1]);

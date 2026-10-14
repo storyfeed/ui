@@ -7,6 +7,8 @@ import type { BodyProps } from './body';
 /** Vue injection seams, supplied together through one React context. */
 export interface FeedOptions {
     FEED_LINK?: ElementType;
+    /** Draws headline text only, never entities, lists, counts or viewer labels. */
+    headlineText?: (text: string) => ReactNode;
     /** Complete media override with image, href, linkAttributes and className. */
     FEED_MEDIA?: ElementType;
     FEED_IMAGE_SIZE?: import('../shared/body').ImageSize;

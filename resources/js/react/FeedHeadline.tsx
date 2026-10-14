@@ -74,7 +74,7 @@ export default function FeedHeadline({
     verb,
     aggregate,
 }: HeadlineProps) {
-    const viewer = useFeedOptions().FEED_VIEWER ?? null;
+    const { FEED_VIEWER: viewer = null, headlineText = (text: string) => text } = useFeedOptions();
     let content: ReactNode;
     if (template)
         content = template
@@ -115,11 +115,12 @@ export default function FeedHeadline({
                 } else if (segment === ':count') part = count;
                 else if (segment === ':others')
                     part = `${Math.max(0, (distinct.actors ?? 0) - (sample.actors ?? []).length)} others`;
+                else part = headlineText(segment);
                 return <Fragment key={i}>{part}</Fragment>;
             });
+    else if (headline) content = headlineText(headline);
     else
         content =
-            headline ||
             (aggregate ? (
                 ` ${count} activities `
             ) : (

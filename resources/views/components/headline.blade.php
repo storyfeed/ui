@@ -6,14 +6,16 @@
     Core passes either to the closure as an absent entity with no type
     (storyfeed/storyfeed#98); an older core draws the empty role's words itself.
     The page's viewer, when the feed is given one, reads as "You", drawn as
-    the actor it is.
+    the actor it is. Text segments go through the app's HeadlineText formatter
+    when one is registered and core takes it (storyfeed/storyfeed#208).
 --}}
 @props(['headline'])
 @aware(['viewer' => null])
 @php
     // The viewer, when the page names one (ui#75), reads as "You": marked here, worded once the sentence is known.
     $mark = "\u{E000}";
-    $html = $headline->toHtml(fn (\Storyfeed\Support\Entity $entity): string => match (true) {
+    // Text segments go through the app's registered formatter, if any (ui#97); entities never do.
+    $html = app(\Storyfeed\Ui\Support\HeadlineText::class)->render($headline, fn (\Storyfeed\Support\Entity $entity): string => match (true) {
         \Storyfeed\Ui\Support\Viewer::is($viewer, $entity) => $mark,
         method_exists($entity, 'isAbsent') && $entity->isAbsent() && $entity->role() === 'actor' => '<span class="sf-entity sf-entity--anonymous font-medium text-muted-foreground">'.e($entity->toString()).'</span>',
         $entity->type() === null => e($entity->toString()),

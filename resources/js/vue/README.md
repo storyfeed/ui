@@ -65,6 +65,20 @@ invert and code needs a dark surface in both themes.
   Filename extensions are never inferred by the kit. File names always show,
   even when the headline names the entity; sizes use decimal units (21 MB,
   76 KB). The payload is unchanged.
+- Provide `FEED_HEADLINE_TEXT` from `keys.ts` with a function
+  `(text: string) => VNodeChild` to draw a headline's own words: template text
+  and the pre-rendered `headline` fallback, never entity names, lists, counts
+  or "You". Without it, text renders escaped as before. `inlineCode` from
+  `inlineCode.ts` is the built-in formatter: each pair of single backticks
+  becomes a `<code>` styled with Tailwind utilities, the rest stays escaped
+  text, and an unmatched backtick stays literal. Nothing else is Markdown.
+
+  ```ts
+  import { FEED_HEADLINE_TEXT } from '@/components/storyfeed/keys';
+  import { inlineCode } from '@/components/storyfeed/inlineCode';
+
+  app.provide(FEED_HEADLINE_TEXT, inlineCode);
+  ```
 - `MediaObject.vue` accepts `image-placement="beside|below"`. Beside is the
   compact picture beside the text, which keeps its shape: an `icon` is a 4rem square;
   a picture with a declared `width` and `height` is 4rem tall at its own ratio, clamped between 1:1 and 2:1 (cropped only beyond that); one without shows whole at 6rem wide, up to 8rem tall. On a narrow card the picture stacks above the text.

@@ -5,6 +5,7 @@ namespace Storyfeed\Ui;
 use Illuminate\Support\ServiceProvider;
 use Storyfeed\Ui\Commands\InstallUiCommand;
 use Storyfeed\Ui\Support\BodyComponents;
+use Storyfeed\Ui\Support\HeadlineText;
 
 /**
  * The Blade kit, registered the way Laravel's package documentation says:
@@ -20,6 +21,7 @@ class UiServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(BodyComponents::class);
+        $this->app->singleton(HeadlineText::class);
     }
 
     public function boot(): void

@@ -7,6 +7,7 @@
 - Tailwind CSS v4 is mandatory and there is no package stylesheet to import. Register the Typography plugin and an `@source` scan of the kit in `resources/css/app.css`; retune colours and sizes through the app's `@theme` and the kit's `--sf-*` variables.
 - The kits expect the Laravel starter-kit colour tokens (`background`, `foreground`, `card`, `muted`, `muted-foreground`, `primary`, `primary-foreground`, `border`, `ring`).
 - Render the feed with the kit's components. Never copy kit markup into app views, add CSS files for the feed, or assert the kit's class names in the app's tests: test the app's own output, such as the headline text.
+- Headline words (template text and the pre-rendered `headline` fallback, never entity names) render as escaped text. To draw `` `code` `` spans, opt into the built-in `inlineCode` formatter: Blade `app(\Storyfeed\Ui\Support\HeadlineText::class)->register(\Storyfeed\Ui\Support\HeadlineText::inlineCode(...))` in a service provider, Vue `FEED_HEADLINE_TEXT` from `keys`, React `FeedProvider`'s `headlineText`. A custom Blade callback returns trusted HTML and must escape the text itself.
 - Copied Vue and React kits belong to the app. Re-run the copy with `--diff` to review an update and `--force` to replace edited files.
 
 ### Blade

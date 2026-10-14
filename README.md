@@ -133,7 +133,8 @@ export default function History({ feed }: { feed: FeedPagePayload | FeedPayload 
 
 Function components work with Inertia 2/3's React adapter and the Laravel React
 starter kit. `FeedProvider` supplies the `FEED_LINK`, `FEED_BODIES`, `FEED_COMPONENTS`, `FEED_NOW`,
-`FEED_FILE_LABELLER` and `FEED_MEDIA_OBJECT_PLACEMENT` seams. `body`, `annotations`
+`FEED_FILE_LABELLER` and `FEED_MEDIA_OBJECT_PLACEMENT` seams, and the
+`headlineText` option ([Headline text](#headline-text)). `body`, `annotations`
 and `time` render props replace Vue slots. Groups use native `<details>`.
 The initial SSR/hydration render uses stable ISO dates; after mount, labels
 use the browser's local calendar and live or pinned clock. See the
@@ -622,6 +623,46 @@ else. Templates written in the past tense read correctly; a present-tense
 template such as `:actor is reading :object` reads "You is reading", so
 reword it. "You" is drawn as the actor it is, with the actor's weight and
 colour, and no link: the reader needs no link to themselves.
+
+### Headline text
+
+A headline's own words, its template text and the pre-rendered `headline`
+fallback, are drawn as escaped plain text. A headline-text seam lets an app
+draw those words itself. It never receives entity names, lists, counts or
+"You", which keep their own links and viewer handling. With nothing set, every
+kit's output is unchanged.
+
+Each kit ships one formatter, `inlineCode`. It escapes the text, then draws
+each pair of single backticks as a `<code>` styled with Tailwind utilities, so
+"Released `` `v2.3` `` to production" shows `v2.3` as code. An unmatched
+backtick stays literal, and nothing else is treated as Markdown.
+
+```php
+use Storyfeed\Ui\Support\HeadlineText;
+
+// In a service provider's boot(); register(null) restores escaped text.
+app(HeadlineText::class)->register(HeadlineText::inlineCode(...));
+```
+
+```ts
+import { FEED_HEADLINE_TEXT } from '@/components/storyfeed/keys';
+import { inlineCode } from '@/components/storyfeed/inlineCode';
+
+app.provide(FEED_HEADLINE_TEXT, inlineCode); // Vue: (text: string) => VNodeChild
+```
+
+```tsx
+import { FeedProvider, inlineCode } from '@/components/storyfeed';
+
+<FeedProvider headlineText={inlineCode}>…</FeedProvider> // React: (text: string) => ReactNode
+```
+
+Blade passes the registered callback to core's headline rendering, which
+takes it from Storyfeed core 0.21; with an older core, Blade headlines stay
+escaped plain text. A Blade callback receives a text segment and returns
+trusted HTML that is not sanitized, so it must escape the text itself, as
+`inlineCode` does. Vue and React callbacks return nodes, which the framework
+escapes.
 
 ## Customising the Views
 

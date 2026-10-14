@@ -20,3 +20,4 @@ export * from '../shared/rail';
 export type { FeedViewer } from '../shared/viewer';
 export { readPage } from '../shared/page';
 export type { FeedPageLike } from '../shared/page';
+export { inlineCode } from './inlineCode';
