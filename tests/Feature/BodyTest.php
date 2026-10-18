@@ -545,3 +545,16 @@ it('draws the Image bodies core writes from 0.18', function () {
         ->toContain('src="https://cdn.example.com/day-3.jpg"', 'width="1200"', 'alt="Cabinets installed"', 'Day 3');
     expect($draw(Image::make(DeferredMedia::slot('sparkline'))->toPayload()))->toContain('src="/sparkline.svg"', 'height="24"');
 })->skip(! class_exists(DeferredMedia::class), 'core before 0.18 writes no own pictures or custom slots');
+
+it('renders optional evidence as a native collapsed disclosure without losing values', function () {
+    $body = ['$body' => 'Storyfeed/Body/KeyValue', '$v' => 3, 'disclosure' => 'Request <evidence>', 'items' => [['key' => 'Address', 'value' => '192.0.2.4']]];
+    $html = Blade::render('<x-storyfeed::body :body="$body" />', ['body' => $body]);
+    expect($html)->toContain('<details', '<summary', 'Request &lt;evidence&gt;', '192.0.2.4')
+        ->not->toContain(' open');
+    unset($body['disclosure']);
+    expect(Blade::render('<x-storyfeed::body :body="$body" />', ['body' => $body]))
+        ->toContain('<figure')->not->toContain('<details');
+    $body['disclosure'] = 'Evidence';
+    $body['items'] = [];
+    expect(Blade::render('<x-storyfeed::body :body="$body" />', ['body' => $body]))->not->toContain('<details', '<summary');
+});
