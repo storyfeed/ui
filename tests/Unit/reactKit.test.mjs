@@ -1290,8 +1290,13 @@ test('KeyValue disclosure keeps evidence collapsed, escaped and available', () =
     assert.match(html, /<summary[^>]*>Request &lt;evidence&gt;<\/summary>/);
     assert.match(html, /192\.0\.2\.4/);
     assert.doesNotMatch(html, /<details[^>]*\sopen[=> ]/);
-    const plain = renderToString(h(bodies.KeyValue, { payload: { ...payload, disclosure: ' ' } }));
+    const { disclosure, ...plainPayload } = payload;
+    const plain = renderToString(h(bodies.KeyValue, { payload: plainPayload }));
     assert.match(plain, /<figure[ >]/);
-    assert.doesNotMatch(plain, /<details/);
+    assert.doesNotMatch(plain, /<details|<summary/);
+    for (const label of ['', ' \t\n', null, false, 42, [], { label: 'Evidence' }]) {
+        plainPayload.disclosure = label;
+        assert.equal(renderToString(h(bodies.KeyValue, { payload: plainPayload })), plain);
+    }
     assert.equal(renderToString(h(bodies.KeyValue, { payload: { ...payload, items: [] } })), '');
 });

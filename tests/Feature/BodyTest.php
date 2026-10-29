@@ -552,8 +552,12 @@ it('renders optional evidence as a native collapsed disclosure without losing va
     expect($html)->toContain('<details', '<summary', 'Request &lt;evidence&gt;', '192.0.2.4')
         ->not->toContain(' open');
     unset($body['disclosure']);
-    expect(Blade::render('<x-storyfeed::body :body="$body" />', ['body' => $body]))
-        ->toContain('<figure')->not->toContain('<details');
+    $plain = Blade::render('<x-storyfeed::body :body="$body" />', ['body' => $body]);
+    expect($plain)->toContain('<figure')->not->toContain('<details', '<summary');
+    foreach (['', " \t\n", null, false, 42, [], ['label' => 'Evidence']] as $label) {
+        $body['disclosure'] = $label;
+        expect(Blade::render('<x-storyfeed::body :body="$body" />', ['body' => $body]))->toBe($plain);
+    }
     $body['disclosure'] = 'Evidence';
     $body['items'] = [];
     expect(Blade::render('<x-storyfeed::body :body="$body" />', ['body' => $body]))->not->toContain('<details', '<summary');
