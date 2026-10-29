@@ -317,12 +317,16 @@ export function KeyValue({ payload }: BodyProps) {
     const text = (value: unknown) =>
         typeof value === 'boolean' ? (value ? 'Yes' : 'No') : String(value);
     if (!rows.length) return null;
+    const disclosure = typeof payload.disclosure === 'string' && payload.disclosure.trim() !== '' ? payload.disclosure : null;
+    const Container = disclosure ? 'details' : 'figure';
+    const Caption = disclosure ? 'p' : 'figcaption';
     return (
-        <figure className="sf-facts @container/facts m-0 flex max-w-128 flex-col rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] px-3 py-1.5 text-sm leading-[1.5]">
+        <Container className="sf-facts @container/facts m-0 flex max-w-128 flex-col rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] px-3 py-1.5 text-sm leading-[1.5]">
+            {disclosure && <summary className="cursor-pointer rounded-sm py-1 font-medium text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">{disclosure}</summary>}
             {payload.title && (
-                <figcaption className="sf-facts__title border-b border-border pt-0.75 pb-1.25 font-semibold text-foreground">
+                <Caption className="sf-facts__title border-b border-border pt-0.75 pb-1.25 font-semibold text-foreground">
                     {payload.title}
-                </figcaption>
+                </Caption>
             )}
             <dl className="sf-facts__rows m-0 grid grid-cols-[fit-content(40%)_minmax(0,1fr)] @max-[28rem]/facts:grid-cols-1">
                 {rows.map((row: any, i: number) => (
@@ -334,7 +338,7 @@ export function KeyValue({ payload }: BodyProps) {
                             {row.key}
                         </dt>
                         <dd
-                            className={`sf-facts__value m-0 min-w-0 text-left text-foreground tabular-nums [overflow-wrap:anywhere]${row.verbatim ? ' sf-facts__value--verbatim truncate font-mono text-sm' : ''}`}
+                            className={`sf-facts__value m-0 min-w-0 text-left text-foreground tabular-nums [overflow-wrap:anywhere]${row.verbatim ? ` sf-facts__value--verbatim font-mono text-sm${disclosure ? '' : ' truncate'}` : ''}`}
                             title={
                                 row.verbatim && typeof row.value === 'string'
                                     ? row.value
@@ -356,7 +360,7 @@ export function KeyValue({ payload }: BodyProps) {
                     </div>
                 ))}
             </dl>
-        </figure>
+        </Container>
     );
 }
 export function MediaObject({

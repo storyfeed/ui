@@ -8,6 +8,7 @@
 - The kits expect the Laravel starter-kit colour tokens (`background`, `foreground`, `card`, `muted`, `muted-foreground`, `primary`, `primary-foreground`, `border`, `ring`).
 - Render the feed with the kit's components. Never copy kit markup into app views, add CSS files for the feed, or assert the kit's class names in the app's tests: test the app's own output, such as the headline text.
 - Headline words (template text and the pre-rendered `headline` fallback, never entity names) render as escaped text. To draw `` `code` `` spans, opt into the built-in `inlineCode` formatter: Blade `app(\Storyfeed\Ui\Support\HeadlineText::class)->register(\Storyfeed\Ui\Support\HeadlineText::inlineCode(...))` in a service provider, Vue `FEED_HEADLINE_TEXT` from `keys`, React `FeedProvider`'s `headlineText`. A custom Blade callback returns trusted HTML and must escape the text itself.
+- KeyValue bodies with a non-blank string `disclosure` label render native `<details>/<summary>`, closed by default, in all three kits. Labels are escaped plain text and every row stays in the payload. Missing, blank or malformed labels keep the existing figure; disclosure is presentation, so authorize the full payload before rendering.
 - Copied Vue and React kits belong to the app. Re-run the copy with `--diff` to review an update and `--force` to replace edited files.
 
 ### Blade

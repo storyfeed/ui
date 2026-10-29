@@ -1265,3 +1265,23 @@ test('image avatars use neutral ring utilities and bind only their colour variab
     assert.match(html, /--sf-avatar-color:/);
     assert.doesNotMatch(html, /background-color/);
 });
+
+
+test('KeyValue disclosure keeps evidence collapsed, escaped and available', async () => {
+    const payload = { $body: 'Storyfeed/Body/KeyValue', disclosure: 'Request <evidence>', items: [{ key: 'Address', value: '192.0.2.4' }] };
+    const html = await renderRaw('/resources/js/vue/body/KeyValue.vue', { payload });
+    assert.match(html, /<details[ >]/);
+    assert.match(html, /<summary[^>]*>Request &lt;evidence&gt;<\/summary>/);
+    assert.match(html, /192\.0\.2\.4/);
+    assert.doesNotMatch(html, /<details[^>]*\sopen[=> ]/);
+    const { disclosure, ...plainPayload } = payload;
+    const plain = await renderRaw('/resources/js/vue/body/KeyValue.vue', { payload: plainPayload });
+    assert.match(plain, /<figure[ >]/);
+    assert.doesNotMatch(plain, /<details|<summary/);
+    for (const label of ['', ' \t\n', null, false, 42, [], { label: 'Evidence' }]) {
+        plainPayload.disclosure = label;
+        assert.equal(await renderRaw('/resources/js/vue/body/KeyValue.vue', { payload: plainPayload }), plain);
+    }
+    const empty = await renderRaw('/resources/js/vue/body/KeyValue.vue', { payload: { ...payload, items: [] } });
+    assert.doesNotMatch(empty, /<details|<summary/);
+});

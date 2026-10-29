@@ -6,6 +6,9 @@
 
 - Allow Storyfeed core 0.22 and 0.23. The kits use nothing that core 0.23 renamed, and the suite passes against core v0.23.0.
 
+- Add optional labelled disclosure for KeyValue evidence without removing its rows. (#100)
+
+
 ## v0.10.0 - 2026-10-14
 
 ### Added

@@ -5,14 +5,18 @@
 @props(['body', 'entity' => null])
 
 @php
+    $disclosure = is_string($body['disclosure'] ?? null) && trim($body['disclosure']) !== '' ? $body['disclosure'] : null;
     $body = \Storyfeed\Body\KeyValue::upgrade($body, is_int($body['$v'] ?? null) ? $body['$v'] : 1);
     $rows = collect($body['items'] ?? [])->filter(fn ($row) => is_array($row) && isset($row['key'])
         && (! (($row['value'] ?? null) === null || ($row['value'] ?? null) === '') || ($row['placeholder'] ?? null) !== null));
 @endphp
 @if ($rows->isNotEmpty())
-    <figure {{ $attributes->class('sf-facts @container/facts m-0 flex max-w-128 flex-col rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] px-3 py-1.5 text-sm leading-[1.5]') }}>
+    <{{ $disclosure !== null ? 'details' : 'figure' }} {{ $attributes->class('sf-facts @container/facts m-0 flex max-w-128 flex-col rounded-lg border border-[var(--sf-well-border,color-mix(in_oklab,var(--color-foreground)_8%,transparent))] bg-[var(--sf-well,color-mix(in_oklab,var(--color-card)_55%,transparent))] dark:bg-[var(--sf-well,color-mix(in_oklab,var(--color-foreground)_3%,transparent))] px-3 py-1.5 text-sm leading-[1.5]') }}>
+@if ($disclosure !== null)
+        <summary class="cursor-pointer rounded-sm py-1 font-medium text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">{{ $disclosure }}</summary>
+@endif
 @if (filled($body['title'] ?? null))
-            <figcaption class="border-b border-border pt-0.75 pb-1.25 font-semibold text-foreground">{{ $body['title'] }}</figcaption>
+            <{{ $disclosure !== null ? 'p' : 'figcaption' }} class="border-b border-border pt-0.75 pb-1.25 font-semibold text-foreground">{{ $body['title'] }}</{{ $disclosure !== null ? 'p' : 'figcaption' }}>
 @endif
         <dl class="sf-facts__rows m-0 grid grid-cols-[fit-content(40%)_minmax(0,1fr)] @max-[28rem]/facts:grid-cols-1">
 @foreach ($rows as $row)
@@ -25,7 +29,7 @@
                         @php($text = is_bool($value) ? ($value ? __('Yes') : __('No')) : $value)
 @if ($row['verbatim'] ?? false)
                             {{-- Compared, not read: one line, with the whole value on hover. --}}
-                            <dd class="sf-facts__value m-0 min-w-0 text-left tabular-nums [overflow-wrap:anywhere] text-foreground truncate font-mono text-sm" title="{{ $text }}">{{ $text }}</dd>
+                            <dd class="sf-facts__value m-0 min-w-0 text-left tabular-nums [overflow-wrap:anywhere] text-foreground {{ $disclosure === null ? 'truncate' : '' }} font-mono text-sm" title="{{ $text }}">{{ $text }}</dd>
 @else
                             <dd class="sf-facts__value m-0 min-w-0 text-left tabular-nums [overflow-wrap:anywhere] text-foreground"><span class="block max-w-full">{{ $text }}</span></dd>
 @endif
@@ -33,5 +37,5 @@
                 </div>
 @endforeach
         </dl>
-    </figure>
+    </{{ $disclosure !== null ? 'details' : 'figure' }}>
 @endif

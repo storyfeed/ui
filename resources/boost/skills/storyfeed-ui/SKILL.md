@@ -221,6 +221,10 @@ import { FeedProvider, inlineCode } from '@/components/storyfeed';
 <FeedProvider headlineText={inlineCode}>…</FeedProvider>
 ```
 
+## KeyValue disclosure
+
+A KeyValue body may carry a plain-text `disclosure` label (authored with core’s `KeyValue::disclosure()`). All three kits render a non-blank string as native `<details>/<summary>`, closed by default and operable by keyboard. The label is escaped; all rows remain in the payload. A missing, blank or malformed label leaves the existing figure unchanged, and an empty body draws nothing. Disclosure is presentation: the host must authorize the full payload.
+
 ## Replace a body renderer
 
 A renderer is registered for an exact body type, such as `Acme/Shipment`, and receives the body's `payload` with the entity's `entityLabel`, `entityUrl` and `entityMedia`. One registered for a core type, such as `Storyfeed/Body/Image`, replaces the kit's. In Vue, install maps with the `feedBodies()` plugin (each install merges); in React, pass `FEED_BODIES` to `FeedProvider`. In Blade, a type maps to a view: `Acme/Shipment` draws `resources/views/vendor/storyfeed/components/body/acme/shipment.blade.php`.

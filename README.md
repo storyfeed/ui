@@ -811,3 +811,8 @@ from `@storyfeed/shared/body`. A host `FEED_MEDIA` component or Blade media
 callback receives the same size and frame classes; apply them to a root
 containing the `<img>` as a direct child, or consume the size variables in
 your own markup if it wraps the image differently.
+
+
+### Optional evidence disclosure
+
+A KeyValue payload may carry a non-empty `disclosure` label. Blade, Vue and React render a native closed `details`/`summary`, with all labelled rows available on expansion. Labels and values are escaped. Without this field the existing figure remains unchanged; empty bodies render nothing. This is progressive presentation, never access control. The host must authorize the entire payload before sending it to a browser.
