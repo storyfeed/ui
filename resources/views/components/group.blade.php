@@ -82,7 +82,7 @@
             });
             var settle = function () { if (row.sfMorph !== transition) return; row.sfMorph = null; unmark(); row.removeAttribute('data-sf-morph'); };
             row.sfMorph = transition;
-            transition.ready.then(function () { document.getAnimations().forEach(function (animation) { var effect = animation.effect; if (effect && effect.pseudoElement && effect.pseudoElement.indexOf('::view-transition') === 0) effect.updateTiming({ duration: 200, easing: 'ease-out' }); }); }, function () {});
+            transition.ready.then(function () { document.getAnimations().forEach(function (animation) { var effect = animation.effect; if (!effect || !effect.pseudoElement) return; if (/\(root\)$/.test(effect.pseudoElement)) animation.finish(); else if (effect.pseudoElement.indexOf('::view-transition') === 0) effect.updateTiming({ duration: 200, easing: 'ease-out' }); }); }, function () {});
             transition.finished.then(settle, settle);
         });
     </script>
