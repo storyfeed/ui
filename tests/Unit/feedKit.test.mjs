@@ -1327,6 +1327,8 @@ test('nodes arrive by id: at the head before the first one drawn, else with a pa
 test('a stream draws its first page still (ui#30)', async () => {
     const { ARRIVAL_CLASSES } = await server.ssrLoadModule('/resources/js/shared/motion.ts');
     const html = await renderRaw('/resources/js/vue/FeedStream.vue', { items: [activity, { ...activity, id: 'u5-second' }] });
+    // Nothing waits on a first render, so there's no "N new" pill.
+    assert.doesNotMatch(html, /sf-new/);
     assert.match(html, /role="listitem"/);
     for (const classes of Object.values(ARRIVAL_CLASSES)) assert.ok(!html.includes(classes.split(' ').at(-1)));
 });

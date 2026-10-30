@@ -1,12 +1,12 @@
 import { imageClasses, type ImageSize } from '../shared/body';
-import { useEffect, useId, useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import type { FeedNode } from '../shared/types';
 import { readPage, type FeedPageLike } from '../shared/page';
 import { FeedProvider } from './context';
 import FeedNodeView from './FeedNode';
 import type { NodeProps } from './FeedItem';
 import { useFeedDays } from './useRelativeTime';
-import { ARRIVAL_CLASSES, ARRIVAL_MS, arrivals, type Arrival } from '../shared/motion';
+import { ARRIVAL_CLASSES, ARRIVAL_MS, arrivals, awayFromTop, type Arrival } from '../shared/motion';
 export interface FeedStreamProps extends NodeProps {
     className?: string;
     style?: CSSProperties & Record<`--${string}`, string | number>;
@@ -103,17 +103,34 @@ export default function FeedStream({
     const read = readPage(page);
     const items = given ?? read.items;
     const nextCursor = givenCursor ?? read.nextCursor;
-    const days = useFeedDays(items);
     // Nodes that join after the first render ease in: Live arrivals at the
     // head, a new page below (ui#30). The first render, and a reset, draw still.
     const ids = items.map((item) => item.id);
     const [drawn, setDrawn] = useState(ids);
     const [arrived, setArrived] = useState<Map<string, Arrival>>(() => new Map());
+    // Live arrivals that wait behind the "N new" pill while the reader is
+    // scrolled away from the top, so the rows being read never move.
+    const [held, setHeld] = useState<Set<string>>(() => new Set());
+    const root = useRef<HTMLDivElement>(null);
     if (ids.length !== drawn.length || ids.some((id, i) => id !== drawn[i])) {
         const found = arrivals(drawn, ids);
+        const head = [...found].filter(([, kind]) => kind === 'head').map(([id]) => id);
+        // Once some wait, every later arrival waits behind them. Reading the
+        // DOM here is safe: a node only arrives after the first, mounted render.
+        const hold = head.length > 0 && (held.size > 0 || awayFromTop(root.current));
+        if (hold) head.forEach((id) => found.delete(id));
+        if (hold || held.size > 0) setHeld(new Set([...(hold ? head : []), ...held].filter((id) => ids.includes(id))));
         setDrawn(ids);
         if (found.size > 0) setArrived((now) => new Map([...now, ...found]));
     }
+    const shown = held.size > 0 ? items.filter((item) => !held.has(item.id)) : items;
+    const days = useFeedDays(shown);
+    /** Tapping the pill brings the reader to the top, where the waiting rows ease in. */
+    const showNew = () => {
+        if (awayFromTop(root.current)) root.current?.scrollIntoView({ block: 'start' });
+        setArrived((now) => new Map([...now, ...[...held].map((id) => [id, 'head'] as const)]));
+        setHeld(new Set());
+    };
     useEffect(() => {
         if (arrived.size === 0) return;
         const settle = setTimeout(() => setArrived(new Map()), ARRIVAL_MS);
@@ -127,10 +144,23 @@ export default function FeedStream({
     return (
         <FeedProvider FEED_IMAGE_SIZE={imageSize ?? 'full'}>
             <div
+                ref={root}
                 className={`sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6] text-muted-foreground ${imageClasses({}, imageSize) ?? ''} ${className}`}
                 style={style}
             >
-                {!items.length ? (
+                {held.size > 0 && (
+                    // A zero-height sticky row, so the pill floats over the rows being read without moving them.
+                    <div className="sf-new sticky top-2 z-10 flex h-0 items-start justify-center">
+                        <button
+                            type="button"
+                            className="sf-new__pill cursor-pointer rounded-full border border-border bg-background px-3 py-1 text-sm leading-[1.6] font-medium text-foreground shadow-sm hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring motion-safe:transition-opacity motion-safe:duration-200 motion-safe:ease-out starting:opacity-0"
+                            onClick={showNew}
+                        >
+                            {held.size} new
+                        </button>
+                    </div>
+                )}
+                {!shown.length ? (
                     <div className="sf-empty rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">
                         {empty}
                     </div>

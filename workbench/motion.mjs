@@ -5,17 +5,19 @@ import { join } from 'node:path';
 import assert from 'node:assert/strict';
 import { serve, pages } from './host.mjs';
 
-// ui#30, two motions. The morph: expanding a group flies each picture tile
+// ui#30, three motions. The morph: expanding a group flies each picture tile
 // to the member row that draws the same picture and back again, in 200 ms
 // eased out, while the head row stays put. Arrivals: rows that join after the
 // first render ease in at the head (Live) or fade in below (a new page), and
-// the first page draws still. Reduced motion, and a browser without the API,
-// swap instantly, as before. Run after `npm run workbench`.
-// STORYFEED_MOTIONS=morph,arrivals picks which to run (both by default).
+// the first page draws still. The pill (Vue and React): with the reader
+// scrolled away from the top, Live rows wait behind "N new" and nothing moves
+// until it's tapped. Reduced motion, and a browser without the API, swap
+// instantly, as before. Run after `npm run workbench`.
+// STORYFEED_MOTIONS=morph,arrivals,pill picks which to run (all by default).
 // STORYFEED_RECORDINGS=<dir> also records each one per kit, as MP4 when
 // ffmpeg is on the PATH (WebM otherwise).
 const recordings = process.env.STORYFEED_RECORDINGS;
-const motions = new Set((process.env.STORYFEED_MOTIONS ?? 'morph,arrivals').split(','));
+const motions = new Set((process.env.STORYFEED_MOTIONS ?? 'morph,arrivals,pill').split(','));
 const GROUP = 'uploaded 9 photos';
 
 if (recordings) await mkdir(recordings, { recursive: true });
@@ -100,14 +102,31 @@ const add = (kit, where) => kit === 'blade'
 
 // Every row now carrying arrival classes, and the transitions it runs.
 async function arrived(page) {
-    await page.waitForFunction(() => document.querySelector('[class*="starting:opacity-0"]'), null, { timeout: 5000 }).catch(() => {});
-    return page.evaluate(() => [...document.querySelectorAll('[class*="starting:opacity-0"]')].map(row => ({
+    await page.waitForFunction(() => document.querySelector('[class*="starting:opacity-0"]:not(.sf-new__pill)'), null, { timeout: 5000 }).catch(() => {});
+    return page.evaluate(() => [...document.querySelectorAll('[class*="starting:opacity-0"]:not(.sf-new__pill)')].map(row => ({
         head: row.classList.contains('starting:h-0'),
         transitions: row.getAnimations().map(animation => animation.transitionProperty).sort(),
     })));
 }
-const marked = page => page.evaluate(() => document.querySelectorAll('[class*="starting:"]').length);
-const unmarked = page => page.waitForFunction(() => !document.querySelector('[class*="starting:"]'), null, { timeout: 5000 }).then(() => true, () => false);
+const marked = page => page.evaluate(() => document.querySelectorAll('[class*="starting:"]:not(.sf-new__pill)').length);
+const unmarked = page => page.waitForFunction(() => !document.querySelector('[class*="starting:"]:not(.sf-new__pill)'), null, { timeout: 5000 }).then(() => true, () => false);
+// Scroll the first feed's top out of view, and read what the reader sees.
+const awayFromTop = page => page.evaluate(() => {
+    const feed = document.querySelector('.sf-feed');
+    window.scrollTo(0, feed.getBoundingClientRect().top + window.scrollY + 140);
+});
+const view = page => page.evaluate(() => {
+    const feed = document.querySelector('.sf-feed');
+    const rows = [...feed.querySelectorAll('[role="listitem"]')];
+    const pill = feed.querySelector('.sf-new__pill');
+    return {
+        rows: rows.length,
+        tops: rows.map(row => Math.round(row.getBoundingClientRect().top)).join(','),
+        // Visible, and its own height: a zero-height row must not squash it.
+        pill: pill ? { text: pill.textContent.trim(), visible: pill.getBoundingClientRect().top >= 0 && pill.getBoundingClientRect().bottom <= innerHeight, height: pill.getBoundingClientRect().height >= 24 } : null,
+        feedTop: Math.round(feed.getBoundingClientRect().top),
+    };
+});
 const endOfFirstFeed = page => page.evaluate(() => {
     const feed = document.querySelector('.sf-feed');
     window.scrollTo(0, feed.getBoundingClientRect().bottom + window.scrollY - innerHeight + 120);
@@ -216,10 +235,41 @@ try {
             await reduced.context.close();
         }
 
+        // The pill: scrolled away, Live rows wait and nothing moves until it's tapped.
+        if (motions.has('pill') && kit !== 'blade') {
+            const { context, page, errors } = await open(kit, path, { top: true });
+            await awayFromTop(page);
+            const before = await view(page);
+            await add(kit, 'head')(page);
+            await page.locator('.sf-new__pill').first().waitFor({ timeout: 5000 }).catch(() => {});
+            const one = await view(page);
+            await add(kit, 'head')(page);
+            await page.waitForFunction(() => document.querySelector('.sf-new__pill')?.textContent.includes('2'), null, { timeout: 5000 }).catch(() => {});
+            const two = await view(page);
+            const pill = page.locator('.sf-new__pill').first();
+            if (await pill.count()) await pill.click();
+            const released = await arrived(page);
+            const after = await view(page);
+            check(`${kit} pill`, () => {
+                assert.equal(before.pill, null, 'no pill before anything arrives');
+                assert.deepEqual(one.pill, { text: '1 new', visible: true, height: true }, 'a Live row waits behind a visible "1 new"');
+                assert.equal(one.tops, before.tops, 'and the rows being read stay put');
+                assert.equal(one.rows, before.rows, 'the waiting row is not drawn');
+                assert.equal(two.pill?.text, '2 new', 'a second arrival waits too');
+                assert.equal(two.tops, before.tops, 'still nothing moves');
+                assert.equal(after.pill, null, 'tapping the pill dismisses it');
+                assert.equal(after.rows, before.rows + 2, 'and draws the waiting rows');
+                assert.ok(Math.abs(after.feedTop) <= 1, `at the top of the feed (${after.feedTop}px)`);
+                assert.deepEqual(released, Array(2).fill({ head: true, transitions: ['height', 'opacity', 'translate'] }), 'where they ease in');
+                assert.deepEqual(errors, []);
+            });
+            await context.close();
+        }
+
         if (recordings) {
             const takes = [
                 ...(motions.has('morph') ? ['light', 'dark'].flatMap(theme => [1, 0.25].map(speed => ({ motion: 'morph', theme, speed }))) : []),
-                ...(motions.has('arrivals') ? [{ motion: 'arrivals', theme: 'light', speed: 1 }, { motion: 'arrivals', theme: 'dark', speed: 1 }, { motion: 'arrivals', theme: 'light', speed: 0.25 }] : []),
+                ...['arrivals', 'pill'].filter(motion => motions.has(motion) && (motion !== 'pill' || kit !== 'blade')).flatMap(motion => [{ motion, theme: 'light', speed: 1 }, { motion, theme: 'dark', speed: 1 }, { motion, theme: 'light', speed: 0.25 }]),
             ];
             for (const { motion, theme, speed } of takes) {
                 const dir = join(recordings, `.${kit}-${motion}-${theme}-${speed}`);
@@ -237,6 +287,14 @@ try {
                     await pause(900);
                     await summaryOf(group).click();
                     await settled(page);
+                } else if (motion === 'pill') {
+                    await awayFromTop(page);
+                    await pause(600);
+                    await add(kit, 'head')(page);
+                    await pause(900);
+                    await add(kit, 'head')(page);
+                    await pause(1200);
+                    await page.locator('.sf-new__pill').first().click();
                 } else {
                     await add(kit, 'head')(page);
                     await pause(900);
