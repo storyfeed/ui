@@ -1,11 +1,12 @@
 import { imageClasses, type ImageSize } from '../shared/body';
-import { useId, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useId, useState, type CSSProperties, type ReactNode } from 'react';
 import type { FeedNode } from '../shared/types';
 import { readPage, type FeedPageLike } from '../shared/page';
 import { FeedProvider } from './context';
 import FeedNodeView from './FeedNode';
 import type { NodeProps } from './FeedItem';
 import { useFeedDays } from './useRelativeTime';
+import { ARRIVAL_CLASSES, ARRIVAL_MS, arrivals, type Arrival } from '../shared/motion';
 export interface FeedStreamProps extends NodeProps {
     className?: string;
     style?: CSSProperties & Record<`--${string}`, string | number>;
@@ -103,6 +104,26 @@ export default function FeedStream({
     const items = given ?? read.items;
     const nextCursor = givenCursor ?? read.nextCursor;
     const days = useFeedDays(items);
+    // Nodes that join after the first render ease in: Live arrivals at the
+    // head, a new page below (ui#30). The first render, and a reset, draw still.
+    const ids = items.map((item) => item.id);
+    const [drawn, setDrawn] = useState(ids);
+    const [arrived, setArrived] = useState<Map<string, Arrival>>(() => new Map());
+    if (ids.length !== drawn.length || ids.some((id, i) => id !== drawn[i])) {
+        const found = arrivals(drawn, ids);
+        setDrawn(ids);
+        if (found.size > 0) setArrived((now) => new Map([...now, ...found]));
+    }
+    useEffect(() => {
+        if (arrived.size === 0) return;
+        const settle = setTimeout(() => setArrived(new Map()), ARRIVAL_MS);
+        return () => clearTimeout(settle);
+    }, [arrived]);
+    const arrival = (id: string) => {
+        const kind = arrived.get(id);
+
+        return kind ? ARRIVAL_CLASSES[kind] : undefined;
+    };
     return (
         <FeedProvider FEED_IMAGE_SIZE={imageSize ?? 'full'}>
             <div
@@ -124,7 +145,7 @@ export default function FeedStream({
                                     />
                                 )}
                                 {day.items.map((item, i) => (
-                                    <div key={item.id} role="listitem">
+                                    <div key={item.id} role="listitem" className={arrival(item.id)}>
                                         {dividers[item.id] && (
                                             <Divider
                                                 label={dividers[item.id]}

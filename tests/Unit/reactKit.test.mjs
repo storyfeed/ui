@@ -1312,3 +1312,10 @@ test('a group carries the morph names, which wait for data-sf-morph (ui#30)', ()
     const row = raw('FeedGroup', { item }).match(/^<div[^>]*class="([^"]*)"/)[1].replaceAll('&#x27;', "'").replaceAll('&amp;', '&').split(' ');
     for (const name of MORPH_CLASSES.split(' ')) assert.ok(row.includes(name), `the row carries ${name}`);
 });
+
+test('a stream draws its first page still (ui#30)', () => {
+    const activity = { kind: 'activity', id: 'a1', verb: 'post', headline: 'Posted', published_at: null };
+    const html = raw('FeedStream', { items: [activity, { ...activity, id: 'a2' }] });
+    assert.match(html, /role="listitem"/);
+    for (const classes of Object.values(motion.ARRIVAL_CLASSES)) assert.ok(!html.includes(classes.split(' ').at(-1)));
+});

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { FeedProvider, FeedStream } from '../../resources/js/react';
 import { MediaObject } from '../../resources/js/react/body';
 import type { FeedNode } from '../../resources/js/shared/types';
@@ -5,7 +6,18 @@ import Shipment from './Shipment';
 import payload from '../vue/sample-payload.json';
 import bodies from '../vue/body-payload.json';
 import cases from '../vue/cases.json';
+let copies = 0;
+const copy = (node: any) => ({ ...node, id: `${node.id}-copy-${++copies}` }) as FeedNode;
 export default function App() {
+    // The motion harness (ui#30) stands in for a host: a Live arrival at the
+    // head, and a page of older activity under the rest.
+    const [main, setMain] = useState(payload.items as FeedNode[]);
+    useEffect(() => {
+        (window as any).storyfeedWorkbench = {
+            arrive: () => setMain((now) => [copy(payload.items[1]), ...now]),
+            page: () => setMain((now) => [...now, ...payload.items.slice(2, 4).map(copy)]),
+        };
+    }, []);
     const bodyItems = bodies as FeedNode[];
     const post = bodies.find((item) =>
         item.object?.body?.some(
@@ -26,7 +38,7 @@ export default function App() {
             <main className="comparison single">
                 <article className="pane converted">
                     <h1>React</h1>
-                    {feed(payload.items, { nextCursor: payload.next_cursor })}
+                    {feed(main, { nextCursor: payload.next_cursor })}
                     <section className="example">
                         <h2>Generic body forms</h2>
                         {feed(bodyItems, { grouped: false })}

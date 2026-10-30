@@ -5,14 +5,17 @@ import { join } from 'node:path';
 import assert from 'node:assert/strict';
 import { serve, pages } from './host.mjs';
 
-// ui#30: expanding a group morphs. Each picture tile flies to the member row
-// that draws the same picture and back again, in 200 ms eased out, while the
-// head row stays put. Reduced motion and a browser without the View
-// Transitions API swap instantly, as before. Run after `npm run workbench`.
-// STORYFEED_RECORDINGS=<dir> also records each kit expanding and collapsing,
-// light and dark, at full speed and at a quarter speed, as MP4 when ffmpeg is
-// on the PATH (WebM otherwise).
+// ui#30, two motions. The morph: expanding a group flies each picture tile
+// to the member row that draws the same picture and back again, in 200 ms
+// eased out, while the head row stays put. Arrivals: rows that join after the
+// first render ease in at the head (Live) or fade in below (a new page), and
+// the first page draws still. Reduced motion, and a browser without the API,
+// swap instantly, as before. Run after `npm run workbench`.
+// STORYFEED_MOTIONS=morph,arrivals picks which to run (both by default).
+// STORYFEED_RECORDINGS=<dir> also records each one per kit, as MP4 when
+// ffmpeg is on the PATH (WebM otherwise).
 const recordings = process.env.STORYFEED_RECORDINGS;
+const motions = new Set((process.env.STORYFEED_MOTIONS ?? 'morph,arrivals').split(','));
 const GROUP = 'uploaded 9 photos';
 
 if (recordings) await mkdir(recordings, { recursive: true });
@@ -53,7 +56,7 @@ const settled = page => page.waitForFunction(() => !document.querySelector('[dat
 const membersShown = group => group.locator(':scope > .sf-body .sf-children').evaluate(element => element.checkVisibility());
 const headBox = group => group.locator(':scope > .sf-body > .sf-head').evaluate(element => { const r = element.getBoundingClientRect(); return [r.x, r.y, r.width, r.height].map(Math.round).join(','); });
 
-async function open(kit, path, { theme = 'light', reducedMotion = 'no-preference', api = true, video = null } = {}) {
+async function open(kit, path, { theme = 'light', reducedMotion = 'no-preference', api = true, video = null, top = false } = {}) {
     const context = await browser.newContext({
         viewport: { width: 900, height: 900 },
         timezoneId: 'UTC',
@@ -70,8 +73,10 @@ async function open(kit, path, { theme = 'light', reducedMotion = 'no-preference
     await page.evaluate(() => Promise.all([...document.images].map(img => { img.loading = 'eager'; return img.decode().catch(() => {}); })));
     await page.evaluate(instrument);
     const group = groupOf(page);
-    await group.evaluate(element => element.scrollIntoView({ block: 'start' }));
-    await page.evaluate(() => window.scrollBy(0, -24));
+    if (!top) {
+        await group.evaluate(element => element.scrollIntoView({ block: 'start' }));
+        await page.evaluate(() => window.scrollBy(0, -24));
+    }
     return { context, page, group, errors };
 }
 
@@ -82,6 +87,32 @@ async function morphAt(page, n) {
     return page.evaluate(n => window.__morphs[n], n);
 }
 
+// A host adding rows to the first feed: the workbench's hooks in Vue and
+// React, and in Blade a row inserted into the server-drawn feed, as Livewire
+// or Turbo would.
+const add = (kit, where) => kit === 'blade'
+    ? page => page.evaluate(where => {
+        const feed = document.querySelector('.sf-feed > [role="feed"]');
+        const row = feed.querySelector(':scope > .sf-row:not(.sf-divider)').cloneNode(true);
+        if (where === 'head') feed.prepend(row); else feed.append(row);
+    }, where)
+    : page => page.evaluate(where => window.storyfeedWorkbench[where === 'head' ? 'arrive' : 'page'](), where);
+
+// Every row now carrying arrival classes, and the transitions it runs.
+async function arrived(page) {
+    await page.waitForFunction(() => document.querySelector('[class*="starting:opacity-0"]'), null, { timeout: 5000 }).catch(() => {});
+    return page.evaluate(() => [...document.querySelectorAll('[class*="starting:opacity-0"]')].map(row => ({
+        head: row.classList.contains('starting:h-0'),
+        transitions: row.getAnimations().map(animation => animation.transitionProperty).sort(),
+    })));
+}
+const marked = page => page.evaluate(() => document.querySelectorAll('[class*="starting:"]').length);
+const unmarked = page => page.waitForFunction(() => !document.querySelector('[class*="starting:"]'), null, { timeout: 5000 }).then(() => true, () => false);
+const endOfFirstFeed = page => page.evaluate(() => {
+    const feed = document.querySelector('.sf-feed');
+    window.scrollTo(0, feed.getBoundingClientRect().bottom + window.scrollY - innerHeight + 120);
+});
+
 const summaryOf = group => group.locator(':scope > .sf-body .sf-toggle').first();
 
 const failures = [];
@@ -90,7 +121,7 @@ const check = (label, fn) => { try { fn(); } catch (error) { failures.push(`${la
 try {
     for (const [kit, path] of Object.entries(pages)) {
         // The morph: tiles out of the strip into the member rows, and back.
-        {
+        if (motions.has('morph')) {
             const { context, page, group, errors } = await open(kit, path);
             const srcs = await group.locator(':scope > .sf-body > .sf-media-strip img').evaluateAll(imgs => imgs.map(img => img.getAttribute('src')));
             assert.ok(srcs.length >= 2, `${kit}: the "${GROUP}" group draws picture tiles`);
@@ -141,7 +172,7 @@ try {
         }
 
         // Reduced motion and a browser without the API: an instant swap.
-        for (const variant of [{ reducedMotion: 'reduce' }, { api: false }]) {
+        if (motions.has('morph')) for (const variant of [{ reducedMotion: 'reduce' }, { api: false }]) {
             const label = `${kit} ${variant.api === false ? 'without View Transitions' : 'reduced motion'}`;
             const { context, page, group, errors } = await open(kit, path, variant);
             await summaryOf(group).click();
@@ -158,26 +189,67 @@ try {
             await context.close();
         }
 
+        // Arrivals: a Live row eases in at the head, a page fades in below.
+        if (motions.has('arrivals')) {
+            const { context, page, errors } = await open(kit, path, { top: true });
+            const still = await marked(page);
+            await add(kit, 'head')(page);
+            const head = await arrived(page);
+            const headSettled = await unmarked(page);
+            await add(kit, 'page')(page);
+            const below = await arrived(page);
+            const belowSettled = await unmarked(page);
+            check(`${kit} arrivals`, () => {
+                assert.equal(still, 0, 'the first page draws still');
+                assert.deepEqual(head, [{ head: true, transitions: ['height', 'opacity', 'translate'] }], 'a Live row eases in at the head, growing from nothing');
+                assert.equal(headSettled, true, 'and drops its arrival classes once it lands');
+                assert.deepEqual(below, Array(kit === 'blade' ? 1 : 2).fill({ head: false, transitions: ['opacity'] }), 'a page fades in below');
+                assert.equal(belowSettled, true, 'and drops its arrival classes once it lands');
+                assert.deepEqual(errors, []);
+            });
+            await context.close();
+
+            const reduced = await open(kit, path, { top: true, reducedMotion: 'reduce' });
+            await add(kit, 'head')(reduced.page);
+            const instant = await arrived(reduced.page);
+            check(`${kit} arrivals with reduced motion`, () => assert.deepEqual(instant, [{ head: true, transitions: [] }], 'nothing transitions'));
+            await reduced.context.close();
+        }
+
         if (recordings) {
-            for (const theme of ['light', 'dark']) for (const speed of [1, 0.25]) {
-                const dir = join(recordings, `.${kit}-${theme}-${speed}`);
-                const { context, page, group } = await open(kit, path, { theme, video: dir });
+            const takes = [
+                ...(motions.has('morph') ? ['light', 'dark'].flatMap(theme => [1, 0.25].map(speed => ({ motion: 'morph', theme, speed }))) : []),
+                ...(motions.has('arrivals') ? [{ motion: 'arrivals', theme: 'light', speed: 1 }, { motion: 'arrivals', theme: 'dark', speed: 1 }, { motion: 'arrivals', theme: 'light', speed: 0.25 }] : []),
+            ];
+            for (const { motion, theme, speed } of takes) {
+                const dir = join(recordings, `.${kit}-${motion}-${theme}-${speed}`);
+                const { context, page, group } = await open(kit, path, { theme, video: dir, top: motion === 'arrivals' });
                 if (speed !== 1) {
                     const cdp = await context.newCDPSession(page);
                     await cdp.send('Animation.enable');
                     await cdp.send('Animation.setPlaybackRate', { playbackRate: speed });
                 }
-                const pause = ms => page.waitForTimeout(ms);
+                const pause = ms => page.waitForTimeout(ms / speed ** 0.5);
                 await pause(600);
-                await summaryOf(group).click();
-                await settled(page);
-                await pause(900);
-                await summaryOf(group).click();
-                await settled(page);
+                if (motion === 'morph') {
+                    await summaryOf(group).click();
+                    await settled(page);
+                    await pause(900);
+                    await summaryOf(group).click();
+                    await settled(page);
+                } else {
+                    await add(kit, 'head')(page);
+                    await pause(900);
+                    await add(kit, 'head')(page);
+                    await pause(900);
+                    await endOfFirstFeed(page);
+                    await pause(600);
+                    await add(kit, 'page')(page);
+                }
                 await pause(900);
                 await context.close();
                 const [webm] = (await readdir(dir)).filter(file => file.endsWith('.webm'));
-                const name = `ui30-morph-${kit}-${theme}${speed === 1 ? '' : '-quarter-speed'}`;
+                const name = `ui30-${motion}-${kit}-${theme}${speed === 1 ? '' : '-quarter-speed'}`;
                 try {
                     execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', join(dir, webm), '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', join(recordings, `${name}.mp4`)]);
                 } catch {
@@ -196,4 +268,4 @@ if (failures.length) {
     console.error(failures.join('\n'));
     process.exit(1);
 }
-console.log(`motion: the expand morph flies, times and settles in ${Object.keys(pages).join(', ')}; reduced motion and no API swap instantly${recordings ? `; recordings in ${recordings}` : ''}`);
+console.log(`motion: ${[...motions].join(' and ')} pass in ${Object.keys(pages).join(', ')}, and swap instantly with reduced motion${recordings ? `; recordings in ${recordings}` : ''}`);

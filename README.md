@@ -470,6 +470,17 @@ and readers who set `prefers-reduced-motion: reduce`, get the instant swap.
 Blade adds one inline `<script>` with each page's first interactive group; with
 a strict script CSP, the groups still open natively, without the motion.
 
+Rows that join a feed after its first render ease in (#30). In Vue and React,
+when the host passes new nodes (a Live poll, or the page after "Load older
+activity"), each node the stream hasn't drawn is matched by id. Nodes ahead of
+the first one already drawn grow in at the head with a short fade and slide,
+so the feed glides down instead of jumping. Any other new node fades in under
+the rest. The first render draws still, and so does a reset where nothing is
+in common, such as a changed `sync_token`. In Blade, a small inline script
+gives rows a host inserts into a feed after the page loads (Livewire, Turbo
+Streams, htmx) the same ease-in. Blade's "Older activity" link loads a new
+page, so it doesn't fade. Reduced motion draws every arrival at once.
+
 `page` takes whatever core's reads return: core 0.13–0.18's `FeedPage`, or
 from storyfeed/storyfeed#95 the collection from `get()` and the paginators
 from `cursorPaginate()`, `simplePaginate()` and `members()`. A raw JSON page

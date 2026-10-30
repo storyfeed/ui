@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { provide, h } from 'vue';
+import { provide, h, ref } from 'vue';
 import MediaObject from '../../resources/js/vue/body/MediaObject.vue';
 import FeedStream from '../../resources/js/vue/FeedStream.vue';
 import ReferenceFeed from 'reference-feed';
@@ -22,13 +22,23 @@ const bodyItems = bodies as FeedNode[];
 const post = bodies.find(item => item.object?.body?.some(body => body.$body === 'Storyfeed/Body/MediaObject'))!.object!;
 const postBody = post.body![0];
 const rails = ['actor', 'activity', 'actor-only', 'activity-only'] as const;
+
+// The motion harness (ui#30) stands in for a host: a Live arrival at the head,
+// and a page of older activity under the rest.
+const main = ref(payload.items as FeedNode[]);
+let copies = 0;
+const copy = (node: any) => ({ ...node, id: `${node.id}-copy-${++copies}` }) as FeedNode;
+(window as any).storyfeedWorkbench = {
+    arrive: () => { main.value = [copy(payload.items[1]), ...main.value]; },
+    page: () => { main.value = [...main.value, ...payload.items.slice(2, 4).map(copy)]; },
+};
 </script>
 
 <template>
     <main class="comparison" :class="{ single: !parity }">
         <article v-for="pane in panes" :key="pane.name" class="pane" :class="pane.css">
             <h1>{{ pane.name }}</h1>
-            <component :is="pane.component" :items="(payload.items as FeedNode[])" :next-cursor="payload.next_cursor" />
+            <component :is="pane.component" :items="pane.css === 'converted' ? main : (payload.items as FeedNode[])" :next-cursor="payload.next_cursor" />
             <section class="example"><h2>Generic body forms</h2><component :is="pane.component" :items="bodyItems" :grouped="false" /></section>
             <section v-for="rail in rails" :key="rail" class="example"><h2>{{ rail }}</h2><component :is="pane.component" :items="bodyItems.slice(0, 1)" :grouped="false" :rail="rail" /></section>
             <section class="example"><h2>Per-item divider</h2><component :is="pane.component" :items="bodyItems.slice(0, 1)" :grouped="false" :dividers="{ 'body-0': 'Timeline' }" /></section>

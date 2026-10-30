@@ -1,9 +1,10 @@
 /**
  * Motion where layout changes under the reader, and nowhere else (ui#30).
  *
- * Built on the View Transitions API and nothing more. A browser without it,
- * and a reader who prefers reduced motion, gets the instant swap every kit
- * drew before. The Blade kit inlines the same steps in `group.blade.php`.
+ * Built on the View Transitions API and `@starting-style`, and nothing more.
+ * A browser without them, and a reader who prefers reduced motion, gets the
+ * instant swap every kit drew before. The Blade kit inlines the morph's steps
+ * in `group.blade.php`.
  */
 
 /** How long every motion runs, in milliseconds, eased out. */
@@ -112,4 +113,39 @@ export function morph(row: HTMLElement | null | undefined, update: () => void | 
         delete row.dataset.sfMorph;
     };
     transition.finished.then(settle, settle);
+}
+
+/** How a node joined the feed since the last render: at the head (Live), or after it (a new page, a regroup). */
+export type Arrival = 'head' | 'page';
+
+/**
+ * Head arrivals ease in, growing from nothing so the feed glides down rather
+ * than jumping. A page fades in under the old one. Both run from
+ * `@starting-style`, once, when the node first renders.
+ */
+export const ARRIVAL_CLASSES: Record<Arrival, string> = {
+    head: 'motion-safe:transition-[height,opacity,translate] motion-safe:duration-200 motion-safe:ease-out [interpolate-size:allow-keywords] overflow-hidden starting:h-0 starting:opacity-0 starting:-translate-y-2',
+    page: 'motion-safe:transition-opacity motion-safe:duration-200 motion-safe:ease-out starting:opacity-0',
+};
+
+/** How long a node keeps its arrival classes: the motion, with room to finish. */
+export const ARRIVAL_MS = MOTION_MS * 2;
+
+/**
+ * The nodes in `after` that weren't in `before`, by id (never position), and
+ * where each arrived. Nodes before the first one already drawn came in at the
+ * head; any other new node came with a page. With nothing in common, `after`
+ * is a first page or a reset (a changed `sync_token`), so nothing arrives and
+ * nothing moves.
+ */
+export function arrivals(before: readonly string[], after: readonly string[]): Map<string, Arrival> {
+    const seen = new Set(before);
+    const first = after.findIndex((id) => seen.has(id));
+    const found = new Map<string, Arrival>();
+    if (first === -1) return found;
+    after.forEach((id, index) => {
+        if (!seen.has(id)) found.set(id, index < first ? 'head' : 'page');
+    });
+
+    return found;
 }
