@@ -203,6 +203,8 @@ try {
             for (const state of ['collapsed', 'expanded']) {
                 if (state === 'expanded') {
                     await frames[0].locator('.sf-toggle').evaluateAll(buttons => buttons.forEach(button => { if (button.getAttribute('aria-expanded') === 'false') button.click(); }));
+                    // Each toggle morphs (ui#30), landing its change a frame later.
+                    await frames[0].waitForFunction(() => !document.querySelector('.sf-toggle[aria-expanded="false"], [data-sf-morph]'));
                     for (const frame of frames.slice(1)) await frame.locator('details').evaluateAll(nodes => nodes.forEach(node => node.open = true));
                 }
                 // Several actors draw as a diagonal pair inside the single face's square (ui#25):

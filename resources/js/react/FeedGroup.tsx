@@ -1,4 +1,5 @@
-import { useId, useState, type SyntheticEvent } from 'react';
+import { useId, useRef, useState, type MouseEvent, type SyntheticEvent } from 'react';
+import { flushSync } from 'react-dom';
 import type { GroupNode } from '../shared/types';
 import { actorStrip } from '../shared/actors';
 import { strip as stripOf } from '../shared/strip';
@@ -9,6 +10,7 @@ import FeedMeta from './FeedMeta';
 import FeedActorStrip from './FeedActorStrip';
 import FeedMediaStrip from './FeedMediaStrip';
 import Rail from './Rail';
+import { MORPH_CLASSES, morph } from '../shared/motion';
 export default function FeedGroup({
     item,
     isLast = false,
@@ -31,6 +33,14 @@ export default function FeedGroup({
     // closes the members like the summary does (ui#27); `onToggle` keeps it in
     // step with the native summary.
     const [isOpen, setOpen] = useState(open);
+    // Every toggle morphs: the strip's tiles fly into the member rows (ui#30).
+    // The summary's own toggle is cancelled so the change lands inside the transition.
+    const row = useRef<HTMLDivElement>(null);
+    const toggleOpen = () => morph(row.current, () => flushSync(() => setOpen((value) => !value)));
+    const onSummaryClick = (event: MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        toggleOpen();
+    };
     const membersId = `sf-members-${useId()}`;
     const Disclosure = interactive ? 'details' : 'div';
     const hidden = Math.max(0, item.count - item.children.length);
@@ -40,11 +50,12 @@ export default function FeedGroup({
     const actors = actorStrip(item);
     const toggle =
         interactive && item.children.length > 0
-            ? { expanded: isOpen, controls: membersId, label: `Show all ${item.count}`, onToggle: () => setOpen((value) => !value) }
+            ? { expanded: isOpen, controls: membersId, label: `Show all ${item.count}`, onToggle: toggleOpen }
             : null;
     return (
         <div
-            className={`sf-row relative flex items-start gap-(--sf-gap-v) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]${
+            ref={row}
+            className={`${MORPH_CLASSES} sf-row relative flex items-start gap-(--sf-gap-v) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]${
                 isLast && interactive
                     ? ' [&:not(:has(>.sf-body>.sf-disclosure[open]))>.sf-rail>[aria-hidden]]:hidden'
                     : ''
@@ -93,7 +104,7 @@ export default function FeedGroup({
                         {...(interactive ? { open: isOpen, onToggle: (event: SyntheticEvent<HTMLElement>) => setOpen((event.currentTarget as HTMLDetailsElement).open) } : {})}
                     >
                         {interactive && (
-                            <summary className="sf-toggle mt-1 inline-flex min-h-6 items-center cursor-pointer list-none rounded-sm border-0 bg-transparent p-0 text-sm leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden print:hidden">
+                            <summary onClick={onSummaryClick} className="sf-toggle mt-1 inline-flex min-h-6 items-center cursor-pointer list-none rounded-sm border-0 bg-transparent p-0 text-sm leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden print:hidden">
                                 <span className="group-open/disclosure:hidden">{`Show all ${item.count}`}</span>
                                 <span className="hidden group-open/disclosure:inline">
                                     Show less

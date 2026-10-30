@@ -60,9 +60,12 @@ try {
         const toggle = disclosure.locator('summary')
         await toggle.focus()
         await page.keyboard.press('Enter')
+        // The summary morphs (ui#30): the disclosure opens and closes a frame later.
+        await disclosure.and(page.locator('details[open]')).waitFor()
         assert.equal(await disclosure.getAttribute('open'), '')
         assert.equal(await toggle.innerText(), 'Show less')
         await page.keyboard.press('Enter')
+        await disclosure.and(page.locator('details:not([open])')).waitFor()
         assert.equal(await disclosure.getAttribute('open'), null)
         assert.match(await toggle.innerText(), /Show all/)
         await page.locator('details').evaluateAll(items => items.forEach(item => item.open = true))

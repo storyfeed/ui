@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { after, test } from 'node:test';
+import { readFile } from 'node:fs/promises';
 import vue from '@vitejs/plugin-vue';
 import { createServer } from 'vite';
 import { createSSRApp, h } from 'vue';
@@ -1284,4 +1285,18 @@ test('KeyValue disclosure keeps evidence collapsed, escaped and available', asyn
     }
     const empty = await renderRaw('/resources/js/vue/body/KeyValue.vue', { payload: { ...payload, items: [] } });
     assert.doesNotMatch(empty, /<details|<summary/);
+});
+
+test('a group carries the morph names, which wait for data-sf-morph (ui#30)', async () => {
+    const { MORPH_CLASSES, MORPH_SLOTS, morph } = await server.ssrLoadModule('/resources/js/shared/motion.ts');
+    const names = MORPH_CLASSES.split(' ');
+    assert.deepEqual(names, Array.from({ length: MORPH_SLOTS }, (_, slot) => `[&[data-sf-morph]_[data-sf-vt='${slot}']]:[view-transition-name:sf-vt-${slot}]`));
+    const row = (await renderRaw('/resources/js/vue/FeedGroup.vue', { item: group })).match(/^<div[^>]*class="([^"]*)"/)[1].replaceAll('&#39;', "'").replaceAll('&amp;', '&').split(' ');
+    for (const name of names) assert.ok(row.includes(name), `the row carries ${name}`);
+    // Blade inlines the same names.
+    assert.ok((await readFile('resources/views/components/group.blade.php', 'utf8')).includes(MORPH_CLASSES));
+    // No View Transitions API (no document at all, here): the change lands at once.
+    let changed = false;
+    morph(null, () => { changed = true; });
+    assert.equal(changed, true);
 });

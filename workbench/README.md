@@ -51,6 +51,16 @@ scale" case also re-renders a row inside a 14px host to check it keeps its own
 sizes. Light/dark card captures
 and measurements use `k4-`.
 
+`npm run test:motion` expands and collapses a photo group in all three kits
+(ui#30). Each picture tile carries a `view-transition-name` from the group's
+literal classes and lands on the member row that draws the same picture. Every
+transition pseudo-element runs 200 ms, eased out, and the names are gone once
+it settles. The head row doesn't move, and the "+N" tile goes through the same
+morph. Reduced motion, and a browser without `startViewTransition`, toggle
+instantly with no transition. Set `STORYFEED_RECORDINGS=<dir>` to also record
+each kit, light and dark, at full and quarter speed (MP4 with ffmpeg, WebM
+without).
+
 `npm run test:alignment` checks every row in all three kits (activities,
 groups and their members, single-line and wrapped headlines) at 1512px and
 390px: the headline's first line box centres on the rail's disc within 0.5px

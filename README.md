@@ -461,6 +461,15 @@ the group opens. Like the feature strip, the chip opens the group and
 expanding hides the strip. `actor-strip` is standalone too, with `faces` from
 `ActorStrip::of()`.
 
+Opening and closing a group morphs (#30). Each picture tile flies to the
+member row that draws the same picture, growing into it, and flies back on
+collapse. Name tiles, the "+N" tile and the actor strip fade into the opened
+rows. The head row never moves. The motion lasts 200 ms, eased out, and uses
+the View Transitions API with no animation library. Browsers without the API,
+and readers who set `prefers-reduced-motion: reduce`, get the instant swap.
+Blade adds one inline `<script>` with each page's first interactive group; with
+a strict script CSP, the groups still open natively, without the motion.
+
 `page` takes whatever core's reads return: core 0.13–0.18's `FeedPage`, or
 from storyfeed/storyfeed#95 the collection from `get()` and the paginators
 from `cursorPaginate()`, `simplePaginate()` and `members()`. A raw JSON page

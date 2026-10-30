@@ -60,6 +60,7 @@ jobs:
       - run: npm run image-size:preview
       - run: npm run image-size:check
       - run: npm run test:hydrate
+      - run: npm run test:motion
       - run: npm run kit:parity
         env:
           STORYFEED_SCREENSHOTS: ${{ runner.temp }}/kit-parity
