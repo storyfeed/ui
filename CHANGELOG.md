@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.11.1 - 2026-10-30
+
+### Changed
+
+- Opening or closing a group no longer cross-fades the rest of the page. Only the pictures fly; the rows below, and the rest of the group, jump straight to where they land, in Blade, Vue and React. (#30)
+
 ## v0.11.0 - 2026-10-30
 
 ### Added

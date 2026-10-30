@@ -30,11 +30,17 @@ export function animates(): boolean {
         && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-/** Retime the browser's default 250 ms `ease` on every transition pseudo-element. */
+/**
+ * Retime the browser's default 250 ms `ease` on every transition pseudo-element,
+ * and drop the page's own cross-fade: only the named pictures move, and
+ * everything else, the rows below included, jumps to where it lands.
+ */
 export function retime(): void {
     for (const animation of document.getAnimations()) {
         const effect = animation.effect as KeyframeEffect | null;
-        if (effect?.pseudoElement?.startsWith('::view-transition')) {
+        if (effect?.pseudoElement?.endsWith('(root)')) {
+            animation.finish();
+        } else if (effect?.pseudoElement?.startsWith('::view-transition')) {
             effect.updateTiming({ duration: MOTION_MS, easing: 'ease-out' });
         }
     }
@@ -67,8 +73,8 @@ const running = new WeakMap<HTMLElement, ViewTransition>();
 /**
  * Expand or collapse a group with its pictures in flight: each strip tile
  * flies to the member row that draws the same picture, and back. Everything
- * else in the row (the "+N" tile, name tiles, the actor strip) dissolves in
- * the page's cross-fade, and the head row, above all of it, never moves.
+ * else (the "+N" tile, name tiles, the actor strip, the rows below) jumps
+ * straight to where it lands, and the head row never moves.
  *
  * `update` makes the change and resolves once the DOM shows it.
  */
