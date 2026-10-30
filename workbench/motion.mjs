@@ -48,7 +48,7 @@ const instrument = () => {
         transition.ready.then(() => requestAnimationFrame(() => {
             record.animations = document.getAnimations()
                 .filter(animation => animation.effect?.pseudoElement?.startsWith('::view-transition'))
-                .map(animation => ({ pseudo: animation.effect.pseudoElement, ...animation.effect.getTiming() }));
+                .map(animation => ({ pseudo: animation.effect.pseudoElement, state: animation.playState, ...animation.effect.getTiming() }));
         }));
         return transition;
     };
@@ -162,6 +162,10 @@ try {
                 assert.deepEqual(out.after.map(m => [m.slot, m.src, m.side]).sort(), srcs.map((src, i) => [String(i), src, 'members']).sort(), 'each name lands on the member row drawing the same picture');
                 for (let i = 0; i < srcs.length; i++) assert.ok(out.animations.some(a => a.pseudo === `::view-transition-group(sf-vt-${i})`), `sf-vt-${i} flies`);
                 for (const a of out.animations) {
+                    if (a.pseudo.endsWith('(root)')) {
+                        assert.equal(a.state, 'finished', `${a.pseudo} jumps: the page itself never fades`);
+                        continue;
+                    }
                     assert.equal(a.duration, 200, `${a.pseudo} runs 200 ms`);
                     assert.equal(a.easing, 'ease-out', `${a.pseudo} eases out`);
                 }
