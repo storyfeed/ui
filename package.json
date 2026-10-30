@@ -21,6 +21,7 @@
     "kit:parity": "STORYFEED_SCREENSHOTS=build/kit-parity STORYFEED_STRICT_PARITY=1 node workbench/blade-parity.mjs",
     "test:avatar-rings": "node workbench/avatar-rings.mjs",
     "test:hydrate": "node workbench/react/hydration.mjs",
+    "test:motion": "node workbench/motion.mjs",
     "test:installed": "node --test tests/Unit/installedKits.test.mjs",
     "test:alignment": "node workbench/alignment.mjs",
     "test:wells": "node workbench/wells.mjs",

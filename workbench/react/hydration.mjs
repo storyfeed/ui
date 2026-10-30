@@ -11,6 +11,7 @@ const server = await createServer({
         noDiscovery: true,
         include: [
             'react',
+            'react-dom',
             'react-dom/client',
             'react/jsx-runtime',
             'react/jsx-dev-runtime',
@@ -113,6 +114,8 @@ try {
             .elementHandle();
         await (await disclosure.$('summary')).focus();
         await page.keyboard.press('Enter');
+        // The summary morphs (ui#30): the disclosure opens a frame later.
+        await page.waitForFunction((details) => details.open, disclosure, { timeout: 5_000 });
         assert.equal(await disclosure.getAttribute('open'), '');
         await page.clock.fastForward(60_000);
         assert.equal(

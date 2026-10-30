@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Opening and closing a group morphs in Blade, Vue and React. Each picture tile in the strip flies to the member row that draws the same picture and back on collapse, while name tiles, the "+N" tile and the actor strip fade, and the head row stays put. It uses the View Transitions API: 200 ms, eased out, with no animation library. Browsers without the API and readers who prefer reduced motion get the instant swap. Blade adds one inline script with the first interactive group, and its "+N" tiles now open the group through its summary. (#30)
+
 ## v0.10.1 - 2026-10-29
 
 ### Changed

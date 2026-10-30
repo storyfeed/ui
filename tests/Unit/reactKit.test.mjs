@@ -25,6 +25,7 @@ after(() => server.close());
 const kit = await server.ssrLoadModule('/resources/js/react/index.ts');
 const bodies = await server.ssrLoadModule('/resources/js/react/body/index.tsx');
 const shared = await server.ssrLoadModule('/resources/js/shared/body.ts');
+const motion = await server.ssrLoadModule('/resources/js/shared/motion.ts');
 const { formatTimestamp } = await server.ssrLoadModule(
     '/resources/js/shared/timestamp.ts',
 );
@@ -1299,4 +1300,15 @@ test('KeyValue disclosure keeps evidence collapsed, escaped and available', () =
         assert.equal(renderToString(h(bodies.KeyValue, { payload: plainPayload })), plain);
     }
     assert.equal(renderToString(h(bodies.KeyValue, { payload: { ...payload, items: [] } })), '');
+});
+
+test('a group carries the morph names, which wait for data-sf-morph (ui#30)', () => {
+    const { MORPH_CLASSES } = motion;
+    const item = {
+        kind: 'group', id: 'g30', verb: 'post', headline: 'Updates', count: 2, published_at: null,
+        children: [1, 2].map((n) => ({ kind: 'activity', id: `a${n}`, verb: 'post', headline: 'Member', published_at: null })),
+        sample: { actors: [] }, distinct: {},
+    };
+    const row = raw('FeedGroup', { item }).match(/^<div[^>]*class="([^"]*)"/)[1].replaceAll('&#x27;', "'").replaceAll('&amp;', '&').split(' ');
+    for (const name of MORPH_CLASSES.split(' ')) assert.ok(row.includes(name), `the row carries ${name}`);
 });

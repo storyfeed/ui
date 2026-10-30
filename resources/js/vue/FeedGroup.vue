@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, toRef, useId } from 'vue';
+import { computed, nextTick, ref, toRef, useId } from 'vue';
 import EntityAvatar from './EntityAvatar.vue';
 import FeedHeadline from './FeedHeadline.vue';
 import FeedIcon from './FeedIcon.vue';
@@ -13,6 +13,7 @@ import { rail as parseRail, railFor } from '../shared/rail';
 import type { Rail, RailName } from '../shared/rail';
 import type { GroupNode, FeedSingularRole } from '../shared/types';
 import { useRelativeTime } from './useRelativeTime';
+import { MORPH_CLASSES, morph } from '../shared/motion';
 
 const props = withDefaults(
     defineProps<{
@@ -56,6 +57,15 @@ const membersId = `sf-members-${useId()}`;
 
 const expanded = ref(props.item.expanded || (props.collapsed === null ? (!props.interactive || unnamed.value) : !props.collapsed));
 
+// Every toggle morphs: the strip's tiles fly into the member rows (ui#30).
+const row = ref<HTMLElement | null>(null);
+function toggle() {
+    morph(row.value, async () => {
+        expanded.value = !expanded.value;
+        await nextTick();
+    });
+}
+
 const time = useRelativeTime(toRef(() => props.item.published_at));
 
 // Only core's explicit slots pin a group role; distinct=1 is not a pin.
@@ -94,7 +104,7 @@ const hiddenBeyondChildren = computed(
 </script>
 
 <template>
-    <div class="sf-row relative flex items-start gap-(--sf-gap-v) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]">
+    <div ref="row" :class="MORPH_CLASSES" class="sf-row relative flex items-start gap-(--sf-gap-v) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]">
         <!-- Several actors draw as a diagonal pair inside one disc's square (ui#25): the first in front at the bottom-right, where the verb badge sits, the second behind at the top-left. Below a 1.5rem (24px) disc only the front face shows. -->
         <div class="sf-rail box-content flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
             <div class="sf-rail__disc relative flex w-(--sf-disc-v) shrink-0 [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-v:calc(var(--sf-badge,--spacing(3.5))*11/14)] [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-anchor-v:--spacing(2.75)] [&:has(>.sf-avatars)>.sf-badge_svg]:size-[calc(var(--sf-badge-v)*8/11)]">
@@ -181,7 +191,7 @@ const hiddenBeyondChildren = computed(
                 :faces="actors.faces"
                 :overflow="actors.overflow"
                 :toggle="interactive && item.children.length > 0 ? { expanded, controls: membersId, label: `Show all ${item.count}` } : null"
-                @toggle="expanded = !expanded"
+                @toggle="toggle"
             />
 
             <FeedMediaStrip
@@ -189,7 +199,7 @@ const hiddenBeyondChildren = computed(
                 :tiles="strip.tiles"
                 :overflow="strip.overflow"
                 :toggle="interactive && item.children.length > 0 ? { expanded, controls: membersId, label: `Show all ${item.count}` } : null"
-                @toggle="expanded = !expanded"
+                @toggle="toggle"
             />
 
             <slot name="body" :node="item" />
@@ -202,7 +212,7 @@ const hiddenBeyondChildren = computed(
                 class="sf-toggle mt-1 inline-flex min-h-6 items-center cursor-pointer border-0 bg-transparent p-0 text-sm leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring print:hidden"
                 :aria-expanded="expanded"
                 :aria-controls="membersId"
-                @click="expanded = !expanded"
+                @click="toggle"
             >
                 {{ expanded ? 'Show less' : `Show all ${item.count}` }}
             </button>

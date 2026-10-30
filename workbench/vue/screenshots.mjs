@@ -64,6 +64,8 @@ try {
             await refToggle.click();
             await newToggle.focus();
             await page.keyboard.press('Enter');
+            // The toggle morphs (ui#30): the group opens a frame later.
+            await page.waitForFunction(() => !document.querySelector('[data-sf-morph]'));
             assert.equal(await newToggle.getAttribute('aria-expanded'), 'true');
             assert.equal(await refToggle.getAttribute('aria-expanded'), 'true');
             await page.screenshot({ path: resolve(output, `${theme}-${width}-expanded.png`), fullPage: true });

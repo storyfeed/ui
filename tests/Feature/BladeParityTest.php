@@ -189,7 +189,8 @@ it('uses only pinned group singulars', function () {
 /** A group's strip in order (a src, `name:<label>`, `tile:<initials>` or `+N`) and its links, or null when there is none. */
 function strip_tiles(string $html): ?array
 {
-    $html = (string) preg_replace('/<!--.*?-->/s', '', $html);
+    // Markup only: the group's motion script (ui#30) names the strip too.
+    $html = (string) preg_replace('/<!--.*?-->|<script>.*?<\/script>/s', '', $html);
     if (! str_contains($html, 'sf-media-strip ')) {
         return null;
     }
@@ -267,6 +268,28 @@ it('draws a group strip previewing what its members\' rows show: a picture they 
     $live = Blade::render('<x-storyfeed::group :group="$item" />', compact('item'));
     expect($live)->toMatch('/<button type="button" aria-label="Show all 6" aria-expanded="false" aria-controls="sf-members-g6"/')->toContain('id="sf-members-g6"', 'ontoggle=');
     expect(Blade::render('<x-storyfeed::group :group="$item" :interactive="false" />', compact('item')))->not->toContain('<button type="button" aria-label="Show all 6"');
+});
+
+it('morphs a group through its summary, with names only while it morphs (ui#30)', function () {
+    $photo = fn (int $n) => ['type' => 'photo', 'id' => (string) $n, 'label' => "Photo $n", 'body' => [['$body' => 'Storyfeed/Body/Image', 'src' => "/p$n.jpg", 'alt' => "Photo $n"]]];
+    $group = fn (string $id) => ['kind' => 'group', 'id' => $id, 'headline' => 'Updates', 'count' => 6, 'children' => array_map(fn ($n) => ['kind' => 'activity', 'headline' => 'Member', 'object' => $photo($n)], [1, 2, 3, 4, 5, 6])];
+    $items = [$group('g1'), $group('g2')];
+    app('view')->flushState();
+    $html = html_entity_decode(Blade::render('<x-storyfeed::feed :items="$items" />', compact('items')), ENT_QUOTES);
+
+    // Each slot's name waits for data-sf-morph, so a row at rest names nothing.
+    foreach (range(0, 3) as $slot) {
+        expect(substr_count($html, "[&[data-sf-morph]_[data-sf-vt='$slot']]:[view-transition-name:sf-vt-$slot]"))->toBe(2);
+    }
+    expect(substr_count($html, '<script>'))->toBe(1)
+        ->and($html)->toContain("closest('.sf-disclosure > summary')", 'document.startViewTransition', "matchMedia('(prefers-reduced-motion: reduce)')");
+    // "+N" clicks the summary, so it opens the members through the same morph.
+    expect($html)->toContain("onclick=\"var d=this.closest('.sf-row').querySelector('.sf-disclosure');if(d)d.querySelector('summary').click()\"")
+        ->not->toContain('d.open=!d.open');
+
+    // A static group has nothing to toggle, so it ships no script.
+    app('view')->flushState();
+    expect(Blade::render('<x-storyfeed::feed :items="$items" :interactive="false" />', compact('items')))->not->toContain('<script>');
 });
 
 it('supports file MIME labels and host labellers through the feed without changing the body', function () {

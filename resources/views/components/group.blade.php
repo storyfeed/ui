@@ -21,7 +21,7 @@
     $membersId = 'sf-members-'.($group->id() ?? substr(md5((string) json_encode([$group->get('headline'), $group->get('headline_template'), $group->count(), $children->map(fn ($child) => [$child->id(), $child->get('headline')])->all()])), 0, 12));
     $toggle = $interactive && $children->isNotEmpty() ? ['expanded' => $open, 'controls' => $membersId, 'label' => __('Show all :count', ['count' => $group->count()])] : null;
 @endphp
-<article {{ $attributes->class(['sf-row relative flex items-start gap-(--sf-gap-v) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]', '[&:not(:has(>.sf-body>.sf-disclosure[open]))>.sf-rail>[aria-hidden]]:hidden' => $last && $interactive]) }}>
+<article {{ $attributes->class(["[&[data-sf-morph]_[data-sf-vt='0']]:[view-transition-name:sf-vt-0] [&[data-sf-morph]_[data-sf-vt='1']]:[view-transition-name:sf-vt-1] [&[data-sf-morph]_[data-sf-vt='2']]:[view-transition-name:sf-vt-2] [&[data-sf-morph]_[data-sf-vt='3']]:[view-transition-name:sf-vt-3] sf-row relative flex items-start gap-(--sf-gap-v) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]", '[&:not(:has(>.sf-body>.sf-disclosure[open]))>.sf-rail>[aria-hidden]]:hidden' => $last && $interactive]) }}>
     <x-storyfeed::rail :item="$group" :rail="$rail" :last="$last && ! $interactive && ! $open" :renderers="$renderers" />
     <div @class(['sf-body min-w-0 flex-1 pt-[max(0px,calc((var(--sf-disc-v)-1lh)/2))] [&:has(>.sf-disclosure[open])>.sf-media-strip]:hidden [&:has(>.sf-disclosure[open])>.sf-actor-strip]:hidden', 'sf-body--spaced pb-5' => ! $last || (! $interactive && $open), '[&:has(>.sf-disclosure[open])]:pb-5' => $last])>
         <div class="sf-head flex items-baseline gap-3"><x-storyfeed::headline :headline="$headline" /></div>
@@ -57,4 +57,35 @@
             @endif
         @endif
     </div>
+@if ($toggle)
+@once
+    {{-- The strip's tiles fly into the member rows and back (ui#30): the steps of resources/js/shared/motion.ts. --}}
+    <script>
+        document.addEventListener('click', function (event) {
+            var summary = event.target instanceof Element ? event.target.closest('.sf-disclosure > summary') : null;
+            var row = summary && summary.closest('.sf-row');
+            if (!row || event.defaultPrevented || !document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            event.preventDefault();
+            var sides = { strip: ':scope > .sf-body > .sf-media-strip img', members: ':scope > .sf-body .sf-children img:not(.sf-avatar img)' };
+            var pictures = function (side) { return [].slice.call(row.querySelectorAll(sides[side])).filter(function (img) { return img.checkVisibility(); }).map(function (img) { return img.closest('.sf-media') || img; }); };
+            var srcOf = function (picture) { var img = picture.matches('img') ? picture : picture.querySelector('img'); return img ? img.getAttribute('src') : null; };
+            var unmark = function () { row.querySelectorAll('[data-sf-vt]').forEach(function (element) { element.removeAttribute('data-sf-vt'); }); };
+            var from = pictures('strip').length ? 'strip' : 'members', slots = Object.create(null), count = 0;
+            unmark();
+            pictures(from).forEach(function (picture) { var src = srcOf(picture); if (src !== null && !(src in slots) && count < 4) { slots[src] = count++; picture.setAttribute('data-sf-vt', slots[src]); } });
+            row.setAttribute('data-sf-morph', '');
+            var transition = document.startViewTransition(function () {
+                var landed = Object.create(null);
+                unmark();
+                summary.parentElement.open = !summary.parentElement.open;
+                pictures(from === 'strip' ? 'members' : 'strip').forEach(function (picture) { var src = srcOf(picture); if (src !== null && src in slots && !landed[src]) { landed[src] = true; picture.setAttribute('data-sf-vt', slots[src]); } });
+            });
+            var settle = function () { if (row.sfMorph !== transition) return; row.sfMorph = null; unmark(); row.removeAttribute('data-sf-morph'); };
+            row.sfMorph = transition;
+            transition.ready.then(function () { document.getAnimations().forEach(function (animation) { var effect = animation.effect; if (effect && effect.pseudoElement && effect.pseudoElement.indexOf('::view-transition') === 0) effect.updateTiming({ duration: 200, easing: 'ease-out' }); }); }, function () {});
+            transition.finished.then(settle, settle);
+        });
+    </script>
+@endonce
+@endif
 </article>
