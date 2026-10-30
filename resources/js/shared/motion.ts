@@ -167,3 +167,25 @@ export function awayFromTop(feed: Element | null | undefined): boolean {
 
     return feed.getBoundingClientRect().top < top - 1;
 }
+
+// What each headline number last read, so an update can tell which changed.
+const drawn = new WeakMap<Element, string>();
+
+/**
+ * Fade in each `[data-sf-part]` under `root` whose text changed since the
+ * last call, and nothing else: "and 2 others" becoming "and 3 others" fades
+ * the 3 alone. Call it after every render; the first call only notes what
+ * shows. Reduced motion swaps the text at once.
+ */
+export function fadeChanged(root: Element | null | undefined): void {
+    if (!root) return;
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    for (const part of root.querySelectorAll('[data-sf-part]')) {
+        const text = part.textContent ?? '';
+        const before = drawn.get(part);
+        drawn.set(part, text);
+        if (before !== undefined && before !== text && !still) {
+            part.animate([{ opacity: 0 }, { opacity: 1 }], { duration: MOTION_MS, easing: 'ease-out' });
+        }
+    }
+}

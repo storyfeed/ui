@@ -11,13 +11,14 @@ import { serve, pages } from './host.mjs';
 // first render ease in at the head (Live) or fade in below (a new page), and
 // the first page draws still. The pill (Vue and React): with the reader
 // scrolled away from the top, Live rows wait behind "N new" and nothing moves
-// until it's tapped. Reduced motion, and a browser without the API, swap
-// instantly, as before. Run after `npm run workbench`.
-// STORYFEED_MOTIONS=morph,arrivals,pill picks which to run (all by default).
+// until it's tapped. Updates (Vue and React): a group's headline number that
+// changes in place fades in alone. Reduced motion, and a browser without the
+// API, swap instantly, as before. Run after `npm run workbench`.
+// STORYFEED_MOTIONS=morph,arrivals,pill,updates picks which to run (all by default).
 // STORYFEED_RECORDINGS=<dir> also records each one per kit, as MP4 when
 // ffmpeg is on the PATH (WebM otherwise).
 const recordings = process.env.STORYFEED_RECORDINGS;
-const motions = new Set((process.env.STORYFEED_MOTIONS ?? 'morph,arrivals,pill').split(','));
+const motions = new Set((process.env.STORYFEED_MOTIONS ?? 'morph,arrivals,pill,updates').split(','));
 const GROUP = 'uploaded 9 photos';
 
 if (recordings) await mkdir(recordings, { recursive: true });
@@ -266,14 +267,44 @@ try {
             await context.close();
         }
 
+        // Updates: "and 4 more" becomes "and 5 more", and only the 5 fades in.
+        if (motions.has('updates') && kit !== 'blade') {
+            for (const reducedMotion of ['no-preference', 'reduce']) {
+                const { context, page, errors } = await open(kit, path, { top: true, reducedMotion });
+                const fading = () => page.evaluate(() => {
+                    const headline = document.querySelector('.sf-feed .sf-headline');
+                    const parts = [...headline.querySelectorAll('[data-sf-part]')];
+                    return {
+                        text: headline.textContent.replace(/\s+/g, ' ').trim(),
+                        fading: parts.filter(part => part.getAnimations().length).map(part => `${part.dataset.sfPart}:${part.textContent}:${part.getAnimations()[0].effect.getTiming().duration}`),
+                        // Anything else in the headline that animates.
+                        others: [...headline.querySelectorAll('*')].filter(element => !element.matches('[data-sf-part]') && element.getAnimations().length).length,
+                    };
+                });
+                const before = await fading(page);
+                await page.evaluate(() => window.storyfeedWorkbench.grow());
+                await page.waitForFunction(() => /and 5 more/.test(document.querySelector('.sf-feed .sf-headline').textContent), null, { timeout: 5000 }).catch(() => {});
+                const after = await fading(page);
+                check(`${kit} updates${reducedMotion === 'reduce' ? ' with reduced motion' : ''}`, () => {
+                    assert.match(before.text, /and 4 more/);
+                    assert.deepEqual(before.fading, [], 'the first render fades nothing');
+                    assert.match(after.text, /and 5 more/, 'the count changes in place');
+                    assert.deepEqual(after.fading, reducedMotion === 'reduce' ? [] : ['more:5:200'], 'only the changed number fades in, over 200 ms');
+                    assert.equal(after.others, 0, 'and nothing else in the headline moves');
+                    assert.deepEqual(errors, []);
+                });
+                await context.close();
+            }
+        }
+
         if (recordings) {
             const takes = [
                 ...(motions.has('morph') ? ['light', 'dark'].flatMap(theme => [1, 0.25].map(speed => ({ motion: 'morph', theme, speed }))) : []),
-                ...['arrivals', 'pill'].filter(motion => motions.has(motion) && (motion !== 'pill' || kit !== 'blade')).flatMap(motion => [{ motion, theme: 'light', speed: 1 }, { motion, theme: 'dark', speed: 1 }, { motion, theme: 'light', speed: 0.25 }]),
+                ...['arrivals', 'pill', 'updates'].filter(motion => motions.has(motion) && (motion === 'arrivals' || kit !== 'blade')).flatMap(motion => [{ motion, theme: 'light', speed: 1 }, { motion, theme: 'dark', speed: 1 }, { motion, theme: 'light', speed: 0.25 }]),
             ];
             for (const { motion, theme, speed } of takes) {
                 const dir = join(recordings, `.${kit}-${motion}-${theme}-${speed}`);
-                const { context, page, group } = await open(kit, path, { theme, video: dir, top: motion === 'arrivals' });
+                const { context, page, group } = await open(kit, path, { theme, video: dir, top: motion !== 'morph' });
                 if (speed !== 1) {
                     const cdp = await context.newCDPSession(page);
                     await cdp.send('Animation.enable');
@@ -287,6 +318,10 @@ try {
                     await pause(900);
                     await summaryOf(group).click();
                     await settled(page);
+                } else if (motion === 'updates') {
+                    await page.evaluate(() => window.storyfeedWorkbench.grow());
+                    await pause(900);
+                    await page.evaluate(() => window.storyfeedWorkbench.grow());
                 } else if (motion === 'pill') {
                     await awayFromTop(page);
                     await pause(600);

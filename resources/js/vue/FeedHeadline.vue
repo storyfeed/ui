@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, inject } from 'vue';
+import { computed, inject, onMounted, onUpdated, ref } from 'vue';
 import EntityLink from './EntityLink.vue';
 import type { FeedEntities, FeedEntity, FeedRole, FeedSingularRole } from '../shared/types';
 import { FEED_HEADLINE_TEXT, FEED_VIEWER } from './keys';
 import { isViewer, you, VIEWER_CLASSES } from '../shared/viewer';
+import { fadeChanged } from '../shared/motion';
 
 // The page's reader, named "You" wherever a headline names them (ui#75).
 const viewer = inject(FEED_VIEWER, null);
@@ -104,10 +105,15 @@ function overflow(role: FeedRole): number {
 }
 
 const actorOverflow = computed(() => overflow('actors'));
+
+// A number that changes in place fades in on its own (ui#30).
+const root = ref<HTMLElement | null>(null);
+onMounted(() => fadeChanged(root.value));
+onUpdated(() => fadeChanged(root.value));
 </script>
 
 <template>
-    <span class="sf-headline leading-[1.6] text-pretty text-muted-foreground [overflow-wrap:anywhere]">
+    <span ref="root" class="sf-headline leading-[1.6] text-pretty text-muted-foreground [overflow-wrap:anywhere]">
         <template v-if="parts.length > 0">
             <template v-for="(part, index) in parts" :key="index">
                 <template v-if="part.type === 'text'"><HeadlineText v-if="headlineText" :text="part.text" /><template v-else>{{ part.text }}</template></template>
@@ -143,16 +149,16 @@ const actorOverflow = computed(() => overflow('actors'));
                         </template>
                     </template>
                     <template v-if="overflow(part.role) > 0">
-                        and {{ overflow(part.role) }} more</template
+                        and <span data-sf-part="more">{{ overflow(part.role) }}</span> more</template
                     >
                 </template>
 
-                <template v-else-if="part.type === 'count'">{{
+                <span v-else-if="part.type === 'count'" data-sf-part="count">{{
                     count ?? 0
-                }}</template>
+                }}</span>
 
                 <template v-else-if="part.type === 'others'"
-                    >{{ actorOverflow }} others</template
+                    ><span data-sf-part="others">{{ actorOverflow }}</span> others</template
                 >
             </template>
         </template>
@@ -164,7 +170,7 @@ const actorOverflow = computed(() => overflow('actors'));
             names who, the children carry what. Activities keep singular prose,
             where every role is genuinely the one activity's own.
         -->
-        <template v-else-if="aggregate"> {{ count ?? 0 }} activities </template>
+        <template v-else-if="aggregate"> <span data-sf-part="count">{{ count ?? 0 }}</span> activities </template>
 
         <template v-else>
             <span v-if="isViewer(viewer, entities.actor)" :class="VIEWER_CLASSES">{{ you(true) }}</span>
