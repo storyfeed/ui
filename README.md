@@ -481,6 +481,12 @@ gives rows a host inserts into a feed after the page loads (Livewire, Turbo
 Streams, htmx) the same ease-in. Blade's "Older activity" link loads a new
 page, so it doesn't fade. Reduced motion draws every arrival at once.
 
+In Vue and React, a reader who has scrolled the feed's top out of view, in
+the window or in a scrolling panel, isn't moved. Live arrivals wait behind an
+"N new" pill pinned to the top of the feed, and the rows being read stay put.
+Tapping the pill scrolls to the top of the feed, and the waiting rows ease in
+there. A page appended below still draws at once. Blade has no pill.
+
 `page` takes whatever core's reads return: core 0.13–0.18's `FeedPage`, or
 from storyfeed/storyfeed#95 the collection from `get()` and the paginators
 from `cursorPaginate()`, `simplePaginate()` and `members()`. A raw JSON page

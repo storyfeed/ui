@@ -149,3 +149,21 @@ export function arrivals(before: readonly string[], after: readonly string[]): M
 
     return found;
 }
+
+/**
+ * Whether the reader has scrolled the feed's top out of view, in the window
+ * or in the nearest scrolling ancestor. Live arrivals then wait behind an
+ * "N new" pill instead of moving the rows being read.
+ */
+export function awayFromTop(feed: Element | null | undefined): boolean {
+    if (!feed) return false;
+    let top = 0;
+    for (let parent = feed.parentElement; parent; parent = parent.parentElement) {
+        if (/auto|scroll|overlay/.test(getComputedStyle(parent).overflowY) && parent.scrollHeight > parent.clientHeight) {
+            top = parent.getBoundingClientRect().top;
+            break;
+        }
+    }
+
+    return feed.getBoundingClientRect().top < top - 1;
+}

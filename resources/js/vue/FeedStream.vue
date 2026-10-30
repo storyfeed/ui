@@ -6,7 +6,7 @@ import type { Rail, RailName } from '../shared/rail';
 import type { FeedNode } from '../shared/types';
 import { readPage, type FeedPageLike } from '../shared/page';
 import { useFeedDays } from './useRelativeTime';
-import { ARRIVAL_CLASSES, ARRIVAL_MS, arrivals, type Arrival } from '../shared/motion';
+import { ARRIVAL_CLASSES, ARRIVAL_MS, arrivals, awayFromTop, type Arrival } from '../shared/motion';
 
 const props = withDefaults(
     defineProps<{
@@ -61,24 +61,46 @@ const read = computed(() => readPage(props.page));
 const nodes = computed(() => props.items ?? read.value.items);
 const cursor = computed(() => props.nextCursor ?? read.value.nextCursor);
 
-const days = useFeedDays(toRef(() => nodes.value));
+// Live arrivals that wait behind the "N new" pill while the reader is
+// scrolled away from the top, so the rows being read never move (ui#30).
+const held = ref(new Set<string>());
+const shown = computed(() => (held.value.size ? nodes.value.filter((node) => !held.value.has(node.id)) : nodes.value));
+const root = ref<HTMLElement | null>(null);
+
+const days = useFeedDays(toRef(() => shown.value));
 
 // Nodes that join after the first render ease in: Live arrivals at the head,
 // a new page below (ui#30). The first render, and a reset, draw still.
 const arrived = ref(new Map<string, Arrival>());
 let settle: ReturnType<typeof setTimeout> | undefined;
+function ease(found: Map<string, Arrival>) {
+    if (found.size === 0) return;
+    arrived.value = new Map([...arrived.value, ...found]);
+    clearTimeout(settle);
+    settle = setTimeout(() => { arrived.value = new Map(); }, ARRIVAL_MS);
+}
 watch(
     () => nodes.value.map((node) => node.id),
     (ids, before) => {
         const found = arrivals(before, ids);
-        if (found.size === 0) return;
-        arrived.value = new Map([...arrived.value, ...found]);
-        clearTimeout(settle);
-        settle = setTimeout(() => { arrived.value = new Map(); }, ARRIVAL_MS);
+        const head = [...found].filter(([, kind]) => kind === 'head').map(([id]) => id);
+        // Once some wait, every later arrival waits behind them.
+        const hold = head.length > 0 && (held.value.size > 0 || awayFromTop(root.value));
+        if (hold) head.forEach((id) => found.delete(id));
+        if (hold || held.value.size) held.value = new Set([...(hold ? head : []), ...held.value].filter((id) => ids.includes(id)));
+        ease(found);
     },
     { flush: 'pre' },
 );
 onBeforeUnmount(() => clearTimeout(settle));
+
+/** Tapping the pill brings the reader to the top, where the waiting rows ease in. */
+function showNew() {
+    const released = held.value;
+    if (awayFromTop(root.value)) root.value?.scrollIntoView({ block: 'start' });
+    held.value = new Set();
+    ease(new Map([...released].map((id) => [id, 'head' as const])));
+}
 const arrival = (id: string) => {
     const kind = arrived.value.get(id);
 
@@ -89,8 +111,19 @@ const gradientId = `sf-branch-${useId()}`;
 </script>
 
 <template>
-    <div :class="imageClasses({}, imageSize)" class="sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6] text-muted-foreground">
-        <div v-if="nodes.length === 0" class="sf-empty rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">
+    <div ref="root" :class="imageClasses({}, imageSize)" class="sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6] text-muted-foreground">
+        <!-- A zero-height sticky row, so the pill floats over the rows being read without moving them. -->
+        <div v-if="held.size" class="sf-new sticky top-2 z-10 flex h-0 items-start justify-center">
+            <button
+                type="button"
+                class="sf-new__pill cursor-pointer rounded-full border border-border bg-background px-3 py-1 text-sm leading-[1.6] font-medium text-foreground shadow-sm hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring motion-safe:transition-opacity motion-safe:duration-200 motion-safe:ease-out starting:opacity-0"
+                @click="showNew"
+            >
+                {{ held.size }} new
+            </button>
+        </div>
+
+        <div v-if="shown.length === 0" class="sf-empty rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">
             <slot name="empty">No activity yet.</slot>
         </div>
 
