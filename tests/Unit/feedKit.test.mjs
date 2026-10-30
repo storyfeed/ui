@@ -1300,3 +1300,33 @@ test('a group carries the morph names, which wait for data-sf-morph (ui#30)', as
     morph(null, () => { changed = true; });
     assert.equal(changed, true);
 });
+
+test('nodes arrive by id: at the head before the first one drawn, else with a page (ui#30)', async () => {
+    const { arrivals, ARRIVAL_CLASSES } = await server.ssrLoadModule('/resources/js/shared/motion.ts');
+    const of = (before, after) => Object.fromEntries(arrivals(before, after));
+    assert.deepEqual(of(['a', 'b'], ['x', 'a', 'b']), { x: 'head' });
+    assert.deepEqual(of(['a', 'b'], ['a', 'b', 'c', 'd']), { c: 'page', d: 'page' });
+    // A regroup between kept nodes comes with the page, never at the head.
+    assert.deepEqual(of(['a', 'b'], ['y', 'a', 'g', 'b', 'z']), { y: 'head', g: 'page', z: 'page' });
+    // Reordered or unchanged: nothing new, nothing moves.
+    assert.deepEqual(of(['a', 'b'], ['b', 'a']), {});
+    // A first page, or a reset with nothing in common: drawn still.
+    assert.deepEqual(of([], ['a']), {});
+    assert.deepEqual(of(['a'], ['p', 'q']), {});
+    // Every transition waits for motion-safe, its timing too: an ungated duration
+    // alone transitions everything, since transition-property starts as `all`.
+    for (const classes of Object.values(ARRIVAL_CLASSES)) {
+        assert.match(classes, /(^| )motion-safe:transition-\S+/);
+        assert.doesNotMatch(classes, /(^| )(transition|duration|ease|delay)-/);
+    }
+    // Blade adds the same classes to rows a host inserts.
+    const blade = await readFile('resources/views/components/feed.blade.php', 'utf8');
+    for (const classes of Object.values(ARRIVAL_CLASSES)) assert.ok(blade.includes(`'${classes}'`));
+});
+
+test('a stream draws its first page still (ui#30)', async () => {
+    const { ARRIVAL_CLASSES } = await server.ssrLoadModule('/resources/js/shared/motion.ts');
+    const html = await renderRaw('/resources/js/vue/FeedStream.vue', { items: [activity, { ...activity, id: 'u5-second' }] });
+    assert.match(html, /role="listitem"/);
+    for (const classes of Object.values(ARRIVAL_CLASSES)) assert.ok(!html.includes(classes.split(' ').at(-1)));
+});

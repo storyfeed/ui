@@ -281,15 +281,15 @@ it('morphs a group through its summary, with names only while it morphs (ui#30)'
     foreach (range(0, 3) as $slot) {
         expect(substr_count($html, "[&[data-sf-morph]_[data-sf-vt='$slot']]:[view-transition-name:sf-vt-$slot]"))->toBe(2);
     }
-    expect(substr_count($html, '<script>'))->toBe(1)
-        ->and($html)->toContain("closest('.sf-disclosure > summary')", 'document.startViewTransition', "matchMedia('(prefers-reduced-motion: reduce)')");
+    expect(substr_count($html, "closest('.sf-disclosure > summary')"))->toBe(1)
+        ->and($html)->toContain('document.startViewTransition', "matchMedia('(prefers-reduced-motion: reduce)')");
     // "+N" clicks the summary, so it opens the members through the same morph.
     expect($html)->toContain("onclick=\"var d=this.closest('.sf-row').querySelector('.sf-disclosure');if(d)d.querySelector('summary').click()\"")
         ->not->toContain('d.open=!d.open');
 
-    // A static group has nothing to toggle, so it ships no script.
+    // A static group has nothing to toggle, so it ships no morph script.
     app('view')->flushState();
-    expect(Blade::render('<x-storyfeed::feed :items="$items" :interactive="false" />', compact('items')))->not->toContain('<script>');
+    expect(Blade::render('<x-storyfeed::feed :items="$items" :interactive="false" />', compact('items')))->not->toContain('startViewTransition');
 });
 
 it('supports file MIME labels and host labellers through the feed without changing the body', function () {
@@ -571,4 +571,15 @@ it('keeps image avatars as neutral empty rings with only a runtime colour variab
     $html = Blade::render('<x-storyfeed::avatar :entity="$entity" />', compact('entity'));
     expect($html)->toContain('has-[&gt;img:not([hidden])]:bg-transparent', 'has-[&gt;img:not([hidden])]:border-border', 'bg-(--sf-avatar-color)', '--sf-avatar-color: #123456', 'ring-2 ring-background')
         ->not->toContain('background-color');
+});
+
+it('eases in rows a host inserts later, once per page (ui#30)', function () {
+    $items = [['kind' => 'activity', 'id' => 'a1', 'headline' => 'Posted']];
+    app('view')->flushState();
+    $html = Blade::render('<x-storyfeed::feed :items="$items" /><x-storyfeed::feed :items="$items" />', compact('items'));
+
+    expect(substr_count($html, 'new MutationObserver'))->toBe(1)
+        ->and($html)->toContain("feed.matches('.sf-feed > [role=\"feed\"]')", "head: 'motion-safe:transition-", "page: 'motion-safe:transition-opacity")
+        // The first page draws still: no row carries an arrival class.
+        ->and(explode('<script>', $html)[0])->not->toContain('starting:');
 });

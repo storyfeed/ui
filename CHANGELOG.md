@@ -4,6 +4,7 @@
 
 ### Added
 
+- Rows that join a feed after its first render ease in, in Blade, Vue and React. Live arrivals at the head grow in with a short fade and slide, so the feed glides down instead of jumping, and a page of older activity fades in under the rest. Vue and React match new nodes by id, so the first render and a reset draw still. Blade's small inline script does the same for rows a host inserts after the page loads (Livewire, Turbo Streams, htmx). It runs from `@starting-style`, eased out over 200 ms, and reduced motion draws every arrival at once. (#30)
 - Opening and closing a group morphs in Blade, Vue and React. Each picture tile in the strip flies to the member row that draws the same picture and back on collapse, while name tiles, the "+N" tile and the actor strip fade, and the head row stays put. It uses the View Transitions API: 200 ms, eased out, with no animation library. Browsers without the API and readers who prefer reduced motion get the instant swap. Blade adds one inline script with the first interactive group, and its "+N" tiles now open the group through its summary. (#30)
 
 ## v0.10.1 - 2026-10-29

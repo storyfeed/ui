@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { imageClasses, type ImageSize } from '../shared/body';
-import { computed, toRef, useId, provide } from 'vue';
+import { computed, onBeforeUnmount, ref, toRef, useId, provide, watch } from 'vue';
 import FeedNodeView from './FeedNode.vue';
 import type { Rail, RailName } from '../shared/rail';
 import type { FeedNode } from '../shared/types';
 import { readPage, type FeedPageLike } from '../shared/page';
 import { useFeedDays } from './useRelativeTime';
+import { ARRIVAL_CLASSES, ARRIVAL_MS, arrivals, type Arrival } from '../shared/motion';
 
 const props = withDefaults(
     defineProps<{
@@ -61,6 +62,28 @@ const nodes = computed(() => props.items ?? read.value.items);
 const cursor = computed(() => props.nextCursor ?? read.value.nextCursor);
 
 const days = useFeedDays(toRef(() => nodes.value));
+
+// Nodes that join after the first render ease in: Live arrivals at the head,
+// a new page below (ui#30). The first render, and a reset, draw still.
+const arrived = ref(new Map<string, Arrival>());
+let settle: ReturnType<typeof setTimeout> | undefined;
+watch(
+    () => nodes.value.map((node) => node.id),
+    (ids, before) => {
+        const found = arrivals(before, ids);
+        if (found.size === 0) return;
+        arrived.value = new Map([...arrived.value, ...found]);
+        clearTimeout(settle);
+        settle = setTimeout(() => { arrived.value = new Map(); }, ARRIVAL_MS);
+    },
+    { flush: 'pre' },
+);
+onBeforeUnmount(() => clearTimeout(settle));
+const arrival = (id: string) => {
+    const kind = arrived.value.get(id);
+
+    return kind ? ARRIVAL_CLASSES[kind] : undefined;
+};
 // Each branch divider's stroke gradient needs an id unique on the page.
 const gradientId = `sf-branch-${useId()}`;
 </script>
@@ -103,6 +126,7 @@ const gradientId = `sf-branch-${useId()}`;
                     v-for="(item, index) in day.items"
                     :key="item.id"
                     role="listitem"
+                    :class="arrival(item.id)"
                 >
                     <div
                         v-if="dividers[item.id]"

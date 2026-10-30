@@ -57,7 +57,8 @@ literal classes and lands on the member row that draws the same picture. Every
 transition pseudo-element runs 200 ms, eased out, and the names are gone once
 it settles. The head row doesn't move, and the "+N" tile goes through the same
 morph. Reduced motion, and a browser without `startViewTransition`, toggle
-instantly with no transition. Set `STORYFEED_RECORDINGS=<dir>` to also record
+instantly with no transition. It also adds rows to each kit's first feed, as a host would: through the Vue and React workbenches' `storyfeedWorkbench.arrive()` and `page()` hooks, and in Blade as a row inserted into the server-drawn feed. It checks four things. The first page draws still. A head row runs height, opacity and translate transitions. An appended page runs opacity only. Arrival classes come off once the motion lands, and reduced motion transitions nothing. `STORYFEED_MOTIONS=morph` or `arrivals` runs just one of them.
+Set `STORYFEED_RECORDINGS=<dir>` to also record
 each kit, light and dark, at full and quarter speed (MP4 with ffmpeg, WebM
 without).
 
