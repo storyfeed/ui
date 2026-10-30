@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useLayoutEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import type {
     FeedEntities,
@@ -7,6 +7,7 @@ import type {
     FeedSingularRole,
 } from '../shared/types';
 import EntityLink from './EntityLink';
+import { fadeChanged } from '../shared/motion';
 import { useFeedOptions } from './context';
 import { isViewer, you, VIEWER_CLASSES } from '../shared/viewer';
 import type { FeedViewer } from '../shared/viewer';
@@ -39,7 +40,7 @@ export function EntityList({
                           : ''}
                 </Fragment>
             ))}
-            {overflow > 0 ? ` and ${overflow} more` : ''}
+            {overflow > 0 ? <> and <span data-sf-part="more">{overflow}</span> more</> : ''}
         </>
     );
 }
@@ -112,9 +113,9 @@ export default function FeedHeadline({
                             )}
                         />
                     );
-                } else if (segment === ':count') part = count;
+                } else if (segment === ':count') part = <span data-sf-part="count">{count}</span>;
                 else if (segment === ':others')
-                    part = `${Math.max(0, (distinct.actors ?? 0) - (sample.actors ?? []).length)} others`;
+                    part = <><span data-sf-part="others">{Math.max(0, (distinct.actors ?? 0) - (sample.actors ?? []).length)}</span> others</>;
                 else part = headlineText(segment);
                 return <Fragment key={i}>{part}</Fragment>;
             });
@@ -122,7 +123,7 @@ export default function FeedHeadline({
     else
         content =
             (aggregate ? (
-                ` ${count} activities `
+                <> <span data-sf-part="count">{count}</span> activities </>
             ) : (
                 <>
                     {isViewer(viewer, entities.actor) ? (
@@ -142,8 +143,11 @@ export default function FeedHeadline({
                     )}
                 </>
             ));
+    // A number that changes in place fades in on its own (ui#30).
+    const root = useRef<HTMLSpanElement>(null);
+    useLayoutEffect(() => fadeChanged(root.current));
     return (
-        <span className="sf-headline leading-[1.6] text-pretty text-muted-foreground [overflow-wrap:anywhere]">
+        <span ref={root} className="sf-headline leading-[1.6] text-pretty text-muted-foreground [overflow-wrap:anywhere]">
             {content}
         </span>
     );

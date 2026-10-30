@@ -28,9 +28,12 @@ const rails = ['actor', 'activity', 'actor-only', 'activity-only'] as const;
 const main = ref(payload.items as FeedNode[]);
 let copies = 0;
 const copy = (node: any) => ({ ...node, id: `${node.id}-copy-${++copies}` }) as FeedNode;
+const grown = (group: any) => ({ ...group, count: group.count + 1, distinct: { ...group.distinct, objects: group.distinct.objects + 1 } }) as FeedNode;
 (window as any).storyfeedWorkbench = {
     arrive: () => { main.value = [copy(payload.items[1]), ...main.value]; },
     page: () => { main.value = [...main.value, ...payload.items.slice(2, 4).map(copy)]; },
+    // One more member in the first group: "and 4 more" becomes "and 5 more".
+    grow: () => { main.value = main.value.map((node, i) => (i === main.value.findIndex(n => n.kind === 'group') ? grown(node) : node)); },
 };
 </script>
 

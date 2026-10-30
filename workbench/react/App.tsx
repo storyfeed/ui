@@ -8,6 +8,7 @@ import bodies from '../vue/body-payload.json';
 import cases from '../vue/cases.json';
 let copies = 0;
 const copy = (node: any) => ({ ...node, id: `${node.id}-copy-${++copies}` }) as FeedNode;
+const grown = (group: any) => ({ ...group, count: group.count + 1, distinct: { ...group.distinct, objects: group.distinct.objects + 1 } }) as FeedNode;
 export default function App() {
     // The motion harness (ui#30) stands in for a host: a Live arrival at the
     // head, and a page of older activity under the rest.
@@ -16,6 +17,8 @@ export default function App() {
         (window as any).storyfeedWorkbench = {
             arrive: () => setMain((now) => [copy(payload.items[1]), ...now]),
             page: () => setMain((now) => [...now, ...payload.items.slice(2, 4).map(copy)]),
+            // One more member in the first group: "and 4 more" becomes "and 5 more".
+            grow: () => setMain((now) => now.map((node, i) => (i === now.findIndex((n) => n.kind === 'group') ? grown(node) : node))),
         };
     }, []);
     const bodyItems = bodies as FeedNode[];

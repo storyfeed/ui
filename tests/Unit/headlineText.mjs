@@ -30,9 +30,9 @@ export function headlineTextTests(render, inlineCode, h) {
             assert.deepEqual(seen, [' released ', ' builds, ', ' on ']);
             assert.match(html, />You<\/span>/);
             assert.match(html, />`Project`<\/a>/);
-            assert.match(html, /<\/em>7<em>/);
-            assert.match(html, /2 others/);
-            if (role === ':actors') assert.match(html, />`Kim`<\/a> and 2 more/);
+            assert.match(html, /<\/em><span data-sf-part="count">7<\/span><em>/);
+            assert.match(html, /<span data-sf-part="others">2<\/span> others/);
+            if (role === ':actors') assert.match(html, />`Kim`<\/a> and <span data-sf-part="more">2<\/span> more/);
         }
         seen.length = 0;
         assert.match(clean(await render({ ...base, headline: 'Fallback `x`' }, formatter)), /<em>Fallback `x`<\/em>/);

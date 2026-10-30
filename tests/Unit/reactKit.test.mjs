@@ -1235,7 +1235,7 @@ test('the page viewer reads as You, at any position and in lists (ui#75)', () =>
     assert.match(headline(placed, 'user:1'), /<span><span>You<\/span> placed <a[^>]*>Order #7<\/a><\/span>/);
     assert.match(headline(placed, { type: 'user', id: 1 }), /<span><span>You<\/span> placed/);
     assert.match(headline({ template: ':object was assigned to :target', entities: { object, target: ada }, verb: 'assign' }, 'user:1'), /was assigned to <span>you<\/span><\/span>/);
-    assert.match(headline({ template: ':actors joined :object', entities: { object }, sample: { actors: [ada, ravi] }, distinct: { actors: 4 }, verb: 'join', aggregate: true }, 'user:1'), /<span><span>You<\/span>, <a[^>]*>Ravi<\/a> and 2 more joined/);
+    assert.match(headline({ template: ':actors joined :object', entities: { object }, sample: { actors: [ada, ravi] }, distinct: { actors: 4 }, verb: 'join', aggregate: true }, 'user:1'), /<span><span>You<\/span>, <a[^>]*>Ravi<\/a> and <span data-sf-part="more">2<\/span> more joined/);
     assert.match(headline(placed, 'user:2'), /Ada Lovelace<\/a> placed/);
     assert.equal(headline(placed), headline(placed, null));
 });

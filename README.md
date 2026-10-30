@@ -487,6 +487,13 @@ the window or in a scrolling panel, isn't moved. Live arrivals wait behind an
 Tapping the pill scrolls to the top of the feed, and the waiting rows ease in
 there. A page appended below still draws at once. Blade has no pill.
 
+When a group already on screen changes in place, as when "and 2 others" becomes
+"and 3 others", Vue and React fade in only the number that changed, over
+200 ms. Each number a headline counts (`:count`, `:others` and a list's
+"and N more") sits in its own `<span data-sf-part>` so it can fade alone.
+Reduced motion swaps it at once. Blade's headline text is drawn by core, so
+Blade updates swap instantly.
+
 `page` takes whatever core's reads return: core 0.13–0.18's `FeedPage`, or
 from storyfeed/storyfeed#95 the collection from `get()` and the paginators
 from `cursorPaginate()`, `simplePaginate()` and `members()`. A raw JSON page
