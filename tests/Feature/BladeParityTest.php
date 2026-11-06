@@ -583,3 +583,40 @@ it('eases in rows a host inserts later, once per page (ui#30)', function () {
         // The first page draws still: no row carries an arrival class.
         ->and(explode('<script>', $html)[0])->not->toContain('starting:');
 });
+
+it('replaces the disc and badge with a marker, from a renderer or a slot', function () {
+    $items = [['kind' => 'activity', 'id' => 'a', 'published_at' => '2026-09-25T11:00:00Z', 'headline' => 'First'], ['kind' => 'group', 'id' => 'g', 'count' => 1, 'published_at' => null, 'headline' => 'Grouped', 'children' => [['kind' => 'activity', 'id' => 'c', 'headline' => 'Child']]]];
+    $renderers = ['marker' => fn ($node, $last) => '<i class="step">'.$node->id().':'.($last ? 'last' : 'more').'</i>'];
+    $html = Blade::render('<x-storyfeed::feed :items="$items" :renderers="$renderers" />', compact('items', 'renderers'));
+    expect($html)->toContain('<i class="step">a:more</i>', '<i class="step">g:last</i>', '<i class="step">c:last</i>')
+        ->not->toContain('sf-rail__disc', 'sf-badge')
+        ->and(Blade::render('<x-storyfeed::feed :items="$items" />', compact('items')))->toContain('sf-rail__disc');
+    $item = FeedItem::of($items[0]);
+    expect(Blade::render('<x-storyfeed::activity :activity="$item"><x-slot:marker><i>1</i></x-slot:marker></x-storyfeed::activity>', compact('item')))
+        ->toContain('<i>1</i>')->not->toContain('sf-rail__disc');
+    // An aria-hidden marker survives a last collapsed group's rule hiding the line.
+    expect(Blade::render('<x-storyfeed::group :group="$group" last />', ['group' => FeedItem::of($items[1])]))->toContain('[aria-hidden]:last-child]:hidden');
+});
+
+it('replaces the head row with a headline, and an empty one with no time leaves just the body', function () {
+    $items = [['kind' => 'activity', 'id' => 'a', 'published_at' => null, 'headline' => 'Default words'], ['kind' => 'group', 'id' => 'g', 'count' => 1, 'published_at' => null, 'headline' => 'Group words', 'children' => [['kind' => 'activity', 'id' => 'c', 'headline' => 'Child words']]]];
+    $renderers = ['headline' => fn ($node) => '<b>custom '.$node->id().'</b>'];
+    expect(Blade::render('<x-storyfeed::feed :items="$items" :renderers="$renderers" />', compact('items', 'renderers')))
+        ->toContain('<b>custom a</b>', '<b>custom g</b>', '<b>custom c</b>')->not->toContain('Default words', 'Group words', 'Child words');
+    foreach ([null, '', '  '] as $empty) {
+        $renderers = ['headline' => fn ($node) => $empty, 'body' => fn ($node) => '<p>only the body</p>'];
+        expect(Blade::render('<x-storyfeed::feed :items="[$items[0]]" :renderers="$renderers" />', compact('items', 'renderers')))
+            ->toContain('only the body')->not->toContain('sf-head', 'sf-meta', '<time');
+    }
+    $item = FeedItem::of($items[0]);
+    expect(Blade::render('<x-storyfeed::activity :activity="$item"><x-slot:headline><b>Mine</b></x-slot:headline></x-storyfeed::activity>', compact('item')))
+        ->toContain('<b>Mine</b>')->not->toContain('Default words');
+    expect(Blade::render('<x-storyfeed::activity :activity="$item"><x-slot:headline></x-slot:headline></x-storyfeed::activity>', compact('item')))
+        ->not->toContain('sf-head', 'Default words');
+});
+
+it('draws no day heading for an all-dateless feed', function () {
+    $items = array_map(fn ($id) => ['kind' => 'activity', 'id' => $id, 'published_at' => null, 'headline' => 'Step '.$id], ['a', 'b', 'c']);
+    expect(Blade::render('<x-storyfeed::feed :items="$items" />', compact('items')))
+        ->toContain('Step a', 'Step b', 'Step c')->not->toContain('sf-day', 'sf-divider', '<time');
+});

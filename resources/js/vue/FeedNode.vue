@@ -44,6 +44,12 @@ withDefaults(
         <template v-if="$slots.time" #time="slotProps"
             ><slot name="time" v-bind="slotProps"
         /></template>
+        <template v-if="$slots.marker" #marker="slotProps"
+            ><slot name="marker" v-bind="slotProps"
+        /></template>
+        <template v-if="$slots.headline" #headline="slotProps"
+            ><slot name="headline" v-bind="slotProps"
+        /></template>
     </FeedItem>
     <FeedGroup
         v-else-if="item.kind === 'group'"
@@ -63,6 +69,12 @@ withDefaults(
         <template v-if="$slots.time" #time="slotProps">
             <slot name="time" v-bind="slotProps" />
         </template>
+        <template v-if="$slots.marker" #marker="slotProps"
+            ><slot name="marker" v-bind="slotProps"
+        /></template>
+        <template v-if="$slots.headline" #headline="slotProps"
+            ><slot name="headline" v-bind="slotProps"
+        /></template>
     </FeedGroup>
     <!-- Unknown kinds (future payload additions) are skipped, never fatal. -->
 </template>

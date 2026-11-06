@@ -90,6 +90,13 @@ export default function App() {
                         </section>
                     ))}
                     <section className="example">
+                        <h2>Steps</h2>
+                        {feed(bodyItems.slice(0, 3).map((node: any, i: number) => ({ ...node, id: `step-${i}`, published_at: null })), {
+                            marker: ({ node, isLast }: any) => <span className="sf-step flex size-8 shrink-0 items-center justify-center rounded-full border border-border text-sm" data-last={String(isLast)}>{Number(node.id.slice(5)) + 1}</span>,
+                            headline: ({ node }: any) => (node.id === 'step-1' ? null : `Step ${Number(node.id.slice(5)) + 1}`),
+                        })}
+                    </section>
+                    <section className="example">
                         <h2>MediaObject below</h2>
                         <div className="sf-feed text-sm leading-[1.6] text-muted-foreground">
                             <MediaObject

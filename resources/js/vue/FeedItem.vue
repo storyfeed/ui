@@ -15,6 +15,7 @@ import { entityLink } from '../shared/link';
 import { featuredOf } from '../shared/strip';
 import { rail as parseRail, railFor, withoutSecondary } from '../shared/rail';
 import type { Rail, RailName } from '../shared/rail';
+import { FeedHeadRow } from './slots';
 import type { ActivityNode } from '../shared/types';
 import { useRelativeTime } from './useRelativeTime';
 
@@ -171,7 +172,8 @@ const slots = computed(() =>
                 neither arrived. Activities are never hidden by the read path,
                 so a rail may be empty and may never be broken.
             -->
-            <div class="sf-rail__disc relative flex shrink-0">
+            <slot v-if="$slots.marker" name="marker" :node="item" :is-last="isLast" />
+            <div v-else class="sf-rail__disc relative flex shrink-0">
                 <EntityAvatar
                     v-if="slots.disc === 'actor'"
                     :entity="item.actor"
@@ -213,7 +215,8 @@ const slots = computed(() =>
                 dense ? 'sf-body--dense' : '',
             ]"
         >
-            <div class="sf-head flex items-baseline gap-3">
+            <FeedHeadRow v-if="$slots.headline"><slot name="headline" :node="item" /></FeedHeadRow>
+            <div v-else class="sf-head flex items-baseline gap-3">
                 <FeedHeadline
                     :template="reading.template"
                     :headline="reading.headline"

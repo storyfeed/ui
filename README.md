@@ -504,6 +504,56 @@ control). `divider`, `avatar`, `rail` and `media-strip` are standalone
 components; `media-strip` accepts `tiles` (from `Strip::of()`, or your own
 `{image, href}` pictures), `overflow`, and a `renderer` callback.
 
+### Progress / steps
+
+The marker and headline hooks draw a numbered list of steps from items you build
+on the client. Give each item `published_at: null`, so it gets no time and no day
+heading. Step state shows only in the marker; the rail stays neutral.
+
+```vue
+<script setup lang="ts">
+import FeedStream from '@/components/storyfeed/FeedStream.vue';
+
+const current = 1;
+const steps = ['Order placed', 'Packed', 'Shipped'];
+const items = steps.map((label, index) => ({
+    kind: 'activity', id: `step-${index}`, published_at: null,
+    verb: null, headline: label, headline_template: null, glyph: null,
+}));
+const indexOf = (node) => items.findIndex((item) => item.id === node.id);
+</script>
+
+<template>
+    <FeedStream :items="items">
+        <template #marker="{ node }">
+            <span
+                class="flex size-8 shrink-0 items-center justify-center rounded-full border border-border text-sm"
+                :class="indexOf(node) < current ? 'bg-primary text-primary-foreground' : ''"
+                :aria-current="indexOf(node) === current ? 'step' : undefined"
+            >{{ indexOf(node) + 1 }}</span>
+        </template>
+        <template #headline="{ node }">{{ node.headline }}</template>
+    </FeedStream>
+</template>
+```
+
+React takes the same hooks as render props, `marker={({ node, isLast }) => ...}`
+and `headline={({ node }) => ...}`. Blade takes them as `renderers`, which need no
+client-side state:
+
+```blade
+<x-storyfeed::feed :items="$steps" :renderers="[
+    'marker' => fn ($node, $last) => view('steps.marker', ['node' => $node, 'last' => $last])->render(),
+    'headline' => fn ($node) => e($node->get('headline')),
+]" />
+```
+
+The marker replaces the disc and badge and sits at the top of the rail, centred on
+its line. An empty `#headline` draws no head row, and the row's meta line still
+collapses when it has nothing to show, so a dateless entry is then just its body.
+A standalone `<x-storyfeed::activity>` or `<x-storyfeed::group>` also takes
+`<x-slot:marker>` and `<x-slot:headline>`.
+
 ### Component bodies and host seams
 
 Register an app Blade component in a service provider:
@@ -545,6 +595,8 @@ application callbacks to every row and group child:
 | `glyph` | token, `disc` or `badge` | icon SVG/HTML inside the kit's disc |
 | `avatar` | `Entity`, `md`, `sm` or `badge` | complete avatar HTML |
 | `body`, `annotations` | `FeedItem` | app content HTML |
+| `marker` | `FeedItem`, whether it's the last row | HTML replacing the disc and badge |
+| `headline` | `FeedItem` | HTML replacing the headline; empty draws no head row |
 | `removed` | `FeedItem` | optional escaped removal text |
 | `fileLabel` | `{name, mediaType}` array | optional file-kind label; null uses the built-in MIME map |
 | `form` | body array, owning `Entity` or null | body HTML; null uses the built-in renderer |

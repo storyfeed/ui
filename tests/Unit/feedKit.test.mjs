@@ -3,7 +3,7 @@ import { after, test } from 'node:test';
 import { readFile } from 'node:fs/promises';
 import vue from '@vitejs/plugin-vue';
 import { createServer } from 'vite';
-import { createSSRApp, h } from 'vue';
+import { Comment, createSSRApp, h } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import { headlineTextTests } from './headlineText.mjs';
 
@@ -1331,4 +1331,44 @@ test('a stream draws its first page still (ui#30)', async () => {
     assert.doesNotMatch(html, /sf-new/);
     assert.match(html, /role="listitem"/);
     for (const classes of Object.values(ARRIVAL_CLASSES)) assert.ok(!html.includes(classes.split(' ').at(-1)));
+});
+
+const withSlots = async (path, props, slots) => {
+    const { default: component } = await server.ssrLoadModule(path);
+
+    return renderToString(createSSRApp({ render: () => h(component, props, slots) }));
+};
+
+test('#marker replaces the disc and badge on activities, groups and members; the default stays', async () => {
+    const marker = ({ node, isLast }) => h('i', { class: 'step' }, `${node.id}:${isLast}`);
+    const item = await withSlots('/resources/js/vue/FeedItem.vue', { item: activity, isLast: true, rail: 'actor' }, { marker });
+    assert.match(item, new RegExp(`${activity.id}:true`));
+    assert.doesNotMatch(item, /sf-rail__disc|class="sf-badge/);
+    const stream = await withSlots('/resources/js/vue/FeedStream.vue', { items: [activity, group], interactive: false }, { marker });
+    assert.doesNotMatch(stream, /sf-rail__disc/);
+    assert.equal(stream.match(/class="step"/g).length, 2 + group.children.length);
+    assert.match(await renderRaw('/resources/js/vue/FeedStream.vue', { items: [activity] }), /sf-rail__disc/);
+});
+
+test('#headline replaces the head row, and an empty one with no time leaves just the body', async () => {
+    const custom = await withSlots('/resources/js/vue/FeedStream.vue', { items: [activity, group], interactive: false }, { headline: ({ node }) => `custom ${node.id}` });
+    assert.match(custom, new RegExp(`sf-head[^>]*>(<!--.*?-->)*custom ${activity.id}`));
+    assert.match(custom, new RegExp(`custom ${group.id}`));
+    assert.doesNotMatch(custom, /Ada Lovelace<\/a> /);
+    const dateless = { ...activity, published_at: null };
+    const empties = [() => [], () => h(Comment), () => '  '];
+    for (const headline of empties) {
+        const html = await withSlots('/resources/js/vue/FeedItem.vue', { item: dateless }, { headline, body: () => h('p', 'only the body') });
+        assert.doesNotMatch(html, /sf-head|sf-meta|sf-time/);
+        assert.match(html, /only the body/);
+    }
+    assert.doesNotMatch(await withSlots('/resources/js/vue/FeedStream.vue', { items: [dateless] }, { headline: () => [] }), /sf-head|sf-day/);
+});
+
+test('an all-dateless stream draws no day heading, and a dateless run stays under its day', async () => {
+    const steps = ['a', 'b', 'c'].map(id => ({ ...activity, id, published_at: null }));
+    const html = await renderRaw('/resources/js/vue/FeedStream.vue', { items: steps });
+    assert.doesNotMatch(html, /sf-day|sf-divider|<time|Invalid Date|NaN|null:/);
+    assert.equal(html.match(/role="listitem"/g).length, 3);
+    assert.equal(html.match(/sf-rail__line/g).length, 2);
 });

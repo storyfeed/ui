@@ -92,6 +92,11 @@ final class WorkbenchTest extends TestCase
         foreach ($cases as $case) {
             $examples[$case['name']] = $render($case['items'], ['grouped' => $case['grouped'] ?? false, 'rail' => $case['rail'] ?? null, 'childRail' => $case['childRail'] ?? null, 'interactive' => $case['interactive'] ?? true, 'collapsed' => $case['collapsed'] ?? null, 'renderers' => $renderers]);
         }
+        $step = fn ($node) => (int) substr($node->id(), 5) + 1;
+        $examples['Steps'] = $render(array_map(fn ($node, $i) => [...$node, 'id' => 'step-'.$i, 'published_at' => null], array_slice($bodies, 0, 3), [0, 1, 2]), ['renderers' => [...$renderers,
+            'marker' => fn ($node, $last) => '<span class="sf-step flex size-8 shrink-0 items-center justify-center rounded-full border border-border text-sm" data-last="'.($last ? 'true' : 'false').'">'.$step($node).'</span>',
+            'headline' => fn ($node) => $node->id() === 'step-1' ? null : 'Step '.$step($node),
+        ]]);
         $post = collect($bodies)->first(fn ($item) => ($item['object']['body'][0]['$body'] ?? null) === 'Storyfeed/Body/MediaObject')['object'];
         $postEntity = Entity::of($post);
         $postBody = $post['body'][0];

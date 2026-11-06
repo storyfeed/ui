@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { after, test } from 'node:test';
 import { readFile } from 'node:fs/promises';
 import { createServer } from 'vite';
-import { createElement as h } from 'react';
+import { Fragment, createElement as h } from 'react';
 import { renderToString } from 'react-dom/server';
 import { headlineTextTests } from './headlineText.mjs';
 process.env.TZ = 'UTC';
@@ -1320,4 +1320,36 @@ test('a stream draws its first page still (ui#30)', () => {
     assert.doesNotMatch(html, /sf-new/);
     assert.match(html, /role="listitem"/);
     for (const classes of Object.values(motion.ARRIVAL_CLASSES)) assert.ok(!html.includes(classes.split(' ').at(-1)));
+});
+
+test('marker replaces the disc and badge on activities, groups and members; the default stays', () => {
+    const marker = ({ node, isLast }) => h('i', { className: 'step' }, `${node.id}:${isLast}`);
+    const item = raw('FeedItem', { item: activity, isLast: true, rail: 'actor', marker });
+    assert.match(item, new RegExp(`${activity.id}:true`));
+    assert.doesNotMatch(item, /sf-rail__disc|class="sf-badge/);
+    const stream = raw('FeedStream', { items: [activity, group], interactive: false, marker });
+    assert.doesNotMatch(stream, /sf-rail__disc/);
+    assert.equal(stream.match(/class="step"/g).length, 2 + group.children.length);
+    assert.match(raw('FeedStream', { items: [activity] }), /sf-rail__disc/);
+    // A marker that is itself aria-hidden survives a last collapsed group's rule hiding the line.
+    assert.match(raw('FeedGroup', { item: group, isLast: true }), /\[aria-hidden\]:last-child\]:hidden/);
+});
+
+test('headline replaces the head row, and an empty one with no time leaves just the body', () => {
+    const custom = raw('FeedStream', { items: [activity, group], interactive: false, headline: ({ node }) => `custom ${node.id}` });
+    assert.match(custom, new RegExp(`custom ${activity.id}`));
+    assert.match(custom, new RegExp(`custom ${group.id}`));
+    const dateless = { ...activity, published_at: null };
+    for (const empty of [null, undefined, false, '  ', [], h(Fragment)]) {
+        const html = raw('FeedItem', { item: dateless, headline: () => empty, body: () => h('p', null, 'only the body') });
+        assert.doesNotMatch(html, /sf-head|sf-meta|sf-time/);
+        assert.match(html, /only the body/);
+    }
+});
+
+test('an all-dateless stream draws no day heading, on the server and in hydration', () => {
+    const html = raw('FeedStream', { items: ['a', 'b', 'c'].map((id) => ({ ...activity, id, published_at: null })) });
+    assert.doesNotMatch(html, /sf-day|sf-divider|<time|Invalid Date|NaN/);
+    assert.equal(html.match(/role="listitem"/g).length, 3);
+    assert.equal(html.match(/sf-rail__line/g).length, 2);
 });

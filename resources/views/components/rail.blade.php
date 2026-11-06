@@ -1,4 +1,4 @@
-@props(['item', 'rail' => null, 'dense' => false, 'last' => false, 'renderers' => []])
+@props(['item', 'rail' => null, 'dense' => false, 'last' => false, 'renderers' => [], 'marker' => null])
 @php
     $faces = $item->isGroup() ? $item->actors()->take(2) : collect([$item->actor()])->filter();
     $slots = \Storyfeed\Ui\Support\Rail::slots($rail, $faces->count(), $item->glyph() !== null, $dense);
@@ -10,6 +10,9 @@
     only the front face shows, filling it. The count stays in the headline.
 --}}
 <div class="sf-rail box-content flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
+@if ($marker !== null)
+    {!! $marker !!}
+@else
     <div class="sf-rail__disc relative flex w-(--sf-disc-v) shrink-0 [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-v:calc(var(--sf-badge,--spacing(3.5))*11/14)] [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-anchor-v:--spacing(2.75)] [&:has(>.sf-avatars)>.sf-badge_svg]:size-[calc(var(--sf-badge-v)*8/11)]">
 @if ($slots['disc'] === 'actor' && $faces->count() > 1)
             <div class="sf-avatars @container/pair relative size-(--sf-disc-v) shrink-0">
@@ -42,6 +45,7 @@
 @endif
 @endif
     </div>
+@endif
 
 @unless ($last)
         <div class="sf-rail__line mt-1 w-px flex-1 bg-border" aria-hidden="true"></div>
