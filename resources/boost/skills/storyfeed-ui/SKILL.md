@@ -154,6 +154,8 @@ Retune a size's limits with `--sf-image-size-<name>` and `--sf-image-size-<name>
 | `divider-style` | `dividerStyle` | `branch` (default) or `dot` |
 | `interactive`, `collapsed` | `interactive`, `collapsed` | group disclosure and its initial state |
 
+**Custom rows.** Vue's `#marker` slot (`{ node, isLast }`) and React's `marker` replace the disc and badge; Vue's `#headline` slot (`{ node }`) and React's `headline` replace the headline, and an empty one draws no head row. Blade takes `marker` and `headline` keys in `renderers`.
+
 Blade also takes `viewer` (a model), `timezone` and `renderers`. Vue emits `load-more`; React takes `onLoadMore`, `loadingMore` and `empty`.
 
 **Dense rows.** A group's expanded members draw as dense rows: the same row without the rail's secondary badge. `child-rail` (React `childRail`) sets their posture independently, for example `rail="actor" child-rail="activity-only"`.

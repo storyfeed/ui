@@ -95,6 +95,9 @@ All provider names retain the Vue seams' meaning:
 `body` and `annotations` are functions receiving `{ node }`; `time` receives
 `{ node, label }`. They work on activities, groups and expanded children.
 Return null from `time` to omit time while retaining leftover role metadata.
+`marker` receives `{ node, isLast }` and replaces the disc and badge. `headline`
+receives `{ node }` and replaces the headline; returning nothing draws no head
+row. See the root README's [Progress / steps recipe](../../../README.md#progress--steps).
 
 ```tsx
 <FeedStream

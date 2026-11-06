@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- A `#marker` slot in Vue, a `marker` render prop in React, and a `marker` renderer and `<x-slot:marker>` in Blade replace a row's disc and badge. They receive the node and whether it's the last row, and reach activities, groups and expanded members.
+- A `#headline` slot in Vue, a `headline` render prop in React, and a `headline` renderer and `<x-slot:headline>` in Blade replace the headline. An empty one draws no head row, so a dateless entry with no leftover roles shows just its body.
+
+### Changed
+
+- A last collapsed group now hides its rail's line by the rail's last `aria-hidden` child rather than any of them, so an `aria-hidden` marker stays visible.
+
 ## v0.11.1 - 2026-10-30
 
 ### Changed

@@ -51,6 +51,8 @@ scale" case also re-renders a row inside a 14px host to check it keeps its own
 sizes. Light/dark card captures
 and measurements use `k4-`.
 
+`npm run test:steps` draws a dateless numbered-steps feed through the marker and headline hooks in all three kits. The marker replaces the disc and centres on the rail's line, an empty headline draws no head row, and no row gets a day or a time.
+
 `npm run test:motion` expands and collapses a photo group in all three kits
 (ui#30). Each picture tile carries a `view-transition-name` from the group's
 literal classes and lands on the member row that draws the same picture. Every

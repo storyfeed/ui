@@ -178,6 +178,12 @@ For a custom Image body, use `<FeedMedia :image="picture" :payload="payload"
 applies the body's own size, and the frame follows the picture. See the root
 README's [custom Image examples](../../../README.md#custom-image-renderers).
 
+`FeedStream`, `FeedNode`, `FeedGroup` and `FeedItem` take a `#marker` slot, with
+`{ node, isLast }`, that replaces the disc and badge, and a `#headline` slot, with
+`{ node }`, that replaces the headline. An empty `#headline` draws no head row.
+Both reach expanded members. See the root README's
+[Progress / steps recipe](../../../README.md#progress--steps).
+
 `interactive` defaults to true. Set it false for a static feed; `collapsed`
 selects its initial group state (null opens static groups). Collapsed members
 stay in the HTML with `hidden print:block`, so print needs no JavaScript.

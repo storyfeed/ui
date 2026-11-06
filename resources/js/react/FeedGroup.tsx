@@ -3,7 +3,7 @@ import { flushSync } from 'react-dom';
 import type { GroupNode } from '../shared/types';
 import { actorStrip } from '../shared/actors';
 import { strip as stripOf } from '../shared/strip';
-import FeedItem, { useNodeTime } from './FeedItem';
+import FeedItem, { FeedHeadRow, useNodeTime } from './FeedItem';
 import type { NodeProps } from './FeedItem';
 import FeedHeadline from './FeedHeadline';
 import FeedMeta from './FeedMeta';
@@ -21,6 +21,8 @@ export default function FeedGroup({
     annotations,
     interactive = true,
     collapsed = null,
+    marker,
+    headline,
 }: NodeProps & { item: GroupNode }) {
     const timestamp = useNodeTime(item, time);
     const faces = (item.sample.actors ?? []).slice(0, 2);
@@ -57,7 +59,7 @@ export default function FeedGroup({
             ref={row}
             className={`${MORPH_CLASSES} sf-row relative flex items-start gap-(--sf-gap-v) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]${
                 isLast && interactive
-                    ? ' [&:not(:has(>.sf-body>.sf-disclosure[open]))>.sf-rail>[aria-hidden]]:hidden'
+                    ? ' [&:not(:has(>.sf-body>.sf-disclosure[open]))>.sf-rail>[aria-hidden]:last-child]:hidden'
                     : ''
             }`}
         >
@@ -67,6 +69,7 @@ export default function FeedGroup({
                 intent={item.glyph_intent}
                 rail={rail}
                 line={!(isLast && !interactive && !open)}
+                marker={marker ? (marker({ node: item, isLast }) ?? null) : undefined}
             />
             <div
                 className={`sf-body min-w-0 flex-1 pt-[max(0px,calc((var(--sf-disc-v)-1lh)/2))] ${
@@ -75,18 +78,22 @@ export default function FeedGroup({
                         : '[&:has(>.sf-disclosure[open])]:pb-5'
                 }`}
             >
-                <div className="sf-head flex items-baseline gap-3">
-                    <FeedHeadline
-                        template={item.headline_template}
-                        headline={item.headline}
-                        entities={item}
-                        sample={item.sample}
-                        distinct={item.distinct}
-                        count={item.count}
-                        verb={item.verb}
-                        aggregate
-                    />
-                </div>
+                {headline ? (
+                    <FeedHeadRow>{headline({ node: item })}</FeedHeadRow>
+                ) : (
+                    <div className="sf-head flex items-baseline gap-3">
+                        <FeedHeadline
+                            template={item.headline_template}
+                            headline={item.headline}
+                            entities={item}
+                            sample={item.sample}
+                            distinct={item.distinct}
+                            count={item.count}
+                            verb={item.verb}
+                            aggregate
+                        />
+                    </div>
+                )}
                 <FeedMeta node={item} templates={[item.headline_template]}>
                     {timestamp}
                 </FeedMeta>
@@ -132,6 +139,8 @@ export default function FeedGroup({
                                     body={body}
                                     annotations={annotations}
                                     time={time ? time : ({ label }) => label}
+                                    marker={marker}
+                                    headline={headline}
                                 />
                             ))}
                             {hidden > 0 && (

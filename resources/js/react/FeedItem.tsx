@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { Fragment, isValidElement, type CSSProperties, type ReactNode } from 'react';
 import type { ActivityNode, FeedNode } from '../shared/types';
 import type { Rail as RailConfig, RailName } from '../shared/rail';
 import { formsIn, resolve, imageOf, Image } from './body';
@@ -16,6 +16,10 @@ export interface FeedRenderProps {
     body?: (props: { node: FeedNode }) => ReactNode;
     annotations?: (props: { node: FeedNode }) => ReactNode;
     time?: (props: { node: FeedNode; label: string }) => ReactNode;
+    /** Replaces the disc and badge. */
+    marker?: (props: { node: FeedNode; isLast: boolean }) => ReactNode;
+    /** Replaces the headline; returning nothing draws no head row. */
+    headline?: (props: { node: FeedNode }) => ReactNode;
 }
 export interface NodeProps extends FeedRenderProps {
     interactive?: boolean;
@@ -23,6 +27,17 @@ export interface NodeProps extends FeedRenderProps {
     isLast?: boolean;
     rail?: RailConfig | RailName | null;
     childRail?: RailConfig | RailName | null;
+}
+function rendersNothing(node: ReactNode): boolean {
+    if (node === null || node === undefined || typeof node === 'boolean') return true;
+    if (typeof node === 'string') return !node.trim();
+    if (Array.isArray(node)) return node.every(rendersNothing);
+    if (isValidElement<{ children?: ReactNode }>(node) && node.type === Fragment) return rendersNothing(node.props.children);
+    return false;
+}
+/** The head row around a `headline` render prop. An empty one draws no row at all. */
+export function FeedHeadRow({ children }: { children?: ReactNode }) {
+    return rendersNothing(children) ? null : <div className="sf-head flex items-baseline gap-3">{children}</div>;
 }
 export function useNodeTime(node: FeedNode, time?: FeedRenderProps['time']) {
     const clock = useRelativeTime(node.published_at);
@@ -47,6 +62,8 @@ export default function FeedItem({
     time,
     body,
     annotations,
+    marker,
+    headline,
 }: NodeProps & { item: ActivityNode; dense?: boolean }) {
     const timestamp = useNodeTime(item, time);
     const { FEED_BODIES: bodies = {}, FEED_IMAGE_SIZE: feedImageSize } = useFeedOptions();
@@ -100,19 +117,24 @@ export default function FeedItem({
                 rail={rail}
                 dense={dense}
                 line={!isLast}
+                marker={marker ? (marker({ node: item, isLast }) ?? null) : undefined}
             />
             <div
                 className={`sf-body min-w-0 flex-1 pt-[max(0px,calc((var(--sf-disc-v)-1lh)/2))] ${
                     isLast ? '' : 'sf-body--spaced pb-5'
                 } ${dense ? 'sf-body--dense' : ''}`}
             >
-                <div className="sf-head flex items-baseline gap-3">
-                    <FeedHeadline
-                        {...reading}
-                        entities={item}
-                        verb={item.verb}
-                    />
-                </div>
+                {headline ? (
+                    <FeedHeadRow>{headline({ node: item })}</FeedHeadRow>
+                ) : (
+                    <div className="sf-head flex items-baseline gap-3">
+                        <FeedHeadline
+                            {...reading}
+                            entities={item}
+                            verb={item.verb}
+                        />
+                    </div>
+                )}
                 <FeedMeta node={item} templates={[reading.template]}>
                     {timestamp}
                 </FeedMeta>

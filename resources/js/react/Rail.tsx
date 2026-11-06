@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { FeedEntity } from '../shared/types';
 import type { Rail as RailConfig, RailName } from '../shared/rail';
 import { rail as parseRail, railFor, withoutSecondary } from '../shared/rail';
@@ -10,6 +11,7 @@ export default function Rail({
     rail,
     dense = false,
     line = true,
+    marker,
 }: {
     faces: FeedEntity[];
     glyph: string | null;
@@ -17,6 +19,8 @@ export default function Rail({
     rail?: RailConfig | RailName | null;
     dense?: boolean;
     line?: boolean;
+    /** Replaces the disc and badge when not undefined. */
+    marker?: ReactNode;
 }) {
     const configured = parseRail(
         rail ?? (dense ? 'activity-only' : 'actor-only'),
@@ -51,14 +55,14 @@ export default function Rail({
         );
     return (
         <div className="sf-rail box-content flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
-            <div className="sf-rail__disc relative flex w-(--sf-disc-v) shrink-0 [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-v:calc(var(--sf-badge,--spacing(3.5))*11/14)] [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-anchor-v:--spacing(2.75)] [&:has(>.sf-avatars)>.sf-badge_svg]:size-[calc(var(--sf-badge-v)*8/11)]">
+            {marker !== undefined ? marker : <div className="sf-rail__disc relative flex w-(--sf-disc-v) shrink-0 [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-v:calc(var(--sf-badge,--spacing(3.5))*11/14)] [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-anchor-v:--spacing(2.75)] [&:has(>.sf-avatars)>.sf-badge_svg]:size-[calc(var(--sf-badge-v)*8/11)]">
                 {disc}
                 {slots.badge === 'activity' ? (
                     <FeedIcon icon={glyph} variant="badge" />
                 ) : slots.badge === 'actor' ? (
                     <EntityAvatar entity={faces[0] ?? null} size="badge" />
                 ) : null}
-            </div>
+            </div>}
             {line && (
                 <div
                     aria-hidden="true"

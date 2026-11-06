@@ -21,6 +21,7 @@ const panes = parity ? [{ name: 'Reference', component: ReferenceFeed, css: 'ref
 const bodyItems = bodies as FeedNode[];
 const post = bodies.find(item => item.object?.body?.some(body => body.$body === 'Storyfeed/Body/MediaObject'))!.object!;
 const postBody = post.body![0];
+const stepItems = bodyItems.slice(0, 3).map((node, i) => ({ ...node, id: `step-${i}`, published_at: null })) as FeedNode[];
 const rails = ['actor', 'activity', 'actor-only', 'activity-only'] as const;
 
 // The motion harness (ui#30) stands in for a host: a Live arrival at the head,
@@ -47,6 +48,7 @@ const grown = (group: any) => ({ ...group, count: group.count + 1, distinct: { .
             <section class="example"><h2>Per-item divider</h2><component :is="pane.component" :items="bodyItems.slice(0, 1)" :grouped="false" :dividers="{ 'body-0': 'Timeline' }" /></section>
             <section v-if="pane.name === 'Tailwind'" class="example"><h2>Dot divider (option)</h2><FeedStream :items="bodyItems.slice(0, 1)" :grouped="false" :dividers="{ 'body-0': 'Timeline' }" divider-style="dot" /></section>
             <section v-for="example in cases" :key="example.name" class="example"><h2>{{ example.name }}</h2><component :is="pane.component" :items="(example.items as FeedNode[])" :rail="(example.rail as any) ?? null" :child-rail="(example.childRail as any) ?? null" :grouped="example.grouped ?? false" :interactive="example.interactive ?? true" :collapsed="example.collapsed ?? null" /></section>
+            <section v-if="pane.name === 'Tailwind'" class="example"><h2>Steps</h2><FeedStream :items="stepItems"><template #marker="{ node, isLast }"><span class="sf-step flex size-8 shrink-0 items-center justify-center rounded-full border border-border text-sm" :data-last="isLast">{{ Number(node.id.slice(5)) + 1 }}</span></template><template #headline="{ node }"><template v-if="node.id !== 'step-1'">Step {{ Number(node.id.slice(5)) + 1 }}</template></template></FeedStream></section>
             <section class="example"><h2>MediaObject below</h2><div class="sf-feed text-sm leading-[1.6] text-muted-foreground"><MediaObject :payload="postBody" :entity-media="post.media" :entity-url="post.url" image-placement="below" /></div></section>
         </article>
     </main>
