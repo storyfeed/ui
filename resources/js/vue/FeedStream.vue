@@ -131,6 +131,7 @@ const gradientId = `sf-branch-${useId()}`;
             <section v-for="(day, dayIndex) in days" :key="`${day.label}:${dayIndex}`">
                 <div
                     v-if="grouped && day.label !== null"
+                    role="listitem"
                     :class="[
                         'sf-row sf-divider relative flex items-start gap-(--sf-gap-v)',
                         dividerStyle === 'dot' ? 'sf-divider--dot [&_.sf-rail>div:last-child]:mt-[calc(var(--spacing)*1.625)]' : 'sf-divider--branch',
@@ -217,7 +218,7 @@ const gradientId = `sf-branch-${useId()}`;
                 </div>
             </section>
 
-            <div v-if="cursor" class="sf-row relative flex items-start gap-(--sf-gap-v)">
+            <div v-if="cursor" role="listitem" class="sf-row relative flex items-start gap-(--sf-gap-v)">
                 <div class="sf-rail flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
                     <div aria-hidden="true" class="sf-rail__line mt-1 w-px flex-1 bg-border" />
                 </div>

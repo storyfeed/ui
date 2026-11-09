@@ -11,6 +11,8 @@ import cases from './cases.json';
 import type { FeedNode } from '../../resources/js/vue/types';
 
 const parity = __PARITY__;
+// The axe check's load-more case (workbench/a11y.mjs); off the parity pages, where Blade's pager differs by design.
+const a11y = new URLSearchParams(location.search).has('a11y');
 const dark = new URLSearchParams(location.search).get('theme') === 'dark';
 document.documentElement.classList.toggle('dark', dark);
 const now = Date.parse('2026-08-14T15:00:00Z');
@@ -45,6 +47,7 @@ const grown = (group: any) => ({ ...group, count: group.count + 1, distinct: { .
             <component :is="pane.component" :items="pane.css === 'converted' ? main : (payload.items as FeedNode[])" :next-cursor="payload.next_cursor" />
             <section class="example"><h2>Generic body forms</h2><component :is="pane.component" :items="bodyItems" :grouped="false" /></section>
             <section v-for="rail in rails" :key="rail" class="example"><h2>{{ rail }}</h2><component :is="pane.component" :items="bodyItems.slice(0, 1)" :grouped="false" :rail="rail" /></section>
+            <section v-if="a11y" class="example"><h2>Load more</h2><component :is="pane.component" :items="bodyItems.slice(0, 1)" :grouped="false" next-cursor="workbench-next-page" /></section>
             <section class="example"><h2>Per-item divider</h2><component :is="pane.component" :items="bodyItems.slice(0, 1)" :grouped="false" :dividers="{ 'body-0': 'Timeline' }" /></section>
             <section v-if="pane.name === 'Tailwind'" class="example"><h2>Dot divider (option)</h2><FeedStream :items="bodyItems.slice(0, 1)" :grouped="false" :dividers="{ 'body-0': 'Timeline' }" divider-style="dot" /></section>
             <section v-for="example in cases" :key="example.name" class="example"><h2>{{ example.name }}</h2><component :is="pane.component" :items="(example.items as FeedNode[])" :rail="(example.rail as any) ?? null" :child-rail="(example.childRail as any) ?? null" :grouped="example.grouped ?? false" :interactive="example.interactive ?? true" :collapsed="example.collapsed ?? null" /></section>

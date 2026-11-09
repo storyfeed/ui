@@ -1111,7 +1111,7 @@ test('FeedStream reads a whole page: core #95 JSON under data, the older items e
     assert.deepEqual(kit.readPage(nodes), { items: nodes, nextCursor: null });
     assert.deepEqual(kit.readPage(undefined), { items: [], nextCursor: null });
     const html = raw('FeedStream', { page: { data: nodes, next_cursor: 'next' } });
-    assert.equal((html.match(/role="listitem"/g) ?? []).length, 2, 'both nodes from data');
+    assert.equal((html.match(/role="listitem"(?![^>]*sf-(?:divider|more|row))/g) ?? []).length, 2, 'both nodes from data');
     assert.match(html, /sf-more/, 'the next cursor offers more');
     assert.doesNotMatch(raw('FeedStream', { page: { items: nodes, next_cursor: null } }), /sf-more/, 'no cursor, no more');
     assert.match(raw('FeedStream', { page: { items: nodes, next_cursor: null } }), /Ada Lovelace/);

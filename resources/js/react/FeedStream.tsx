@@ -25,14 +25,17 @@ export interface FeedStreamProps extends NodeProps {
 function Divider({
     label,
     kind,
+    role,
 }: {
     label: string;
     kind: 'dot' | 'branch';
+    role?: 'listitem';
 }) {
     // The stroke gradient needs an id unique on the page; React's ids may hold characters a url() reference shouldn't.
     const gradient = `sf-branch-${useId().replace(/[^\w-]/g, '')}`;
     return (
         <div
+            role={role}
             className={`sf-row sf-divider relative flex items-start gap-(--sf-gap-v) ${kind === 'dot' ? 'sf-divider--dot [&_.sf-rail>div:last-child]:mt-[calc(var(--spacing)*1.625)]' : 'sf-divider--branch'}`}
         >
             <div className="sf-rail relative flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
@@ -170,6 +173,7 @@ export default function FeedStream({
                             <section key={`${day.label}:${dayIndex}`}>
                                 {grouped && day.label !== null && (
                                     <Divider
+                                        role="listitem"
                                         label={day.label}
                                         kind={dividerStyle}
                                     />
@@ -198,7 +202,7 @@ export default function FeedStream({
                             </section>
                         ))}
                         {nextCursor && (
-                            <div className="sf-row relative flex items-start gap-(--sf-gap-v)">
+                            <div role="listitem" className="sf-row relative flex items-start gap-(--sf-gap-v)">
                                 <div className="sf-rail flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
                                     <div
                                         aria-hidden="true"
