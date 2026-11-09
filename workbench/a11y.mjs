@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 import { serve, pages } from './host.mjs';
 
 // Runs axe's list-structure rules over every feed in all three kits: a
-// multi-day feed with a load-more cursor and a dateless (Steps) feed. Every
+// multi-day feed, a load-more cursor (shown with ?a11y) and a dateless (Steps) feed. Every
 // direct child of role=list must be a listitem, and vice versa.
 // Blade is skipped until #110: its role=feed may only own articles, and its
 // day dividers sit directly inside it. Remove it from `skipped` once fixed.
@@ -19,7 +19,7 @@ const failures = [];
 try {
     for (const [kit, path] of kits) {
         const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-        await page.goto(`${origin}/${path}`);
+        await page.goto(`${origin}/${path}?a11y`);
         await page.addScriptTag({ content: axe });
         const found = await page.evaluate(async rules => {
             const feeds = [...document.querySelectorAll('.sf-feed')];

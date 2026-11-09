@@ -27,6 +27,8 @@ export default function App() {
             (body) => body.$body === 'Storyfeed/Body/MediaObject',
         ),
     )!.object!;
+    // The axe check's load-more case (workbench/a11y.mjs); off the parity pages, where Blade's pager differs by design.
+    const a11y = new URLSearchParams(location.search).has('a11y');
     const feed = (items: any, props: any = {}) => (
         <FeedStream items={items} {...props} />
     );
@@ -62,13 +64,15 @@ export default function App() {
                             })}
                         </section>
                     ))}
-                    <section className="example">
-                        <h2>Load more</h2>
-                        {feed(bodyItems.slice(0, 1), {
-                            grouped: false,
-                            nextCursor: 'workbench-next-page',
-                        })}
-                    </section>
+                    {a11y && (
+                        <section className="example">
+                            <h2>Load more</h2>
+                            {feed(bodyItems.slice(0, 1), {
+                                grouped: false,
+                                nextCursor: 'workbench-next-page',
+                            })}
+                        </section>
+                    )}
                     <section className="example">
                         <h2>Per-item divider</h2>
                         {feed(bodyItems.slice(0, 1), {
