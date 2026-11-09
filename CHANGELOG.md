@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Vue and React day dividers and the load-more row are now `role="listitem"`, so every direct child of the feed's `role="list"` is a list item (axe `aria-required-children`). The markup and visuals are otherwise unchanged. Blade's `role="feed"` has the same defect and is tracked in #110.
+
 ## v0.12.0 - 2026-11-05
 
 ### Added

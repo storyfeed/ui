@@ -85,6 +85,7 @@ final class WorkbenchTest extends TestCase
         foreach (['actor', 'activity', 'actor-only', 'activity-only'] as $rail) {
             $examples[$rail] = $render([$bodies[0]], ['grouped' => false, 'rail' => $rail]);
         }
+        $examples['Load more'] = Blade::render('<x-storyfeed::feed :items="$items" :grouped="false" next-cursor="workbench-next-page" />', ['items' => [$bodies[0]]]);
         foreach (['branch', 'dot'] as $style) {
             $examples[$style === 'branch' ? 'Per-item divider' : 'Dot divider (option)'] = $render([$bodies[0]], ['grouped' => false, 'dividers' => ['body-0' => 'Timeline'], 'dividerStyle' => $style]);
         }
