@@ -29,7 +29,7 @@ it('draws an activity row: glyph, linked headline and time', function () {
     $html = render_feed();
 
     expect($html)
-        ->toContain('<div> <div role="feed"> <article>')
+        ->toContain('<div data-sf-feed> <div role="feed"> <article>')
         ->toContain('<span data-sf-intent="success" data-sf-glyph="shopping-bag" aria-hidden="true"> <svg')
         ->toContain('<span><a href="/users/1">Dana</a> placed <a href="/orders/1" target="_blank">Order #1042</a></span>')
         ->toContain('</span> </div> <div> <time datetime="2026-09-25T12:00:00+00:00" title="Friday, 25 September 2026, 12:00:00 PM">just now</time>')
@@ -41,7 +41,7 @@ it('draws an activity row: glyph, linked headline and time', function () {
 it('lands attributes on the feed root', function () {
     Storyfeed::activity('place', Order::create(['number' => '1']))->by($this->dana)->publish();
 
-    expect(render_feed(attributes: 'class="my-feed" id="activity"'))->toStartWith('<div id="activity">');
+    expect(render_feed(attributes: 'class="my-feed" id="activity"'))->toStartWith('<div data-sf-feed id="activity">');
 });
 
 it('draws the blank disc for a verb with no glyph', function () {
@@ -147,7 +147,7 @@ it('links to older activity with the next cursor, and not from the last page', f
 });
 
 it('says so when the page is empty, in words the app can replace', function () {
-    expect(render_feed())->toBe('<div> <div>No activity yet.</div> </div>')
+    expect(render_feed())->toBe('<div data-sf-feed> <div>No activity yet.</div> </div>')
         ->and(render_blade('<x-storyfeed::feed :page="$page"><x-slot:empty>Nothing yet today.</x-slot:empty></x-storyfeed::feed>', ['page' => Storyfeed::feed()->get()]))
         ->toContain('<div>Nothing yet today.</div>');
 });
@@ -216,4 +216,14 @@ it('leaves a null verb out of the fallback headline (storyfeed/storyfeed#127)', 
 
     expect(render_feed([[...$node, 'verb' => null, 'headline_template' => null, 'headline' => null]]))->not->toContain('null')
         ->and(render_feed([[...$node, 'verb' => null, 'headline_template' => null, 'headline' => 'Imported from the archive']]))->toContain('<span>Imported from the archive</span>');
+});
+
+it('marks the feed root and CTA action with stable data hooks', function () {
+    expect(render_feed())->toStartWith('<div data-sf-feed>');
+
+    $cta = fn (array $body) => Blade::render('<x-storyfeed::body.call-to-action :body="$body" :entity="$entity" />', ['body' => $body, 'entity' => Entity::of(['label' => 'E', 'url' => '/e', 'link' => ['href' => '/e']])]);
+    $action = ['label' => 'Go', 'link' => ['href' => '/go', 'modal' => false, 'attributes' => []]];
+
+    expect($cta(['subject' => 'S', 'action' => $action]))->toMatch('/<a href="\/go" data-sf-cta-action [^>]*class="sf-cta__action/')
+        ->and($cta(['action' => $action]))->toMatch('/<a href="\/go" data-sf-cta-action [^>]*class="sf-cta__action/');
 });

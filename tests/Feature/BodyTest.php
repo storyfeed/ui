@@ -368,9 +368,9 @@ it('draws a call to action as a plain link button, with safe attributes and its 
     $action = fn (?string $href, array $attributes = [], bool $modal = false) => ['label' => 'See <it>', 'link' => ['href' => $href, 'modal' => $modal, 'attributes' => $attributes]];
 
     expect(structural_html($render(['subject' => 'The countdown', 'content' => 'Five milestones.', 'action' => $action('/next', ['target' => '_blank', 'onclick' => 'x'], true)])))
-        ->toBe('<div> <p>The countdown</p> <p>Five milestones.</p> <a href="/next" target="_blank">See &lt;it&gt;<span aria-hidden="true">→</span></a> </div>')
-        ->and(structural_html($render(['action' => $action('/next')])))->toBe('<a href="/next">See &lt;it&gt;<span aria-hidden="true">→</span></a>')
-        ->and(structural_html($render(['content' => 'Mine', 'action' => $action(null)])))->toContain('<a href="/roadmap">')
+        ->toBe('<div> <p>The countdown</p> <p>Five milestones.</p> <a href="/next" data-sf-cta-action target="_blank">See &lt;it&gt;<span aria-hidden="true">→</span></a> </div>')
+        ->and(structural_html($render(['action' => $action('/next')])))->toBe('<a href="/next" data-sf-cta-action>See &lt;it&gt;<span aria-hidden="true">→</span></a>')
+        ->and(structural_html($render(['content' => 'Mine', 'action' => $action(null)])))->toContain('<a href="/roadmap" data-sf-cta-action>')
         ->and(structural_html($render(['subject' => 'Heading', 'action' => ['link' => ['href' => '/x']]])))->toBe('<div> <p>Heading</p> </div>')
         ->and($render(['action' => ['label' => 'No link']]))->toBe('')
         ->and($render([]))->toBe('');
@@ -382,7 +382,7 @@ it('draws core\'s CallToAction body through the feed', function () {
     }
 
     expect(render_bodies(CallToAction::make(subject: 'The countdown to 1.0')->action('See the roadmap', '/roadmap')))
-        ->toContain('<p>The countdown to 1.0</p>', '<a href="/roadmap">See the roadmap<span aria-hidden="true">→</span></a>');
+        ->toContain('<p>The countdown to 1.0</p>', '<a href="/roadmap" data-sf-cta-action>See the roadmap<span aria-hidden="true">→</span></a>');
 });
 
 it('reads links in core 0.17\'s shape and core 0.16\'s', function () {

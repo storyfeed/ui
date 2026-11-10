@@ -62,7 +62,7 @@ export function CallToAction({ payload, entityUrl, entityLink }: BodyProps) {
     if (!cta) return null;
     const action = (className: string) =>
         cta.action && (
-            <Link {...linkProps(cta.action, Link)} className={className}>
+            <Link {...linkProps(cta.action, Link)} data-sf-cta-action="" className={className}>
                 {cta.action.label}
                 <span aria-hidden="true">→</span>
             </Link>
