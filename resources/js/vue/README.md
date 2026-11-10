@@ -171,7 +171,9 @@ excluding `href`, event handlers and invalid names. A missing URL or tombstone
 renders an unlinked image. An app that registers its own Image renderer through
 `FEED_BODIES` draws icon Image bodies in place instead. Provide `FEED_MEDIA` with a component receiving
 `image`, `href`, `linkAttributes` and the kit classes to render media yourself
-(for example, a lightbox button).
+(for example, a lightbox button). It draws every picture: an Image body's own
+(with `href` null, since a row's picture does not navigate), media objects and
+group tiles.
 
 For a custom Image body, use `<FeedMedia :image="picture" :payload="payload"
 :href="entityUrl" />`. It consumes inherited feed size variables; `payload`

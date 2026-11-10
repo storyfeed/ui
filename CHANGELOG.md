@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Vue and React Image bodies now draw their picture through a provided `FEED_MEDIA` component, as media objects and group tiles already did, so a host lightbox sees them too. The component receives the picture, a null `href`, empty `linkAttributes` and the picture's sizing classes; the caption stays in the figure. Without `FEED_MEDIA` the markup is unchanged. Blade's Image body already used its media renderer.
+
 ## v0.12.1 - 2026-11-09
 
 ### Fixed
