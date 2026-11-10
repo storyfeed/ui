@@ -778,8 +778,8 @@ test('a call to action draws one button; modal reaches a host link, attributes a
         return structural(await renderToString(app)).replace(/<!--[\s\S]*?-->/g, '');
     };
     assert.equal(await draw({ subject: 'The countdown', content: 'Five milestones.', action: action('/next', { modal: true, attributes: { target: '_blank', onclick: 'x' } }) }),
-        '<div class="sf-cta"><p class="sf-cta__subject">The countdown</p><p class="sf-cta__content">Five milestones.</p><a target="_blank" href="/next" class="sf-cta__action">See &lt;it&gt;<span aria-hidden="true">→</span></a></div>');
-    assert.equal(await draw({ action: action('/next') }), '<a href="/next" class="sf-cta__action">See &lt;it&gt;<span aria-hidden="true">→</span></a>');
+        '<div class="sf-cta"><p class="sf-cta__subject">The countdown</p><p class="sf-cta__content">Five milestones.</p><a target="_blank" href="/next" data-sf-cta-action class="sf-cta__action">See &lt;it&gt;<span aria-hidden="true">→</span></a></div>');
+    assert.equal(await draw({ action: action('/next') }), '<a href="/next" data-sf-cta-action class="sf-cta__action">See &lt;it&gt;<span aria-hidden="true">→</span></a>');
     assert.match(await draw({ content: 'Mine', action: action(null) }), /href="\/roadmap"/);
     assert.equal(await draw({ subject: 'Heading', action: { link: { href: '/x' } } }), '<div class="sf-cta"><p class="sf-cta__subject">Heading</p></div>');
     assert.equal(await draw({ action: { label: 'No link' } }), '');
@@ -1423,4 +1423,13 @@ test(':media-objects="false" drops MediaObject bodies from rows, groups and expa
     assert.equal(hidden.match(/Kept prose/g).length, 2);
     const member = await renderRaw('/resources/js/vue/FeedGroup.vue', { item: postedGroup, collapsed: false, mediaObjects: false });
     assert.doesNotMatch(member, /sf-media-object/);
+});
+
+test('stable hooks: data-sf-feed on the feed root and data-sf-cta-action on the CTA action', async () => {
+    const feed = await render('/resources/js/vue/FeedStream.vue', { items: [] });
+    assert.match(feed, /^<div[^>]*\sdata-sf-feed[\s>=]/);
+    const cta = await renderRaw('/resources/js/vue/body/CallToAction.vue', { payload: { subject: 'S', action: { label: 'Go', link: { href: '/go', modal: false, attributes: {} } } }, entityUrl: '/e' });
+    assert.match(cta, /<a[^>]*\sdata-sf-cta-action[\s>=][^>]*class="sf-cta__action/);
+    const lone = await renderRaw('/resources/js/vue/body/CallToAction.vue', { payload: { action: { label: 'Go', link: { href: '/go', modal: false, attributes: {} } } }, entityUrl: '/e' });
+    assert.match(lone, /<a[^>]*\sdata-sf-cta-action[\s>=]/);
 });

@@ -148,6 +148,7 @@ export default function FeedStream({
         <FeedProvider FEED_IMAGE_SIZE={imageSize ?? 'full'}>
             <div
                 ref={root}
+                data-sf-feed=""
                 className={`sf-feed [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6] text-muted-foreground ${imageClasses({}, imageSize) ?? ''} ${className}`}
                 style={style}
             >

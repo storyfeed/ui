@@ -726,8 +726,8 @@ test('a call to action draws one button; modal reaches a host link, attributes a
     const action = (href, extra = {}) => ({ label: 'See <it>', link: { href, modal: false, attributes: {}, ...extra } });
     const draw = (payload, options = {}) => render('CallToAction', { payload, entityUrl: '/roadmap' }, options);
     assert.equal(draw({ subject: 'The countdown', content: 'Five milestones.', action: action('/next', { modal: true, attributes: { target: '_blank', onclick: 'x' } }) }),
-        '<div class="sf-cta"><p class="sf-cta__subject">The countdown</p><p class="sf-cta__content">Five milestones.</p><a target="_blank" href="/next" class="sf-cta__action">See &lt;it&gt;<span aria-hidden="true">→</span></a></div>');
-    assert.equal(draw({ action: action('/next') }), '<a href="/next" class="sf-cta__action">See &lt;it&gt;<span aria-hidden="true">→</span></a>');
+        '<div class="sf-cta"><p class="sf-cta__subject">The countdown</p><p class="sf-cta__content">Five milestones.</p><a target="_blank" href="/next" data-sf-cta-action="" class="sf-cta__action">See &lt;it&gt;<span aria-hidden="true">→</span></a></div>');
+    assert.equal(draw({ action: action('/next') }), '<a href="/next" data-sf-cta-action="" class="sf-cta__action">See &lt;it&gt;<span aria-hidden="true">→</span></a>');
     assert.match(draw({ content: 'Mine', action: action(null) }), /href="\/roadmap"/);
     assert.equal(draw({ subject: 'Heading', action: { link: { href: '/x' } } }), '<div class="sf-cta"><p class="sf-cta__subject">Heading</p></div>');
     assert.equal(draw({ action: { label: 'No link' } }), '');
@@ -1400,4 +1400,11 @@ test('mediaObjects={false} drops MediaObject bodies from rows, groups and expand
     assert.doesNotMatch(hidden, /sf-media-object|Post subject|Post words/);
     assert.equal(hidden.match(/Kept prose/g).length, 2);
     assert.doesNotMatch(raw('FeedGroup', { item: postedGroup, collapsed: false, mediaObjects: false }), /sf-media-object/);
+});
+
+test('stable hooks: data-sf-feed on the feed root and data-sf-cta-action on the CTA action', () => {
+    assert.match(raw('FeedStream', { items: [] }), /^<div[^>]*\sdata-sf-feed=""/);
+    const action = { label: 'Go', link: { href: '/go', modal: false, attributes: {} } };
+    assert.match(raw('CallToAction', { payload: { subject: 'S', action }, entityUrl: '/e' }), /<a[^>]*\sdata-sf-cta-action=""[^>]*class="sf-cta__action/);
+    assert.match(raw('CallToAction', { payload: { action }, entityUrl: '/e' }), /<a[^>]*\sdata-sf-cta-action=""/);
 });

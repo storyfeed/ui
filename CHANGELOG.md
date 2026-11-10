@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.13.1 - 2026-11-10
+
+### Added
+
+- Stable script hooks in Blade, Vue and React: `data-sf-feed` on the feed root and `data-sf-cta-action` on a CallToAction's action link. A new README section, "Stable hooks", documents them as the supported selectors; `.sf-*` classes are styling internals that may change.
+
 ## v0.13.0 - 2026-11-10
 
 ### Added

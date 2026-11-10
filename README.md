@@ -790,6 +790,22 @@ trusted HTML that is not sanitized, so it must escape the text itself, as
 `inlineCode` does. Vue and React callbacks return nodes, which the framework
 escapes.
 
+## Stable hooks
+
+Script against data attributes, not classes. These are the supported
+selectors, kept stable across releases in Vue, React and Blade:
+
+| Attribute | Element |
+| --- | --- |
+| `data-sf-feed` | the feed root |
+| `data-sf-cta-action` | a CallToAction body's action link |
+
+```js
+const feed = event.target.closest('[data-sf-feed]');
+```
+
+The kit's `.sf-*` classes are styling internals and may change in any release.
+
 ## Customising the Views
 
 Publish the views to change the markup:
