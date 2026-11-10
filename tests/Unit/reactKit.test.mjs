@@ -1353,3 +1353,22 @@ test('an all-dateless stream draws no day heading, on the server and in hydratio
     assert.equal(html.match(/role="listitem"/g).length, 3);
     assert.equal(html.match(/sf-rail__line/g).length, 2);
 });
+
+test('an Image body draws its picture through a host media seam with its sizing classes', () => {
+    const payload = { $v: 3, src: '/dal.jpg', alt: 'Dal', width: 800, height: 600, caption: 'Fresh dal', $meta: { size: 'thumbnail' } };
+    let received;
+    const html = raw('Image', { payload }, { FEED_MEDIA: props => { received = props; return h('button', { className: props.className }, 'Lightbox'); } });
+    assert.match(html, /<figure[^>]*sf-image[^>]*><button[^>]*>Lightbox<\/button>/);
+    assert.doesNotMatch(html, /<img/);
+    assert.match(html, /Fresh dal/);
+    assert.equal(received.image.src, '/dal.jpg');
+    assert.equal(received.href, null);
+    assert.deepEqual(received.linkAttributes, {});
+    assert.match(received.className, /--sf-image-width:var\(--sf-image-size-thumbnail/);
+    assert.match(received.className, /max-h-\[var\(--sf-image-height,none\)\]/);
+});
+
+test('an Image body without a media seam keeps its own picture markup', () => {
+    const html = raw('Image', { payload: { $v: 3, src: '/dal.jpg', alt: 'Dal', width: 800, height: 600, caption: 'Fresh dal', $meta: { size: 'thumbnail' } } });
+    assert.equal(html, '<figure class="sf-image m-0 [--sf-image-width:var(--sf-image-size-thumbnail,6rem)] [--sf-image-height:var(--sf-image-size-thumbnail-height,6rem)]"><img class="block h-auto object-contain max-w-[min(100%,var(--sf-image-width,100%))] max-h-[var(--sf-image-height,none)] rounded-lg" src="/dal.jpg" alt="Dal" width="800" height="600" loading="lazy"/><figcaption class="mt-2 text-xs leading-[1.6] text-muted-foreground">Fresh dal</figcaption></figure>');
+});

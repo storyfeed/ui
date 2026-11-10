@@ -144,7 +144,10 @@ export function FileAttachment({ payload }: BodyProps) {
         </p>
     ) : null;
 }
+const PICTURE_CLASSES =
+    'block h-auto object-contain max-w-[min(100%,var(--sf-image-width,100%))] max-h-[var(--sf-image-height,none)] rounded-lg';
 export function Image({ payload, entityMedia }: BodyProps) {
+    const { FEED_MEDIA: Media } = useFeedOptions();
     const caption =
         typeof payload.caption === 'string' ? payload.caption : null;
     // Its own `src`, else the entity's slot it names (see `pictureOf()`).
@@ -154,6 +157,15 @@ export function Image({ payload, entityMedia }: BodyProps) {
     );
     return picture ? (
         <figure className={`sf-image m-0 ${imageClasses(payload) ?? ''}`}>
+            {/* A host's media seam draws this picture too; a row's own picture does not navigate. */}
+            {Media ? (
+                <Media
+                    image={picture}
+                    href={null}
+                    linkAttributes={{}}
+                    className={`${PICTURE_CLASSES} ${imageClasses(payload) ?? ''}`.trim()}
+                />
+            ) : (
             <img
                 className="block h-auto object-contain max-w-[min(100%,var(--sf-image-width,100%))] max-h-[var(--sf-image-height,none)] rounded-lg"
                 src={picture.src}
@@ -162,6 +174,7 @@ export function Image({ payload, entityMedia }: BodyProps) {
                 height={picture.height ?? undefined}
                 loading="lazy"
             />
+            )}
             {caption && (
                 <figcaption className="mt-2 text-xs leading-[1.6] text-muted-foreground">
                     {caption}
