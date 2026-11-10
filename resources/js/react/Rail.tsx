@@ -66,7 +66,7 @@ export default function Rail({
             {line && (
                 <div
                     aria-hidden="true"
-                    className="sf-rail__line mt-1 w-px flex-1 bg-border"
+                    className="sf-rail__line mt-[var(--sf-rail-line-offset,--spacing(1))] w-[var(--sf-rail-line-width,1px)] flex-1 bg-border"
                 />
             )}
         </div>

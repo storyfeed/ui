@@ -332,6 +332,28 @@ A value applies in both themes, so set it again under `.dark` for a different
 dark one. The kit draws no blur behind cards, which would cost every card on a
 long feed its own compositing layer.
 
+#### Tune the rows
+
+A host that needs a row's spacing, type or rail to match its own layout sets
+these variables on the feed or any element around it, instead of reaching
+into the kit's `.sf-*` classes. Unset, each draws exactly what the kit drew
+before:
+
+| Variable | What it sets | Default |
+|---|---|---|
+| `--sf-body-pt` | the body's top padding, which centres the headline's first line on the disc | `max(0px, calc((var(--sf-disc-v) - 1lh) / 2))` |
+| `--sf-body-leading` | the body's line height | inherited from the row (`1.6`) |
+| `--sf-body-color` | the body's text colour | inherited from the feed |
+| `--sf-row-gap` | the space after a row, before the next one; dense group members use it too | `--spacing(5)` |
+| `--sf-rail-line-offset` | the gap between a disc and the rail line below it | `--spacing(1)` |
+| `--sf-rail-line-width` | the rail line's width, divider lines included | `1px` |
+
+```blade
+<x-storyfeed::feed :page="$page" class="[--sf-row-gap:--spacing(3)] [--sf-rail-line-width:2px]" />
+```
+
+A divider's line keeps its own offset from its node or branch.
+
 #### Set the feed's size
 
 The feed is sized in `rem` on Tailwind's scale, so it follows the reader's
@@ -441,7 +463,26 @@ works without JavaScript and supports keyboard disclosure. An unspecified
 state opens unnamed groups, or all groups when `interactive` is false.
 `:collapsed="true"` overrides that default; payload `expanded` still opens a
 group. With `:interactive="false"`, no toggle is rendered and only the chosen
-server state is drawn. Groups show honest truncated-member counts and up to
+server state is drawn.
+
+`media-objects` (React `mediaObjects`, default true) set to false leaves every
+MediaObject body out of rows, groups and their expanded members. No
+`.sf-media-object` markup is drawn at all, so the rest of the row's bodies
+close up behind it:
+
+```blade
+<x-storyfeed::feed :page="$page" :media-objects="false" />
+```
+
+```vue
+<FeedStream :items="items" :media-objects="false" />
+```
+
+```tsx
+<FeedStream items={items} mediaObjects={false} />
+```
+
+Groups show honest truncated-member counts and up to
 three sampled faces. Below the headline, a group draws a strip: one tile per member activity, newest first, each the
 preview of what that member's row shows: the picture it draws (its featured
 entity's Image body), else a quiet name tile with that entity's label, which

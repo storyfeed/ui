@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Row seams a host can set instead of reaching into `.sf-*` classes, in Blade, Vue and React: `--sf-body-pt` (the body's top padding), `--sf-body-leading` and `--sf-body-color` (its line height and text colour), `--sf-row-gap` (the space after a row, dense group members included), `--sf-rail-line-offset` and `--sf-rail-line-width` (the rail line's top offset and width). Each defaults to what the kit drew before, so a page that sets none is unchanged.
+- `:media-objects="false"` on the Blade feed, `media-objects` on Vue's `FeedStream` and `mediaObjects` on React's leave MediaObject bodies out of rows, groups and expanded members, with no `.sf-media-object` markup at all. It defaults to true.
+
 ## v0.12.2 - 2026-11-10
 
 ### Fixed

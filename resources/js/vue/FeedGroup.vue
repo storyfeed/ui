@@ -26,8 +26,10 @@ const props = withDefaults(
         childRail?: Rail | RailName | null;
         interactive?: boolean;
         collapsed?: boolean | null;
+        /** False drops MediaObject bodies from expanded members. */
+        mediaObjects?: boolean;
     }>(),
-    { isLast: false, rail: null, interactive: true, collapsed: null },
+    { isLast: false, rail: null, interactive: true, collapsed: null, mediaObjects: true },
 );
 
 /** See `FeedItem` for why an unasked-for rail is `actor-only` here. */
@@ -145,13 +147,13 @@ const hiddenBeyondChildren = computed(
             <div
                 v-if="!isLast || expanded"
                 aria-hidden="true"
-                class="sf-rail__line mt-1 w-px flex-1 bg-border"
+                class="sf-rail__line mt-[var(--sf-rail-line-offset,--spacing(1))] w-[var(--sf-rail-line-width,1px)] flex-1 bg-border"
             />
         </div>
 
         <div
-            class="sf-body min-w-0 flex-1 pt-[max(0px,calc((var(--sf-disc-v)-1lh)/2))]"
-            :class="isLast && !expanded ? '' : 'sf-body--spaced pb-5'"
+            class="sf-body min-w-0 flex-1 pt-[var(--sf-body-pt,max(0px,calc((var(--sf-disc-v)-1lh)/2)))] [line-height:var(--sf-body-leading)] [color:var(--sf-body-color)]"
+            :class="isLast && !expanded ? '' : 'sf-body--spaced pb-[var(--sf-row-gap,--spacing(5))]'"
         >
             <FeedHeadRow v-if="$slots.headline"><slot name="headline" :node="item" /></FeedHeadRow>
             <div v-else class="sf-head flex items-baseline gap-3">
@@ -226,6 +228,7 @@ const hiddenBeyondChildren = computed(
                     :key="child.id"
                     :item="child"
                     dense
+                    :media-objects="mediaObjects"
                     :rail="childRail ?? rail"
                     :is-last="
                         index === item.children.length - 1 &&

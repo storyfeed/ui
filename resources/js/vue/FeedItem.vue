@@ -3,7 +3,7 @@ import { computed, inject, toRef } from 'vue';
 import { imageOf } from './body';
 import { formsIn, resolve } from './body';
 import { FEED_BODIES } from './keys';
-import { bodyFrame, iconOf } from '../shared/body';
+import { bodyFrame, iconOf, isMediaObject } from '../shared/body';
 import ImageBody from './body/Image.vue';
 import EntityAvatar from './EntityAvatar.vue';
 import FeedHeadline from './FeedHeadline.vue';
@@ -33,8 +33,10 @@ const props = withDefaults(
          * `activity-only`, `actor-only`. See `rail.ts` for the model.
          */
         rail?: Rail | RailName | null;
+        /** False drops MediaObject bodies: no `.sf-media-object` markup at all. */
+        mediaObjects?: boolean;
     }>(),
-    { dense: false, isLast: false, rail: null },
+    { dense: false, isLast: false, rail: null, mediaObjects: true },
 );
 
 const bodies = inject(FEED_BODIES, {});
@@ -121,7 +123,7 @@ const found = computed(() => {
         entityMedia: object?.media ?? null,
     });
 
-    return [
+    return ([
         // The activity's own map, still walked: an app may put a form at a key
         // of its own and this kit will find it.
         ...formsIn(props.item.data, 4, bodies),
@@ -129,7 +131,7 @@ const found = computed(() => {
         // whole point of it being a slot and not a key somebody chose.
         ...resolve(object?.body, bodies).map(attributed),
         ...formsIn(object?.data, 4, bodies).map(attributed),
-    ];
+    ] as any[]).filter((form) => props.mediaObjects || !isMediaObject(form.payload));
 });
 
 /**
@@ -205,13 +207,13 @@ const slots = computed(() =>
                     size="badge"
                 />
             </div>
-            <div v-if="!isLast" aria-hidden="true" class="sf-rail__line mt-1 w-px flex-1 bg-border" />
+            <div v-if="!isLast" aria-hidden="true" class="sf-rail__line mt-[var(--sf-rail-line-offset,--spacing(1))] w-[var(--sf-rail-line-width,1px)] flex-1 bg-border" />
         </div>
 
         <div
-            class="sf-body min-w-0 flex-1 pt-[max(0px,calc((var(--sf-disc-v)-1lh)/2))]"
+            class="sf-body min-w-0 flex-1 pt-[var(--sf-body-pt,max(0px,calc((var(--sf-disc-v)-1lh)/2)))] [line-height:var(--sf-body-leading)] [color:var(--sf-body-color)]"
             :class="[
-                isLast ? '' : 'sf-body--spaced pb-5',
+                isLast ? '' : 'sf-body--spaced pb-[var(--sf-row-gap,--spacing(5))]',
                 dense ? 'sf-body--dense' : '',
             ]"
         >

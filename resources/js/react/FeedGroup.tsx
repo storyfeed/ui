@@ -21,6 +21,7 @@ export default function FeedGroup({
     annotations,
     interactive = true,
     collapsed = null,
+    mediaObjects = true,
     marker,
     headline,
 }: NodeProps & { item: GroupNode }) {
@@ -72,10 +73,10 @@ export default function FeedGroup({
                 marker={marker ? (marker({ node: item, isLast }) ?? null) : undefined}
             />
             <div
-                className={`sf-body min-w-0 flex-1 pt-[max(0px,calc((var(--sf-disc-v)-1lh)/2))] ${
+                className={`sf-body min-w-0 flex-1 pt-[var(--sf-body-pt,max(0px,calc((var(--sf-disc-v)-1lh)/2)))] [line-height:var(--sf-body-leading)] [color:var(--sf-body-color)] ${
                     !isLast || (!interactive && open)
-                        ? 'sf-body--spaced pb-5'
-                        : '[&:has(>.sf-disclosure[open])]:pb-5'
+                        ? 'sf-body--spaced pb-[var(--sf-row-gap,--spacing(5))]'
+                        : '[&:has(>.sf-disclosure[open])]:pb-[var(--sf-row-gap,--spacing(5))]'
                 }`}
             >
                 {headline ? (
@@ -131,6 +132,7 @@ export default function FeedGroup({
                                     key={child.id}
                                     item={child}
                                     dense
+                                    mediaObjects={mediaObjects}
                                     rail={childRail ?? rail}
                                     isLast={
                                         i === item.children.length - 1 &&

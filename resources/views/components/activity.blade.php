@@ -1,5 +1,5 @@
 @aware(['imageSize' => 'full'])
-@props(['activity', 'last' => false, 'dense' => false, 'rail' => null, 'timezone' => null, 'renderers' => [], 'removed' => null])
+@props(['activity', 'last' => false, 'dense' => false, 'mediaObjects' => true, 'rail' => null, 'timezone' => null, 'renderers' => [], 'removed' => null])
 @php
     $activity = \Storyfeed\Support\FeedItem::of($activity);
     $removed ??= isset($renderers['removed']) ? $renderers['removed']($activity) : null;
@@ -12,6 +12,12 @@
     $forms = \Storyfeed\Ui\Support\Bodies::in($activity->get('data'));
     $bodies = $object?->bodies() ?? collect();
     $bodies = $bodies->merge(\Storyfeed\Ui\Support\Bodies::in($object?->get('data')))->values();
+    // `:media-objects="false"` drops MediaObject bodies: no `.sf-media-object` markup at all.
+    if (! $mediaObjects) {
+        $isMediaObject = fn ($body) => is_array($body) && ($body['$body'] ?? null) === 'Storyfeed/Body/MediaObject';
+        $forms = collect($forms)->reject($isMediaObject)->values();
+        $bodies = $bodies->reject($isMediaObject)->values();
+    }
     // A row shows a picture only when a body asks: an Image naming the icon slot
     // draws as the small thumbnail beside the other bodies, unless the app's
     // form renderer draws that body itself.
@@ -26,7 +32,7 @@
 @endphp
 <article {{ $attributes->class('sf-row relative flex items-start gap-(--sf-gap-v) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]') }}>
     <x-storyfeed::rail :item="$activity" :rail="$rail" :dense="$dense" :last="$last" :renderers="$renderers" :marker="$marker" />
-    <div @class(['sf-body min-w-0 flex-1 pt-[max(0px,calc((var(--sf-disc-v)-1lh)/2))]', 'sf-body--spaced pb-5' => ! $last, 'sf-body--dense' => $dense])>
+    <div @class(['sf-body min-w-0 flex-1 pt-[var(--sf-body-pt,max(0px,calc((var(--sf-disc-v)-1lh)/2)))] [line-height:var(--sf-body-leading)] [color:var(--sf-body-color)]', 'sf-body--spaced pb-[var(--sf-row-gap,--spacing(5))]' => ! $last, 'sf-body--dense' => $dense])>
 @if ($head === null)
         <div class="sf-head flex items-baseline gap-3"><x-storyfeed::headline :headline="$reading" /></div>
 @elseif (trim($head) !== '')
