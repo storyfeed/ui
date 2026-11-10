@@ -150,7 +150,7 @@ payload keys are ignored.
 `dividers={{ [itemId]: 'History' }}` draws labels before items. Day headings
 and these labels branch off the rail by default; `dividerStyle="dot"` draws a
 dot on the rail instead. Root utility properties
-`--sf-font-size`, `--sf-prose-max-h`, `--sf-gutter`, `--sf-gap`, `--sf-disc`, `--sf-badge`, `--sf-badge-face`, `--sf-well` and `--sf-well-border` match Vue.
+`--sf-font-size`, `--sf-prose-max-h`, `--sf-gutter`, `--sf-gap`, `--sf-disc`, `--sf-badge`, `--sf-badge-face`, `--sf-well`, `--sf-well-border`, `--sf-body-pt`, `--sf-body-leading`, `--sf-body-color`, `--sf-row-gap`, `--sf-rail-line-offset` and `--sf-rail-line-width` match Vue.
 Glyph intent stays an app-owned `data-sf-intent`; edit `FeedIcon.tsx` to change
 icon mapping. Avatars read `media.initials` and `media.color` first, then the
 older snapshot `data.initials`/`data.avatar_color`, then the stable identity
@@ -198,3 +198,5 @@ README's [custom Image examples](../../../README.md#custom-image-renderers).
 rules. Set false for a static feed; `collapsed` sets the initial group state
 (null opens static groups). Static collapsed members stay in the HTML with
 `hidden print:block`, so print needs no JavaScript.
+`mediaObjects={false}` leaves MediaObject bodies out of rows, groups and
+expanded members, with no `.sf-media-object` markup.

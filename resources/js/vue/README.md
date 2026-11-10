@@ -142,6 +142,9 @@ keeps its centre where its default size puts it, so a larger one grows
 outward from the disc's corner.
 `--sf-well` and `--sf-well-border` set the fill and edge of card-shaped
 bodies from any ancestor; unset, both mix from your tokens (see the root README).
+`--sf-body-pt`, `--sf-body-leading`, `--sf-body-color`, `--sf-row-gap`,
+`--sf-rail-line-offset` and `--sf-rail-line-width` tune a row's body and rail;
+unset, each draws the kit's default (see "Tune the rows" in the root README).
 The `sf-*` classes remain semantic hooks; styling lives in utilities.
 
 Metadata follows the headline: date, then unused instrument/origin/result/
@@ -189,3 +192,5 @@ Both reach expanded members. See the root README's
 `interactive` defaults to true. Set it false for a static feed; `collapsed`
 selects its initial group state (null opens static groups). Collapsed members
 stay in the HTML with `hidden print:block`, so print needs no JavaScript.
+`:media-objects="false"` leaves MediaObject bodies out of rows, groups and
+expanded members, with no `.sf-media-object` markup.

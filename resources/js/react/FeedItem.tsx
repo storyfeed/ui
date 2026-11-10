@@ -10,7 +10,7 @@ import Rail from './Rail';
 import { useFeedOptions } from './context';
 import { entityLink } from '../shared/link';
 import { featuredOf } from '../shared/strip';
-import { bodyFrame, iconOf } from '../shared/body';
+import { bodyFrame, iconOf, isMediaObject } from '../shared/body';
 import { useRelativeTime } from './useRelativeTime';
 export interface FeedRenderProps {
     body?: (props: { node: FeedNode }) => ReactNode;
@@ -24,6 +24,8 @@ export interface FeedRenderProps {
 export interface NodeProps extends FeedRenderProps {
     interactive?: boolean;
     collapsed?: boolean | null;
+    /** False drops MediaObject bodies from every row and group member: no `.sf-media-object` markup at all. */
+    mediaObjects?: boolean;
     isLast?: boolean;
     rail?: RailConfig | RailName | null;
     childRail?: RailConfig | RailName | null;
@@ -64,6 +66,7 @@ export default function FeedItem({
     annotations,
     marker,
     headline,
+    mediaObjects = true,
 }: NodeProps & { item: ActivityNode; dense?: boolean }) {
     const timestamp = useNodeTime(item, time);
     const { FEED_BODIES: bodies = {}, FEED_IMAGE_SIZE: feedImageSize } = useFeedOptions();
@@ -92,7 +95,7 @@ export default function FeedItem({
                 entityMedia: object?.media,
             }),
         ),
-    ];
+    ].filter((form) => mediaObjects || !isMediaObject(form.payload));
     // A row shows a picture only when a body asks: an Image naming the icon slot
     // draws as the small thumbnail beside the other bodies, unless the app
     // draws Image bodies itself.
@@ -120,8 +123,8 @@ export default function FeedItem({
                 marker={marker ? (marker({ node: item, isLast }) ?? null) : undefined}
             />
             <div
-                className={`sf-body min-w-0 flex-1 pt-[max(0px,calc((var(--sf-disc-v)-1lh)/2))] ${
-                    isLast ? '' : 'sf-body--spaced pb-5'
+                className={`sf-body min-w-0 flex-1 pt-[var(--sf-body-pt,max(0px,calc((var(--sf-disc-v)-1lh)/2)))] [line-height:var(--sf-body-leading)] [color:var(--sf-body-color)] ${
+                    isLast ? '' : 'sf-body--spaced pb-[var(--sf-row-gap,--spacing(5))]'
                 } ${dense ? 'sf-body--dense' : ''}`}
             >
                 {headline ? (

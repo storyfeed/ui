@@ -1,4 +1,4 @@
-@props(['imageSize' => null, 'page' => null, 'items' => null, 'nextCursor' => null, 'cursorName' => 'cursor', 'grouped' => true, 'rail' => null, 'childRail' => null, 'dividers' => [], 'dividerStyle' => 'branch', 'interactive' => true, 'collapsed' => null, 'timezone' => null, 'renderers' => [], 'viewer' => null])
+@props(['imageSize' => null, 'page' => null, 'items' => null, 'nextCursor' => null, 'cursorName' => 'cursor', 'grouped' => true, 'rail' => null, 'childRail' => null, 'dividers' => [], 'dividerStyle' => 'branch', 'interactive' => true, 'collapsed' => null, 'mediaObjects' => true, 'timezone' => null, 'renderers' => [], 'viewer' => null])
 @php
     // Any page core reads: a FeedPage (core <=0.18), a collection or paginator (storyfeed/storyfeed#95), or its JSON.
     $read = \Storyfeed\Ui\Support\Page::read($page);
@@ -32,7 +32,7 @@
 @if (isset($dividers[$item->id()]))
                     <x-storyfeed::divider :label="$dividers[$item->id()]" :divider-style="$dividerStyle" />
 @endif
-                <x-storyfeed::item :item="$item" :last="$loop->last && $cursor === null" :rail="$rail" :child-rail="$childRail" :interactive="$interactive" :collapsed="$collapsed" :timezone="$timezone" :renderers="$renderers" />
+                <x-storyfeed::item :item="$item" :last="$loop->last && $cursor === null" :rail="$rail" :child-rail="$childRail" :interactive="$interactive" :collapsed="$collapsed" :media-objects="$mediaObjects" :timezone="$timezone" :renderers="$renderers" />
 @endforeach
         </div>
 @once

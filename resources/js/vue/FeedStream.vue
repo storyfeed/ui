@@ -29,6 +29,8 @@ const props = withDefaults(
         childRail?: Rail | RailName | null;
         interactive?: boolean;
         collapsed?: boolean | null;
+        /** False drops MediaObject bodies from every row and group member: no `.sf-media-object` markup at all. */
+        mediaObjects?: boolean;
         /**
          * Labels to draw on the rail before particular items, keyed by item
          * id: `{ [firstTimelineId]: 'Timeline' }`. Drawn like a day heading,
@@ -47,6 +49,7 @@ const props = withDefaults(
         grouped: true,
         interactive: true,
         collapsed: null,
+        mediaObjects: true,
         rail: null,
         dividers: () => ({}),
         dividerStyle: 'branch',
@@ -150,7 +153,7 @@ const gradientId = `sf-branch-${useId()}`;
                         </svg>
                         <div
                             aria-hidden="true"
-                            :class="['sf-rail__line w-px flex-1 bg-border', dividerStyle === 'dot' ? 'mt-1' : 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]']"
+                            :class="['sf-rail__line w-[var(--sf-rail-line-width,1px)] flex-1 bg-border', dividerStyle === 'dot' ? 'mt-1' : 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]']"
                         />
                     </div>
                     <h2 class="sf-day m-0 border-0 pt-0 pb-5 text-xs leading-[1.6] font-semibold tracking-[0.05em] text-muted-foreground uppercase">{{ day.label }}</h2>
@@ -182,7 +185,7 @@ const gradientId = `sf-branch-${useId()}`;
                             </svg>
                             <div
                                 aria-hidden="true"
-                                :class="['sf-rail__line w-px flex-1 bg-border', dividerStyle === 'dot' ? 'mt-1' : 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]']"
+                                :class="['sf-rail__line w-[var(--sf-rail-line-width,1px)] flex-1 bg-border', dividerStyle === 'dot' ? 'mt-1' : 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]']"
                             />
                         </div>
                         <h2 class="sf-day m-0 border-0 pt-0 pb-5 text-xs leading-[1.6] font-semibold tracking-[0.05em] text-muted-foreground uppercase">{{ dividers[item.id] }}</h2>
@@ -198,6 +201,7 @@ const gradientId = `sf-branch-${useId()}`;
                         :child-rail="childRail"
                         :interactive="interactive"
                         :collapsed="collapsed"
+                        :media-objects="mediaObjects"
                     >
                         <template #body="slotProps"
                             ><slot name="body" v-bind="slotProps"
@@ -220,7 +224,7 @@ const gradientId = `sf-branch-${useId()}`;
 
             <div v-if="cursor" role="listitem" class="sf-row relative flex items-start gap-(--sf-gap-v)">
                 <div class="sf-rail flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
-                    <div aria-hidden="true" class="sf-rail__line mt-1 w-px flex-1 bg-border" />
+                    <div aria-hidden="true" class="sf-rail__line mt-[var(--sf-rail-line-offset,--spacing(1))] w-[var(--sf-rail-line-width,1px)] flex-1 bg-border" />
                 </div>
                 <button
                     type="button"

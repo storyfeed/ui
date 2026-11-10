@@ -1372,3 +1372,32 @@ test('an Image body without a media seam keeps its own picture markup', () => {
     const html = raw('Image', { payload: { $v: 3, src: '/dal.jpg', alt: 'Dal', width: 800, height: 600, caption: 'Fresh dal', $meta: { size: 'thumbnail' } } });
     assert.equal(html, '<figure class="sf-image m-0 [--sf-image-width:var(--sf-image-size-thumbnail,6rem)] [--sf-image-height:var(--sf-image-size-thumbnail-height,6rem)]"><img class="block h-auto object-contain max-w-[min(100%,var(--sf-image-width,100%))] max-h-[var(--sf-image-height,none)] rounded-lg" src="/dal.jpg" alt="Dal" width="800" height="600" loading="lazy"/><figcaption class="mt-2 text-xs leading-[1.6] text-muted-foreground">Fresh dal</figcaption></figure>');
 });
+
+const posted = {
+    ...activity,
+    id: 'seam-post',
+    object: { ...entity, type: 'post', id: '9', label: 'Post', media: null, body: [{ $body: 'Storyfeed/Body/MediaObject', subject: 'Post subject', content: 'Post words' }, { $body: 'Storyfeed/Body/Prose', content: 'Kept prose' }] },
+};
+const postedGroup = { ...group, id: 'seam-group', children: [posted], children_truncated: false, count: 1 };
+
+test('the host seams are CSS variables that default to the values the kit drew before', () => {
+    const html = raw('FeedStream', { items: [postedGroup, { ...posted, id: 'seam-2' }, { ...posted, id: 'seam-3' }], nextCursor: 'next' });
+    assert.match(html, /sf-body min-w-0 flex-1 pt-\[var\(--sf-body-pt,max\(0px,calc\(\(var\(--sf-disc-v\)-1lh\)\/2\)\)\)\] \[line-height:var\(--sf-body-leading\)\] \[color:var\(--sf-body-color\)\]/);
+    assert.match(html, /sf-body--spaced pb-\[var\(--sf-row-gap,--spacing\(5\)\)\]/);
+    assert.match(html, /sf-rail__line mt-\[var\(--sf-rail-line-offset,--spacing\(1\)\)\] w-\[var\(--sf-rail-line-width,1px\)\]/);
+    assert.doesNotMatch(html, /sf-rail__line[^"]* (mt-1|w-px) /);
+    assert.doesNotMatch(html, /sf-body[^"]* pb-5/);
+    const members = raw('FeedGroup', { item: { ...postedGroup, children: [posted, { ...posted, id: 'seam-4' }], count: 2 }, isLast: true, collapsed: false });
+    assert.match(members, /sf-body--spaced pb-\[var\(--sf-row-gap,--spacing\(5\)\)\] +sf-body--dense/);
+    assert.match(members, /\[&amp;:has\(&gt;\.sf-disclosure\[open\]\)\]:pb-\[var\(--sf-row-gap,--spacing\(5\)\)\]/);
+});
+
+test('mediaObjects={false} drops MediaObject bodies from rows, groups and expanded members', () => {
+    const items = [postedGroup, { ...posted, id: 'seam-2' }];
+    const shown = raw('FeedStream', { items, collapsed: false });
+    assert.equal(shown.match(/class="sf-media-object /g).length, 2);
+    const hidden = raw('FeedStream', { items, collapsed: false, mediaObjects: false });
+    assert.doesNotMatch(hidden, /sf-media-object|Post subject|Post words/);
+    assert.equal(hidden.match(/Kept prose/g).length, 2);
+    assert.doesNotMatch(raw('FeedGroup', { item: postedGroup, collapsed: false, mediaObjects: false }), /sf-media-object/);
+});

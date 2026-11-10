@@ -28,7 +28,8 @@
     "test:alignment": "node workbench/alignment.mjs",
     "test:wells": "node workbench/wells.mjs",
     "test:targets": "node workbench/targets.mjs",
-    "test:bare": "npm run workbench:bare && STORYFEED_HOST=bare node workbench/alignment.mjs && STORYFEED_HOST=bare node workbench/wells.mjs && STORYFEED_HOST=bare node workbench/targets.mjs"
+    "test:seams": "node workbench/seams.mjs",
+    "test:bare": "npm run workbench:bare && STORYFEED_HOST=bare node workbench/alignment.mjs && STORYFEED_HOST=bare node workbench/wells.mjs && STORYFEED_HOST=bare node workbench/targets.mjs && STORYFEED_HOST=bare node workbench/seams.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.0.0",

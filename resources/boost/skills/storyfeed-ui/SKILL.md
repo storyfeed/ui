@@ -160,7 +160,9 @@ Blade also takes `viewer` (a model), `timezone` and `renderers`. Vue emits `load
 
 **Dense rows.** A group's expanded members draw as dense rows: the same row without the rail's secondary badge. `child-rail` (React `childRail`) sets their posture independently, for example `rail="actor" child-rail="activity-only"`.
 
-**Size.** Set `--sf-font-size` on the feed or an element around it to scale the whole feed, for example `class="[--sf-font-size:0.875rem]"` for a compact one. `--sf-well` and `--sf-well-border` set the fill and edge of card-shaped bodies.
+**Size.** Set `--sf-font-size` on the feed or an element around it to scale the whole feed, for example `class="[--sf-font-size:0.875rem]"` for a compact one. `--sf-well` and `--sf-well-border` set the fill and edge of card-shaped bodies. `--sf-body-pt`, `--sf-body-leading`, `--sf-body-color`, `--sf-row-gap`, `--sf-rail-line-offset` and `--sf-rail-line-width` tune a row's body and rail without touching `.sf-*` classes; unset, each keeps the kit's default.
+
+**Leaving MediaObject bodies out.** `:media-objects="false"` (React `mediaObjects={false}`) on the feed drops every MediaObject body from rows, groups and expanded members; no `.sf-media-object` markup is drawn.
 
 **The viewer reads as "You".** Name who is reading and headlines that name them say "You". The payload stays the same for every reader.
 

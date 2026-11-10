@@ -168,3 +168,7 @@ export function imageClasses(payload: Record<string, any>, fallback?: unknown): 
     const size = valid(own) ? own : valid(fallback) ? fallback : undefined;
     return size ? IMAGE_SIZE_CLASSES[size] : undefined;
 }
+
+/** Whether a body is a MediaObject, which a feed drops when `mediaObjects` is false. */
+export const isMediaObject = (payload: Record<string, any> | null | undefined): boolean =>
+    payload?.$body === 'Storyfeed/Body/MediaObject';

@@ -1,4 +1,4 @@
-@props(['group', 'last' => false, 'rail' => null, 'childRail' => null, 'interactive' => true, 'collapsed' => null, 'timezone' => null, 'renderers' => [], 'removed' => null, 'mediaTiles' => null, 'mediaOverflow' => 0])
+@props(['group', 'last' => false, 'rail' => null, 'childRail' => null, 'interactive' => true, 'collapsed' => null, 'mediaObjects' => true, 'timezone' => null, 'renderers' => [], 'removed' => null, 'mediaTiles' => null, 'mediaOverflow' => 0])
 @php
     $group = \Storyfeed\Support\FeedItem::of($group);
     $removed ??= isset($renderers['removed']) ? $renderers['removed']($group) : null;
@@ -26,7 +26,7 @@
 @endphp
 <article {{ $attributes->class(["[&[data-sf-morph]_[data-sf-vt='0']]:[view-transition-name:sf-vt-0] [&[data-sf-morph]_[data-sf-vt='1']]:[view-transition-name:sf-vt-1] [&[data-sf-morph]_[data-sf-vt='2']]:[view-transition-name:sf-vt-2] [&[data-sf-morph]_[data-sf-vt='3']]:[view-transition-name:sf-vt-3] sf-row relative flex items-start gap-(--sf-gap-v) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]", '[&:not(:has(>.sf-body>.sf-disclosure[open]))>.sf-rail>[aria-hidden]:last-child]:hidden' => $last && $interactive]) }}>
     <x-storyfeed::rail :item="$group" :rail="$rail" :last="$last && ! $interactive && ! $open" :renderers="$renderers" :marker="$marker" />
-    <div @class(['sf-body min-w-0 flex-1 pt-[max(0px,calc((var(--sf-disc-v)-1lh)/2))] [&:has(>.sf-disclosure[open])>.sf-media-strip]:hidden [&:has(>.sf-disclosure[open])>.sf-actor-strip]:hidden', 'sf-body--spaced pb-5' => ! $last || (! $interactive && $open), '[&:has(>.sf-disclosure[open])]:pb-5' => $last])>
+    <div @class(['sf-body min-w-0 flex-1 pt-[var(--sf-body-pt,max(0px,calc((var(--sf-disc-v)-1lh)/2)))] [line-height:var(--sf-body-leading)] [color:var(--sf-body-color)] [&:has(>.sf-disclosure[open])>.sf-media-strip]:hidden [&:has(>.sf-disclosure[open])>.sf-actor-strip]:hidden', 'sf-body--spaced pb-[var(--sf-row-gap,--spacing(5))]' => ! $last || (! $interactive && $open), '[&:has(>.sf-disclosure[open])]:pb-[var(--sf-row-gap,--spacing(5))]' => $last])>
 @if ($head === null)
         <div class="sf-head flex items-baseline gap-3"><x-storyfeed::headline :headline="$reading" /></div>
 @elseif (trim($head) !== '')
@@ -53,7 +53,7 @@
             @endif
                 <div id="{{ $membersId }}" @class(['sf-children mt-3', 'hidden print:block' => ! $interactive && ! $open])>
                     @foreach ($children as $child)
-                        <x-storyfeed::activity :activity="$child" dense :rail="$childRail ?? $rail" :last="$loop->last && $hidden === 0" :timezone="$timezone" :renderers="$renderers" />
+                        <x-storyfeed::activity :activity="$child" dense :media-objects="$mediaObjects" :rail="$childRail ?? $rail" :last="$loop->last && $hidden === 0" :timezone="$timezone" :renderers="$renderers" />
                     @endforeach
                     @if ($hidden > 0)
                         <p class="sf-overflow pl-[calc(var(--sf-gutter-v)+var(--sf-gap-v))] text-sm leading-[1.6] text-muted-foreground">{{ __('…and :count more not shown', ['count' => $hidden]) }}</p>

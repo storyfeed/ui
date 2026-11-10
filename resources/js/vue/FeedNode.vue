@@ -14,8 +14,10 @@ withDefaults(
         childRail?: Rail | RailName | null;
         interactive?: boolean;
         collapsed?: boolean | null;
+        /** False drops MediaObject bodies, here and in a group's members. */
+        mediaObjects?: boolean;
     }>(),
-    { isLast: false, rail: null, interactive: true, collapsed: null },
+    { isLast: false, rail: null, interactive: true, collapsed: null, mediaObjects: true },
 );
 </script>
 
@@ -30,6 +32,7 @@ withDefaults(
         :item="item"
         :is-last="isLast"
         :rail="rail"
+        :media-objects="mediaObjects"
     >
         <template #body="slotProps"
             ><slot name="body" v-bind="slotProps"
@@ -59,6 +62,7 @@ withDefaults(
         :item="item"
         :is-last="isLast"
         :rail="rail"
+        :media-objects="mediaObjects"
     >
         <template #body="slotProps"
             ><slot name="body" v-bind="slotProps"
