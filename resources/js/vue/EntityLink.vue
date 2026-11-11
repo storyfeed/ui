@@ -11,6 +11,8 @@ const props = defineProps<{
      * "Someone", drawn as an actor (weight and colour, no link).
      */
     fallback?: string;
+    /** Marks the entity as a headline subject with `data-sf-subject`. */
+    subject?: boolean;
 }>();
 
 const linkComponent = inject(FEED_LINK, 'a');
@@ -51,12 +53,14 @@ const label = computed(() => {
         :is="linkComponent"
         v-if="link"
         v-bind="linkProps(link, linkComponent)"
+        :data-sf-subject="subject ? '' : undefined"
         class="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
     >
         {{ label }}
     </component>
     <span
         v-else
+        :data-sf-subject="subject ? '' : undefined"
         class="sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline"
         :class="{
             'sf-entity--tombstone text-muted-foreground font-normal': tombstone,

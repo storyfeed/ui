@@ -4,10 +4,13 @@ import { entityLink, linkProps } from '../shared/link';
 export default function EntityLink({
     entity,
     fallback,
+    subject = false,
 }: {
     entity: FeedEntity | null;
     /** Rendered for a null entity: an anonymous actor's "Someone", drawn as an actor. */
     fallback?: string;
+    /** Marks the entity as a headline subject with `data-sf-subject`. */
+    subject?: boolean;
 }) {
     const { FEED_LINK: Link = 'a' } = useFeedOptions();
     const tombstone = entity?.tombstone;
@@ -23,16 +26,18 @@ export default function EntityLink({
         'sf-entity font-medium text-foreground no-underline underline-offset-2 hover:underline';
     // Core 0.17's `link`, or 0.16's `url`, `modal` and `attributes`.
     const link = entityLink(entity);
+    const hook = subject ? { 'data-sf-subject': '' } : {};
     if (link) {
         // `modal` belongs to a host router component, rather than the native anchor.
         return (
-            <Link {...linkProps(link, Link)} className={classes}>
+            <Link {...linkProps(link, Link)} {...hook} className={classes}>
                 {label}
             </Link>
         );
     }
     return (
         <span
+            {...hook}
             className={`${classes}${tombstone ? ' sf-entity--tombstone text-muted-foreground font-normal' : !entity && fallback ? ' sf-entity--anonymous text-muted-foreground' : !entity?.label ? ' sf-entity--unknown italic text-muted-foreground font-normal' : ''}`}
         >
             {label}

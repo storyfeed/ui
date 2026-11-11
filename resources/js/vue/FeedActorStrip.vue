@@ -21,11 +21,12 @@ defineEmits<{ toggle: [] }>()
 </script>
 
 <template>
-    <div v-if="faces.length" class="sf-actor-strip isolate mt-2 flex flex-wrap items-center gap-y-1 pl-0.25">
+    <div v-if="faces.length" data-sf-strip class="sf-actor-strip isolate mt-2 flex flex-wrap items-center gap-y-1 pl-0.25">
         <span v-for="(face, i) in faces" :key="i" class="sf-actor-strip__face relative -ml-0.25 flex shrink-0" :class="['z-8', 'z-7', 'z-6', 'z-5', 'z-4', 'z-3', 'z-2', 'z-1'][i] ?? 'z-0'"><EntityAvatar :entity="face" size="sm" /></span>
         <button
             v-if="overflow && toggle"
             type="button"
+            data-sf-toggle
             :aria-label="toggle.label"
             :aria-expanded="toggle.expanded"
             :aria-controls="toggle.controls"

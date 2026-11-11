@@ -49,7 +49,7 @@ final class Viewer
     /** The viewer is an actor like any named one: the actor's weight and colour, unlinked. */
     private static function drawn(string $word): string
     {
-        return '<span class="sf-entity sf-entity--viewer font-medium text-foreground">'.$word.'</span>';
+        return '<span data-sf-subject class="sf-entity sf-entity--viewer font-medium text-foreground">'.$word.'</span>';
     }
 
     private static function pair(mixed $type, mixed $id): ?string

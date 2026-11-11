@@ -4,7 +4,7 @@
     $icon = $entity->isTombstone() ? null : $entity->media()?->get('icon');
 @endphp
 <span role="img" aria-label="{{ $entity->label() ?? __('Someone') }}" title="{{ $entity->label() ?? __('Someone') }}"
-    {{ $attributes->class(['sf-avatar flex shrink-0 items-center justify-center rounded-full font-semibold select-none ring-2 ring-background has-[>img:not([hidden])]:bg-transparent has-[>img:not([hidden])]:border has-[>img:not([hidden])]:border-border',
+    data-sf-avatar {{ $attributes->class(['sf-avatar flex shrink-0 items-center justify-center rounded-full font-semibold select-none ring-2 ring-background has-[>img:not([hidden])]:bg-transparent has-[>img:not([hidden])]:border has-[>img:not([hidden])]:border-border',
         'sf-avatar--md size-[var(--sf-disc,--spacing(8))] text-[length:calc(var(--sf-disc,--spacing(8))*3/8)] leading-(--text-xs--line-height)' => $size === 'md',
         'sf-avatar--sm size-6 text-[length:--spacing(2.5)]' => $size === 'sm',
         'sf-avatar--pair size-full text-[length:calc(var(--sf-disc-v)*11/32)] @max-[1.5rem]/pair:text-[length:calc(var(--sf-disc-v)*33/64)]' => $size === 'pair',

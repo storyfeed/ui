@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- More stable script hooks in Blade, Vue and React, as boolean data attributes: `data-sf-row` (activity, group and member rows; not day dividers or the load-more row), `data-sf-rail`, `data-sf-body`, `data-sf-headline`, `data-sf-subject` (an entity named in a headline), `data-sf-toggle` (a group's "Show all" / "Show less" toggle and a strip's "+N" when it opens the group), `data-sf-children`, `data-sf-strip`, `data-sf-day` and `data-sf-avatar`. The README "Stable hooks" table lists each one, the element it marks and the kits that carry it. React's `EntityLink` takes an optional `subject` prop that adds `data-sf-subject`.
+
 ## v0.13.1 - 2026-11-10
 
 ### Added

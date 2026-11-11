@@ -27,7 +27,7 @@ const tileClass = 'mt-0! aspect-square! size-full! max-w-none! rounded-lg! [&_im
 </script>
 
 <template>
-    <div v-if="tiles.length" class="sf-media-strip mt-2 grid max-w-88 grid-cols-4 gap-1">
+    <div v-if="tiles.length" data-sf-strip class="sf-media-strip mt-2 grid max-w-88 grid-cols-4 gap-1">
         <template v-for="(tile, i) in tiles" :key="i">
             <FeedMedia v-if="tile.image" :image="tile.image" :href="tile.href" :link-attributes="tile.linkAttributes" :class="tileClass" />
             <component
@@ -41,6 +41,7 @@ const tileClass = 'mt-0! aspect-square! size-full! max-w-none! rounded-lg! [&_im
         <button
             v-if="overflow && toggle"
             type="button"
+            data-sf-toggle
             :aria-label="toggle.label"
             :aria-expanded="toggle.expanded"
             :aria-controls="toggle.controls"

@@ -22,7 +22,7 @@ export default function FeedActorStrip({
 }) {
     if (!faces.length) return null;
     return (
-        <div className="sf-actor-strip isolate mt-2 flex flex-wrap items-center gap-y-1 pl-0.25">
+        <div data-sf-strip="" className="sf-actor-strip isolate mt-2 flex flex-wrap items-center gap-y-1 pl-0.25">
             {faces.map((face, i) => (
                 <span key={i} className={`sf-actor-strip__face relative -ml-0.25 flex shrink-0 ${['z-8', 'z-7', 'z-6', 'z-5', 'z-4', 'z-3', 'z-2', 'z-1'][i] ?? 'z-0'}`}>
                     <EntityAvatar entity={face} size="sm" />
@@ -31,6 +31,7 @@ export default function FeedActorStrip({
             {!!overflow && toggle ? (
                 <button
                     type="button"
+                    data-sf-toggle=""
                     aria-label={toggle.label}
                     aria-expanded={toggle.expanded}
                     aria-controls={toggle.controls}

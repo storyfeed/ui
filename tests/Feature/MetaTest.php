@@ -12,7 +12,7 @@ it('puts activity and group metadata after the headline row', function (string $
         ...$extra,
     ]);
     $html = render_blade('<x-storyfeed::'.$component.' :'.$component.'="$item" />', compact('item'));
-    expect($html)->toContain('<div><span>An update</span> </div> <div> <time')
+    expect($html)->toContain('<div><span data-sf-headline>An update</span> </div> <div> <time')
         ->toContain('</time> · via <a href="/tools/claude">Claude</a>');
 })->with([
     'activity' => ['activity', []],

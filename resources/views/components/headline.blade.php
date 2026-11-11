@@ -17,9 +17,9 @@
     // Text segments go through the app's registered formatter, if any (ui#97); entities never do.
     $html = app(\Storyfeed\Ui\Support\HeadlineText::class)->render($headline, fn (\Storyfeed\Support\Entity $entity): string => match (true) {
         \Storyfeed\Ui\Support\Viewer::is($viewer, $entity) => $mark,
-        method_exists($entity, 'isAbsent') && $entity->isAbsent() && $entity->role() === 'actor' => '<span class="sf-entity sf-entity--anonymous font-medium text-muted-foreground">'.e($entity->toString()).'</span>',
+        method_exists($entity, 'isAbsent') && $entity->isAbsent() && $entity->role() === 'actor' => '<span data-sf-subject class="sf-entity sf-entity--anonymous font-medium text-muted-foreground">'.e($entity->toString()).'</span>',
         $entity->type() === null => e($entity->toString()),
-        default => trim(view('storyfeed::entity', ['entity' => $entity])->render()),
+        default => trim(view('storyfeed::entity', ['entity' => $entity, 'subject' => true])->render()),
     });
 @endphp
-<span {{ $attributes->class('sf-headline leading-[1.6] text-pretty text-muted-foreground [overflow-wrap:anywhere]') }}>{!! \Storyfeed\Ui\Support\Viewer::speak($html, $mark) !!}</span>
+<span data-sf-headline {{ $attributes->class('sf-headline leading-[1.6] text-pretty text-muted-foreground [overflow-wrap:anywhere]') }}>{!! \Storyfeed\Ui\Support\Viewer::speak($html, $mark) !!}</span>

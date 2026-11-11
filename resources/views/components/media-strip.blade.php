@@ -11,7 +11,7 @@
 @props(['tiles' => [], 'overflow' => 0, 'renderer' => null, 'toggle' => null])
 @php($classes = 'mt-0! aspect-square! size-full! max-w-none! rounded-lg! [&_img]:size-full! [&_img]:max-w-none! [&_img]:max-h-none! [&_img]:object-cover!')
 @if ($tiles)
-    <div {{ $attributes->class('sf-media-strip mt-2 grid max-w-88 grid-cols-4 gap-1') }}>
+    <div data-sf-strip {{ $attributes->class('sf-media-strip mt-2 grid max-w-88 grid-cols-4 gap-1') }}>
 @foreach ($tiles as $tile)
 @if (! empty($tile['image']))
 @if ($renderer){!! $renderer(['image' => $tile['image'], 'href' => $tile['href'] ?? null, 'attributes' => $tile['attributes'] ?? []], $classes) !!}
@@ -22,7 +22,7 @@
 @else<span class="sf-media-strip__name flex aspect-square min-w-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-background p-1 text-center"><span class="line-clamp-3 text-[length:--spacing(2.75)] leading-[1.3] break-words text-muted-foreground [hyphens:auto]">{{ $tile['label'] ?? '' }}</span></span>
 @endif
 @endforeach
-@if ($overflow && $toggle)<button type="button" aria-label="{{ $toggle['label'] }}" aria-expanded="{{ $toggle['expanded'] ? 'true' : 'false' }}" aria-controls="{{ $toggle['controls'] }}" class="sf-media-strip__more flex aspect-square items-center justify-center rounded-lg bg-muted text-[length:--spacing(4)] font-semibold text-muted-foreground select-none cursor-pointer border-0 p-0 font-[inherit] hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring" onclick="var d=this.closest('.sf-row').querySelector('.sf-disclosure');if(d)d.querySelector('summary').click()">+{{ $overflow }}</button>
+@if ($overflow && $toggle)<button type="button" data-sf-toggle aria-label="{{ $toggle['label'] }}" aria-expanded="{{ $toggle['expanded'] ? 'true' : 'false' }}" aria-controls="{{ $toggle['controls'] }}" class="sf-media-strip__more flex aspect-square items-center justify-center rounded-lg bg-muted text-[length:--spacing(4)] font-semibold text-muted-foreground select-none cursor-pointer border-0 p-0 font-[inherit] hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring" onclick="var d=this.closest('.sf-row').querySelector('.sf-disclosure');if(d)d.querySelector('summary').click()">+{{ $overflow }}</button>
 @elseif ($overflow)<span role="img" aria-label="{{ __(':count more', ['count' => $overflow]) }}" class="sf-media-strip__more flex aspect-square items-center justify-center rounded-lg bg-muted text-[length:--spacing(4)] font-semibold text-muted-foreground select-none">+{{ $overflow }}</span>
 @endif
     </div>

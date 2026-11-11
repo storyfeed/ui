@@ -795,14 +795,28 @@ escapes.
 Script against data attributes, not classes. These are the supported
 selectors, kept stable across releases in Vue, React and Blade:
 
-| Attribute | Element |
-| --- | --- |
-| `data-sf-feed` | the feed root |
-| `data-sf-cta-action` | a CallToAction body's action link |
+| Attribute | Element | Kits |
+| --- | --- | --- |
+| `data-sf-feed` | the feed root | Blade, Vue, React |
+| `data-sf-row` | each activity, group and expanded member row; never a day divider or the load-more row | Blade, Vue, React |
+| `data-sf-rail` | a row's rail column, holding its disc and line | Blade, Vue, React |
+| `data-sf-body` | a row's body column, beside the rail | Blade, Vue, React |
+| `data-sf-headline` | a row's headline | Blade, Vue, React |
+| `data-sf-subject` | an entity named in a headline: its link, or its name when it has none (including the viewer's "You" and an anonymous "Someone") | Blade, Vue, React |
+| `data-sf-toggle` | a group's disclosure toggle: "Show all N" / "Show less", and a strip's "+N" when it opens the group | Blade, Vue, React |
+| `data-sf-children` | a group's members container | Blade, Vue, React |
+| `data-sf-strip` | a group's actor strip or media strip | Blade, Vue, React |
+| `data-sf-day` | a day divider's heading | Blade, Vue, React |
+| `data-sf-avatar` | an entity avatar, in the rail, a strip or a tile | Blade, Vue, React |
+| `data-sf-cta-action` | a CallToAction body's action link | Blade, Vue, React |
 
 ```js
 const feed = event.target.closest('[data-sf-feed]');
+const row = event.target.closest('[data-sf-row]');
 ```
+
+Each hook is a boolean attribute with no value: match it with `[data-sf-row]`,
+never by value.
 
 The kit's `.sf-*` classes are styling internals and may change in any release.
 

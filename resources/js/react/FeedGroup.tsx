@@ -58,6 +58,7 @@ export default function FeedGroup({
     return (
         <div
             ref={row}
+            data-sf-row=""
             className={`${MORPH_CLASSES} sf-row relative flex items-start gap-(--sf-gap-v) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]${
                 isLast && interactive
                     ? ' [&:not(:has(>.sf-body>.sf-disclosure[open]))>.sf-rail>[aria-hidden]:last-child]:hidden'
@@ -73,6 +74,7 @@ export default function FeedGroup({
                 marker={marker ? (marker({ node: item, isLast }) ?? null) : undefined}
             />
             <div
+                data-sf-body=""
                 className={`sf-body min-w-0 flex-1 pt-[var(--sf-body-pt,max(0px,calc((var(--sf-disc-v)-1lh)/2)))] [line-height:var(--sf-body-leading)] [color:var(--sf-body-color)] ${
                     !isLast || (!interactive && open)
                         ? 'sf-body--spaced pb-[var(--sf-row-gap,--spacing(5))]'
@@ -112,7 +114,7 @@ export default function FeedGroup({
                         {...(interactive ? { open: isOpen, onToggle: (event: SyntheticEvent<HTMLElement>) => setOpen((event.currentTarget as HTMLDetailsElement).open) } : {})}
                     >
                         {interactive && (
-                            <summary onClick={onSummaryClick} className="sf-toggle mt-1 inline-flex min-h-6 items-center cursor-pointer list-none rounded-sm border-0 bg-transparent p-0 text-sm leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden print:hidden">
+                            <summary onClick={onSummaryClick} data-sf-toggle="" className="sf-toggle mt-1 inline-flex min-h-6 items-center cursor-pointer list-none rounded-sm border-0 bg-transparent p-0 text-sm leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden print:hidden">
                                 <span className="group-open/disclosure:hidden">{`Show all ${item.count}`}</span>
                                 <span className="hidden group-open/disclosure:inline">
                                     Show less
@@ -121,6 +123,7 @@ export default function FeedGroup({
                         )}
                         <div
                             id={membersId}
+                            data-sf-children=""
                             className={`sf-children mt-3 ${
                                 !interactive && !open
                                     ? 'hidden print:block'

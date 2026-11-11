@@ -9,7 +9,7 @@
     second behind at the top-left, each 2/3 of the disc. Below a 1.5rem (24px) disc
     only the front face shows, filling it. The count stays in the headline.
 --}}
-<div class="sf-rail box-content flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
+<div data-sf-rail class="sf-rail box-content flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
 @if ($marker !== null)
     {!! $marker !!}
 @else
