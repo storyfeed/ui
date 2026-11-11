@@ -264,3 +264,29 @@ it('marks rows, rails, bodies, headlines, subjects, toggles, members, strips, da
         }
     }
 });
+
+it('marks every rail line and a MediaObject subject link with stable hooks', function () {
+    $person = fn (int $n) => ['type' => 'person', 'id' => "p{$n}", 'label' => "Person {$n}", 'url' => "/people/{$n}", 'media' => null];
+    $members = array_map(fn (int $n) => ['kind' => 'activity', 'id' => "visit-{$n}", 'headline_template' => ':actor checked in', 'actor' => $person($n), 'published_at' => '2026-09-25T12:00:00Z'], range(1, 12));
+    $items = [
+        ['kind' => 'group', 'id' => 'crowd', 'headline_template' => ':actors checked in', 'count' => 12, 'children' => $members, 'sample' => ['actors' => array_map($person, range(1, 3))], 'distinct' => ['actors' => 12], 'published_at' => '2026-09-25T12:00:00Z'],
+        ['kind' => 'activity', 'id' => 'older', 'headline_template' => ':actor checked in', 'actor' => $person(20), 'published_at' => '2026-09-20T12:00:00Z'],
+        ['kind' => 'activity', 'id' => 'oldest', 'headline_template' => ':actor checked in', 'actor' => $person(21), 'published_at' => '2026-09-19T12:00:00Z'],
+    ];
+    foreach (['<x-storyfeed::feed :items="$items" next-cursor="next" />', '<x-storyfeed::feed :items="$items" divider-style="dot" />'] as $template) {
+        $html = Blade::render($template, ['items' => $items]);
+        preg_match_all('/<div[^>]*class="sf-rail__line[^>]*>/', $html, $lines);
+        expect($lines[0])->not->toBeEmpty()
+            ->and(preg_match_all('/\sdata-sf-rail-line[\s>=]/', $html))->toBe(count($lines[0]));
+        foreach ($lines[0] as $line) {
+            expect($line)->toMatch('/\sdata-sf-rail-line[\s>=]/');
+        }
+    }
+
+    $media = fn (array $body) => Blade::render('<x-storyfeed::body.media-object :body="$body" :entity="$entity" />', ['body' => $body, 'entity' => Entity::of(['label' => 'E', 'url' => '/e', 'link' => ['href' => '/e']])]);
+    $html = $media(['subject' => ['label' => 'Launch notes', 'href' => '/posts/1'], 'content' => 'Prose', 'footnote' => ['label' => 'More', 'href' => '/more']]);
+
+    expect(preg_match_all('/\sdata-sf-media-object-link[\s>=]/', $html))->toBe(1)
+        ->and($html)->toMatch('/<p class="sf-media-object__subject[^>]*>\s*<a href="\/posts\/1" data-sf-media-object-link [^>]*>Launch notes<\/a>/')
+        ->and($media(['subject' => 'Unlinked']))->not->toContain('data-sf-media-object-link');
+});

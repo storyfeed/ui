@@ -445,7 +445,7 @@ export function MediaObject({
                 {subject?.label && (
                     <p className="sf-media-object__subject m-0 text-sm font-semibold text-foreground">
                         {subject.href ? (
-                            <Link {...subject.props} className="relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))]">{subject.label}</Link>
+                            <Link {...subject.props} data-sf-media-object-link="" className="relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))]">{subject.label}</Link>
                         ) : (
                             subject.label
                         )}

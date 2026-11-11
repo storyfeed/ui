@@ -55,7 +55,7 @@
     <div class="sf-media-object__body flex min-w-0 flex-[1_1_--spacing(48)] flex-col gap-1 [overflow-wrap:anywhere]">
 @if ($subject)
             <p class="sf-media-object__subject m-0 text-sm font-semibold text-foreground">
-@if ($subject['href'])<a href="{{ $subject['href'] }}" {{ (new \Illuminate\View\ComponentAttributeBag($subject['attributes']))->class('relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))] text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring') }}>{{ $subject['label'] }}</a>
+@if ($subject['href'])<a href="{{ $subject['href'] }}" data-sf-media-object-link {{ (new \Illuminate\View\ComponentAttributeBag($subject['attributes']))->class('relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))] text-foreground underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring') }}>{{ $subject['label'] }}</a>
 @else{{ $subject['label'] }}
 @endif
             </p>

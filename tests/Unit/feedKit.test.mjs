@@ -1467,3 +1467,18 @@ test('stable hooks: rows, rails, bodies, headlines, subjects, toggles, members, 
     const items = [{ ...crowd(35), published_at: '2026-09-25T12:00:00Z' }, { ...activity, id: 'older', published_at: '2026-09-20T12:00:00Z' }];
     assertStableHooks(await renderRaw('/resources/js/vue/FeedStream.vue', { items, nextCursor: 'next' }));
 });
+
+test('stable hooks: data-sf-rail-line on every rail line, and data-sf-media-object-link on a MediaObject subject link', async () => {
+    const items = [{ ...crowd(35), published_at: '2026-09-25T12:00:00Z' }, { ...activity, id: 'older', published_at: '2026-09-20T12:00:00Z' }, { ...activity, id: 'oldest', published_at: '2026-09-19T12:00:00Z' }];
+    for (const html of [await renderRaw('/resources/js/vue/FeedStream.vue', { items, nextCursor: 'next' }), await renderRaw('/resources/js/vue/FeedStream.vue', { items, dividerStyle: 'dot' }), await renderRaw('/resources/js/vue/FeedGroup.vue', { item: crowd(35), collapsed: false })]) {
+        const lines = html.match(/<div[^>]*class="sf-rail__line[^>]*>/g) ?? [];
+        assert.ok(lines.length > 0);
+        assert.equal((html.match(/\sdata-sf-rail-line[\s>=]/g) ?? []).length, lines.length);
+        for (const line of lines) assert.match(line, /\sdata-sf-rail-line[\s>=]/);
+    }
+    const media = await renderRaw('/resources/js/vue/body/MediaObject.vue', { payload: { subject: { label: 'Launch notes', link: { href: '/posts/1', modal: false, attributes: {} } }, content: 'Prose', footnote: { label: 'More', link: { href: '/more', modal: false, attributes: {} } } }, entityUrl: '/e' });
+    assert.equal((media.match(/\sdata-sf-media-object-link[\s>=]/g) ?? []).length, 1);
+    assert.match(media, /<p class="sf-media-object__subject[^>]*><a[^>]*\sdata-sf-media-object-link[\s>=][^>]*>Launch notes<\/a>/);
+    const plain = await renderRaw('/resources/js/vue/body/MediaObject.vue', { payload: { subject: 'Unlinked' }, entityUrl: '/e' });
+    assert.doesNotMatch(plain, /data-sf-media-object-link/);
+});

@@ -77,7 +77,7 @@ function Divider({
                 )}
                 <div
                     aria-hidden="true"
-                    className={`sf-rail__line w-[var(--sf-rail-line-width,1px)] flex-1 bg-border ${kind === 'dot' ? 'mt-1' : 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]'}`}
+                    data-sf-rail-line="" className={`sf-rail__line w-[var(--sf-rail-line-width,1px)] flex-1 bg-border ${kind === 'dot' ? 'mt-1' : 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]'}`}
                 />
             </div>
             <h2 data-sf-day="" className="sf-day m-0 border-0 pt-0 pb-5 text-xs leading-[1.6] font-semibold tracking-[0.05em] text-muted-foreground uppercase">
@@ -207,7 +207,7 @@ export default function FeedStream({
                                 <div className="sf-rail flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
                                     <div
                                         aria-hidden="true"
-                                        className="sf-rail__line mt-[var(--sf-rail-line-offset,--spacing(1))] w-[var(--sf-rail-line-width,1px)] flex-1 bg-border"
+                                        data-sf-rail-line="" className="sf-rail__line mt-[var(--sf-rail-line-offset,--spacing(1))] w-[var(--sf-rail-line-width,1px)] flex-1 bg-border"
                                     />
                                 </div>
                                 <button

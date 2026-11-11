@@ -74,7 +74,7 @@ const footnote = computed(() => {
         </div>
         <div class="sf-media-object__body flex min-w-0 flex-[1_1_--spacing(48)] flex-col gap-1 [overflow-wrap:anywhere]">
             <p v-if="subject" class="sf-media-object__subject m-0 text-sm font-semibold text-foreground">
-                <component :is="linkComponent" v-if="subject.link" v-bind="linkProps(subject.link, linkComponent)" class="relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))]">{{ subject.label }}</component>
+                <component :is="linkComponent" v-if="subject.link" v-bind="linkProps(subject.link, linkComponent)" data-sf-media-object-link class="relative inline-block py-[max(0px,calc(12px-0.5lh))] -my-[max(0px,calc(12px-0.5lh))]">{{ subject.label }}</component>
                 <template v-else>{{ subject.label }}</template>
             </p>
 

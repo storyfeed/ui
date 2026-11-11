@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Two more stable script hooks in Blade, Vue and React: `data-sf-media-object-link` on a MediaObject body's subject link, and `data-sf-rail-line` on every rail connector line, including those in group and day-divider rows.
+
 ## v0.13.2 - 2026-11-10
 
 ### Added

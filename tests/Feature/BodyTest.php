@@ -227,7 +227,7 @@ it('draws a linked card title without a picture or optional sections', function 
     $html = render_bodies(MediaObject::make(subject: FeedLink::make('Order #1042', '/orders/1042'), content: 'Dinner'));
 
     expect($html)
-        ->toContain('<div> <div> <p> <a href="/orders/1042">Order #1042</a> </p>')
+        ->toContain('<div> <div> <p> <a href="/orders/1042" data-sf-media-object-link>Order #1042</a> </p>')
         ->not->toContain('<img', '<ul', '/receipts/');
 });
 
