@@ -546,7 +546,7 @@ const stripGone = { type: 'person', id: 'cara', label: null, url: null, media: {
 const stripDee = { type: 'person', id: 'dee', label: 'Dee Ford', url: '/people/dee', media: null };
 /** A group's strip in order (a src, `name:<label>`, `tile:<initials>` or `+N`) and its links, or null when there is none. */
 const stripTiles = (html) => {
-    const section = html.replace(/<!--.*?-->/g, '').split('sf-media-strip ')[1]?.split(/sf-toggle|sf-children/)[0];
+    const section = html.replace(/<!--.*?-->/g, '').split('sf-media-strip ')[1]?.split(/(?<!data-)sf-toggle|(?<!data-)sf-children/)[0];
     if (section === undefined) return null;
     const tiles = [...section.matchAll(/<img[^>]+src="([^"]+)"|class="[^"]*sf-avatar--tile[^"]*"[^>]*>([^<]*)<|class="[^"]*sf-media-strip__name[^"]*"[^>]*><span[^>]*>([^<]*)<|sf-media-strip__more[^>]*>\+(\d+)</g)]
         .map((m) => m[1] ?? (m[2] !== undefined ? `tile:${m[2].trim()}` : m[3] !== undefined ? `name:${m[3].trim()}` : `+${m[4]}`));
@@ -564,7 +564,7 @@ test('a group strip previews what its members\' rows show: a picture they draw, 
     const order = (n) => ({ type: 'order', id: String(n), label: `Order #${n}`, url: `/orders/${n}`, media: { icon: null, initials: 'O2', color: '#438d98' } });
     const orders = await draw([order(2033), order(2032), order(2031)]);
     assert.deepEqual(orders, { tiles: ['name:Order #2033', 'name:Order #2032', 'name:Order #2031'], hrefs: ['/orders/2033', '/orders/2032', '/orders/2031'] });
-    assert.doesNotMatch((await renderRaw('/resources/js/vue/FeedGroup.vue', { item: { ...group, count: 3, children: [order(2033), order(2032), order(2031)].map((object, n) => stripMember(n, object)), sample: { actors: group.sample.actors } } })).split('sf-children')[0], /sf-avatar--tile/);
+    assert.doesNotMatch((await renderRaw('/resources/js/vue/FeedGroup.vue', { item: { ...group, count: 3, children: [order(2033), order(2032), order(2031)].map((object, n) => stripMember(n, object)), sample: { actors: group.sample.actors } } })).split(/(?<!data-)sf-children/)[0], /sf-avatar--tile/);
     // An Image body naming the icon slot is drawn by the row, so its icon is a picture tile.
     const iconed = (id) => ({ type: 'product', id, label: id, url: `/products/${id}`, body: [{ $body: 'Storyfeed/Body/Image', image: 'icon' }], media: { icon: { src: `/${id}.svg` } } });
     assert.deepEqual((await draw([iconed('mug'), iconed('tote')])).tiles, ['/mug.svg', '/tote.svg']);
@@ -646,12 +646,12 @@ test('a group with several actors draws every face, newest first, eight before "
 
 test('expanding a group hides its actor strip, and every face is a member row\'s face (ui#48)', async () => {
     const collapsed = await renderRaw('/resources/js/vue/FeedGroup.vue', { item: crowd(35), rail: 'actor' });
-    const members = collapsed.split('sf-children')[1];
+    const members = collapsed.split(/(?<!data-)sf-children/)[1];
     for (const face of actorFaces(collapsed).filter((face) => !face.startsWith('+'))) {
         assert.match(members, new RegExp(`aria-label="${face}"[^>]*class="sf-avatar `), `${face} is a member row's face`);
     }
     for (const interactive of [true, false]) {
-        const head = (await renderRaw('/resources/js/vue/FeedGroup.vue', { item: crowd(35), rail: 'actor', interactive, collapsed: false })).split('sf-children')[0];
+        const head = (await renderRaw('/resources/js/vue/FeedGroup.vue', { item: crowd(35), rail: 'actor', interactive, collapsed: false })).split(/(?<!data-)sf-children/)[0];
         assert.doesNotMatch(head, /sf-actor-strip/);
     }
 });
@@ -985,7 +985,7 @@ test('feed retains collapsed members for print and static groups never show a to
     for (const interactive of [false, true]) {
         const html = await renderRaw('/resources/js/vue/FeedStream.vue', { items: [group], grouped: false, interactive, collapsed: true });
         assert.match(html, /class="(?=[^"]*sf-children)(?=[^"]*hidden print:block)/);
-        assert.match(html.split('sf-children')[1], /Ada Lovelace/);
+        assert.match(html.split(/(?<!data-)sf-children/)[1], /Ada Lovelace/);
         if (interactive) assert.match(html, /aria-expanded="false"/);
         else assert.doesNotMatch(html, /sf-toggle|<details|<summary/);
     }
@@ -1207,10 +1207,10 @@ test('the page viewer reads as You, at any position and in lists (ui#75)', async
     const ravi = { ...entity, id: '2', label: 'Ravi', url: '/ravi' };
     const placed = { template: ':actor placed :object', entities: { actor: entity, object }, verb: 'place' };
 
-    assert.match(await headline(placed, 'user:1'), /<span><span>You<\/span> placed <a[^>]*>Order #7<\/a><\/span>/);
-    assert.match(await headline(placed, { type: 'user', id: 1 }), /<span><span>You<\/span> placed/);
-    assert.match(await headline({ template: ':object was assigned to :target', entities: { object, target: entity }, verb: 'assign' }, 'user:1'), /was assigned to <span>you<\/span><\/span>/);
-    assert.match(await headline({ template: ':actors joined :object', entities: { object }, sample: { actors: [entity, ravi] }, distinct: { actors: 4 }, verb: 'join', aggregate: true }, 'user:1'), /<span><span>You<\/span>, <a[^>]*>Ravi<\/a> and <span data-sf-part="more">2<\/span> more joined/);
+    assert.match(await headline(placed, 'user:1'), /<span data-sf-headline(?:="")?><span data-sf-subject(?:="")?>You<\/span> placed <a[^>]*>Order #7<\/a><\/span>/);
+    assert.match(await headline(placed, { type: 'user', id: 1 }), /<span data-sf-headline(?:="")?><span data-sf-subject(?:="")?>You<\/span> placed/);
+    assert.match(await headline({ template: ':object was assigned to :target', entities: { object, target: entity }, verb: 'assign' }, 'user:1'), /was assigned to <span data-sf-subject(?:="")?>you<\/span><\/span>/);
+    assert.match(await headline({ template: ':actors joined :object', entities: { object }, sample: { actors: [entity, ravi] }, distinct: { actors: 4 }, verb: 'join', aggregate: true }, 'user:1'), /<span data-sf-headline(?:="")?><span data-sf-subject(?:="")?>You<\/span>, <a[^>]*>Ravi<\/a> and <span data-sf-part="more">2<\/span> more joined/);
     assert.match(await headline(placed, 'user:2'), /Ada Lovelace<\/a> placed/);
     assert.equal(await headline(placed), await headline(placed, null));
 });
@@ -1432,4 +1432,38 @@ test('stable hooks: data-sf-feed on the feed root and data-sf-cta-action on the 
     assert.match(cta, /<a[^>]*\sdata-sf-cta-action[\s>=][^>]*class="sf-cta__action/);
     const lone = await renderRaw('/resources/js/vue/body/CallToAction.vue', { payload: { action: { label: 'Go', link: { href: '/go', modal: false, attributes: {} } } }, entityUrl: '/e' });
     assert.match(lone, /<a[^>]*\sdata-sf-cta-action[\s>=]/);
+});
+
+/** The stable hooks (README "Stable hooks"): each marks exactly the elements it names, and the dividers and load-more row stay unmarked. */
+const assertStableHooks = (html) => {
+    const tags = (html.match(/<[a-zA-Z](?:[^>"]|"[^"]*")*>/g) ?? []).map((tag) => ({ tag, classes: (tag.match(/ class="([^"]*)"/)?.[1] ?? '').split(/\s+/) }));
+    const is = (...names) => ({ classes }) => names.some((name) => classes.includes(name));
+    const marked = (hook) => tags.filter(({ tag }) => new RegExp(`\\s${hook}(?=[\\s>=/])`).test(tag));
+    const rows = tags.filter(({ classes }) => classes.includes('sf-row') && !classes.includes('sf-divider')).length - 1;
+    const expected = {
+        'data-sf-row': [is('sf-row'), rows],
+        'data-sf-rail': [is('sf-rail'), rows],
+        'data-sf-body': [is('sf-body')],
+        'data-sf-headline': [is('sf-headline')],
+        'data-sf-toggle': [({ tag, classes }) => classes.includes('sf-toggle') || (tag.startsWith('<button') && is('sf-actor-strip__more', 'sf-media-strip__more')({ classes }))],
+        'data-sf-children': [is('sf-children')],
+        'data-sf-strip': [is('sf-actor-strip', 'sf-media-strip')],
+        'data-sf-subject': [is('sf-entity')],
+        'data-sf-day': [is('sf-day')],
+        'data-sf-avatar': [is('sf-avatar')],
+    };
+    for (const [hook, [element, count = tags.filter(element).length]] of Object.entries(expected)) {
+        const found = marked(hook);
+        assert.ok(found.length > 0, `${hook} is drawn`);
+        assert.equal(found.length, count, `${hook} marks every element it names`);
+        for (const { tag, classes } of found) {
+            assert.ok(element({ tag, classes }), `${hook} marks only its element: ${tag.slice(0, 80)}`);
+            assert.ok(!classes.includes('sf-divider') && !classes.includes('sf-more'), `${hook} stays off dividers and load-more`);
+        }
+    }
+};
+
+test('stable hooks: rows, rails, bodies, headlines, subjects, toggles, members, strips, days and avatars', async () => {
+    const items = [{ ...crowd(35), published_at: '2026-09-25T12:00:00Z' }, { ...activity, id: 'older', published_at: '2026-09-20T12:00:00Z' }];
+    assertStableHooks(await renderRaw('/resources/js/vue/FeedStream.vue', { items, nextCursor: 'next' }));
 });

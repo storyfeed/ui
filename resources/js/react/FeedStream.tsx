@@ -80,7 +80,7 @@ function Divider({
                     className={`sf-rail__line w-[var(--sf-rail-line-width,1px)] flex-1 bg-border ${kind === 'dot' ? 'mt-1' : 'mt-[calc(0.5625em-0.5px+var(--spacing)*2)]'}`}
                 />
             </div>
-            <h2 className="sf-day m-0 border-0 pt-0 pb-5 text-xs leading-[1.6] font-semibold tracking-[0.05em] text-muted-foreground uppercase">
+            <h2 data-sf-day="" className="sf-day m-0 border-0 pt-0 pb-5 text-xs leading-[1.6] font-semibold tracking-[0.05em] text-muted-foreground uppercase">
                 {label}
             </h2>
         </div>

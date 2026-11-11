@@ -29,9 +29,9 @@ it('draws an activity row: glyph, linked headline and time', function () {
     $html = render_feed();
 
     expect($html)
-        ->toContain('<div data-sf-feed> <div role="feed"> <article>')
+        ->toContain('<div data-sf-feed> <div role="feed"> <article data-sf-row>')
         ->toContain('<span data-sf-intent="success" data-sf-glyph="shopping-bag" aria-hidden="true"> <svg')
-        ->toContain('<span><a href="/users/1">Dana</a> placed <a href="/orders/1" target="_blank">Order #1042</a></span>')
+        ->toContain('<span data-sf-headline><a data-sf-subject href="/users/1">Dana</a> placed <a data-sf-subject href="/orders/1" target="_blank">Order #1042</a></span>')
         ->toContain('</span> </div> <div> <time datetime="2026-09-25T12:00:00+00:00" title="Friday, 25 September 2026, 12:00:00 PM">just now</time>')
         // The last row on the last page ends the rail.
         ->not->toContain('<div aria-hidden="true"></div>')
@@ -57,8 +57,8 @@ it('reads a missing actor with core\'s placeholder', function () {
 
     // Before storyfeed/storyfeed#98, core draws the empty role's words itself, so they stay bare.
     expect(render_feed())->toContain(method_exists(Entity::class, 'isAbsent')
-        ? '<span><span>Someone</span> placed <a href="/orders/1" target="_blank">Order #9</a></span>'
-        : '<span>Someone placed <a href="/orders/1" target="_blank">Order #9</a></span>');
+        ? '<span data-sf-headline><span data-sf-subject>Someone</span> placed <a data-sf-subject href="/orders/1" target="_blank">Order #9</a></span>'
+        : '<span data-sf-headline>Someone placed <a data-sf-subject href="/orders/1" target="_blank">Order #9</a></span>');
 });
 
 it('draws an anonymous actor as an actor, muted, never italic', function () {
@@ -70,7 +70,7 @@ it('draws an anonymous actor as an actor, muted, never italic', function () {
 
     // A core before storyfeed/storyfeed#98 draws a single row's empty role itself; the group headline is the kit's own.
     foreach (method_exists(Entity::class, 'isAbsent') ? [$single, $group] : [$group] as $html) {
-        expect($html)->toContain('<span class="sf-entity sf-entity--anonymous font-medium text-muted-foreground">Someone</span>')
+        expect($html)->toContain('<span data-sf-subject class="sf-entity sf-entity--anonymous font-medium text-muted-foreground">Someone</span>')
             ->not->toMatch('/<span[^>]*italic[^>]*>Someone</');
     }
 });
@@ -81,7 +81,7 @@ it('draws a deleted model as a tombstone, never a link', function () {
     $order->delete();
 
     expect(render_feed())
-        ->toContain('placed <span>a removed order</span>')
+        ->toContain('placed <span data-sf-subject>a removed order</span>')
         ->not->toContain('href="/orders/');
 });
 
@@ -108,10 +108,10 @@ it('draws a repeat group with its members behind a disclosure', function () {
     $html = render_feed($page);
 
     expect($html)
-        ->toContain('<span>'.structural_html($group->headline()->toHtml(fn ($entity) => trim(view('storyfeed::entity', ['entity' => $entity])->render()))).'</span>')
-        ->toContain('<summary> <span>Show all 3</span><span>Show less</span> </summary>')
+        ->toContain('<span data-sf-headline>'.structural_html($group->headline()->toHtml(fn ($entity) => trim(view('storyfeed::entity', ['entity' => $entity, 'subject' => true])->render()))).'</span>')
+        ->toContain('<summary data-sf-toggle> <span>Show all 3</span><span>Show less</span> </summary>')
         ->toContain('<p>…and 1 more not shown</p>')
-        ->and(substr_count($html, '<article>'))->toBe(3);
+        ->and(substr_count($html, '<article data-sf-row>'))->toBe(3);
 });
 
 it('opens a group with no headline on its members', function () {
@@ -124,7 +124,7 @@ it('opens a group with no headline on its members', function () {
 
     expect($group->headline()->isFallback())->toBeTrue()
         ->and(render_feed($page))
-        ->toContain('<span>2 activities</span>')
+        ->toContain('<span data-sf-headline>2 activities</span>')
         ->toContain('<details open ontoggle=');
 });
 
@@ -157,9 +157,9 @@ it('renders each part on its own', function () {
 
     $item = Storyfeed::feed()->get()->collect()->sole();
 
-    expect(render_blade('<x-storyfeed::item :item="$item" last />', ['item' => $item]))->toStartWith('<article>')
-        ->and(render_blade('<x-storyfeed::activity :activity="$item" />', ['item' => $item]))->toStartWith('<article>')
-        ->and(render_blade('<x-storyfeed::headline :headline="$item->headline()" />', ['item' => $item]))->toStartWith('<span><a')
+    expect(render_blade('<x-storyfeed::item :item="$item" last />', ['item' => $item]))->toStartWith('<article data-sf-row>')
+        ->and(render_blade('<x-storyfeed::activity :activity="$item" />', ['item' => $item]))->toStartWith('<article data-sf-row>')
+        ->and(render_blade('<x-storyfeed::headline :headline="$item->headline()" />', ['item' => $item]))->toStartWith('<span data-sf-headline><a data-sf-subject')
         ->and(render_blade('<x-storyfeed::time :at="$item->publishedAt()" />', ['item' => $item]))->toEndWith('>just now</time>')
         ->and(render_blade('<x-storyfeed::glyph :glyph="$item->glyph()" :intent="$item->intent()" />', ['item' => $item]))->toStartWith('<span data-sf-intent="success"')
         ->and(render_blade('<x-storyfeed::pager :cursor="null" />'))->toBe('');
@@ -179,7 +179,7 @@ it('reads every page shape core returns, and its JSON with the nodes under data 
     Storyfeed::activity('place', Order::create(['number' => 'A']))->by($this->dana)->publishedAt(now()->subHour())->publish();
     Storyfeed::activity('ship', Order::create(['number' => 'B']))->by($this->dana)->publish();
 
-    $rows = fn (string $html) => substr_count($html, '<article>');
+    $rows = fn (string $html) => substr_count($html, '<article data-sf-row>');
     $paginator = Storyfeed::feed()->cursorPaginate(1);
     $cursor = $paginator->nextCursor()?->encode();
     $nodes = json_decode((string) json_encode(Page::read(Storyfeed::feed()->get())['items']), true);
@@ -205,9 +205,9 @@ it('draws a dateless entry with no time and no day of its own (storyfeed/storyfe
 
     expect($html = render_feed([$at('a', null)]))->toContain('Order #A')->not->toContain('<time')
         // A dateless entry neither starts a day nor ends one: the next dated entry on that day draws no second heading.
-        ->and(substr_count($grouped([$at('a', '2026-09-25T12:00:00+00:00'), $at('b', null), $at('c', '2026-09-25T10:00:00+00:00'), $at('d', '2026-09-23T10:00:00+00:00')]), '<h2>'))->toBe(2)
-        ->and(substr_count($grouped([$at('b', null), $at('a', '2026-09-25T12:00:00+00:00')]), '<h2>'))->toBe(1)
-        ->and(substr_count($grouped([$at('b', null)]), '<h2>'))->toBe(0);
+        ->and(substr_count($grouped([$at('a', '2026-09-25T12:00:00+00:00'), $at('b', null), $at('c', '2026-09-25T10:00:00+00:00'), $at('d', '2026-09-23T10:00:00+00:00')]), '<h2 data-sf-day>'))->toBe(2)
+        ->and(substr_count($grouped([$at('b', null), $at('a', '2026-09-25T12:00:00+00:00')]), '<h2 data-sf-day>'))->toBe(1)
+        ->and(substr_count($grouped([$at('b', null)]), '<h2 data-sf-day>'))->toBe(0);
 });
 
 it('leaves a null verb out of the fallback headline (storyfeed/storyfeed#127)', function () {
@@ -215,7 +215,7 @@ it('leaves a null verb out of the fallback headline (storyfeed/storyfeed#127)', 
     $node = json_decode((string) json_encode(Page::read(Storyfeed::feed()->get())['items']), true)[0];
 
     expect(render_feed([[...$node, 'verb' => null, 'headline_template' => null, 'headline' => null]]))->not->toContain('null')
-        ->and(render_feed([[...$node, 'verb' => null, 'headline_template' => null, 'headline' => 'Imported from the archive']]))->toContain('<span>Imported from the archive</span>');
+        ->and(render_feed([[...$node, 'verb' => null, 'headline_template' => null, 'headline' => 'Imported from the archive']]))->toContain('<span data-sf-headline>Imported from the archive</span>');
 });
 
 it('marks the feed root and CTA action with stable data hooks', function () {
@@ -226,4 +226,41 @@ it('marks the feed root and CTA action with stable data hooks', function () {
 
     expect($cta(['subject' => 'S', 'action' => $action]))->toMatch('/<a href="\/go" data-sf-cta-action [^>]*class="sf-cta__action/')
         ->and($cta(['action' => $action]))->toMatch('/<a href="\/go" data-sf-cta-action [^>]*class="sf-cta__action/');
+});
+
+it('marks rows, rails, bodies, headlines, subjects, toggles, members, strips, days and avatars with stable hooks', function () {
+    $person = fn (int $n) => ['type' => 'person', 'id' => "p{$n}", 'label' => "Person {$n}", 'url' => "/people/{$n}", 'media' => null];
+    $members = array_map(fn (int $n) => ['kind' => 'activity', 'id' => "visit-{$n}", 'headline_template' => ':actor checked in', 'actor' => $person($n), 'published_at' => '2026-09-25T12:00:00Z'], range(1, 12));
+    $items = [
+        ['kind' => 'group', 'id' => 'crowd', 'headline_template' => ':actors checked in', 'count' => 12, 'children' => $members, 'sample' => ['actors' => array_map($person, range(1, 3))], 'distinct' => ['actors' => 12], 'published_at' => '2026-09-25T12:00:00Z'],
+        ['kind' => 'activity', 'id' => 'older', 'headline_template' => ':actor checked in', 'actor' => $person(20), 'published_at' => '2026-09-20T12:00:00Z'],
+    ];
+    $html = Blade::render('<x-storyfeed::feed :items="$items" next-cursor="next" />', ['items' => $items]);
+
+    preg_match_all('/<[a-zA-Z](?:[^>"]|"[^"]*")*>/', (string) preg_replace('/<script>.*?<\/script>/s', '', $html), $found);
+    $tags = array_map(fn (string $tag) => ['tag' => $tag, 'classes' => preg_match('/ class="([^"]*)"/', $tag, $m) ? preg_split('/\s+/', $m[1]) : []], $found[0]);
+    $is = fn (string ...$names) => fn (array $t) => array_intersect($names, $t['classes']) !== [];
+    $rows = count(array_filter($tags, fn ($t) => in_array('sf-row', $t['classes'], true) && ! in_array('sf-divider', $t['classes'], true))) - 1;
+    $expected = [
+        'data-sf-row' => [$is('sf-row'), $rows],
+        'data-sf-rail' => [$is('sf-rail'), $rows],
+        'data-sf-body' => [$is('sf-body')],
+        'data-sf-headline' => [$is('sf-headline')],
+        'data-sf-toggle' => [fn ($t) => $is('sf-toggle')($t) || (str_starts_with($t['tag'], '<button') && $is('sf-actor-strip__more', 'sf-media-strip__more')($t))],
+        'data-sf-children' => [$is('sf-children')],
+        'data-sf-strip' => [$is('sf-actor-strip', 'sf-media-strip')],
+        'data-sf-subject' => [$is('sf-entity')],
+        'data-sf-day' => [$is('sf-day')],
+        'data-sf-avatar' => [$is('sf-avatar')],
+    ];
+    foreach ($expected as $hook => $spec) {
+        [$element, $count] = [$spec[0], $spec[1] ?? null];
+        $marked = array_filter($tags, fn ($t) => preg_match('/\s'.$hook.'(?=[\s>=\/])/', $t['tag']) === 1);
+        expect($marked)->not->toBeEmpty("{$hook} is drawn")
+            ->and(count($marked))->toBe($count ?? count(array_filter($tags, $element)), "{$hook} marks every element it names");
+        foreach ($marked as $t) {
+            expect($element($t))->toBeTrue("{$hook} marks only its element: {$t['tag']}")
+                ->and(array_intersect(['sf-divider', 'sf-more'], $t['classes']))->toBe([]);
+        }
+    }
 });

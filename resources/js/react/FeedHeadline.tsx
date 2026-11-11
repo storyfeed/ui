@@ -29,9 +29,9 @@ export function EntityList({
             {entities.map((entity, i) => (
                 <Fragment key={`${entity.type}:${entity.id}:${i}`}>
                     {isViewer(viewer, entity) ? (
-                        <span className={VIEWER_CLASSES}>{you(first && i === 0)}</span>
+                        <span data-sf-subject="" className={VIEWER_CLASSES}>{you(first && i === 0)}</span>
                     ) : (
-                        <EntityLink entity={entity} />
+                        <EntityLink entity={entity} subject />
                     )}
                     {overflow === 0 && i === entities.length - 2
                         ? ' and '
@@ -89,12 +89,13 @@ export default function FeedHeadline({
                     roles.includes(role) &&
                     isViewer(viewer, entities[role as FeedSingularRole])
                 )
-                    part = <span className={VIEWER_CLASSES}>{you(i === 0)}</span>;
+                    part = <span data-sf-subject="" className={VIEWER_CLASSES}>{you(i === 0)}</span>;
                 else if (segment.startsWith(':') && roles.includes(role))
                     part = (
                         <EntityLink
                             entity={entities[role as FeedSingularRole] ?? null}
                             fallback={role === 'actor' ? 'Someone' : undefined}
+                            subject
                         />
                     );
                 else if (
@@ -127,18 +128,19 @@ export default function FeedHeadline({
             ) : (
                 <>
                     {isViewer(viewer, entities.actor) ? (
-                        <span className={VIEWER_CLASSES}>{you(true)}</span>
+                        <span data-sf-subject="" className={VIEWER_CLASSES}>{you(true)}</span>
                     ) : (
                         <EntityLink
                             entity={entities.actor ?? null}
                             fallback="Someone"
+                            subject
                         />
                     )}
                     {verb && ' ' + verb}
                     {entities.object && (
                         <>
                             {' '}
-                            <EntityLink entity={entities.object} />
+                            <EntityLink entity={entities.object} subject />
                         </>
                     )}
                 </>
@@ -147,7 +149,7 @@ export default function FeedHeadline({
     const root = useRef<HTMLSpanElement>(null);
     useLayoutEffect(() => fadeChanged(root.current));
     return (
-        <span ref={root} className="sf-headline leading-[1.6] text-pretty text-muted-foreground [overflow-wrap:anywhere]">
+        <span ref={root} data-sf-headline="" className="sf-headline leading-[1.6] text-pretty text-muted-foreground [overflow-wrap:anywhere]">
             {content}
         </span>
     );

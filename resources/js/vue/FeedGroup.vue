@@ -107,9 +107,9 @@ const hiddenBeyondChildren = computed(
 </script>
 
 <template>
-    <div ref="row" :class="MORPH_CLASSES" class="sf-row relative flex items-start gap-(--sf-gap-v) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]">
+    <div ref="row" data-sf-row :class="MORPH_CLASSES" class="sf-row relative flex items-start gap-(--sf-gap-v) [--spacing:calc(var(--sf-font-size,1rem)/4)] [--text-xs:calc(var(--sf-font-size,1rem)*0.75)] [--text-sm:calc(var(--sf-font-size,1rem)*0.875)] [--text-base:var(--sf-font-size,1rem)] [--sf-gutter-v:var(--sf-gutter,--spacing(8))] [--sf-gap-v:var(--sf-gap,--spacing(3))] [--sf-disc-v:var(--sf-disc,--spacing(8))] [--sf-badge-v:var(--sf-badge,--spacing(3.5))] [--sf-badge-face-v:var(--sf-badge-face,--spacing(4.5))] text-base leading-[1.6]">
         <!-- Several actors draw as a diagonal pair inside one disc's square (ui#25): the first in front at the bottom-right, where the verb badge sits, the second behind at the top-left. Below a 1.5rem (24px) disc only the front face shows. -->
-        <div class="sf-rail box-content flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
+        <div data-sf-rail class="sf-rail box-content flex w-(--sf-gutter-v) shrink-0 flex-col items-center self-stretch">
             <slot v-if="$slots.marker" name="marker" :node="item" :is-last="isLast" />
             <div v-else class="sf-rail__disc relative flex w-(--sf-disc-v) shrink-0 [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-v:calc(var(--sf-badge,--spacing(3.5))*11/14)] [&:has(>.sf-avatars)>.sf-badge]:[--sf-badge-anchor-v:--spacing(2.75)] [&:has(>.sf-avatars)>.sf-badge_svg]:size-[calc(var(--sf-badge-v)*8/11)]">
                 <div v-if="slots.disc === 'actor' && faces.length > 1" class="sf-avatars @container/pair relative size-(--sf-disc-v) shrink-0">
@@ -152,6 +152,7 @@ const hiddenBeyondChildren = computed(
         </div>
 
         <div
+            data-sf-body
             class="sf-body min-w-0 flex-1 pt-[var(--sf-body-pt,max(0px,calc((var(--sf-disc-v)-1lh)/2)))] [line-height:var(--sf-body-leading)] [color:var(--sf-body-color)]"
             :class="isLast && !expanded ? '' : 'sf-body--spaced pb-[var(--sf-row-gap,--spacing(5))]'"
         >
@@ -214,6 +215,7 @@ const hiddenBeyondChildren = computed(
             <button
                 v-if="interactive && item.children.length > 0"
                 type="button"
+                data-sf-toggle
                 class="sf-toggle mt-1 inline-flex min-h-6 items-center cursor-pointer border-0 bg-transparent p-0 text-sm leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring print:hidden"
                 :aria-expanded="expanded"
                 :aria-controls="membersId"
@@ -222,7 +224,7 @@ const hiddenBeyondChildren = computed(
                 {{ expanded ? 'Show less' : `Show all ${item.count}` }}
             </button>
 
-            <div v-if="item.children.length" :id="membersId" class="sf-children mt-3" :class="{ 'hidden print:block': !expanded }">
+            <div v-if="item.children.length" :id="membersId" data-sf-children class="sf-children mt-3" :class="{ 'hidden print:block': !expanded }">
                 <FeedItem
                     v-for="(child, index) in item.children"
                     :key="child.id"

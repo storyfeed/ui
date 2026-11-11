@@ -113,17 +113,18 @@ onUpdated(() => fadeChanged(root.value));
 </script>
 
 <template>
-    <span ref="root" class="sf-headline leading-[1.6] text-pretty text-muted-foreground [overflow-wrap:anywhere]">
+    <span ref="root" data-sf-headline class="sf-headline leading-[1.6] text-pretty text-muted-foreground [overflow-wrap:anywhere]">
         <template v-if="parts.length > 0">
             <template v-for="(part, index) in parts" :key="index">
                 <template v-if="part.type === 'text'"><HeadlineText v-if="headlineText" :text="part.text" /><template v-else>{{ part.text }}</template></template>
 
-                <span v-else-if="part.type === 'entity' && isViewer(viewer, entities[part.role])" :class="VIEWER_CLASSES">{{ you(index === 0) }}</span>
+                <span v-else-if="part.type === 'entity' && isViewer(viewer, entities[part.role])" data-sf-subject :class="VIEWER_CLASSES">{{ you(index === 0) }}</span>
 
                 <EntityLink
                     v-else-if="part.type === 'entity'"
                     :entity="entities[part.role] ?? null"
                     :fallback="part.role === 'actor' ? 'Someone' : undefined"
+                    subject
                 />
 
                 <!--
@@ -136,7 +137,7 @@ onUpdated(() => fadeChanged(root.value));
                         v-for="(entity, entityIndex) in shown(part.role)"
                         :key="entity.id"
                     >
-                        <span v-if="isViewer(viewer, entity)" :class="VIEWER_CLASSES">{{ you(index === 0 && entityIndex === 0) }}</span><EntityLink v-else :entity="entity" /><template
+                        <span v-if="isViewer(viewer, entity)" data-sf-subject :class="VIEWER_CLASSES">{{ you(index === 0 && entityIndex === 0) }}</span><EntityLink v-else :entity="entity" subject /><template
                             v-if="
                                 overflow(part.role) === 0 &&
                                 entityIndex === shown(part.role).length - 2
@@ -173,11 +174,11 @@ onUpdated(() => fadeChanged(root.value));
         <template v-else-if="aggregate"> <span data-sf-part="count">{{ count ?? 0 }}</span> activities </template>
 
         <template v-else>
-            <span v-if="isViewer(viewer, entities.actor)" :class="VIEWER_CLASSES">{{ you(true) }}</span>
-            <EntityLink v-else :entity="entities.actor ?? null" fallback="Someone" />
+            <span v-if="isViewer(viewer, entities.actor)" data-sf-subject :class="VIEWER_CLASSES">{{ you(true) }}</span>
+            <EntityLink v-else :entity="entities.actor ?? null" fallback="Someone" subject />
             <template v-if="verb">{{ ' ' + verb }}</template>
             <template v-if="entities.object">
-                {{ ' ' }}<EntityLink :entity="entities.object" />
+                {{ ' ' }}<EntityLink :entity="entities.object" subject />
             </template>
         </template>
     </span>

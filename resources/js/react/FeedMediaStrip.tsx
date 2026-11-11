@@ -27,7 +27,7 @@ export default function FeedMediaStrip({
     const { FEED_LINK: Link = 'a' } = useFeedOptions();
     if (!tiles.length) return null;
     return (
-        <div className="sf-media-strip mt-2 grid max-w-88 grid-cols-4 gap-1">
+        <div data-sf-strip="" className="sf-media-strip mt-2 grid max-w-88 grid-cols-4 gap-1">
             {tiles.map((tile, i) =>
                 tile.image ? (
                     <FeedMedia key={i} image={tile.image} href={tile.href} linkAttributes={tile.linkAttributes} className={tileClass} />
@@ -50,6 +50,7 @@ export default function FeedMediaStrip({
             {!!overflow && toggle ? (
                 <button
                     type="button"
+                    data-sf-toggle=""
                     aria-label={toggle.label}
                     aria-expanded={toggle.expanded}
                     aria-controls={toggle.controls}

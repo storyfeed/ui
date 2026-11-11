@@ -525,7 +525,7 @@ const stripGone = { type: 'person', id: 'cara', label: null, url: null, media: {
 const stripDee = { type: 'person', id: 'dee', label: 'Dee Ford', url: '/people/dee', media: null };
 /** A group's strip in order (a src, `name:<label>`, `tile:<initials>` or `+N`) and its links, or null when there is none. */
 const stripTiles = (html) => {
-    const section = html.replace(/<!--.*?-->/g, '').split('sf-media-strip ')[1]?.split(/sf-toggle|sf-children/)[0];
+    const section = html.replace(/<!--.*?-->/g, '').split('sf-media-strip ')[1]?.split(/(?<!data-)sf-toggle|(?<!data-)sf-children/)[0];
     if (section === undefined) return null;
     const tiles = [...section.matchAll(/<img[^>]+src="([^"]+)"|class="[^"]*sf-avatar--tile[^"]*"[^>]*>([^<]*)<|class="[^"]*sf-media-strip__name[^"]*"[^>]*><span[^>]*>([^<]*)<|sf-media-strip__more[^>]*>\+(\d+)</g)]
         .map((m) => m[1] ?? (m[2] !== undefined ? `tile:${m[2].trim()}` : m[3] !== undefined ? `name:${m[3].trim()}` : `+${m[4]}`));
@@ -543,7 +543,7 @@ test('a group strip previews what its members\' rows show: a picture they draw, 
     const order = (n) => ({ type: 'order', id: String(n), label: `Order #${n}`, url: `/orders/${n}`, media: { icon: null, initials: 'O2', color: '#438d98' } });
     const orders = draw([order(2033), order(2032), order(2031)]);
     assert.deepEqual(orders, { tiles: ['name:Order #2033', 'name:Order #2032', 'name:Order #2031'], hrefs: ['/orders/2033', '/orders/2032', '/orders/2031'] });
-    assert.doesNotMatch(raw('FeedGroup', { item: { ...group, count: 3, children: [order(2033), order(2032), order(2031)].map((object, n) => stripMember(n, object)), sample: { actors: group.sample.actors } } }).split('sf-children')[0], /sf-avatar--tile/);
+    assert.doesNotMatch(raw('FeedGroup', { item: { ...group, count: 3, children: [order(2033), order(2032), order(2031)].map((object, n) => stripMember(n, object)), sample: { actors: group.sample.actors } } }).split(/(?<!data-)sf-children/)[0], /sf-avatar--tile/);
     // An Image body naming the icon slot is drawn by the row, so its icon is a picture tile.
     const iconed = (id) => ({ type: 'product', id, label: id, url: `/products/${id}`, body: [{ $body: 'Storyfeed/Body/Image', image: 'icon' }], media: { icon: { src: `/${id}.svg` } } });
     assert.deepEqual((draw([iconed('mug'), iconed('tote')])).tiles, ['/mug.svg', '/tote.svg']);
@@ -952,14 +952,14 @@ test('a row shows no picture its bodies did not ask for', () => {
 test('feed retains static collapsed members for print and preserves native interactive print rules', () => {
     const html = raw('FeedStream', { items: [group], interactive: false, collapsed: true });
     assert.match(html, /class="(?=[^"]*sf-children)(?=[^"]*hidden print:block)/);
-    assert.match(html.split('sf-children')[1], /Ada Lovelace/);
+    assert.match(html.split(/(?<!data-)sf-children/)[1], /Ada Lovelace/);
     assert.doesNotMatch(html, /<details|<summary/);
     const open = raw('FeedStream', { items: [group], interactive: false });
     assert.doesNotMatch(open, /hidden print:block|<summary/);
     const interactive = raw('FeedStream', { items: [group], collapsed: true });
     assert.match(interactive, /<details/);
     assert.match(interactive, /print:\[&amp;::details-content\]:block/);
-    assert.match(interactive.split('sf-children')[1], /Ada Lovelace/);
+    assert.match(interactive.split(/(?<!data-)sf-children/)[1], /Ada Lovelace/);
 });
 
 test('groups render without retired fields and ignore unknown extra keys', () => {
@@ -1044,7 +1044,7 @@ test('expanding a group hides its strip and keeps its rail faces in place (ui#47
     const item = { ...group, count: 2, headline_template: null, children: [stripMember(1, stripPhoto(1)), stripMember(2, stripPhoto(2))], sample: { actors: [person('A'), person('B')] } };
     for (const interactive of [true, false]) {
         const html = raw('FeedGroup', { item, rail: 'actor', collapsed: false, interactive });
-        const head = html.split('sf-children')[0];
+        const head = html.split(/(?<!data-)sf-children/)[0];
         assert.doesNotMatch(head, /sf-media-strip /);
         assert.equal((head.match(/sf-avatar--pair/g) ?? []).length, 2);
         assert.match(html, /src="\/p1\.jpg"/, 'the members still draw their pictures');
@@ -1094,12 +1094,12 @@ test('a group with several actors draws every face, newest first, eight before "
 
 test('expanding a group hides its actor strip, and every face is a member row\'s face (ui#48)', () => {
     const collapsed = raw('FeedGroup', { item: crowd(35), rail: 'actor' });
-    const members = collapsed.split('sf-children')[1];
+    const members = collapsed.split(/(?<!data-)sf-children/)[1];
     for (const face of actorFaces(collapsed).filter((face) => !face.startsWith('+'))) {
         assert.match(members, new RegExp(`aria-label="${face}"[^>]*class="sf-avatar `), `${face} is a member row's face`);
     }
     for (const interactive of [true, false]) {
-        const head = raw('FeedGroup', { item: crowd(35), rail: 'actor', interactive, collapsed: false }).split('sf-children')[0];
+        const head = raw('FeedGroup', { item: crowd(35), rail: 'actor', interactive, collapsed: false }).split(/(?<!data-)sf-children/)[0];
         assert.doesNotMatch(head, /sf-actor-strip/);
     }
 });
@@ -1232,10 +1232,10 @@ test('the page viewer reads as You, at any position and in lists (ui#75)', () =>
         raw('FeedHeadline', props, viewer === undefined ? {} : { FEED_VIEWER: viewer }).replace(/<!-- -->/g, '').replace(/ class="[^"]*"/g, '');
     const placed = { template: ':actor placed :object', entities: { actor: ada, object }, verb: 'place' };
 
-    assert.match(headline(placed, 'user:1'), /<span><span>You<\/span> placed <a[^>]*>Order #7<\/a><\/span>/);
-    assert.match(headline(placed, { type: 'user', id: 1 }), /<span><span>You<\/span> placed/);
-    assert.match(headline({ template: ':object was assigned to :target', entities: { object, target: ada }, verb: 'assign' }, 'user:1'), /was assigned to <span>you<\/span><\/span>/);
-    assert.match(headline({ template: ':actors joined :object', entities: { object }, sample: { actors: [ada, ravi] }, distinct: { actors: 4 }, verb: 'join', aggregate: true }, 'user:1'), /<span><span>You<\/span>, <a[^>]*>Ravi<\/a> and <span data-sf-part="more">2<\/span> more joined/);
+    assert.match(headline(placed, 'user:1'), /<span data-sf-headline(?:="")?><span data-sf-subject(?:="")?>You<\/span> placed <a[^>]*>Order #7<\/a><\/span>/);
+    assert.match(headline(placed, { type: 'user', id: 1 }), /<span data-sf-headline(?:="")?><span data-sf-subject(?:="")?>You<\/span> placed/);
+    assert.match(headline({ template: ':object was assigned to :target', entities: { object, target: ada }, verb: 'assign' }, 'user:1'), /was assigned to <span data-sf-subject(?:="")?>you<\/span><\/span>/);
+    assert.match(headline({ template: ':actors joined :object', entities: { object }, sample: { actors: [ada, ravi] }, distinct: { actors: 4 }, verb: 'join', aggregate: true }, 'user:1'), /<span data-sf-headline(?:="")?><span data-sf-subject(?:="")?>You<\/span>, <a[^>]*>Ravi<\/a> and <span data-sf-part="more">2<\/span> more joined/);
     assert.match(headline(placed, 'user:2'), /Ada Lovelace<\/a> placed/);
     assert.equal(headline(placed), headline(placed, null));
 });
@@ -1407,4 +1407,38 @@ test('stable hooks: data-sf-feed on the feed root and data-sf-cta-action on the 
     const action = { label: 'Go', link: { href: '/go', modal: false, attributes: {} } };
     assert.match(raw('CallToAction', { payload: { subject: 'S', action }, entityUrl: '/e' }), /<a[^>]*\sdata-sf-cta-action=""[^>]*class="sf-cta__action/);
     assert.match(raw('CallToAction', { payload: { action }, entityUrl: '/e' }), /<a[^>]*\sdata-sf-cta-action=""/);
+});
+
+/** The stable hooks (README "Stable hooks"): each marks exactly the elements it names, and the dividers and load-more row stay unmarked. */
+const assertStableHooks = (html) => {
+    const tags = (html.match(/<[a-zA-Z](?:[^>"]|"[^"]*")*>/g) ?? []).map((tag) => ({ tag, classes: (tag.match(/ class="([^"]*)"/)?.[1] ?? '').split(/\s+/) }));
+    const is = (...names) => ({ classes }) => names.some((name) => classes.includes(name));
+    const marked = (hook) => tags.filter(({ tag }) => new RegExp(`\\s${hook}(?=[\\s>=/])`).test(tag));
+    const rows = tags.filter(({ classes }) => classes.includes('sf-row') && !classes.includes('sf-divider')).length - 1;
+    const expected = {
+        'data-sf-row': [is('sf-row'), rows],
+        'data-sf-rail': [is('sf-rail'), rows],
+        'data-sf-body': [is('sf-body')],
+        'data-sf-headline': [is('sf-headline')],
+        'data-sf-toggle': [({ tag, classes }) => classes.includes('sf-toggle') || (tag.startsWith('<button') && is('sf-actor-strip__more', 'sf-media-strip__more')({ classes }))],
+        'data-sf-children': [is('sf-children')],
+        'data-sf-strip': [is('sf-actor-strip', 'sf-media-strip')],
+        'data-sf-subject': [is('sf-entity')],
+        'data-sf-day': [is('sf-day')],
+        'data-sf-avatar': [is('sf-avatar')],
+    };
+    for (const [hook, [element, count = tags.filter(element).length]] of Object.entries(expected)) {
+        const found = marked(hook);
+        assert.ok(found.length > 0, `${hook} is drawn`);
+        assert.equal(found.length, count, `${hook} marks every element it names`);
+        for (const { tag, classes } of found) {
+            assert.ok(element({ tag, classes }), `${hook} marks only its element: ${tag.slice(0, 80)}`);
+            assert.ok(!classes.includes('sf-divider') && !classes.includes('sf-more'), `${hook} stays off dividers and load-more`);
+        }
+    }
+};
+
+test('stable hooks: rows, rails, bodies, headlines, subjects, toggles, members, strips, days and avatars', () => {
+    const items = [{ ...crowd(35), published_at: '2026-09-25T12:00:00Z' }, { ...activity, id: 'older', published_at: '2026-09-20T12:00:00Z' }];
+    assertStableHooks(raw('FeedStream', { items, nextCursor: 'next' }));
 });

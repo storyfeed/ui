@@ -79,8 +79,8 @@ final class GroupHeadline
 
             // An anonymous actor is drawn as an actor; any other unpinned role stays a placeholder.
             return $match[1] === 'actor'
-                ? '<span class="sf-entity sf-entity--anonymous font-medium text-muted-foreground">'.e($label).'</span>'
-                : '<span class="sf-entity sf-entity--unknown font-medium text-foreground italic">'.e($label).'</span>';
+                ? '<span data-sf-subject class="sf-entity sf-entity--anonymous font-medium text-muted-foreground">'.e($label).'</span>'
+                : '<span data-sf-subject class="sf-entity sf-entity--unknown font-medium text-foreground italic">'.e($label).'</span>';
         })->implode('');
     }
 }

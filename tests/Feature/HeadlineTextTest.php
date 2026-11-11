@@ -39,7 +39,7 @@ it('draws headline text escaped, as before, when no formatter is registered', fu
     Storyfeed::activity('release', Order::create(['number' => '1']))->by($this->dana)->publish();
 
     expect(app(HeadlineText::class)->formatter())->toBeNull()
-        ->and(render_feed())->toContain('<span><a href="/users/1">Dana</a> released `v2.3` &lt;b&gt;to&lt;/b&gt; <a href="/orders/1" target="_blank">Order #1</a></span>')
+        ->and(render_feed())->toContain('<span data-sf-headline><a data-sf-subject href="/users/1">Dana</a> released `v2.3` &lt;b&gt;to&lt;/b&gt; <a data-sf-subject href="/orders/1" target="_blank">Order #1</a></span>')
         ->not->toContain('<code');
 });
 
@@ -48,7 +48,7 @@ it('passes only a singular headline\'s text to the formatter, never entities or 
     $seen = record_headline_text();
 
     expect(render_feed(attributes: 'viewer="user:1"'))
-        ->toContain('<span><span>You</span><em> released `v2.3` &lt;b&gt;to&lt;/b&gt; </em><a href="/orders/1" target="_blank">Order #1</a></span>')
+        ->toContain('<span data-sf-headline><span data-sf-subject>You</span><em> released `v2.3` &lt;b&gt;to&lt;/b&gt; </em><a data-sf-subject href="/orders/1" target="_blank">Order #1</a></span>')
         ->and($seen->getArrayCopy())->toBe([' released `v2.3` <b>to</b> ']);
 })->skip(fn () => ! HeadlineText::supported(), 'core without Headline::toHtml(text:)');
 
@@ -63,7 +63,7 @@ it('passes only a group headline\'s text to the formatter, never its entity list
     $seen = record_headline_text();
 
     expect(render_blade('<x-storyfeed::feed :page="$page" viewer="user:1" />', ['page' => Storyfeed::feed()->live()->get()]))
-        ->toMatch('/<a href="\/users\/3">Kim<\/a>, <a href="\/users\/2">Ravi<\/a> and <span>you<\/span><em> reviewed `main` on <\/em><a href="\/orders\/1" target="_blank">Order #9<\/a>/')
+        ->toMatch('/<a data-sf-subject href="\/users\/3">Kim<\/a>, <a data-sf-subject href="\/users\/2">Ravi<\/a> and <span data-sf-subject>you<\/span><em> reviewed `main` on <\/em><a data-sf-subject href="\/orders\/1" target="_blank">Order #9<\/a>/')
         ->toMatch('/<em> \(<\/em>3<em> reviews, <\/em>\s*0 others<em>; 3\)<\/em>/')
         ->and($seen->getArrayCopy())->toContain(' reviewed `main` on ')
         ->not->toContain('3')->not->toContain('0 others')->not->toContain(' 0 others')
@@ -79,7 +79,7 @@ it('leaves counts unformatted while formatting the selected count-form prose', f
     $seen = record_headline_text();
 
     expect(render_blade('<x-storyfeed::headline :headline="$headline" />', ['headline' => $headline]))
-        ->toBe("<span><em>Released </em>{$count}<em> {$word}</em></span>")
+        ->toBe("<span data-sf-headline><em>Released </em>{$count}<em> {$word}</em></span>")
         ->and($seen->getArrayCopy())->toBe(['Released ', ' '.$word]);
 })->with([[1, 'build'], [3, 'builds']])
     ->skip(fn () => ! HeadlineText::supported(), 'core without Headline::toHtml(text:)');
@@ -90,7 +90,7 @@ it('passes a pre-rendered fallback headline to the formatter', function () {
     app(HeadlineText::class)->register(HeadlineText::inlineCode(...));
 
     expect(render_feed([[...$node, 'headline_template' => null, 'headline' => 'Deployed `main` & <i>more</i>']]))
-        ->toContain('<span>Deployed <code>main</code> &amp; &lt;i&gt;more&lt;/i&gt;</span>');
+        ->toContain('<span data-sf-headline>Deployed <code>main</code> &amp; &lt;i&gt;more&lt;/i&gt;</span>');
 })->skip(fn () => ! HeadlineText::supported(), 'core without Headline::toHtml(text:)');
 
 it('draws balanced backtick spans as styled inline code, escaped', function () {
@@ -131,6 +131,6 @@ it('does not format generated fallback words or counts', function () {
 
     $headline = new Headline(FeedItem::of(['kind' => 'group', 'count' => 3]), null, null);
     expect(render_blade('<x-storyfeed::headline :headline="$headline" />', ['headline' => $headline]))
-        ->toBe('<span>3 activities</span>')
+        ->toBe('<span data-sf-headline>3 activities</span>')
         ->and($seen->getArrayCopy())->toBe([]);
 });

@@ -63,6 +63,7 @@ export default function EntityAvatar({
             role="img"
             aria-label={entity?.label ?? 'Someone'}
             title={entity?.label ?? 'Someone'}
+            data-sf-avatar=""
             className={`sf-avatar flex shrink-0 items-center justify-center rounded-full font-semibold select-none ring-2 ring-background has-[>img:not([hidden])]:bg-transparent has-[>img:not([hidden])]:border has-[>img:not([hidden])]:border-border ${sizes[size]} ${className} ${entity?.tombstone ? 'bg-muted text-white' : color ? `bg-(--sf-avatar-color) ${text}` : 'bg-primary text-primary-foreground'}`}
             style={color ? ({ '--sf-avatar-color': color } as CSSProperties) : undefined}
         >

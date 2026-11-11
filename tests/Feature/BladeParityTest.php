@@ -14,7 +14,7 @@ it('branches day and per-item dividers off the rail by default, and draws dots o
         ['kind' => 'activity', 'id' => 'b', 'published_at' => '2026-09-24T11:00:00Z', 'headline' => 'Yesterday update'],
     ];
     $html = render_blade('<x-storyfeed::feed :items="$items" :dividers="[\'a\' => \'Timeline\']" />', compact('items'));
-    expect($html)->toContain('<h2>Today</h2>', '<h2>Yesterday</h2>', '<h2>Timeline</h2>')
+    expect($html)->toContain('<h2 data-sf-day>Today</h2>', '<h2 data-sf-day>Yesterday</h2>', '<h2 data-sf-day>Timeline</h2>')
         ->and(render_blade('<x-storyfeed::feed :items="$items" :grouped="false" />', compact('items')))->not->toContain('<h2');
     $classes = fn (string $style) => Blade::render('<x-storyfeed::feed :items="$items" :dividers="[\'a\' => \'Timeline\']" '.$style.' />', ['items' => $items]);
     expect(substr_count($classes(''), 'sf-rail__branch'))->toBe(3)
@@ -102,7 +102,7 @@ it('draws its featured role\'s body: the object by default, none when featured i
         ->and(explode('sf-object-media', $located)[1])->toMatch('/<a href="\/talks\/gpug"[^>]*>\s*<img[^>]*src="\/talk\.svg"/');
     // null draws no entity body; a featured role the payload left empty draws none either, and the row stays.
     foreach ([[...$item, 'featured' => null], [...$item, 'featured' => 'target', 'target' => null]] as $node) {
-        expect($draw($node))->toContain('<article>', 'Ada unveiled Storyfeed')->not->toContain('The package itself', 'Live at the talk');
+        expect($draw($node))->toContain('<article data-sf-row>', 'Ada unveiled Storyfeed')->not->toContain('The package itself', 'Live at the talk');
     }
 });
 
@@ -194,7 +194,7 @@ function strip_tiles(string $html): ?array
     if (! str_contains($html, 'sf-media-strip ')) {
         return null;
     }
-    $section = preg_split('/sf-toggle|sf-children/', explode('sf-media-strip ', $html, 2)[1])[0];
+    $section = preg_split('/(?<!data-)sf-toggle|(?<!data-)sf-children/', explode('sf-media-strip ', $html, 2)[1])[0];
     preg_match_all('/<img[^>]+src="([^"]+)"|class="[^"]*sf-avatar--tile[^"]*"[^>]*>([^<]*)<|class="[^"]*sf-media-strip__name[^"]*"[^>]*><span[^>]*>([^<]*)<|sf-media-strip__more[^>]*>\+(\d+)</', $section, $matches, PREG_SET_ORDER);
     preg_match_all('/href="([^"]+)"/', $section, $hrefs);
 
@@ -266,7 +266,7 @@ it('draws a group strip previewing what its members\' rows show: a picture they 
     // Jasper (ui#27): "+N" opens the group like "Show all N"; a static group keeps a plain tile.
     $item = ['kind' => 'group', 'id' => 'g6', 'headline' => 'Updates', 'count' => 6, 'children' => array_map(fn ($object) => ['kind' => 'activity', 'headline' => 'Member', 'object' => $object], [$photo(1), $ana, $ben, $photo(2), $photo(3), $photo(4)])];
     $live = Blade::render('<x-storyfeed::group :group="$item" />', compact('item'));
-    expect($live)->toMatch('/<button type="button" aria-label="Show all 6" aria-expanded="false" aria-controls="sf-members-g6"/')->toContain('id="sf-members-g6"', 'ontoggle=');
+    expect($live)->toMatch('/<button type="button" data-sf-toggle aria-label="Show all 6" aria-expanded="false" aria-controls="sf-members-g6"/')->toContain('id="sf-members-g6"', 'ontoggle=');
     expect(Blade::render('<x-storyfeed::group :group="$item" :interactive="false" />', compact('item')))->not->toContain('<button type="button" aria-label="Show all 6"');
 });
 
