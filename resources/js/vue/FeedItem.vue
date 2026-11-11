@@ -207,7 +207,7 @@ const slots = computed(() =>
                     size="badge"
                 />
             </div>
-            <div v-if="!isLast" aria-hidden="true" class="sf-rail__line mt-[var(--sf-rail-line-offset,--spacing(1))] w-[var(--sf-rail-line-width,1px)] flex-1 bg-border" />
+            <div v-if="!isLast" aria-hidden="true" data-sf-rail-line class="sf-rail__line mt-[var(--sf-rail-line-offset,--spacing(1))] w-[var(--sf-rail-line-width,1px)] flex-1 bg-border" />
         </div>
 
         <div

@@ -1442,3 +1442,18 @@ test('stable hooks: rows, rails, bodies, headlines, subjects, toggles, members, 
     const items = [{ ...crowd(35), published_at: '2026-09-25T12:00:00Z' }, { ...activity, id: 'older', published_at: '2026-09-20T12:00:00Z' }];
     assertStableHooks(raw('FeedStream', { items, nextCursor: 'next' }));
 });
+
+test('stable hooks: data-sf-rail-line on every rail line, and data-sf-media-object-link on a MediaObject subject link', () => {
+    const items = [{ ...crowd(35), published_at: '2026-09-25T12:00:00Z' }, { ...activity, id: 'older', published_at: '2026-09-20T12:00:00Z' }, { ...activity, id: 'oldest', published_at: '2026-09-19T12:00:00Z' }];
+    for (const html of [raw('FeedStream', { items, nextCursor: 'next' }), raw('FeedStream', { items, dividerStyle: 'dot' }), raw('FeedGroup', { item: crowd(35), collapsed: false })]) {
+        const lines = html.match(/<div[^>]*class="sf-rail__line[^>]*>/g) ?? [];
+        assert.ok(lines.length > 0);
+        assert.equal((html.match(/\sdata-sf-rail-line=""/g) ?? []).length, lines.length);
+        for (const line of lines) assert.match(line, /\sdata-sf-rail-line=""/);
+    }
+    const link = (href) => ({ href, modal: false, attributes: {} });
+    const media = raw('MediaObject', { payload: { subject: { label: 'Launch notes', link: link('/posts/1') }, content: 'Prose', footnote: { label: 'More', link: link('/more') } }, entityUrl: '/e' });
+    assert.equal((media.match(/\sdata-sf-media-object-link=""/g) ?? []).length, 1);
+    assert.match(media, /<p class="sf-media-object__subject[^>]*><a[^>]*\sdata-sf-media-object-link=""[^>]*>Launch notes<\/a>/);
+    assert.doesNotMatch(raw('MediaObject', { payload: { subject: 'Unlinked' }, entityUrl: '/e' }), /data-sf-media-object-link/);
+});

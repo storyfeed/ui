@@ -48,7 +48,7 @@
 @endif
 
 @unless ($last)
-        <div class="sf-rail__line mt-[var(--sf-rail-line-offset,--spacing(1))] w-[var(--sf-rail-line-width,1px)] flex-1 bg-border" aria-hidden="true"></div>
+        <div data-sf-rail-line class="sf-rail__line mt-[var(--sf-rail-line-offset,--spacing(1))] w-[var(--sf-rail-line-width,1px)] flex-1 bg-border" aria-hidden="true"></div>
 
 @endunless
 </div>

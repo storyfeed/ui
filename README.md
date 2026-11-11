@@ -800,6 +800,7 @@ selectors, kept stable across releases in Vue, React and Blade:
 | `data-sf-feed` | the feed root | Blade, Vue, React |
 | `data-sf-row` | each activity, group and expanded member row; never a day divider or the load-more row | Blade, Vue, React |
 | `data-sf-rail` | a row's rail column, holding its disc and line | Blade, Vue, React |
+| `data-sf-rail-line` | a rail's connector line, in activity, group and day-divider rows | Blade, Vue, React |
 | `data-sf-body` | a row's body column, beside the rail | Blade, Vue, React |
 | `data-sf-headline` | a row's headline | Blade, Vue, React |
 | `data-sf-subject` | an entity named in a headline: its link, or its name when it has none (including the viewer's "You" and an anonymous "Someone") | Blade, Vue, React |
@@ -809,6 +810,7 @@ selectors, kept stable across releases in Vue, React and Blade:
 | `data-sf-day` | a day divider's heading | Blade, Vue, React |
 | `data-sf-avatar` | an entity avatar, in the rail, a strip or a tile | Blade, Vue, React |
 | `data-sf-cta-action` | a CallToAction body's action link | Blade, Vue, React |
+| `data-sf-media-object-link` | a MediaObject body's subject link; an unlinked subject has none | Blade, Vue, React |
 
 ```js
 const feed = event.target.closest('[data-sf-feed]');
