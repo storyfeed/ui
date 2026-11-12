@@ -89,6 +89,12 @@ interface BaseNode extends FeedEntities {
     headline_template: string | null;
     /** Pre-rendered fallback for closure-based grammar. */
     headline?: string | null;
+    /**
+     * Literal values for named tokens in the headline templates (core v0.24,
+     * Payload v1 additive): `:recipient` renders `bindings.recipient` as
+     * plain text. Null or absent when the node binds nothing.
+     */
+    bindings?: Record<string, string> | null;
     glyph: string | null;
     /**
      * What the glyph MEANS, when the app has said (storyfeed >= b465d1f,

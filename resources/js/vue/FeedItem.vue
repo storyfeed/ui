@@ -223,6 +223,7 @@ const slots = computed(() =>
                 <FeedHeadline
                     :template="reading.template"
                     :headline="reading.headline"
+                    :bindings="item.bindings"
                     :entities="{
                         actor: item.actor,
                         object: item.object,

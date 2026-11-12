@@ -161,6 +161,7 @@ const hiddenBeyondChildren = computed(
                 <FeedHeadline
                     :template="item.headline_template"
                     :headline="item.headline"
+                    :bindings="item.bindings"
                     :entities="entities"
                     :sample="item.sample"
                     :distinct="item.distinct"

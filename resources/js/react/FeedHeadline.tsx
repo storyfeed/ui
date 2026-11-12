@@ -53,6 +53,8 @@ export interface HeadlineProps {
     count?: number;
     verb: string | null;
     aggregate?: boolean;
+    /** Literal values for named tokens; rendered as plain text, never as markup. */
+    bindings?: Record<string, string> | null;
 }
 const roles = [
     'actor',
@@ -74,6 +76,7 @@ export default function FeedHeadline({
     count = 0,
     verb,
     aggregate,
+    bindings,
 }: HeadlineProps) {
     const { FEED_VIEWER: viewer = null, headlineText = (text: string) => text } = useFeedOptions();
     let content: ReactNode;
@@ -117,6 +120,13 @@ export default function FeedHeadline({
                 } else if (segment === ':count') part = <span data-sf-part="count">{count}</span>;
                 else if (segment === ':others')
                     part = <><span data-sf-part="others">{Math.max(0, (distinct.actors ?? 0) - (sample.actors ?? []).length)}</span> others</>;
+                else if (
+                    segment.startsWith(':') &&
+                    bindings &&
+                    Object.hasOwn(bindings, segment.slice(1))
+                )
+                    // A bound value is literal: no text hook, no re-split (core v0.24).
+                    part = String(bindings[segment.slice(1)]);
                 else part = headlineText(segment);
                 return <Fragment key={i}>{part}</Fragment>;
             });

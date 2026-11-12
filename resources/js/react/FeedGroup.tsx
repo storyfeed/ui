@@ -88,6 +88,7 @@ export default function FeedGroup({
                         <FeedHeadline
                             template={item.headline_template}
                             headline={item.headline}
+                            bindings={item.bindings}
                             entities={item}
                             sample={item.sample}
                             distinct={item.distinct}
