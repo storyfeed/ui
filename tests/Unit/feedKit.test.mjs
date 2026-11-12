@@ -1482,3 +1482,32 @@ test('stable hooks: data-sf-rail-line on every rail line, and data-sf-media-obje
     const plain = await renderRaw('/resources/js/vue/body/MediaObject.vue', { payload: { subject: 'Unlinked' }, entityUrl: '/e' });
     assert.doesNotMatch(plain, /data-sf-media-object-link/);
 });
+
+test('a bound token renders its literal value as plain text, in both readings', async () => {
+    const node = {
+        kind: 'activity', id: 'sent', verb: 'send', published_at: '2026-10-07T12:00:00Z',
+        headline_template: ':actor sent :object to :recipient',
+        bindings: { recipient: 'Pat [x] :object <b>' },
+        actor: entity, object: { ...entity, id: '2', label: 'Invoice', url: '/invoice' }, target: null, context: null,
+    };
+    for (const item of [node, { ...node, headline_template: ':actor posted', redundant: true, missing_headline_template: ':actor sent :object to :recipient' }]) {
+        const headline = (await renderRaw('/resources/js/vue/FeedItem.vue', { item })).match(/<span[^>]*data-sf-headline[^>]*>[\s\S]*?<\/span>(?=\s*<)/)[0].replace(/<!--[^>]*-->/g, "");
+        assert.match(headline, / to Pat \[x\] :object &lt;b&gt;/);
+        assert.doesNotMatch(headline, /<b>|:recipient/);
+        assert.equal((headline.match(/<a /g) ?? []).length, 2);
+    }
+    const seen = [];
+    const app = createSSRApp({ render: () => h(Headline, { template: node.headline_template, bindings: node.bindings, entities: node, verb: 'send' }) });
+    app.provide(headlineKeys.FEED_HEADLINE_TEXT, (text) => (seen.push(text), text));
+    assert.match(await renderToString(app), /Pat \[x\] :object &lt;b&gt;/);
+    assert.ok(!seen.some((text) => text.includes('Pat')));
+    const { bindings: _, ...unbound } = node;
+    assert.match((await renderRaw('/resources/js/vue/FeedItem.vue', { item: unbound })).replace(/<!--[^>]*-->/g, ''), / to :recipient<\/span>/);
+});
+
+test('a group passes its bindings to the headline', async () => {
+    const html = await renderRaw('/resources/js/vue/FeedGroup.vue', {
+        item: { kind: 'group', id: 'g', verb: 'send', axis: 'repeat', count: 2, published_at: '2026-10-07T12:00:00Z', headline_template: ':count sent to :recipient', bindings: { recipient: 'Pat <b>' }, actor: null, object: null, target: null, context: null, children: [], sample: {}, distinct: {} },
+    });
+    assert.match(html.replace(/<!--[^>]*-->/g, ""), /sent to Pat &lt;b&gt;/);
+});

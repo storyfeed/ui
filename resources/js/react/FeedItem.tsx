@@ -134,6 +134,7 @@ export default function FeedItem({
                     <div className="sf-head flex items-baseline gap-3">
                         <FeedHeadline
                             {...reading}
+                            bindings={item.bindings}
                             entities={item}
                             verb={item.verb}
                         />

@@ -3,6 +3,7 @@
 use Storyfeed\Facades\Story;
 use Storyfeed\Facades\Storyfeed;
 use Storyfeed\Grouping\Group;
+use Storyfeed\PendingActivity;
 use Storyfeed\Support\FeedItem;
 use Storyfeed\Support\Headline;
 use Storyfeed\Ui\Support\HeadlineText;
@@ -134,3 +135,10 @@ it('does not format generated fallback words or counts', function () {
         ->toBe('<span data-sf-headline>3 activities</span>')
         ->and($seen->getArrayCopy())->toBe([]);
 });
+
+it('draws a bound value exactly, as escaped text with no extra link', function () {
+    Story::for(Order::class)->verb('send')->headline(':actor sent :object to :recipient');
+    Storyfeed::activity('send', Order::create(['number' => '1']))->by($this->dana)->bind('recipient', 'Pat [x] :object <b>')->publish();
+
+    expect(render_feed())->toContain('<span data-sf-headline><a data-sf-subject href="/users/1">Dana</a> sent <a data-sf-subject href="/orders/1" target="_blank">Order #1</a> to Pat [x] :object &lt;b&gt;</span>');
+})->skip(fn () => ! method_exists(PendingActivity::class, 'bind'), 'core without literal bindings (storyfeed#237)');

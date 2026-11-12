@@ -1457,3 +1457,20 @@ test('stable hooks: data-sf-rail-line on every rail line, and data-sf-media-obje
     assert.match(media, /<p class="sf-media-object__subject[^>]*><a[^>]*\sdata-sf-media-object-link=""[^>]*>Launch notes<\/a>/);
     assert.doesNotMatch(raw('MediaObject', { payload: { subject: 'Unlinked' }, entityUrl: '/e' }), /data-sf-media-object-link/);
 });
+test('a bound token renders its literal value as plain text, in both readings', () => {
+    const node = {
+        ...activity,
+        headline_template: ':actor sent :object to :recipient',
+        bindings: { recipient: 'Pat [x] :object <b>' },
+        object: person('Invoice'),
+    };
+    for (const item of [node, { ...node, headline_template: ':actor posted', redundant: true, missing_headline_template: ':actor sent :object to :recipient' }]) {
+        const headline = raw('FeedItem', { item }).match(/<span[^>]*data-sf-headline[^>]*>[\s\S]*?<\/span>(?=\s*<)/)[0].replace(/<!--[^>]*-->/g, "");
+        assert.match(headline, / to Pat \[x\] :object &lt;b&gt;/);
+        assert.doesNotMatch(headline, /<b>|:recipient/);
+        assert.equal((headline.match(/<a /g) ?? []).length, 2);
+    }
+    const { bindings: _, ...unbound } = node;
+    assert.match(raw('FeedItem', { item: unbound }).replace(/<!--[^>]*-->/g, ''), / to :recipient<\/span>/);
+    assert.match(raw('FeedGroup', { item: { ...group, headline_template: ':count sent to :recipient', bindings: { recipient: 'Pat <b>' } } }).replace(/<!--[^>]*-->/g, ''), /sent to Pat &lt;b&gt;/);
+});

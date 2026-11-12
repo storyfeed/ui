@@ -29,6 +29,8 @@ const props = defineProps<{
      * naming one actor here would re-introduce the lie server-side.
      */
     aggregate?: boolean;
+    /** Literal values for named tokens; rendered as plain text, never as markup. */
+    bindings?: Record<string, string> | null;
 }>();
 
 type Part =
@@ -36,7 +38,8 @@ type Part =
     | { type: 'entity'; role: FeedSingularRole }
     | { type: 'list'; role: FeedRole }
     | { type: 'count' }
-    | { type: 'others' };
+    | { type: 'others' }
+    | { type: 'binding'; text: string };
 
 const PLURALS: Record<string, FeedRole> = {
     ':actors': 'actors',
@@ -83,11 +86,25 @@ const parts = computed<Part[]>(() => {
                     return { type: 'count' };
                 case ':others':
                     return { type: 'others' };
-                default:
-                    return { type: 'text', text: segment };
+                default: {
+                    // A bound token is a literal value, never authored text:
+                    // it skips the text hook and is never re-split (core v0.24).
+                    const bound = boundText(segment);
+
+                    return bound === null
+                        ? { type: 'text', text: segment }
+                        : { type: 'binding', text: bound };
+                }
             }
         });
 });
+
+function boundText(segment: string): string | null {
+    const name = segment.slice(1);
+    const bindings = props.bindings ?? {};
+
+    return Object.hasOwn(bindings, name) ? String(bindings[name]) : null;
+}
 
 function shown(role: FeedRole): FeedEntity[] {
     return props.sample?.[role] ?? [];
@@ -117,6 +134,8 @@ onUpdated(() => fadeChanged(root.value));
         <template v-if="parts.length > 0">
             <template v-for="(part, index) in parts" :key="index">
                 <template v-if="part.type === 'text'"><HeadlineText v-if="headlineText" :text="part.text" /><template v-else>{{ part.text }}</template></template>
+
+                <template v-else-if="part.type === 'binding'">{{ part.text }}</template>
 
                 <span v-else-if="part.type === 'entity' && isViewer(viewer, entities[part.role])" data-sf-subject :class="VIEWER_CLASSES">{{ you(index === 0) }}</span>
 

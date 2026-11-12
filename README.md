@@ -790,6 +790,11 @@ trusted HTML that is not sanitized, so it must escape the text itself, as
 `inlineCode` does. Vue and React callbacks return nodes, which the framework
 escapes.
 
+A bound token, such as `:recipient` with its value in the node's `bindings`
+(Storyfeed core 0.24), is drawn as the literal value in escaped plain text in
+every kit: never linked, never passed to the headline-text formatter, and
+never read for tokens again.
+
 ## Stable hooks
 
 Script against data attributes, not classes. These are the supported

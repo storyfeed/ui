@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Vue and React headlines draw a bound token, such as `:recipient`, from the node's new Payload v1 `bindings` map (Storyfeed core 0.24) as the literal value in escaped plain text, for `headline_template` and `missing_headline_template` alike. A binding is never linked, never passed to the headline-text formatter and never read for tokens again. `bindings` is added to the activity and group node types. Blade already draws bindings through core.
+
 ## v0.13.3 - 2026-11-11
 
 ### Added
