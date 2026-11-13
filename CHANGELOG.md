@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.14.2 - 2026-11-13
+
+### Fixed
+
+- Allow storyfeed/storyfeed ^0.25 (render-time headline bindings).
+
 ## v0.14.1 - 2026-11-12
 
 ### Fixed
