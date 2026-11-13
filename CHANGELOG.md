@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.14.1 - 2026-11-12
+
+### Fixed
+
+- Allow storyfeed/storyfeed ^0.24, which v0.14.0's `bindings` support was built for.
+
 ## v0.14.0 - 2026-11-12
 
 ### Added
