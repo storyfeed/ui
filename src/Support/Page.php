@@ -27,6 +27,78 @@ final class Page
      */
     public static function read(mixed $page): array
     {
+        $read = self::envelope($page);
+        $map = self::mediaMap($page);
+
+        return $map === [] ? $read : ['items' => $read['items']->map(fn ($item) => self::resolve($item, $map)), 'cursor' => $read['cursor']];
+    }
+
+    /**
+     * The page's media map (storyfeed/storyfeed#242): `{link, media}` per
+     * `media_ref`. Missing, empty or `[]` means no map.
+     *
+     * @return array<string, array<array-key, mixed>>
+     */
+    public static function mediaMap(mixed $page): array
+    {
+        $map = match (true) {
+            is_object($page) && method_exists($page, 'media') => $page->media(),
+            is_array($page) => $page['media'] ?? null,
+            $page instanceof Arrayable => $page->toArray()['media'] ?? null,
+            default => null,
+        };
+
+        if (! is_array($map) || $map === [] || array_is_list($map)) {
+            return [];
+        }
+
+        return array_filter($map, fn ($entry, $ref) => is_string($ref) && is_array($entry), ARRAY_FILTER_USE_BOTH);
+    }
+
+    /**
+     * An item with every entity's `link` and `media` read from the page's
+     * map by its `media_ref`, falling back to the inline copies.
+     *
+     * @param  array<string, array<array-key, mixed>>  $map
+     */
+    public static function resolve(mixed $value, array $map): mixed
+    {
+        if ($map === []) {
+            return $value;
+        }
+
+        // Core's paginators hold readers over the node arrays.
+        if ($value instanceof Arrayable) {
+            $value = $value->toArray();
+        }
+
+        if (! is_array($value)) {
+            return $value;
+        }
+
+        foreach ($value as $key => $child) {
+            if (is_array($child)) {
+                $value[$key] = self::resolve($child, $map);
+            }
+        }
+
+        $ref = $value['media_ref'] ?? null;
+        if (is_string($ref) && isset($map[$ref])) {
+            foreach (['link', 'media'] as $part) {
+                if (array_key_exists($part, $map[$ref])) {
+                    $value[$part] = $map[$ref][$part];
+                }
+            }
+        }
+
+        return $value;
+    }
+
+    /**
+     * @return array{items: Collection<int, mixed>, cursor: string|null}
+     */
+    private static function envelope(mixed $page): array
+    {
         return match (true) {
             $page === null => ['items' => collect(), 'cursor' => null],
             $page instanceof AbstractCursorPaginator => ['items' => collect($page->items()), 'cursor' => self::cursor($page->nextCursor())],

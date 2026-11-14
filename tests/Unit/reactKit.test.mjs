@@ -1474,3 +1474,44 @@ test('a bound token renders its literal value as plain text, in both readings', 
     assert.match(raw('FeedItem', { item: unbound }).replace(/<!--[^>]*-->/g, ''), / to :recipient<\/span>/);
     assert.match(raw('FeedGroup', { item: { ...group, headline_template: ':count sent to :recipient', bindings: { recipient: 'Pat <b>' } } }).replace(/<!--[^>]*-->/g, ''), /sent to Pat &lt;b&gt;/);
 });
+
+// storyfeed/storyfeed#242: core 0.26 pages carry a `media` map; entities name their entry by `media_ref`.
+const mapped = { link: { href: '/from-map', modal: false, attributes: {} }, media: { icon: { src: '/map.svg', alt: 'Ada', mediaType: null, width: null, height: null }, image: null, preview: null, url: null } };
+const refNode = (actor, id = 'mapped') => ({ ...activity, id, actor: { type: 'user', id: '1', label: 'Ada Lovelace', media_ref: 'm1', ...actor } });
+const inlineOn = refNode({ url: '/from-map', modal: false, ...mapped });
+const inlineOff = refNode({});
+
+test('a page with inline_media on or off reads link and media from its media map', () => {
+    for (const node of [inlineOn, inlineOff]) {
+        const html = raw('FeedStream', { page: { data: [node], next_cursor: null, media: { m1: mapped } } });
+        assert.match(html, /href="\/from-map"/);
+        assert.match(html, /src="\/map\.svg"/);
+    }
+    // No map (missing, empty object or PHP's `[]`): the inline copies draw.
+    for (const media of [undefined, [], {}]) {
+        const html = raw('FeedStream', { page: { data: [refNode({ url: '/ada', modal: false, link: { href: '/ada' }, media: { icon: { src: '/ada.svg', alt: 'Ada' } } })], next_cursor: null, media } });
+        assert.match(html, /href="\/ada"/);
+        assert.match(html, /src="\/ada\.svg"/);
+    }
+    // A ref missing from the map falls back to the inline copy.
+    const stray = refNode({ media_ref: 'm9', url: '/ada', link: { href: '/ada' }, media: { icon: { src: '/ada.svg', alt: 'Ada' } } });
+    assert.match(raw('FeedStream', { page: { data: [stray], next_cursor: null, media: { m1: mapped } } }), /src="\/ada\.svg"/);
+    // A group's children and samples resolve too.
+    const groupOff = { ...group, children: [inlineOff], sample: { actors: [inlineOff.actor] } };
+    const page = kit.readPage({ data: [groupOff], next_cursor: null, media: { m1: mapped } });
+    assert.equal(page.items[0].children[0].actor.link.href, '/from-map');
+    assert.equal(page.items[0].sample.actors[0].media.icon.src, '/map.svg');
+});
+
+test('appendPage merges each loaded page\'s media map for load-more', () => {
+    const first = { data: [inlineOff], next_cursor: 'c2', media: { m1: mapped } };
+    const second = { data: [refNode({ media_ref: 'm2' }, 'older')], next_cursor: null, sync_token: 's', media: { m2: { ...mapped, link: { href: '/second' } } } };
+    const merged = kit.appendPage(first, second);
+    assert.deepEqual(Object.keys(merged.media), ['m1', 'm2']);
+    assert.equal(merged.next_cursor, null);
+    assert.equal(merged.sync_token, 's');
+    const html = raw('FeedStream', { page: merged });
+    assert.match(html, /href="\/from-map"/);
+    assert.match(html, /href="\/second"/);
+    assert.deepEqual(kit.appendPage(first, { data: [], next_cursor: null, media: [] }).media, { m1: mapped });
+});

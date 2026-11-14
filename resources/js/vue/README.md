@@ -3,7 +3,9 @@
 Vue 3, TypeScript and Tailwind v4. Copied files belong to the app. Import
 `FeedStream.vue` and pass core's page JSON as `page` (nodes under `data` from
 storyfeed/storyfeed#95, under `items` before it), or `items` and
-`next-cursor` yourself; handle `@load-more` for pagination. No kit CSS is required.
+`next-cursor` yourself; handle `@load-more` for pagination. Append each loaded
+page with `appendPage(previous, next)` from `shared/page.ts`, which merges the
+pages' `media` maps (core 0.26) that entities read `link` and `media` from. No kit CSS is required.
 Install its dependencies:
 
 ```bash

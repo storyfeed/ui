@@ -29,6 +29,12 @@ export interface FeedEntity {
     /** What a deleted entity left behind; null for a live one. */
     tombstone?: FeedTombstone | null;
     attributes?: Record<string, string>;
+    /**
+     * The key of this entity's `{ link, media }` in its page's `media` map
+     * (core 0.26, additive). Null off a page. With core's `inline_media` off,
+     * paginated entities carry no `link` or `media` of their own.
+     */
+    media_ref?: string | null;
     /** Core 0.17's single link shape, which replaces `url`, `modal` and `attributes`. */
     link?: { href: string | null; modal?: boolean; attributes?: Record<string, unknown> } | null;
     /**
@@ -193,5 +199,10 @@ export interface FeedPagePayload {
     next_cursor: string | null;
     payload_version?: number;
     sync_token?: string | null;
+    /** Core 0.26: each distinct `{ link, media }` by `media_ref`. Empty serializes as `[]`. */
+    media?: FeedMediaMap | unknown[];
     [key: string]: unknown;
 }
+
+/** A page's media map (storyfeed/storyfeed#242), keyed by `media_ref`. */
+export type FeedMediaMap = Record<string, { link: FeedEntity['link']; media: FeedMedia | null }>;

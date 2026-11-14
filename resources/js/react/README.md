@@ -56,7 +56,10 @@ export default function History({ feed }: { feed: FeedPagePayload | FeedPayload 
 }
 ```
 
-Use your app's append/merge pagination policy when loading older pages.
+When loading older pages, append them with `appendPage(previous, next)`: it
+concatenates the nodes and merges each page's `media` map (core 0.26), which
+entities read `link` and `media` from by `media_ref`. Without it, a page from
+an app with `storyfeed.payload.inline_media` off draws no links or pictures.
 `loadingMore` disables the pager and changes its label while a request runs.
 `empty` accepts a React node. `grouped={false}` hides day headings.
 
