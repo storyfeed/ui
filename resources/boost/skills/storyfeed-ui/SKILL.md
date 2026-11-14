@@ -158,6 +158,8 @@ Retune a size's limits with `--sf-image-size-<name>` and `--sf-image-size-<name>
 
 Blade also takes `viewer` (a model), `timezone` and `renderers`. Vue emits `load-more`; React takes `onLoadMore`, `loadingMore` and `empty`.
 
+When loading more, append with `appendPage(previous, next)` from `shared/page` (React: the kit index): it concatenates the nodes and merges each page's `media` map, which entities read their `link` and `media` from by `media_ref` (core 0.26; required once the app turns `storyfeed.payload.inline_media` off).
+
 **Dense rows.** A group's expanded members draw as dense rows: the same row without the rail's secondary badge. `child-rail` (React `childRail`) sets their posture independently, for example `rail="actor" child-rail="activity-only"`.
 
 **Size.** Set `--sf-font-size` on the feed or an element around it to scale the whole feed, for example `class="[--sf-font-size:0.875rem]"` for a compact one. `--sf-well` and `--sf-well-border` set the fill and edge of card-shaped bodies. `--sf-body-pt`, `--sf-body-leading`, `--sf-body-color`, `--sf-row-gap`, `--sf-rail-line-offset` and `--sf-rail-line-width` tune a row's body and rail without touching `.sf-*` classes; unset, each keeps the kit's default.

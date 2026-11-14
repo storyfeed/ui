@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Read entities' `link` and `media` from a page's `media` map by `media_ref`, falling back to the inline copies, in the Blade, Vue and React kits, so apps can turn core's `storyfeed.payload.inline_media` off. A missing, empty or `[]` map is no map. `appendPage()` merges each loaded page's map for load-more (storyfeed/storyfeed#244).
+- Allow storyfeed/storyfeed ^0.26.
+
 ## v0.14.2 - 2026-11-13
 
 ### Fixed
