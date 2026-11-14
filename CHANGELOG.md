@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.16.0 - 2026-11-14
+
+### Added
+
+- Read each entity from a page's `entities` map by `entity_ref`, falling back to the inline copy, before the `media_ref` lookup, in the Blade, Vue and React kits, so apps can turn core's `storyfeed.payload.inline_entities` off. Roles, a group's pinned roles, samples, featured and children all resolve. A missing, empty or `[]` map is no map. `appendPage()` merges each loaded page's `entities` map too (storyfeed/storyfeed#249).
+- Allow storyfeed/storyfeed ^0.27 and ^0.28.
+
 ## v0.15.0 - 2026-11-13
 
 ### Added

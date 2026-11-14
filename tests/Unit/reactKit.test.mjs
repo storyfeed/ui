@@ -1515,3 +1515,47 @@ test('appendPage merges each loaded page\'s media map for load-more', () => {
     assert.match(html, /href="\/second"/);
     assert.deepEqual(kit.appendPage(first, { data: [], next_cursor: null, media: [] }).media, { m1: mapped });
 });
+
+// storyfeed/storyfeed#249: core 0.27 pages carry an `entities` map; entities name their entry by `entity_ref`.
+const ada = { type: 'user', id: '1', label: 'Ada Lovelace', entity_ref: 'e1', media_ref: 'm1', url: '/ada', modal: false, link: { href: '/ada' }, media: { icon: { src: '/ada.svg', alt: 'Ada' } } };
+const stub = { type: 'user', id: '1', entity_ref: 'e1' };
+const entityNode = (actor, id = 'entity') => ({ ...activity, id, actor });
+
+test('a page with inline_entities on or off reads each entity from its entities map', () => {
+    for (const actor of [ada, stub]) {
+        const html = raw('FeedStream', { page: { data: [entityNode(actor)], next_cursor: null, entities: { e1: ada }, media: [] } });
+        assert.match(html, /Ada Lovelace/);
+        assert.match(html, /href="\/ada"/);
+        assert.match(html, /src="\/ada\.svg"/);
+    }
+    // No map (missing, empty object or PHP's `[]`): the inline copy draws.
+    for (const entities of [undefined, [], {}]) {
+        assert.match(raw('FeedStream', { page: { data: [entityNode(ada)], next_cursor: null, entities } }), /href="\/ada"/);
+    }
+    // A ref missing from the map falls back to the inline copy.
+    assert.match(raw('FeedStream', { page: { data: [entityNode({ ...ada, entity_ref: 'e9' })], next_cursor: null, entities: { e1: { ...ada, label: 'Wrong' } } } }), /Ada Lovelace/);
+    // The map entry then reads its link and media by media_ref.
+    const bare = { type: 'user', id: '1', label: 'Ada Lovelace', entity_ref: 'e1', media_ref: 'm1' };
+    const viaMedia = kit.readPage({ data: [entityNode(stub)], next_cursor: null, entities: { e1: bare }, media: { m1: mapped } });
+    assert.equal(viaMedia.items[0].actor.link.href, '/from-map');
+    // Every depth: pinned roles, samples, featured and children of a group.
+    const groupStubs = { ...group, actor: stub, object: stub, children: [entityNode(stub, 'child')], sample: { actors: [stub], featured: [stub] } };
+    const page = kit.readPage({ data: [groupStubs], next_cursor: null, entities: { e1: ada }, media: [] });
+    const item = page.items[0];
+    for (const entity of [item.actor, item.object, item.children[0].actor, item.sample.actors[0], item.sample.featured[0]]) {
+        assert.equal(entity.label, 'Ada Lovelace');
+        assert.equal(entity.media.icon.src, '/ada.svg');
+    }
+});
+
+test('appendPage merges each loaded page\'s entities map for load-more', () => {
+    const grace = { ...ada, id: '2', entity_ref: 'e2', label: 'Grace Hopper', link: { href: '/grace' } };
+    const first = { data: [entityNode(stub)], next_cursor: 'c2', entities: { e1: ada } };
+    const second = { data: [entityNode({ type: 'user', id: '2', entity_ref: 'e2' }, 'older')], next_cursor: null, entities: { e2: grace } };
+    const merged = kit.appendPage(first, second);
+    assert.deepEqual(Object.keys(merged.entities), ['e1', 'e2']);
+    const html = raw('FeedStream', { page: merged });
+    assert.match(html, /href="\/ada"/);
+    assert.match(html, /href="\/grace"/);
+    assert.deepEqual(kit.appendPage(first, { data: [], next_cursor: null, entities: [] }).entities, { e1: ada });
+});

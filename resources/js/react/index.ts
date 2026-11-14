@@ -18,6 +18,6 @@ export type { BodyProps } from './body';
 export type * from '../shared/types';
 export * from '../shared/rail';
 export type { FeedViewer } from '../shared/viewer';
-export { appendPage, readMediaMap, readPage, resolveMedia } from '../shared/page';
+export { appendPage, readEntityMap, readMediaMap, readPage, resolveEntities, resolveMedia } from '../shared/page';
 export type { FeedPageLike } from '../shared/page';
 export { inlineCode } from './inlineCode';

@@ -29,8 +29,9 @@ final class Page
     {
         $read = self::envelope($page);
         $map = self::mediaMap($page);
+        $entities = self::entityMap($page);
 
-        return $map === [] ? $read : ['items' => $read['items']->map(fn ($item) => self::resolve($item, $map)), 'cursor' => $read['cursor']];
+        return $map === [] && $entities === [] ? $read : ['items' => $read['items']->map(fn ($item) => self::resolve($item, $map, $entities)), 'cursor' => $read['cursor']];
     }
 
     /**
@@ -41,10 +42,29 @@ final class Page
      */
     public static function mediaMap(mixed $page): array
     {
+        return self::map($page, 'media');
+    }
+
+    /**
+     * The page's entity map (storyfeed/storyfeed#249): each distinct entity
+     * by its `entity_ref`. Missing, empty or `[]` means no map.
+     *
+     * @return array<string, array<array-key, mixed>>
+     */
+    public static function entityMap(mixed $page): array
+    {
+        return self::map($page, 'entities');
+    }
+
+    /**
+     * @return array<string, array<array-key, mixed>>
+     */
+    private static function map(mixed $page, string $key): array
+    {
         $map = match (true) {
-            is_object($page) && method_exists($page, 'media') => $page->media(),
-            is_array($page) => $page['media'] ?? null,
-            $page instanceof Arrayable => $page->toArray()['media'] ?? null,
+            is_object($page) && method_exists($page, $key) => $page->{$key}(),
+            is_array($page) => $page[$key] ?? null,
+            $page instanceof Arrayable => $page->toArray()[$key] ?? null,
             default => null,
         };
 
@@ -56,14 +76,19 @@ final class Page
     }
 
     /**
-     * An item with every entity's `link` and `media` read from the page's
-     * map by its `media_ref`, falling back to the inline copies.
+     * An item with every entity read from the page's entity map by its
+     * `entity_ref`, falling back to the inline copy (a `{type, id,
+     * entity_ref}` stub with core's `inline_entities` off), then its `link`
+     * and `media` from the media map by its `media_ref`, falling back to the
+     * inline copies. Every depth resolves: roles, group pinned roles,
+     * samples, featured and children.
      *
      * @param  array<string, array<array-key, mixed>>  $map
+     * @param  array<string, array<array-key, mixed>>  $entities
      */
-    public static function resolve(mixed $value, array $map): mixed
+    public static function resolve(mixed $value, array $map, array $entities = []): mixed
     {
-        if ($map === []) {
+        if ($map === [] && $entities === []) {
             return $value;
         }
 
@@ -76,9 +101,14 @@ final class Page
             return $value;
         }
 
+        $entityRef = $value['entity_ref'] ?? null;
+        if (is_string($entityRef) && isset($entities[$entityRef])) {
+            $value = [...$value, ...$entities[$entityRef]];
+        }
+
         foreach ($value as $key => $child) {
             if (is_array($child)) {
-                $value[$key] = self::resolve($child, $map);
+                $value[$key] = self::resolve($child, $map, $entities);
             }
         }
 

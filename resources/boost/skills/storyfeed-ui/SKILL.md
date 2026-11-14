@@ -158,7 +158,7 @@ Retune a size's limits with `--sf-image-size-<name>` and `--sf-image-size-<name>
 
 Blade also takes `viewer` (a model), `timezone` and `renderers`. Vue emits `load-more`; React takes `onLoadMore`, `loadingMore` and `empty`.
 
-When loading more, append with `appendPage(previous, next)` from `shared/page` (React: the kit index): it concatenates the nodes and merges each page's `media` map, which entities read their `link` and `media` from by `media_ref` (core 0.26; required once the app turns `storyfeed.payload.inline_media` off).
+When loading more, append with `appendPage(previous, next)` from `shared/page` (React: the kit index): it concatenates the nodes and merges each page's `entities` map, which entities are read from by `entity_ref` (core 0.27; required once the app turns `storyfeed.payload.inline_entities` off), and its `media` map, which they read their `link` and `media` from by `media_ref` (core 0.26; required once the app turns `storyfeed.payload.inline_media` off).
 
 **Dense rows.** A group's expanded members draw as dense rows: the same row without the rail's secondary badge. `child-rail` (React `childRail`) sets their posture independently, for example `rail="actor" child-rail="activity-only"`.
 

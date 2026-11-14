@@ -35,6 +35,12 @@ export interface FeedEntity {
      * paginated entities carry no `link` or `media` of their own.
      */
     media_ref?: string | null;
+    /**
+     * The key of this entity in its page's `entities` map (core 0.27,
+     * additive). Null off a page. With core's `inline_entities` off,
+     * paginated entities are `{ type, id, entity_ref }` stubs.
+     */
+    entity_ref?: string | null;
     /** Core 0.17's single link shape, which replaces `url`, `modal` and `attributes`. */
     link?: { href: string | null; modal?: boolean; attributes?: Record<string, unknown> } | null;
     /**
@@ -201,8 +207,13 @@ export interface FeedPagePayload {
     sync_token?: string | null;
     /** Core 0.26: each distinct `{ link, media }` by `media_ref`. Empty serializes as `[]`. */
     media?: FeedMediaMap | unknown[];
+    /** Core 0.27: each distinct entity by `entity_ref`. Empty serializes as `[]`. */
+    entities?: FeedEntityMap | unknown[];
     [key: string]: unknown;
 }
 
 /** A page's media map (storyfeed/storyfeed#242), keyed by `media_ref`. */
 export type FeedMediaMap = Record<string, { link: FeedEntity['link']; media: FeedMedia | null }>;
+
+/** A page's entity map (storyfeed/storyfeed#249), keyed by `entity_ref`. */
+export type FeedEntityMap = Record<string, FeedEntity>;
