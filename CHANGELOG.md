@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.16.2 - 2026-11-17
+
+### Fixed
+
+- The Vue and React kits name a removed entity by the last segment of its former type, in words, as core's Blade fallback does. An app without a morph map read "a removed App\\Modules\\Sales\\Models\\LineItem"; it now reads "a removed line item". Morph aliases read as before.
+
 ## v0.16.1 - 2026-11-15
 
 ### Changed

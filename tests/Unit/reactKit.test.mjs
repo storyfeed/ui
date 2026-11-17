@@ -144,6 +144,10 @@ test('avatars show icons, deterministic colours and one-letter badges; tombstone
         text(raw('EntityLink', { entity: { ...deleted, label: null } })),
         /a removed user/,
     );
+    assert.match(
+        text(raw('EntityLink', { entity: { ...deleted, label: null, tombstone: { formerType: 'App\\Modules\\Sales\\Models\\LineItem' } } })),
+        /a removed line item/,
+    );
 });
 test('headlines retain unknown tokens, lists, totals, closure grammar and fallback', () => {
     assert.match(

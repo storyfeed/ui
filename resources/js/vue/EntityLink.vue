@@ -2,6 +2,7 @@
 import { computed, inject } from 'vue';
 import { FEED_LINK } from './keys';
 import { entityLink, linkProps } from '../shared/link';
+import { formerNoun } from '../shared/tombstone';
 import type { FeedEntity } from '../shared/types';
 
 const props = defineProps<{
@@ -17,7 +18,6 @@ const props = defineProps<{
 
 const linkComponent = inject(FEED_LINK, 'a');
 
-const words = (type: string) => type.replace(/[._-]/g, ' ');
 const article = (noun: string) => (/^[aeiou]/i.test(noun) ? 'an' : 'a');
 
 /**
@@ -38,7 +38,7 @@ const label = computed(() => {
     }
 
     if (tombstone.value) {
-        const noun = `removed ${words(tombstone.value.formerType)}`;
+        const noun = `removed ${formerNoun(tombstone.value.formerType)}`;
 
         return props.entity.label ?? `${article(noun)} ${noun}`;
     }

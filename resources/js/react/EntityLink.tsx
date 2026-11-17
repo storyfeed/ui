@@ -1,6 +1,7 @@
 import type { FeedEntity } from '../shared/types';
 import { useFeedOptions } from './context';
 import { entityLink, linkProps } from '../shared/link';
+import { formerNoun } from '../shared/tombstone';
 export default function EntityLink({
     entity,
     fallback,
@@ -15,7 +16,7 @@ export default function EntityLink({
     const { FEED_LINK: Link = 'a' } = useFeedOptions();
     const tombstone = entity?.tombstone;
     const noun = tombstone
-        ? `removed ${tombstone.formerType.replace(/[._-]/g, ' ')}`
+        ? `removed ${formerNoun(tombstone.formerType)}`
         : '';
     const label = !entity
         ? (fallback ?? 'something')
