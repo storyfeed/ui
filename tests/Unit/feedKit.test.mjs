@@ -60,6 +60,15 @@ test('avatars show icons and deleted entities remain muted and unlinked', async 
         await render('/resources/js/vue/EntityLink.vue', { entity: deleted }),
         /<a/,
     );
+    const fqcn = await render('/resources/js/vue/EntityLink.vue', {
+        entity: { ...deleted, label: null, tombstone: { formerType: 'App\\Modules\\Sales\\Models\\LineItem' } },
+    });
+    assert.match(fqcn, /a removed line item/);
+    assert.doesNotMatch(fqcn, /Modules/);
+    assert.match(
+        await render('/resources/js/vue/EntityLink.vue', { entity: { ...deleted, label: null } }),
+        /a removed user/,
+    );
     const badge = await render('/resources/js/vue/EntityAvatar.vue', {
         entity: { ...entity, media: null },
         size: 'badge',
