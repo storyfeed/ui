@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.16.3 - 2026-11-18
+
+### Changed
+
+- Allow storyfeed/storyfeed ^0.30.
+
 ## v0.16.2 - 2026-11-17
 
 ### Fixed
