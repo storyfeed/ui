@@ -256,7 +256,7 @@ try {
             const tops = {};
             for (const layer of document.querySelectorAll('.layer')) {
                 const key = [...layer.classList].find(name => name.startsWith('L-')).slice(2);
-                const feed = layer.querySelector('[role=feed]');
+                const feed = layer.querySelector('[role=list]');
                 if (!feed) continue;
                 const rows = [...feed.children].filter(child => child.tagName === 'ARTICLE');
                 const top = layer.getBoundingClientRect().top;
@@ -305,7 +305,7 @@ try {
 
         CAM = await page.evaluate(() => {
             const stage = document.getElementById('stage').getBoundingClientRect();
-            const rows = [...document.querySelectorAll('.outer [role=feed] > article')];
+            const rows = [...document.querySelectorAll('.outer [role=list] > [role=listitem] > article')];
             rows.forEach((row, i) => row.classList.add(`O${i}`));
             // Your live picture sits over your row's picture. The next look's row
             // gets the typing bubble that the ending camera dives into.

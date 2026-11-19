@@ -29,7 +29,7 @@ it('draws an activity row: glyph, linked headline and time', function () {
     $html = render_feed();
 
     expect($html)
-        ->toContain('<div data-sf-feed> <div role="feed"> <article data-sf-row>')
+        ->toContain('<div data-sf-feed> <div role="list"> <div role="listitem"> <article data-sf-row>')
         ->toContain('<span data-sf-intent="success" data-sf-glyph="shopping-bag" aria-hidden="true"> <svg')
         ->toContain('<span data-sf-headline><a data-sf-subject href="/users/1">Dana</a> placed <a data-sf-subject href="/orders/1" target="_blank">Order #1042</a></span>')
         ->toContain('</span> </div> <div> <time datetime="2026-09-25T12:00:00+00:00" title="Friday, 25 September 2026, 12:00:00 PM">just now</time>')

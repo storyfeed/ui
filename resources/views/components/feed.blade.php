@@ -10,7 +10,7 @@
 @if ($items->isEmpty())
         <div class="sf-empty rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">{{ $empty ?? __('No activity yet.') }}</div>
 @else
-        <div role="feed">
+        <div role="list">
 @foreach ($items as $item)
                 @php
                     $at = $item->publishedAt();
@@ -25,25 +25,28 @@
                     };
                 @endphp
 @if ($grouped && $day !== null && $day !== $previousDay)
-                    <x-storyfeed::divider :label="$label" :divider-style="$dividerStyle" />
+                    <x-storyfeed::divider role="listitem" :label="$label" :divider-style="$dividerStyle" />
 @endif
                 {{-- A dateless entry neither starts a day nor ends one. --}}
                 @php($previousDay = $day ?? $previousDay)
+                {{-- Every child of the list is a list item: a day divider, or one row with its own divider (ui#110). --}}
+                <div role="listitem">
 @if (isset($dividers[$item->id()]))
                     <x-storyfeed::divider :label="$dividers[$item->id()]" :divider-style="$dividerStyle" />
 @endif
                 <x-storyfeed::item :item="$item" :last="$loop->last && $cursor === null" :rail="$rail" :child-rail="$childRail" :interactive="$interactive" :collapsed="$collapsed" :media-objects="$mediaObjects" :timezone="$timezone" :renderers="$renderers" />
+                </div>
 @endforeach
         </div>
 @once
-    {{-- Rows a host inserts later (Livewire, Turbo Streams, htmx) ease in at the head and fade in below (ui#30): ARRIVAL_CLASSES in resources/js/shared/motion.ts. The first page draws still. --}}
+    {{-- Rows a host inserts later (Livewire, Turbo Streams, htmx), each a role=listitem, ease in at the head and fade in below (ui#30): ARRIVAL_CLASSES in resources/js/shared/motion.ts. The first page draws still. --}}
     <script>
         (function () {
             var classes = { head: 'motion-safe:transition-[height,opacity,translate] motion-safe:duration-200 motion-safe:ease-out [interpolate-size:allow-keywords] overflow-hidden starting:h-0 starting:opacity-0 starting:-translate-y-2', page: 'motion-safe:transition-opacity motion-safe:duration-200 motion-safe:ease-out starting:opacity-0' };
             var observe = function () { new MutationObserver(function (records) {
                 records.forEach(function (record) {
                     var feed = record.target;
-                    if (!(feed instanceof Element) || !feed.matches('.sf-feed > [role="feed"]')) return;
+                    if (!(feed instanceof Element) || !feed.matches('.sf-feed > [role="list"]')) return;
                     var added = [].slice.call(record.addedNodes).filter(function (node) { return node instanceof Element; });
                     var kept = [].slice.call(feed.children).filter(function (row) { return added.indexOf(row) === -1; });
                     if (!added.length || !kept.length) return;

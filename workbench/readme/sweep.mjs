@@ -35,7 +35,7 @@ try {
                 const loop = animations.find(animation => animation.effect.target.matches('.L-plain')).effect.getTiming().duration;
                 const layers = [...document.querySelectorAll('.layer')];
                 const layerName = layer => [...layer.classList].find(name => name.startsWith('L-'));
-                const rows = parent => [...parent.querySelector('[role=feed]').children].filter(child => child.tagName === 'ARTICLE');
+                const rows = parent => [...parent.querySelectorAll('[role=list] > [role=listitem] > article')];
                 const opacity = element => {
                     let value = 1;
                     for (let parent = element; parent; parent = parent.parentElement) value *= +getComputedStyle(parent).opacity;
