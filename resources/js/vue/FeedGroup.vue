@@ -93,6 +93,14 @@ const entities = computed(() => ({
  */
 const strip = computed(() => stripOf(props.item) ?? { tiles: [], overflow: 0 });
 
+// Nothing to reveal when the strip already shows every member (ui#126).
+const togglable = computed(
+    () =>
+        props.interactive &&
+        props.item.children.length > 0 &&
+        !(strip.value.tiles.length >= props.item.count && strip.value.overflow === 0),
+);
+
 /**
  * The group's actor strip: every actor's face, newest first, up to eight, then
  * "+N" (ui#48). Hidden when expanded, like the feature strip.
@@ -197,7 +205,7 @@ const hiddenBeyondChildren = computed(
                 v-if="actors.faces.length && !expanded"
                 :faces="actors.faces"
                 :overflow="actors.overflow"
-                :toggle="interactive && item.children.length > 0 ? { expanded, controls: membersId, label: `Show all ${item.count}` } : null"
+                :toggle="togglable ? { expanded, controls: membersId, label: `Show all ${item.count}` } : null"
                 @toggle="toggle"
             />
 
@@ -205,7 +213,7 @@ const hiddenBeyondChildren = computed(
                 v-if="strip.tiles.length && !expanded"
                 :tiles="strip.tiles"
                 :overflow="strip.overflow"
-                :toggle="interactive && item.children.length > 0 ? { expanded, controls: membersId, label: `Show all ${item.count}` } : null"
+                :toggle="togglable ? { expanded, controls: membersId, label: `Show all ${item.count}` } : null"
                 @toggle="toggle"
             />
 
@@ -214,7 +222,7 @@ const hiddenBeyondChildren = computed(
             <slot name="annotations" :node="item" />
 
             <button
-                v-if="interactive && item.children.length > 0"
+                v-if="togglable"
                 type="button"
                 data-sf-toggle
                 class="sf-toggle mt-1 inline-flex min-h-6 items-center cursor-pointer border-0 bg-transparent p-0 text-sm leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring print:hidden"

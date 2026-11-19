@@ -598,6 +598,14 @@ test('a group strip previews what its members\' rows show: a picture they draw, 
     const controls = button.match(/aria-controls="([^"]+)"/)[1];
     assert.ok(live.includes(`id="${controls}"`), 'the +N tile controls the members');
     assert.doesNotMatch(await renderRaw('/resources/js/vue/FeedGroup.vue', { item: six, interactive: false }), /<button[^>]*sf-media-strip__more/);
+    // ui#126: "Show all N" only when expanding reveals something: shown at 3 members with 2 tiles, hidden at 2 with 2.
+    const members = (objects) => ({ ...group, count: objects.length, children: objects.map((object, n) => stripMember(n, object)), children_truncated: false, sample: { actors: group.sample.actors } });
+    const three = await renderRaw('/resources/js/vue/FeedGroup.vue', { item: members([stripPhoto(1), stripPhoto(2), null]) });
+    assert.match(three, /Show all 3/);
+    assert.match(three, /data-sf-toggle/);
+    const two = await renderRaw('/resources/js/vue/FeedGroup.vue', { item: members([stripPhoto(1), stripPhoto(2)]) });
+    assert.doesNotMatch(two, /Show all|data-sf-toggle|<details/);
+    assert.match(two, /data-sf-children[^>]*hidden print:block/);
 });
 
 test('expanding a group hides its strip and keeps its rail faces in place (ui#47)', async () => {

@@ -268,6 +268,13 @@ it('draws a group strip previewing what its members\' rows show: a picture they 
     $live = Blade::render('<x-storyfeed::group :group="$item" />', compact('item'));
     expect($live)->toMatch('/<button type="button" data-sf-toggle aria-label="Show all 6" aria-expanded="false" aria-controls="sf-members-g6"/')->toContain('id="sf-members-g6"', 'ontoggle=');
     expect(Blade::render('<x-storyfeed::group :group="$item" :interactive="false" />', compact('item')))->not->toContain('<button type="button" aria-label="Show all 6"');
+
+    // ui#126: "Show all N" only when expanding reveals something: shown at 3 members with 2 tiles, hidden at 2 with 2.
+    $members = fn (array $objects) => ['kind' => 'group', 'headline' => 'Updates', 'count' => count($objects), 'children' => array_map(fn ($object) => ['kind' => 'activity', 'headline' => 'Member', 'object' => $object], $objects)];
+    $item = $members([$photo(1), $photo(2), null]);
+    expect(Blade::render('<x-storyfeed::group :group="$item" />', compact('item')))->toContain('Show all 3', 'data-sf-toggle');
+    $item = $members([$photo(1), $photo(2)]);
+    expect(Blade::render('<x-storyfeed::group :group="$item" />', compact('item')))->not->toContain('Show all', 'data-sf-toggle', '<details')->toMatch('/data-sf-children[^>]*hidden print:block/');
 });
 
 it('morphs a group through its summary, with names only while it morphs (ui#30)', function () {
@@ -454,7 +461,7 @@ it('draws several actors as a diagonal pair whose front face keeps the verb badg
 
 it('hides a group\'s strip and keeps its rail faces in place when it expands (ui#47)', function (bool $interactive) {
     $photo = fn (string $src) => ['type' => 'photo', 'id' => $src, 'label' => 'Photo', 'url' => '/photos'.$src, 'body' => [['$body' => 'Storyfeed/Body/Image', 'image' => 'preview']], 'media' => ['preview' => ['src' => $src]]];
-    $item = ['kind' => 'group', 'headline' => 'Ana and Ben uploaded photos', 'count' => 2, 'glyph' => 'file-up',
+    $item = ['kind' => 'group', 'headline' => 'Ana and Ben uploaded photos', 'count' => 3, 'glyph' => 'file-up',
         'sample' => ['actors' => [['id' => 'ana', 'label' => 'Ana'], ['id' => 'ben', 'label' => 'Ben']]],
         'children' => [['kind' => 'activity', 'headline' => 'Ana uploaded a photo', 'object' => $photo('/one.jpg')], ['kind' => 'activity', 'headline' => 'Ben uploaded a photo', 'object' => $photo('/two.jpg')]]];
     $html = Blade::render('<x-storyfeed::feed :items="[$item]" rail="actor" :interactive="$interactive" :collapsed="false" />', compact('item', 'interactive'));

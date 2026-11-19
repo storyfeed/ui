@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.16.4 - 2026-11-19
+
+### Fixed
+
+- A group whose media strip already shows every member, with no "+N", no longer offers "Show all N", in the Blade, Vue and React kits: expanding revealed nothing new. A group with more members than tiles still toggles (#126).
+
 ## v0.16.3 - 2026-11-18
 
 ### Changed

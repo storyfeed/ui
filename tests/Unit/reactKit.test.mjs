@@ -572,6 +572,14 @@ test('a group strip previews what its members\' rows show: a picture they draw, 
     const controls = button.match(/aria-controls="([^"]+)"/)[1];
     assert.ok(live.includes(`id="${controls}"`), 'the +N tile controls the members');
     assert.doesNotMatch(raw('FeedGroup', { item: six, interactive: false }), /<button[^>]*sf-media-strip__more/);
+    // ui#126: "Show all N" only when expanding reveals something: shown at 3 members with 2 tiles, hidden at 2 with 2.
+    const members = (objects) => ({ ...group, count: objects.length, children: objects.map((object, n) => stripMember(n, object)), children_truncated: false, sample: { actors: group.sample.actors } });
+    const three = raw('FeedGroup', { item: members([stripPhoto(1), stripPhoto(2), null]) });
+    assert.match(three, /Show all 3/);
+    assert.match(three, /data-sf-toggle/);
+    const two = raw('FeedGroup', { item: members([stripPhoto(1), stripPhoto(2)]) });
+    assert.doesNotMatch(two, /Show all|data-sf-toggle|<details/);
+    assert.match(two, /data-sf-children[^>]*hidden print:block/);
 });
 test('native details open unnamed groups, preserve truncated totals and independent child rails', () => {
     const html = raw('FeedGroup', {
