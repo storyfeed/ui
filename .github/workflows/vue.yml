@@ -17,19 +17,6 @@ on:
       - 'package*.json'
       - '.github/workflows/vue.yml'
   pull_request:
-    paths:
-      - 'composer.json'
-      - 'README.md'
-      - 'CHANGELOG.md'
-      - 'resources/js/**'
-      - 'tests/Unit/**'
-      - 'tests/Feature/InstallUiCommandTest.php'
-      - 'tests/Fixtures/InstallKitsTest.php'
-      - 'src/Commands/**'
-      - 'src/UiServiceProvider.php'
-      - 'workbench/**'
-      - 'package*.json'
-      - '.github/workflows/vue.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
