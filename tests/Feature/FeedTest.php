@@ -124,8 +124,9 @@ it('opens a group with no headline on its members', function () {
 
     expect($group->headline()->isFallback())->toBeTrue()
         ->and(render_feed($page))
-        ->toContain('<span data-sf-headline>2 activities</span>')
-        ->toContain('<details open ontoggle=');
+        ->toContain('<span data-sf-headline>2 activities</span>', 'data-sf-children>')
+        // Its strip already showed both members, so nothing toggles and nothing repeats them (ui#126).
+        ->not->toContain('<details', 'data-sf-strip');
 });
 
 it('links to older activity with the next cursor, and not from the last page', function () {

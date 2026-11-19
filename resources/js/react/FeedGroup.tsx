@@ -45,14 +45,17 @@ export default function FeedGroup({
         toggleOpen();
     };
     const membersId = `sf-members-${useId()}`;
-    const Disclosure = interactive ? 'details' : 'div';
     const hidden = Math.max(0, item.count - item.children.length);
     // One tile per member activity, previewing the members, so expanding hides it (ui#47).
     const strip = stripOf(item);
     // Every actor's face, newest first, up to eight, then "+N"; hidden when expanded too (ui#48).
     const actors = actorStrip(item);
+    // Nothing to reveal when the strip already shows every member (ui#126).
+    const togglable =
+        interactive && item.children.length > 0 && !((strip?.tiles.length ?? 0) >= item.count && !strip?.overflow);
+    const Disclosure = togglable ? 'details' : 'div';
     const toggle =
-        interactive && item.children.length > 0
+        togglable
             ? { expanded: isOpen, controls: membersId, label: `Show all ${item.count}`, onToggle: toggleOpen }
             : null;
     return (
@@ -108,13 +111,13 @@ export default function FeedGroup({
                 {item.children.length > 0 && (
                     <Disclosure
                         className={
-                            interactive
+                            togglable
                                 ? 'group/disclosure sf-disclosure print:[&::details-content]:block print:[&::details-content]:[content-visibility:visible]'
                                 : undefined
                         }
-                        {...(interactive ? { open: isOpen, onToggle: (event: SyntheticEvent<HTMLElement>) => setOpen((event.currentTarget as HTMLDetailsElement).open) } : {})}
+                        {...(togglable ? { open: isOpen, onToggle: (event: SyntheticEvent<HTMLElement>) => setOpen((event.currentTarget as HTMLDetailsElement).open) } : {})}
                     >
-                        {interactive && (
+                        {togglable && (
                             <summary onClick={onSummaryClick} data-sf-toggle="" className="sf-toggle mt-1 inline-flex min-h-6 items-center cursor-pointer list-none rounded-sm border-0 bg-transparent p-0 text-sm leading-[1.6] font-medium text-muted-foreground underline-offset-2 hover:text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-ring [&::-webkit-details-marker]:hidden print:hidden">
                                 <span className="group-open/disclosure:hidden">{`Show all ${item.count}`}</span>
                                 <span className="hidden group-open/disclosure:inline">
@@ -126,7 +129,7 @@ export default function FeedGroup({
                             id={membersId}
                             data-sf-children=""
                             className={`sf-children mt-3 ${
-                                !interactive && !open
+                                !togglable && !open
                                     ? 'hidden print:block'
                                     : ''
                             }`}
