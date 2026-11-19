@@ -65,3 +65,9 @@ push to main, tag or release; the maintainer handles those steps.
 This repository is public. Never publish secrets, local absolute paths,
 private app or client names, or internal notes. Do not touch or describe
 prior implementations without the local-only client-name guidance.
+
+## Amp threads
+
+- `.agents/setup` prepares a fresh Amp orb (Debian 13) to run this repo's gates. It needs no secrets, and running it again is safe.
+- The lead's own thread may merge and release on green under the house rules and the standing gos (routine releases ship on green).
+- Helper orbs only branch and open draft pull requests. They never merge, tag or release.
