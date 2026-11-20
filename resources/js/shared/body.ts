@@ -29,7 +29,7 @@ const drawsCoreBody: DrawsBody = (name) => BODY_NAMES.includes(name);
  * first one on a branch; the depth bound matches core's own `details` check.
  */
 export function formsIn(data: unknown, depth = 4, draws: DrawsBody = drawsCoreBody): ResolvedDetail[] {
-    if (depth < 0 || data === null || typeof data !== 'object') return [];
+    if (depth < 0 || data === null || typeof data !== 'object') {return [];}
 
     const map = data as Record<string, any>;
     const name = map.$body;
@@ -50,7 +50,7 @@ export function formsIn(data: unknown, depth = 4, draws: DrawsBody = drawsCoreBo
  * reason.
  */
 export function resolve(body: unknown, draws: DrawsBody = drawsCoreBody): ResolvedDetail[] {
-    if (!Array.isArray(body)) return [];
+    if (!Array.isArray(body)) {return [];}
 
     return body.flatMap((form) => {
         const name = (form ?? {})['$body'];
@@ -81,8 +81,10 @@ export function bodyFrame(payload: Record<string, any>): { style: Record<string,
     const height = meta && typeof meta === 'object' ? meta.maxHeight : undefined;
     // `none`, or a CSS length as core's `FeedBody::maxHeight()` accepts it.
     const valid = typeof height === 'string' && (height === 'none' || /^(0|\d*\.?\d+(px|rem|em|ex|ch|lh|rlh|%|vh|svh|lvh|dvh|vw|svw|lvw|dvw|vmin|vmax|cm|mm|q|in|pt|pc))$/i.test(height));
-    if (!valid) return { style: undefined, capped: false };
-    if (height === 'none') return { style: { '--sf-prose-max-h': 'none' }, capped: false };
+
+    if (!valid) {return { style: undefined, capped: false };}
+
+    if (height === 'none') {return { style: { '--sf-prose-max-h': 'none' }, capped: false };}
 
     return { style: { '--sf-prose-max-h': 'none', '--sf-body-max-h': height }, capped: true };
 }
@@ -101,11 +103,14 @@ export function isTruncated(payload: Record<string, any>): boolean {
  * Mirrors `Bodies::picture()`.
  */
 export function pictureOf(payload: Record<string, any>, media: Record<string, any> | null | undefined): Record<string, any> | null {
-    if (payload?.$body !== 'Storyfeed/Body/Image') return null;
+    if (payload?.$body !== 'Storyfeed/Body/Image') {return null;}
+
     const version = typeof payload.$v === 'number' ? payload.$v : 1;
     const own = version >= 3 && typeof payload.src === 'string' && payload.src !== '';
     const picture = own ? { src: payload.src } : slotOf(media, payload.image ?? (version < 3 ? 'preview' : null));
-    if (typeof picture?.src !== 'string' || picture.src === '') return null;
+
+    if (typeof picture?.src !== 'string' || picture.src === '') {return null;}
+
     // A declared size wins; with none, the slot's own stands.
     const size = Object.fromEntries((['width', 'height'] as const)
         .filter((key) => Number.isInteger(payload[key]) && payload[key] > 0)
@@ -123,8 +128,10 @@ export function pictureOf(payload: Record<string, any>, media: Record<string, an
 
 /** An entity's picture for a slot a body names: a built-in one, or `slots.<name>`. */
 function slotOf(media: Record<string, any> | null | undefined, slot: unknown): Record<string, any> | null {
-    if (typeof slot !== 'string') return null;
-    if (['icon', 'preview', 'image'].includes(slot)) return media?.[slot] ?? null;
+    if (typeof slot !== 'string') {return null;}
+
+    if (['icon', 'preview', 'image'].includes(slot)) {return media?.[slot] ?? null;}
+
     const name = /^slots\.([A-Za-z][A-Za-z0-9_-]*)$/.exec(slot)?.[1];
 
     return name !== undefined && media?.slots && Object.hasOwn(media.slots, name) ? media.slots[name] ?? null : null;
@@ -144,10 +151,13 @@ export function iconOf(payload: Record<string, any>, media: Record<string, any> 
 /** Only an Image body opts a sampled entity into the photograph strip. */
 export function imageOf(entity: any): any {
     const bodies = [...resolve(entity?.body), ...formsIn(entity?.data)];
+
     for (const { payload } of bodies) {
         const image = pictureOf(payload, entity?.media);
-        if (image) return image;
+
+        if (image) {return image;}
     }
+
     return null;
 }
 
@@ -166,6 +176,7 @@ export function imageClasses(payload: Record<string, any>, fallback?: unknown): 
     const own = payload?.$meta?.size;
     const valid = (value: unknown): value is ImageSize => typeof value === 'string' && Object.hasOwn(IMAGE_SIZE_CLASSES, value);
     const size = valid(own) ? own : valid(fallback) ? fallback : undefined;
+
     return size ? IMAGE_SIZE_CLASSES[size] : undefined;
 }
 

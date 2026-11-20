@@ -41,7 +41,8 @@ const FORMS: Record<string, Component> = {
     'Storyfeed/Body/Callout': Callout,
 }
 
-import { inject, type App, type Plugin } from 'vue';
+import { inject } from 'vue';
+import type { App, Plugin } from 'vue';
 import { fallbackOf, formsIn as discover, resolve as resolveBodies } from '../../shared/body';
 import { FEED_BODIES } from '../keys';
 export { imageOf } from '../../shared/body';

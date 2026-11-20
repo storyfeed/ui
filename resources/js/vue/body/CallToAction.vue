@@ -2,7 +2,8 @@
 import { computed, inject } from 'vue'
 import { FEED_LINK } from '../keys'
 import { readCallToAction } from '../../shared/callToAction'
-import { linkProps, ownLink, type ResolvedLink } from '../../shared/link'
+import { linkProps, ownLink } from '../../shared/link'
+import type { ResolvedLink } from '../../shared/link'
 
 /**
  * `Storyfeed/Body/CallToAction` — an optional heading and a sentence or two,

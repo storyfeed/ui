@@ -2,7 +2,8 @@
 import { computed, inject } from 'vue'
 import { FEED_LINK } from '../keys'
 import { readTable } from '../../shared/table'
-import { bodyLink, linkProps, ownLink, type ResolvedLink } from '../../shared/link'
+import { bodyLink, linkProps, ownLink } from '../../shared/link'
+import type { ResolvedLink } from '../../shared/link'
 
 /**
  * `Storyfeed/Body/Table` — a standard table inside Typography's `prose`,

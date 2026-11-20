@@ -1,5 +1,6 @@
 import { imageOf } from './body';
-import { entityLink, type ResolvedLink } from './link';
+import { entityLink } from './link';
+import type { ResolvedLink } from './link';
 import type { ActivityNode, FeedEntity, GroupNode } from './types';
 
 /**
@@ -39,8 +40,9 @@ export function stripMembers(group: GroupNode): ActivityNode[] {
  * core sent the field.
  */
 export function featuredOf(member: ActivityNode): FeedEntity | null {
-    if (!member) return null;
-    if (!('featured' in member)) return member.object ?? null;
+    if (!member) {return null;}
+
+    if (!('featured' in member)) {return member.object ?? null;}
 
     return member.featured ? ((member as Record<string, any>)[member.featured] ?? null) : null;
 }
@@ -52,6 +54,7 @@ export function featuredOf(member: ActivityNode): FeedEntity | null {
  */
 export function stripEntities(group: GroupNode): { entities: FeedEntity[]; total: number } {
     const featured = group.sample?.featured;
+
     if (Array.isArray(featured)) {
         const total = group.distinct?.featured;
 
@@ -84,7 +87,8 @@ function sameness(tile: StripTile): string {
 export function strip(group: GroupNode): { tiles: StripTile[]; overflow: number } | null {
     const { entities, total } = stripEntities(group);
     const all = entities.map(tileOf).filter((tile) => tile.image || tile.label);
-    if (new Set(all.map(sameness)).size < 2) return null;
+
+    if (new Set(all.map(sameness)).size < 2) {return null;}
 
     const tiles = all.slice(0, total > STRIP_SLOTS ? STRIP_SLOTS - 1 : STRIP_SLOTS);
 

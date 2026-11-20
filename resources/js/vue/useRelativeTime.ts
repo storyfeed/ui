@@ -76,5 +76,6 @@ export interface FeedDay {
 
 export function useFeedDays<T extends { published_at: string | null }>(items: Ref<T[]>) {
     const pinned = inject<number | null>(FEED_NOW, null);
+
     return computed(() => feedDays(items.value, pinned));
 }

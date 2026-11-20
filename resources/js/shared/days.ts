@@ -36,23 +36,28 @@ export function feedDays<T extends { published_at: string | null }>(
 ) {
     const days: { label: string | null; items: T[] }[] = [];
     let currentKey: string | null = null;
+
     for (const item of items) {
         if (item.published_at === null) {
-            if (days.length === 0) days.push({ label: null, items: [] });
+            if (days.length === 0) {days.push({ label: null, items: [] });}
         } else {
             const date = new Date(item.published_at);
             const key = date.toDateString();
+
             if (key !== currentKey) {
                 currentKey = key;
                 days.push({ label: dayLabel(date, pinned), items: [] });
             }
         }
+
         days[days.length - 1]!.items.push(item);
     }
+
     return days;
 }
 
 export function refreshDelay(iso: string, now: number): number {
     const age = now - new Date(iso).getTime();
+
     return age < 60_000 ? 1_000 : age < 3_600_000 ? 60_000 : 3_600_000;
 }

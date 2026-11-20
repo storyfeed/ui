@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue'
 import { FEED_LINK } from '../keys'
-import { bodyLink, linkProps, ownLink, type ResolvedLink } from '../../shared/link'
+import { bodyLink, linkProps, ownLink } from '../../shared/link'
+import type { ResolvedLink } from '../../shared/link'
 
 /**
  * `Storyfeed/Body/ItemList` — several things, each a name and maybe a link.
@@ -31,6 +32,7 @@ const items = computed(() => (props.payload.items ?? []).filter(Boolean).map(lin
 const more = computed(() => props.payload.more ? link(props.payload.more) : null)
 const remaining = computed(() => {
     const total = props.payload.totalItems
+
     return typeof total === 'number' ? Math.max(total - items.value.length, 0) : 0
 })
 </script>

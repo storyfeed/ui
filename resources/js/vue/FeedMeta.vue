@@ -11,6 +11,7 @@ const props = defineProps<{
     templates: (string | null | undefined)[];
 }>();
 const slots = useSlots();
+
 function hasContent(nodes: VNode[]): boolean {
     return nodes.some((node) => {
         if (node.type === Comment) {
@@ -30,6 +31,7 @@ function hasContent(nodes: VNode[]): boolean {
         return true;
     });
 }
+
 const roles = computed(() => leftoverRoles(props.node, props.templates));
 /** The time range the activity describes, after the time. */
 const range = computed(() => formatRange(props.node));

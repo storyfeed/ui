@@ -8,12 +8,14 @@ import type { FeedEntity } from './types';
 export type FeedViewer = { type: string; id: string | number } | string;
 
 export function viewerKey(viewer?: FeedViewer | null): string | null {
-    if (typeof viewer === 'string') return viewer.includes(':') ? viewer : null;
+    if (typeof viewer === 'string') {return viewer.includes(':') ? viewer : null;}
+
     return viewer && viewer.type && viewer.id != null ? `${viewer.type}:${viewer.id}` : null;
 }
 
 export function isViewer(viewer: FeedViewer | null | undefined, entity: FeedEntity | null | undefined): boolean {
     const key = viewerKey(viewer);
+
     return key !== null && !!entity?.type && key === `${entity.type}:${entity.id}`;
 }
 

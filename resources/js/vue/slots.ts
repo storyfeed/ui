@@ -1,11 +1,14 @@
-import { Comment, Fragment, Text, h, type FunctionalComponent, type VNode } from 'vue';
+import { Comment, Fragment, Text, h } from 'vue';
+import type { FunctionalComponent, VNode } from 'vue';
 
 /** Nothing but comments, whitespace and empty fragments: what an empty slot renders. */
 function rendersNothing(nodes: VNode[]): boolean {
     return nodes.every((node) => {
-        if (node.type === Comment) return true;
-        if (node.type === Text) return !String(node.children ?? '').trim();
-        if (node.type === Fragment) return !Array.isArray(node.children) || rendersNothing(node.children as VNode[]);
+        if (node.type === Comment) {return true;}
+
+        if (node.type === Text) {return !String(node.children ?? '').trim();}
+
+        if (node.type === Fragment) {return !Array.isArray(node.children) || rendersNothing(node.children as VNode[]);}
 
         return false;
     });

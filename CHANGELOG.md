@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.17.2 - 2026-11-20
+
+### Fixed
+
+- The published Vue kit (`resources/js/vue` and `resources/js/shared`) passes ESLint's `curly`, `padding-line-between-statements` and top-level `import type` rules, so a fresh `storyfeed:ui vue` copy no longer needs a `--fix` pass in apps that use them. CI lints it. No behaviour or API change (#122).
+
 ## v0.17.1 - 2026-11-20
 
 ### Added
