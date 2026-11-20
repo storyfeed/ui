@@ -1571,3 +1571,17 @@ test('appendPage merges each loaded page\'s entities map for load-more', () => {
     assert.match(html, /href="\/grace"/);
     assert.deepEqual(kit.appendPage(first, { data: [], next_cursor: null, entities: [] }).entities, { e1: ada });
 });
+
+test('resolvePage gives :items apps resolved nodes, and appendPage takes them (ui#123)', () => {
+    const off = { data: [entityNode(stub)], next_cursor: 'c2', entities: { e1: { ...ada, link: undefined, media: undefined } }, media: { m1: { link: { href: '/ada' }, media: ada.media } } };
+    const items = kit.resolvePage(off);
+    assert.equal(items[0].actor.label, 'Ada Lovelace');
+    assert.equal(items[0].actor.link.href, '/ada');
+    const html = ((props) => raw('FeedStream', props))({ items });
+    assert.match(html, /href="\/ada"/);
+    assert.match(html, /src="\/ada\.svg"/);
+    assert.deepEqual(kit.resolvePage([entityNode(ada)]), [entityNode(ada)]);
+    const grace = { ...ada, id: '2', entity_ref: 'e2', label: 'Grace Hopper', link: { href: '/grace' } };
+    const more = kit.appendPage(items, { data: [entityNode({ type: 'user', id: '2', entity_ref: 'e2' }, 'older')], next_cursor: null, entities: { e2: grace } });
+    assert.deepEqual(kit.resolvePage(more).map((node) => node.actor.label), ['Ada Lovelace', 'Grace Hopper']);
+});

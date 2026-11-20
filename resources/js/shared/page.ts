@@ -86,6 +86,16 @@ export function readPage(page: FeedPageLike): { items: FeedNode[]; nextCursor: s
 }
 
 /**
+ * A page's nodes with every entity read from its `entities` and `media` maps,
+ * for apps that pass `items` or keep their own list (ui#123): with core's
+ * `inline_entities` or `inline_media` off, raw `data` holds bare stubs.
+ * `appendPage(resolvePage(first), next)` also works, as resolved nodes need no maps.
+ */
+export function resolvePage(page: FeedPageLike): FeedNode[] {
+    return readPage(page).items;
+}
+
+/**
  * Appends a loaded page to the pages already shown, for infinite scroll and
  * load-more: the nodes concatenate, each page's `entities` and `media` maps
  * merge in, and

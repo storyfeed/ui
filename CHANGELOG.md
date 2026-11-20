@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.17.1 - 2026-11-20
+
+### Added
+
+- `resolvePage(page)` in the Vue (`shared/page.ts`) and React kits returns a page's nodes with entities read from its `entities` and `media` maps, so apps that pass `items` or keep their own list can turn core's `inline_entities` and `inline_media` off. `appendPage()` accepts a list it returned (#123).
+
 ## v0.17.0 - 2026-11-20
 
 ### Changed

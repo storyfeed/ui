@@ -62,6 +62,9 @@ which entities are read from by `entity_ref`, and its `media` map (core 0.26),
 which they read `link` and `media` from by `media_ref`. Without it, a page from
 an app with `storyfeed.payload.inline_entities` or `inline_media` off draws
 bare stubs or no links and pictures.
+Apps that pass `items` or keep their own list read each page with
+`resolvePage(page)`, which returns its nodes with the maps applied;
+`appendPage(resolvePage(first), next)` works too.
 `loadingMore` disables the pager and changes its label while a request runs.
 `empty` accepts a React node. `grouped={false}` hides day headings.
 
