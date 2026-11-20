@@ -95,8 +95,8 @@ async function morphAt(page, n) {
 // or Turbo would.
 const add = (kit, where) => kit === 'blade'
     ? page => page.evaluate(where => {
-        const feed = document.querySelector('.sf-feed > [role="feed"]');
-        const row = feed.querySelector(':scope > .sf-row:not(.sf-divider)').cloneNode(true);
+        const feed = document.querySelector('.sf-feed > [role="list"]');
+        const row = feed.querySelector(':scope > [role="listitem"]:not(.sf-divider)').cloneNode(true);
         if (where === 'head') feed.prepend(row); else feed.append(row);
     }, where)
     : page => page.evaluate(where => window.storyfeedWorkbench[where === 'head' ? 'arrive' : 'page'](), where);

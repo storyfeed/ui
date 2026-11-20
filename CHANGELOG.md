@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.17.0 - 2026-11-20
+
+### Changed
+
+- The Blade feed is now a `role="list"` whose children are all `role="listitem"`: each day divider, and one wrapper per row holding its own divider and its `<article>`. Its day dividers sat directly inside `role="feed"`, which may own only articles (axe `aria-required-children`, critical). This matches the Vue and React kits (#110).
+
+### Upgrading
+
+- Hosts that insert rows into a server-drawn Blade feed (Livewire, Turbo Streams, htmx) should insert a `<div role="listitem">` holding the `<article>`, into `.sf-feed > [role="list"]`. A bare `<article>` still renders and eases in, but breaks the list semantics.
+- Selectors that target `.sf-feed > [role="feed"]` or `[role="feed"] > article` (Filament's included) should use `.sf-feed > [role="list"]` and `[role="list"] > [role="listitem"] > article`.
+
 ## v0.16.4 - 2026-11-19
 
 ### Fixed

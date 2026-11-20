@@ -586,7 +586,7 @@ it('eases in rows a host inserts later, once per page (ui#30)', function () {
     $html = Blade::render('<x-storyfeed::feed :items="$items" /><x-storyfeed::feed :items="$items" />', compact('items'));
 
     expect(substr_count($html, 'new MutationObserver'))->toBe(1)
-        ->and($html)->toContain("feed.matches('.sf-feed > [role=\"feed\"]')", "head: 'motion-safe:transition-", "page: 'motion-safe:transition-opacity")
+        ->and($html)->toContain("feed.matches('.sf-feed > [role=\"list\"]')", "head: 'motion-safe:transition-", "page: 'motion-safe:transition-opacity")
         // The first page draws still: no row carries an arrival class.
         ->and(explode('<script>', $html)[0])->not->toContain('starting:');
 });
@@ -626,4 +626,17 @@ it('draws no day heading for an all-dateless feed', function () {
     $items = array_map(fn ($id) => ['kind' => 'activity', 'id' => $id, 'published_at' => null, 'headline' => 'Step '.$id], ['a', 'b', 'c']);
     expect(Blade::render('<x-storyfeed::feed :items="$items" />', compact('items')))
         ->toContain('Step a', 'Step b', 'Step c')->not->toContain('sf-day', 'sf-divider', '<time');
+});
+
+it('makes every child of the feed list a list item, dividers included (ui#110)', function () {
+    $items = [['kind' => 'activity', 'id' => 'a1', 'headline' => 'Posted', 'published_at' => now()->toIso8601String()], ['kind' => 'activity', 'id' => 'a2', 'headline' => 'Posted', 'published_at' => now()->subDays(3)->toIso8601String()]];
+    $html = Blade::render('<x-storyfeed::feed :items="$items" :dividers="[\'a2\' => \'Earlier\']" />', compact('items'));
+    $dom = new DOMDocument;
+    @$dom->loadHTML('<?xml encoding="utf-8">'.$html);
+    $lists = (new DOMXPath($dom))->query('//*[@role="list"]');
+    expect($lists->length)->toBe(1)->and($html)->not->toContain('role="feed"');
+    $children = array_values(array_filter(iterator_to_array($lists->item(0)->childNodes), fn ($node) => $node instanceof DOMElement));
+    expect(count($children))->toBe(4)
+        ->and(array_map(fn ($child) => $child->getAttribute('role'), $children))->each->toBe('listitem')
+        ->and(substr_count($html, 'data-sf-day'))->toBe(3);
 });
