@@ -62,6 +62,7 @@ const expanded = ref(props.item.expanded || (props.collapsed === null ? (!props.
 
 // Every toggle morphs: the strip's tiles fly into the member rows (ui#30).
 const row = ref<HTMLElement | null>(null);
+
 function toggle() {
     morph(row.value, async () => {
         expanded.value = !expanded.value;

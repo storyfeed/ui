@@ -8,7 +8,8 @@ export type FeedPageLike = FeedPayload | FeedPagePayload | FeedNode[] | null | u
  * `media_ref`. A missing or empty map, including PHP's empty `[]`, is none.
  */
 export function readMediaMap(page: FeedPageLike): FeedMediaMap {
-    if (!page || typeof page !== 'object' || Array.isArray(page)) return {};
+    if (!page || typeof page !== 'object' || Array.isArray(page)) {return {};}
+
     const map = (page as { media?: unknown }).media;
 
     return map && typeof map === 'object' && !Array.isArray(map) ? (map as FeedMediaMap) : {};
@@ -19,7 +20,8 @@ export function readMediaMap(page: FeedPageLike): FeedMediaMap {
  * `entity_ref`. A missing or empty map, including PHP's empty `[]`, is none.
  */
 export function readEntityMap(page: FeedPageLike): FeedEntityMap {
-    if (!page || typeof page !== 'object' || Array.isArray(page)) return {};
+    if (!page || typeof page !== 'object' || Array.isArray(page)) {return {};}
+
     const map = (page as { entities?: unknown }).entities;
 
     return map && typeof map === 'object' && !Array.isArray(map) ? (map as FeedEntityMap) : {};
@@ -41,27 +43,31 @@ export function resolveMedia<T>(value: T, map: FeedMediaMap): T {
  * roles, samples, featured and children. Mirrors `Page::resolve()`.
  */
 export function resolveEntities<T>(value: T, entities: FeedEntityMap, media: FeedMediaMap): T {
-    if (Object.keys(entities).length === 0 && Object.keys(media).length === 0) return value;
+    if (Object.keys(entities).length === 0 && Object.keys(media).length === 0) {return value;}
 
     return resolve(value, entities, media) as T;
 }
 
 function resolve(value: unknown, entities: FeedEntityMap, map: FeedMediaMap): unknown {
-    if (Array.isArray(value)) return value.map((child) => resolve(child, entities, map));
-    if (!value || typeof value !== 'object') return value;
+    if (Array.isArray(value)) {return value.map((child) => resolve(child, entities, map));}
+
+    if (!value || typeof value !== 'object') {return value;}
 
     const eref = (value as Record<string, unknown>).entity_ref;
     const entity = typeof eref === 'string' && Object.hasOwn(entities, eref) ? entities[eref] : undefined;
     const source = entity && typeof entity === 'object' && !Array.isArray(entity) ? { ...value, ...entity } : value;
 
     const out: Record<string, unknown> = {};
-    for (const [key, child] of Object.entries(source)) out[key] = resolve(child, entities, map);
+
+    for (const [key, child] of Object.entries(source)) {out[key] = resolve(child, entities, map);}
 
     const ref = out.media_ref;
     const entry = typeof ref === 'string' && Object.hasOwn(map, ref) ? map[ref] : undefined;
+
     if (entry && typeof entry === 'object') {
-        if ('link' in entry) out.link = entry.link;
-        if ('media' in entry) out.media = entry.media;
+        if ('link' in entry) {out.link = entry.link;}
+
+        if ('media' in entry) {out.media = entry.media;}
     }
 
     return out;
@@ -76,8 +82,9 @@ function resolve(value: unknown, entities: FeedEntityMap, map: FeedMediaMap): un
  * Mirrors `Page::read()`.
  */
 export function readPage(page: FeedPageLike): { items: FeedNode[]; nextCursor: string | null } {
-    if (Array.isArray(page)) return { items: page, nextCursor: null };
-    if (!page || typeof page !== 'object') return { items: [], nextCursor: null };
+    if (Array.isArray(page)) {return { items: page, nextCursor: null };}
+
+    if (!page || typeof page !== 'object') {return { items: [], nextCursor: null };}
 
     const items = 'data' in page && Array.isArray(page.data) ? page.data : 'items' in page && Array.isArray(page.items) ? page.items : [];
     const cursor = page.next_cursor;

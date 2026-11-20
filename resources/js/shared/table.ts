@@ -4,7 +4,8 @@ export type TableCell = string | number | null | { label: string; href: string |
 const list = (value: unknown): unknown[] => (Array.isArray(value) ? value : []);
 
 const cell = (value: unknown): TableCell => {
-    if (value === null || typeof value === 'string' || typeof value === 'number') return value;
+    if (value === null || typeof value === 'string' || typeof value === 'number') {return value;}
+
     const link = value as Record<string, unknown> | undefined;
 
     return link && typeof link === 'object' && typeof link.label === 'string'
@@ -22,7 +23,8 @@ export function readTable(payload: Record<string, any>): { title: string | null;
     const headers = list(payload.headers).map((header) => (typeof header === 'string' || typeof header === 'number' ? String(header) : ''));
     const rows = list(payload.rows).filter(Array.isArray).map((row) => (row as unknown[]).map(cell));
     const footer = list(payload.footer).filter(Array.isArray).map((row) => (row as unknown[]).map(cell));
-    if (!rows.length && !footer.length) return null;
+
+    if (!rows.length && !footer.length) {return null;}
 
     const width = Math.max(headers.length, ...rows.map((row) => row.length), ...footer.map((row) => row.length));
     const pad = (row: TableCell[]) => [...row, ...Array<TableCell>(width - row.length).fill(null)];

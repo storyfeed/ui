@@ -20,11 +20,12 @@ const attributesOf = (value: unknown) =>
  * Mirrors `Storyfeed\Ui\Support\Links`.
  */
 export function entityLink(entity: EntityLike): ResolvedLink | null {
-    if (!entity || entity.tombstone) return null;
+    if (!entity || entity.tombstone) {return null;}
 
     const link = entity.link && typeof entity.link === 'object' ? entity.link : null;
     const href = link ? link.href : entity.url;
-    if (typeof href !== 'string' || href === '') return null;
+
+    if (typeof href !== 'string' || href === '') {return null;}
 
     return {
         href,
@@ -39,11 +40,12 @@ export function entityLink(entity: EntityLike): ResolvedLink | null {
  * to the entity's. Null when it leads nowhere.
  */
 export function bodyLink(link: LinkLike, entity: ResolvedLink | null | undefined): ResolvedLink | null {
-    if (!link || typeof link !== 'object') return null;
+    if (!link || typeof link !== 'object') {return null;}
 
     const modal = link.modal === true;
     const attributes = attributesOf(link.attributes);
-    if (typeof link.href === 'string' && link.href !== '') return { href: link.href, modal, attributes };
+
+    if (typeof link.href === 'string' && link.href !== '') {return { href: link.href, modal, attributes };}
 
     return entity ? { href: entity.href, modal: entity.modal || modal, attributes: { ...entity.attributes, ...attributes } } : null;
 }

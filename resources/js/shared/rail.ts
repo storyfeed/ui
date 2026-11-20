@@ -46,7 +46,7 @@ export const RAIL_NAMES = Object.values(NAMES);
 
 /** A configuration by name, or an already-built one passed through. */
 export function rail(from: Rail | RailName): Rail {
-    if (typeof from !== 'string') return from;
+    if (typeof from !== 'string') {return from;}
 
     const pair = Object.keys(NAMES).find((key) => NAMES[key] === from);
 

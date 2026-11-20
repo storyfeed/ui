@@ -11,15 +11,19 @@ const markdown = (source: string): string =>
         extensions: [gfmAutolinkLiteral(), gfmStrikethrough(), gfmTable(), gfmTaskListItem()],
         htmlExtensions: [gfmAutolinkLiteralHtml(), gfmStrikethroughHtml(), gfmTableHtml(), gfmTaskListItemHtml()],
     });
+
 export function isRich(payload: Record<string, any>): boolean {
     return (
         !payload.verbatim &&
         ['text/markdown', 'text/html'].includes(payload.mediaType)
     );
 }
+
 export function renderProse(payload: Record<string, any>): string {
-    if (!isRich(payload)) return '';
+    if (!isRich(payload)) {return '';}
+
     const source = payload.content ?? '';
+
     return sanitizeHtml(
         payload.mediaType === 'text/markdown'
             ? markdown(source)

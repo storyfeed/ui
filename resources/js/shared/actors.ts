@@ -27,16 +27,20 @@ function identity(actor: FeedEntity): string {
 export function actorStrip(group: GroupNode): { faces: FeedEntity[]; overflow: number } | null {
     const seen = new Set<string>();
     const actors: FeedEntity[] = [];
+
     for (const member of group.children ?? []) {
         const actor = member?.actor;
-        if (!actor || seen.has(identity(actor))) continue;
+
+        if (!actor || seen.has(identity(actor))) {continue;}
+
         seen.add(identity(actor));
         actors.push(actor);
     }
 
     const distinct = group.distinct?.actors;
     const total = Math.max(typeof distinct === 'number' ? distinct : 0, actors.length);
-    if (total < 2) return null;
+
+    if (total < 2) {return null;}
 
     const faces = actors.slice(0, ACTOR_STRIP_FACES);
 

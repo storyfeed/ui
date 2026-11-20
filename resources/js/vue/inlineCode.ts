@@ -1,4 +1,5 @@
-import { h, type VNodeChild } from 'vue';
+import { h } from 'vue';
+import type { VNodeChild } from 'vue';
 
 /** Opt-in single-backtick code; text children are escaped by Vue, never parsed as HTML. */
 export function inlineCode(text: string): VNodeChild {

@@ -39,6 +39,7 @@ jobs:
       - uses: ramsey/composer-install@v4
       - run: npm ci
       - run: npm run test:vue
+      - run: npm run lint:vue
       - run: npm run test:react
       - run: npm run test:installed
       - run: npm run typecheck:react

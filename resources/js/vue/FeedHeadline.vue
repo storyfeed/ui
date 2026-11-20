@@ -86,6 +86,7 @@ const parts = computed<Part[]>(() => {
                     return { type: 'count' };
                 case ':others':
                     return { type: 'others' };
+
                 default: {
                     // A bound token is a literal value, never authored text:
                     // it skips the text hook and is never re-split (core v0.24).

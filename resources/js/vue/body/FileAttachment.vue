@@ -15,10 +15,12 @@ const labeller = inject(FEED_FILE_LABELLER, null)
 const kind = computed(() => fileLabel({ name: props.payload.name ?? null, mediaType: props.payload.mediaType ?? null }, labeller))
 
 const human = (bytes: unknown) => {
-    if (typeof bytes !== 'number') return null
+    if (typeof bytes !== 'number') {return null}
+
     const units = ['bytes', 'KB', 'MB', 'GB']
     let value = bytes
     let unit = 0
+
     while (value >= 1000 && unit < units.length - 1) { value /= 1000; unit++ }
 
     return `${unit === 0 ? value : value.toFixed(value < 10 ? 1 : 0)} ${units[unit]}`

@@ -1,4 +1,5 @@
-import { bodyLink, type ResolvedLink } from './link';
+import { bodyLink } from './link';
+import type { ResolvedLink } from './link';
 
 /**
  * Read a `Storyfeed/Body/CallToAction` as core's `CallToAction::upgrade()`

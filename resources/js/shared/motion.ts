@@ -38,6 +38,7 @@ export function animates(): boolean {
 export function retime(): void {
     for (const animation of document.getAnimations()) {
         const effect = animation.effect as KeyframeEffect | null;
+
         if (effect?.pseudoElement?.endsWith('(root)')) {
             animation.finish();
         } else if (effect?.pseudoElement?.startsWith('::view-transition')) {
@@ -81,6 +82,7 @@ const running = new WeakMap<HTMLElement, ViewTransition>();
 export function morph(row: HTMLElement | null | undefined, update: () => void | Promise<void>): void {
     if (!row || !animates()) {
         void update();
+
         return;
     }
 
@@ -90,34 +92,44 @@ export function morph(row: HTMLElement | null | undefined, update: () => void | 
     const slots = new Map<string, number>();
 
     unmark(row);
+
     for (const picture of pictures(row, from)) {
         const src = srcOf(picture);
-        if (src === null || slots.has(src) || slots.size === MORPH_SLOTS) continue;
+
+        if (src === null || slots.has(src) || slots.size === MORPH_SLOTS) {continue;}
+
         slots.set(src, slots.size);
         picture.dataset.sfVt = String(slots.get(src));
     }
+
     row.dataset.sfMorph = '';
 
     const transition = document.startViewTransition(async () => {
         unmark(row);
         await update();
         const landed = new Set<string>();
+
         for (const picture of pictures(row, to)) {
             const src = srcOf(picture);
-            if (src === null || landed.has(src) || !slots.has(src)) continue;
+
+            if (src === null || landed.has(src) || !slots.has(src)) {continue;}
+
             landed.add(src);
             picture.dataset.sfVt = String(slots.get(src));
         }
     });
     running.set(row, transition);
     transition.ready.then(retime, () => {});
+
     const settle = () => {
         // A second toggle mid-flight starts its own transition; leave its names alone.
-        if (running.get(row) !== transition) return;
+        if (running.get(row) !== transition) {return;}
+
         running.delete(row);
         unmark(row);
         delete row.dataset.sfMorph;
     };
+
     transition.finished.then(settle, settle);
 }
 
@@ -148,9 +160,11 @@ export function arrivals(before: readonly string[], after: readonly string[]): M
     const seen = new Set(before);
     const first = after.findIndex((id) => seen.has(id));
     const found = new Map<string, Arrival>();
-    if (first === -1) return found;
+
+    if (first === -1) {return found;}
+
     after.forEach((id, index) => {
-        if (!seen.has(id)) found.set(id, index < first ? 'head' : 'page');
+        if (!seen.has(id)) {found.set(id, index < first ? 'head' : 'page');}
     });
 
     return found;
@@ -162,8 +176,10 @@ export function arrivals(before: readonly string[], after: readonly string[]): M
  * "N new" pill instead of moving the rows being read.
  */
 export function awayFromTop(feed: Element | null | undefined): boolean {
-    if (!feed) return false;
+    if (!feed) {return false;}
+
     let top = 0;
+
     for (let parent = feed.parentElement; parent; parent = parent.parentElement) {
         if (/auto|scroll|overlay/.test(getComputedStyle(parent).overflowY) && parent.scrollHeight > parent.clientHeight) {
             top = parent.getBoundingClientRect().top;
@@ -184,12 +200,15 @@ const drawn = new WeakMap<Element, string>();
  * shows. Reduced motion swaps the text at once.
  */
 export function fadeChanged(root: Element | null | undefined): void {
-    if (!root) return;
+    if (!root) {return;}
+
     const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     for (const part of root.querySelectorAll('[data-sf-part]')) {
         const text = part.textContent ?? '';
         const before = drawn.get(part);
         drawn.set(part, text);
+
         if (before !== undefined && before !== text && !still) {
             part.animate([{ opacity: 0 }, { opacity: 1 }], { duration: MOTION_MS, easing: 'ease-out' });
         }

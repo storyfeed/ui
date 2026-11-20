@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { imageClasses, type ImageSize } from '../shared/body';
+import { imageClasses } from '../shared/body';
+import type { ImageSize } from '../shared/body';
 import { computed, onBeforeUnmount, ref, toRef, useId, provide, watch } from 'vue';
 import FeedNodeView from './FeedNode.vue';
 import type { Rail, RailName } from '../shared/rail';
 import type { FeedNode } from '../shared/types';
-import { readPage, type FeedPageLike } from '../shared/page';
+import { readPage } from '../shared/page';
+import type { FeedPageLike } from '../shared/page';
 import { useFeedDays } from './useRelativeTime';
-import { ARRIVAL_CLASSES, ARRIVAL_MS, arrivals, awayFromTop, type Arrival } from '../shared/motion';
+import { ARRIVAL_CLASSES, ARRIVAL_MS, arrivals, awayFromTop } from '../shared/motion';
+import type { Arrival } from '../shared/motion';
 
 const props = withDefaults(
     defineProps<{
@@ -76,12 +79,15 @@ const days = useFeedDays(toRef(() => shown.value));
 // a new page below (ui#30). The first render, and a reset, draw still.
 const arrived = ref(new Map<string, Arrival>());
 let settle: ReturnType<typeof setTimeout> | undefined;
+
 function ease(found: Map<string, Arrival>) {
-    if (found.size === 0) return;
+    if (found.size === 0) {return;}
+
     arrived.value = new Map([...arrived.value, ...found]);
     clearTimeout(settle);
     settle = setTimeout(() => { arrived.value = new Map(); }, ARRIVAL_MS);
 }
+
 watch(
     () => nodes.value.map((node) => node.id),
     (ids, before) => {
@@ -89,8 +95,11 @@ watch(
         const head = [...found].filter(([, kind]) => kind === 'head').map(([id]) => id);
         // Once some wait, every later arrival waits behind them.
         const hold = head.length > 0 && (held.value.size > 0 || awayFromTop(root.value));
-        if (hold) head.forEach((id) => found.delete(id));
-        if (hold || held.value.size) held.value = new Set([...(hold ? head : []), ...held.value].filter((id) => ids.includes(id)));
+
+        if (hold) {head.forEach((id) => found.delete(id));}
+
+        if (hold || held.value.size) {held.value = new Set([...(hold ? head : []), ...held.value].filter((id) => ids.includes(id)));}
+
         ease(found);
     },
     { flush: 'pre' },
@@ -100,15 +109,19 @@ onBeforeUnmount(() => clearTimeout(settle));
 /** Tapping the pill brings the reader to the top, where the waiting rows ease in. */
 function showNew() {
     const released = held.value;
-    if (awayFromTop(root.value)) root.value?.scrollIntoView({ block: 'start' });
+
+    if (awayFromTop(root.value)) {root.value?.scrollIntoView({ block: 'start' });}
+
     held.value = new Set();
     ease(new Map([...released].map((id) => [id, 'head' as const])));
 }
+
 const arrival = (id: string) => {
     const kind = arrived.value.get(id);
 
     return kind ? ARRIVAL_CLASSES[kind] : undefined;
 };
+
 // Each branch divider's stroke gradient needs an id unique on the page.
 const gradientId = `sf-branch-${useId()}`;
 </script>

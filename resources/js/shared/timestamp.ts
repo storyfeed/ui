@@ -14,10 +14,14 @@ export function formatTimestamp(
         hour: 'numeric',
         minute: '2-digit',
     });
+
     if (date.toDateString() === today.toDateString()) {
         const seconds = Math.max(0, Math.floor((now - date.getTime()) / 1000));
-        if (seconds < 45) return 'just now';
+
+        if (seconds < 45) {return 'just now';}
+
         const minutes = Math.max(1, Math.floor(seconds / 60));
+
         return new Intl.RelativeTimeFormat(locale, {
             numeric: 'always',
         }).format(
@@ -25,10 +29,13 @@ export function formatTimestamp(
             seconds < 3600 ? 'minute' : 'hour',
         );
     }
+
     if (date.toDateString() === yesterday.toDateString())
-        return `${messages.yesterday}, ${clock}`;
+        {return `${messages.yesterday}, ${clock}`;}
+
     const month = date.toLocaleDateString(locale, { month: 'short' });
     const day = `${date.getDate()} ${month}`;
+
     return date.getFullYear() === today.getFullYear()
         ? `${date.toLocaleDateString(locale, { weekday: 'short' })} ${day}, ${clock}`
         : `${day} ${date.getFullYear()}, ${clock}`;

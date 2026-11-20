@@ -21,6 +21,7 @@ export function leftoverRoles(
     const tokens = new Set(
         templates.flatMap((template) => template?.match(/:[a-z_]+/g) ?? []),
     );
+
     return metaRoles
         .filter((role) => !tokens.has(`:${role}`) && !tokens.has(`:${role}s`))
         .flatMap((role) => {
@@ -33,6 +34,7 @@ export function leftoverRoles(
                 node.kind === 'group'
                     ? (node.distinct[`${role}s`] ?? entities.length)
                     : entities.length;
+
             return entities.length
                 ? [
                       {

@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "description": "ESLint for the published Vue kit (ui#122). Separate so its TypeScript can trail the repo's.",
+  "devDependencies": {
+    "eslint": "^10.15.0",
+    "eslint-plugin-vue": "*",
+    "typescript": "~6.0.0",
+    "typescript-eslint": "^8.73.0",
+    "vue-eslint-parser": "*"
+  }
+}

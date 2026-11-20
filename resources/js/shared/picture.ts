@@ -7,10 +7,11 @@
 export type PictureShape = { shape: 'icon' } | { shape: 'ratio'; ratio: number } | { shape: 'free' };
 
 export function pictureShape(slot: unknown, image: Record<string, any> | null | undefined): PictureShape {
-    if (slot === 'icon') return { shape: 'icon' };
+    if (slot === 'icon') {return { shape: 'icon' };}
 
     const { width, height } = image ?? {};
-    if (typeof width !== 'number' || typeof height !== 'number' || width <= 0 || height <= 0) return { shape: 'free' };
+
+    if (typeof width !== 'number' || typeof height !== 'number' || width <= 0 || height <= 0) {return { shape: 'free' };}
 
     // Rounded so every kit writes the same custom property.
     return { shape: 'ratio', ratio: Math.round(Math.min(Math.max(width / height, 1), 2) * 10000) / 10000 };
@@ -22,7 +23,7 @@ export function pictureShape(slot: unknown, image: Record<string, any> | null | 
  * Blade card.
  */
 export function mediaObjectPicture(image: unknown, entityMedia: Record<string, any> | null | undefined): Record<string, any> | null {
-    if (typeof image === 'string') return ['icon', 'preview', 'image'].includes(image) ? (entityMedia?.[image] ?? null) : null;
+    if (typeof image === 'string') {return ['icon', 'preview', 'image'].includes(image) ? (entityMedia?.[image] ?? null) : null;}
 
     return image && typeof image === 'object' && typeof (image as any).src === 'string' && (image as any).src !== '' ? image as Record<string, any> : null;
 }

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, inject, toRef } from 'vue';
+import type { Ref } from 'vue';
 import { imageOf } from './body';
 import { formsIn, resolve } from './body';
 import { FEED_BODIES } from './keys';
@@ -19,7 +20,7 @@ import { FeedHeadRow } from './slots';
 import type { ActivityNode } from '../shared/types';
 import { useRelativeTime } from './useRelativeTime';
 
-const feedImageSize = inject<import('vue').Ref<string | undefined>>('FEED_IMAGE_SIZE', computed(() => 'full'));
+const feedImageSize = inject<Ref<string | undefined>>('FEED_IMAGE_SIZE', computed(() => 'full'));
 
 const props = withDefaults(
     defineProps<{

@@ -3,7 +3,8 @@ import { computed, inject } from 'vue'
 import { FEED_LINK, FEED_MEDIA_OBJECT_PLACEMENT } from '../keys'
 import FeedMedia from '../FeedMedia.vue'
 import { mediaObjectPicture, pictureShape } from '../../shared/picture'
-import { bodyLink, linkProps, ownLink, type ResolvedLink } from '../../shared/link'
+import { bodyLink, linkProps, ownLink } from '../../shared/link'
+import type { ResolvedLink } from '../../shared/link'
 
 /**
  * `Storyfeed/Body/MediaObject` — the shape of a post: a title line, some
@@ -41,6 +42,7 @@ const subject = computed(() => {
 const files = computed(() => {
     const listed = 'files' in props.payload ? props.payload.files
         : (props.payload.$v ?? 1) < 2 ? props.payload.attachments : []
+
     return Array.isArray(listed) ? listed : []
 })
 
