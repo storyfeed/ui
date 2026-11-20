@@ -6,7 +6,10 @@ storyfeed/storyfeed#95, under `items` before it), or `items` and
 `next-cursor` yourself; handle `@load-more` for pagination. Append each loaded
 page with `appendPage(previous, next)` from `shared/page.ts`, which merges the
 pages' `entities` maps (core 0.27) that entities are read from and `media`
-maps (core 0.26) that they read `link` and `media` from. No kit CSS is required.
+maps (core 0.26) that they read `link` and `media` from.
+Apps that pass `items` or keep their own list read each page with
+`resolvePage(page)`, which returns its nodes with the maps applied;
+`appendPage(resolvePage(first), next)` works too. No kit CSS is required.
 Install its dependencies:
 
 ```bash
