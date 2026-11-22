@@ -1,16 +1,33 @@
 # Changelog
 
+Paths in each release's "Copied files changed" are relative to the directory `storyfeed:ui` copies a kit into (`shared/` is copied with both kits). An app that customised its copy only needs to merge those files.
+
+**From v0.16.1 to v0.17.2**, for apps re-copying for 0.17:
+
+- Vue: `EntityLink.vue`, `FeedGroup.vue`, `FeedHeadline.vue`, `FeedItem.vue`, `FeedMeta.vue`, `FeedStream.vue`, `body/CallToAction.vue`, `body/FileAttachment.vue`, `body/ItemList.vue`, `body/MediaObject.vue`, `body/Table.vue`, `body/index.ts`, `inlineCode.ts`, `slots.ts`, `useRelativeTime.ts`, `shared/actors.ts`, `shared/avatar.ts`, `shared/body.ts`, `shared/callToAction.ts`, `shared/days.ts`, `shared/link.ts`, `shared/meta.ts`, `shared/motion.ts`, `shared/page.ts`, `shared/picture.ts`, `shared/prose.ts`, `shared/rail.ts`, `shared/range.ts`, `shared/strip.ts`, `shared/table.ts`, `shared/timestamp.ts`, `shared/tombstone.ts`, `shared/viewer.ts`
+- React: `EntityLink.tsx`, `FeedGroup.tsx`, `index.ts`, `shared/actors.ts`, `shared/avatar.ts`, `shared/body.ts`, `shared/callToAction.ts`, `shared/days.ts`, `shared/link.ts`, `shared/meta.ts`, `shared/motion.ts`, `shared/page.ts`, `shared/picture.ts`, `shared/prose.ts`, `shared/rail.ts`, `shared/range.ts`, `shared/strip.ts`, `shared/table.ts`, `shared/timestamp.ts`, `shared/tombstone.ts`, `shared/viewer.ts`
+
 ## v0.17.2 - 2026-11-20
 
 ### Fixed
 
 - The published Vue kit (`resources/js/vue` and `resources/js/shared`) passes ESLint's `curly`, `padding-line-between-statements` and top-level `import type` rules, so a fresh `storyfeed:ui vue` copy no longer needs a `--fix` pass in apps that use them. CI lints it. No behaviour or API change (#122).
 
+### Copied files changed
+
+- Vue: `FeedGroup.vue`, `FeedHeadline.vue`, `FeedItem.vue`, `FeedMeta.vue`, `FeedStream.vue`, `body/CallToAction.vue`, `body/FileAttachment.vue`, `body/ItemList.vue`, `body/MediaObject.vue`, `body/Table.vue`, `body/index.ts`, `inlineCode.ts`, `slots.ts`, `useRelativeTime.ts`, `shared/actors.ts`, `shared/avatar.ts`, `shared/body.ts`, `shared/callToAction.ts`, `shared/days.ts`, `shared/link.ts`, `shared/meta.ts`, `shared/motion.ts`, `shared/page.ts`, `shared/picture.ts`, `shared/prose.ts`, `shared/rail.ts`, `shared/range.ts`, `shared/strip.ts`, `shared/table.ts`, `shared/timestamp.ts`, `shared/viewer.ts`
+- React: `shared/actors.ts`, `shared/avatar.ts`, `shared/body.ts`, `shared/callToAction.ts`, `shared/days.ts`, `shared/link.ts`, `shared/meta.ts`, `shared/motion.ts`, `shared/page.ts`, `shared/picture.ts`, `shared/prose.ts`, `shared/rail.ts`, `shared/range.ts`, `shared/strip.ts`, `shared/table.ts`, `shared/timestamp.ts`, `shared/viewer.ts`
+
 ## v0.17.1 - 2026-11-20
 
 ### Added
 
 - `resolvePage(page)` in the Vue (`shared/page.ts`) and React kits returns a page's nodes with entities read from its `entities` and `media` maps, so apps that pass `items` or keep their own list can turn core's `inline_entities` and `inline_media` off. `appendPage()` accepts a list it returned (#123).
+
+### Copied files changed
+
+- Vue: `shared/page.ts`
+- React: `index.ts`, `shared/page.ts`
 
 ## v0.17.0 - 2026-11-20
 
@@ -23,11 +40,20 @@
 - Hosts that insert rows into a server-drawn Blade feed (Livewire, Turbo Streams, htmx) should insert a `<div role="listitem">` holding the `<article>`, into `.sf-feed > [role="list"]`. A bare `<article>` still renders and eases in, but breaks the list semantics.
 - Selectors that target `.sf-feed > [role="feed"]` or `[role="feed"] > article` (Filament's included) should use `.sf-feed > [role="list"]` and `[role="list"] > [role="listitem"] > article`.
 
+### Copied files changed
+
+- None.
+
 ## v0.16.4 - 2026-11-19
 
 ### Fixed
 
 - A group whose media strip already shows every member, with no "+N", no longer offers "Show all N", in the Blade, Vue and React kits: expanding revealed nothing new. A group with more members than tiles still toggles (#126).
+
+### Copied files changed
+
+- Vue: `FeedGroup.vue`
+- React: `FeedGroup.tsx`
 
 ## v0.16.3 - 2026-11-18
 
@@ -35,11 +61,20 @@
 
 - Allow storyfeed/storyfeed ^0.30.
 
+### Copied files changed
+
+- None.
+
 ## v0.16.2 - 2026-11-17
 
 ### Fixed
 
 - The Vue and React kits name a removed entity by the last segment of its former type, in words, as core's Blade fallback does. An app without a morph map read "a removed App\\Modules\\Sales\\Models\\LineItem"; it now reads "a removed line item". Morph aliases read as before.
+
+### Copied files changed
+
+- Vue: `EntityLink.vue`, `shared/tombstone.ts`
+- React: `EntityLink.tsx`, `shared/tombstone.ts`
 
 ## v0.16.1 - 2026-11-15
 
