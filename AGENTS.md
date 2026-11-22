@@ -52,7 +52,10 @@ updates them in the same PR; `tests/BoostSkillTest.php` fails on names the
 package no longer ships.
 
 Every change needs a regression test and an Unreleased changelog entry, with
-an issue number when working on an issue. Local passing checks are one
+an issue number when working on an issue. Every release section ends with
+`### Copied files changed`, listing per kit the files under `resources/js/vue`,
+`resources/js/react` and `resources/js/shared` that changed since the previous
+tag (paths as copied, `shared/` prefixed), or `- None.` Local passing checks are one
 configuration; inspect GitHub CI on the final PR commit before claiming green.
 Stage files by explicit path and preserve unrelated work.
 
